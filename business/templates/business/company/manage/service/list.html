@@ -1,0 +1,12 @@
+{% extends 'business/base.html' %}
+{% load static %}
+{% block content %}
+    <h1>My Services</h1>
+    {% for service in object_list %}
+        <div>
+            <h3>{{ service.name }}</h3>
+        </div>
+    {% empty %}
+        <p>You have not created any courses yet.</p>
+    {% endfor %}
+{% endblock %}

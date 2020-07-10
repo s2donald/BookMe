@@ -1,0 +1,30 @@
+{% extends 'business/base.html' %}
+{% load static %}
+{% block content %}
+    <div class="container text-center bg-white">
+        <h1>{% if category %}{{ category.name }}{% else %}Services{% endif %}</h1>
+        <div class="card-deck text-center">
+        {% for company in companies %}
+            <div class="card mb-4 text-center">
+                    <a class="nav-link text-center" href="{{ company.get_absolute_url }}">
+                        <img class="card-img-top img-responsive list-img" src="{% if company.image %}{{ company.image.url }}{% else %}{% static "img/no_image.png" %}{% endif %}">
+
+                        <div class="card-body">
+                            <h5>{{ company.business_name }}</h5>
+                            <p class="card-text">{{ company.description }}</p>
+                        </div>
+                    </a>
+            </div>
+
+            {% if forloop.counter|divisibleby:1 %}
+                </div>
+                
+                <div class="card-deck text-center">
+            {% endif %}
+        {% endfor %}
+        
+        </div>
+    </div>
+    {% include "business/pagination.html" with page=companies %}
+    <hr>
+{% endblock %}

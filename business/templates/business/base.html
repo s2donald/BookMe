@@ -1,0 +1,117 @@
+{% load business_tags %}
+{% load static %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+        <link rel="stylesheet" href="{% static "css/bases.css" %}">
+	    
+	
+        <title>{% block title %}Gibele.ca - Bookings Made Easy{% endblock %}</title>
+    </head>
+    <body id="page-wrapper">
+        <nav class="navbar navbar-top-default navbar-expand-xlg navbar-dark nav-box-round bg-dark sticky-top">
+        <div class="container-fluid blackcol">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 shadow-sm">
+            <div class="container-fluid padding">
+                <div class="col-md-12 text-center">
+                    <div class-"card text-center search-bar">
+                        <form method="GET" class="input-group justify-content-center">
+                            {% csrf_token %}
+                            {{ form.Search }}
+                        
+                            <select name="dropdown">
+                                {% for c in categories %}
+                                    <option value="{{ c.name }}">{{ c.name }}</option>
+                                {% endfor %}
+                            </select>
+                            <button class="btn btn-outline-primary my-sm-0" type="submit">Search</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 shadow-sm mr-3 ml-3">
+                    {% if request.user.is_authenticated %}
+                        <p class="mx-1">Welcome 
+                            <a href="{% if request.user %}{% url 'account:account' %}{% else %}{% url 'business:manage_service_list' %}{% endif %}">
+                                {% if user.first_name == None %}
+                                    {{ user.username }}
+                                {% else %}
+                                    {{ user.first_name }}
+                                {% endif %}
+                            </a>
+                        </p>
+
+                        <a class="btn btn-outline-primary ml-1 mr-1" href="{% url 'account:account' %}" >Account</a>
+                        <a class="btn btn-outline-primary ml-1 mr-1" href="{% url 'logout' %}">Logout</a>
+                    {% else %}
+
+                            <a class="btn btn-outline-primary ml-1 mr-1" href="{% url 'account:consumer_registration' %}" >Register</a>
+                            <a class="btn btn-outline-primary ml-1 mr-1" href="{% url 'login' %}">Login</a>
+                    {% endif %}
+                </div>
+            
+            <a class="logo navbar-brand navbb" href="/"><img src="{% static "img/logo_transparent.png" %}"></a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav ml-auto">
+                    {% for c in categories %}
+                        <li class="nav-item"{% if category.slug == c.slug %}class="active"{% endif %}>
+                            <a class="nav-link" href="{{ c.get_absolute_url }}">{{ c.name }}</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        </nav>
+        
+            {% block content %}
+            {% endblock %}
+       
+    </body>
+    
+    <footer class="bg-dark">
+    <div class="container-fluid padding">
+    <div class="row text-center">
+        <div class="col-md-4">
+            <hr class="light">
+            <h5 class="logo">Gibele</h5>
+            <hr class="light">
+            <li>©2020 Gibele Inc, All rights reserved.</li>
+            <li><a class="nav-link" href="/legal/">Privacy Policy</a></li>
+            <li><a class="nav-link" href="/legal/">Terms and Services</a></li>
+        </div>
+        <div class="col-md-4">
+            <hr class="light">
+            <h5 class="logo">The Company</h5>
+            <hr class="light">
+                <a class="nav-link" href="/#/">Gibele for Business</a>
+                <a class="nav-link" href="{% url 'account:consumer_registration' %}">Gibele for Consumers</a>
+                <li><a class="" href="/contact/">Contact Us</a></li>
+                <li><a class="nav-link" href="/about/">About Us</a></li>
+        </div>
+        <div class="col-md-4">
+            <hr class="light">
+            <h5 class="logo">Contact Information</h5>
+            <hr class="light">
+                <li>Toronto, Ontario</li>
+                <li>M1C4W7</li>
+                <li><a class="nav-link" href="/contact/">support@gibele.com</a></li>
+                <li><p>647-828-0723</p></li>
+        </div>
+        
+    </div>
+    </div>
+    </footer>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script src="https://use.fontawesome.com/releases/v5.0.8/js/all.js"></script>
+</html>

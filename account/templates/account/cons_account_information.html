@@ -1,0 +1,15 @@
+{% extends 'business/base.html' %}
+{% load static %}
+{% block content %}
+    <div class="container text-center mt-5">
+        <h1>Account Settings</h1>
+        <h2 class="mt-3">Account Details</h2>
+        <p class="mt-3">Username: {{request.user.username }} <button class="btn btn-outline-primary btn-sm">Change</button> </p>
+        <p>Name: {{request.user.first_name }} {{ request.user.last_name }} <button class="btn btn-outline-primary btn-sm">Change</button></p>
+        <p>Email: {{request.user.email }} <button class="btn btn-outline-primary btn-sm">Change</button></p>
+        <p>Phone: {{request.user.phone }} <button class="btn btn-outline-primary btn-sm">Change</button></p>
+        {% if request.user.address == None %}
+            <p>Add your address for mobile services: <button class="btn btn-outline-primary btn-sm">Add</button></p>
+        {% endif %}
+    </div>
+{% endblock  %}

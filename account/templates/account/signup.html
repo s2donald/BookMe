@@ -1,0 +1,16 @@
+{% extends 'business/base.html' %}
+{% load static %}
+{% block content %}
+<div class="container form-inline flex-col">
+
+    <div class="text-center col-md-12">
+        <h1>Sign Up for a free account</h1>
+        <p>Select below the type of account you want to create</p>
+        <div>
+            <a href="{% url 'account:consumer_registration' %}" class="btn btn-outline-primary">Personal</a>
+            <a href="{% url 'account:registration' %}" class="btn btn-outline-primary">Business</a>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

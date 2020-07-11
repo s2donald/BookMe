@@ -13,67 +13,70 @@
         <title>{% block title %}Gibele.ca - Bookings Made Easy{% endblock %}</title>
     </head>
     <body id="page-wrapper">
-        <nav class="navbar navbar-top-default navbar-expand-xlg navbar-dark nav-box-round bg-dark sticky-top">
-        <div class="container-fluid blackcol">
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 shadow-sm">
-            <div class="container-fluid padding">
-                <div class="col-md-12 text-center">
-                    <div class-"card text-center search-bar">
-                        <form method="GET" class="input-group justify-content-center">
-                            {% csrf_token %}
-                            {{ form.Search }}
-                        
-                            <select name="dropdown">
-                                {% for c in categories %}
-                                    <option value="{{ c.name }}">{{ c.name }}</option>
-                                {% endfor %}
-                            </select>
-                            <button class="btn btn-outline-primary my-sm-0" type="submit">Search</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-            <div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 shadow-sm mr-3 ml-3">
-                    {% if request.user.is_authenticated %}
-                        <p class="mx-1">Welcome 
-                            <a href="{% if request.user %}{% url 'account:account' %}{% else %}{% url 'business:manage_service_list' %}{% endif %}">
-                                {% if user.first_name == None %}
-                                    {{ user.username }}
-                                {% else %}
-                                    {{ user.first_name }}
-                                {% endif %}
-                            </a>
-                        </p>
-
-                        <a class="btn btn-outline-primary ml-1 mr-1" href="{% url 'account:account' %}" >Account</a>
-                        <a class="btn btn-outline-primary ml-1 mr-1" href="{% url 'logout' %}">Logout</a>
-                    {% else %}
-
-                            <a class="btn btn-outline-primary ml-1 mr-1" href="{% url 'account:consumer_registration' %}" >Register</a>
-                            <a class="btn btn-outline-primary ml-1 mr-1" href="{% url 'login' %}">Login</a>
-                    {% endif %}
-                </div>
-            
-            <a class="logo navbar-brand navbb" href="/"><img src="{% static "img/logo_transparent.png" %}"></a>
-            </div>
-            <div class="collapse navbar-collapse" id="navbarResponsive">
-                <ul class="navbar-nav ml-auto">
-                    {% for c in categories %}
-                        <li class="nav-item"{% if category.slug == c.slug %}class="active"{% endif %}>
-                            <a class="nav-link" href="{{ c.get_absolute_url }}">{{ c.name }}</a>
-                        </li>
-                    {% endfor %}
-                </ul>
-            </div>
-        </div>
-        </nav>
+        <nav class="navbar navbar-expand-lg navbar-dark nav-box-round bg-dark">
         
+            <a class="logo navbar-brand navbb" href="/"><img src="{% static "img/logo_transparent.png" %}"></a>
+            <form method="GET" class="mr-2 my-auto w-100 d-inline-block order-1">
+                <div class="input-group">
+                    {% csrf_token %}
+                    {{ form.Search }}
+                    <span class="input-group-append">
+                        <button class="btn btn-outline-primary border-left-0" type="submit"><i class="fa fa-search"></i></button>
+                    </span>
+                    
+                </div>
+            </form>
+        
+
+        <button class="navbar-toggler order-0" type="button" data-toggle="collapse" data-target="#navbarResponsive">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+            
+
+        <div class="navbar-collapse collapse flex-shrink-1 flex-grow-0 order-last" id="navbarResponsive">
+            <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+                
+                {% if request.user.is_authenticated %}
+                    <li>
+                    <p class="mx-1">Welcome 
+                        <a href="{% if request.user %}{% url 'account:account' %}{% else %}{% url 'business:manage_service_list' %}{% endif %}">
+                            {% if user.first_name == None %}
+                                {{ user.username }}
+                            {% else %}
+                                {{ user.first_name }}
+                            {% endif %}
+                        </a>
+                    </p>
+                    </li>
+                {% endif %}
+                {% for c in categories %}
+                    <li class="nav-item dropdown"{% if category.slug == c.slug %}class="active"{% endif %}>
+                    <a class="nav-link dropdown-toggle" href="{{ c.get_absolute_url }}">{{ c.name }}</a>
+                    <span class="caret"></span>
+                    </li>
+                {% endfor %}
+
+                {% if request.user.is_authenticated %}
+                    <li>
+                        <a class="btn btn-outline-primary" href="{% url 'account:account' %}" >Account</a>
+                    </li>
+                    <li>
+                    
+                    <a class="btn btn-outline-primary" href="{% url 'logout' %}">Logout</a>
+                    </li>
+                {% else %}
+                    <a class="btn btn-outline-primary" href="{% url 'account:signup' %}" >Sign Up</a>
+                    <a class="btn btn-outline-primary" href="{% url 'login' %}">Login</a>
+                {% endif %}
+            </ul>
+            </div>
+        
+        </nav>
+
+        <div class="main">
             {% block content %}
             {% endblock %}
-       
+        </div>
     </body>
     
     <footer class="bg-dark">

@@ -59,7 +59,10 @@ def BusinessRegistrationView(request):
     return render(request, 'account//business/registration.html', {'user_form':user_form})
 
 def AccountSummaryView(request):
-    return render(request, 'account/account_information.html')
+    is_bus = request.user.is_business
+    if is_bus:
+        return render(request, 'account/account_information.html')
+    return render(request, 'account/cons_account_information.html')
 
 def RegisteredAccountView(request):
     return render(request, 'account/register_done.html')
@@ -89,3 +92,6 @@ def LoginView(request):
 
     context['login_form'] = form
     return render(request, 'registration/login.html', {'form':form})
+
+def SignUpView(request):
+    return render(request, 'account/signup.html')

@@ -41,6 +41,7 @@ class Company(models.Model):
         verbose_name = 'company'
         verbose_name_plural = 'companies'
         index_together =(('id','slug'),)
+        
     def __str__(self):
         return self.user.username
     def get_absolute_url(self):

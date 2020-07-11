@@ -7,10 +7,9 @@
         {% for company in companies %}
             <div class="card mb-4 text-center">
                     <a class="nav-link text-center" href="{{ company.get_absolute_url }}">
-                        <img class="card-img-top img-responsive list-img" src="{% if company.image %}{{ company.image.url }}{% else %}{% static "img/no_image.png" %}{% endif %}">
-
                         <div class="card-body">
-                            <h5>{{ company.business_name }}</h5>
+                        <img class="card-img-top img-responsive list-img" align="left" src="{% if company.image %}{{ company.image.url }}{% else %}{% static "img/no_image.png" %}{% endif %}">
+                            <h5>{{ company.user.username }}</h5>
                             <p class="card-text">{{ company.description }}</p>
                         </div>
                     </a>

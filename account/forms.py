@@ -21,6 +21,11 @@ class ConsumerRegistrationForm(UserCreationForm):
         model = Account
         fields = ('username','email', 'first_name','last_name', 'phone', 'password1', 'password2')
 
+    def save(self):
+        user = super().save(commit=False)
+        user.is_consumer = True
+        user.save()
+
     def clean_password2(self):
         cd = self.cleaned_data
         if cd['password1'] != cd['password2']:

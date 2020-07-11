@@ -36,10 +36,13 @@ class BusinessRegistrationForm(UserCreationForm):
     password1 = forms.CharField(label='Password', widget=forms.PasswordInput)
     password2 = forms.CharField(label='Repeat password', widget=forms.PasswordInput)
     username = forms.CharField(label='Business Name')
+    first_name = forms.CharField(label='Business Owner\'s First Name',max_length=30, required=True)
+    last_name = forms.CharField(label='Business Owner\'s Last Name',max_length=30, required=True)
     address = forms.CharField(label='Company Address')
+    email = forms.CharField(label='Business Email')
     class Meta:
         model = Account
-        fields = ('username','address','email', 'phone',)
+        fields = ('username','first_name','last_name','address','email', 'phone',)
     
     def save(self):
         user = super().save(commit=False)

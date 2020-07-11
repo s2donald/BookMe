@@ -20,6 +20,26 @@ html, body {
     background-color: white;
 }
 
+::-webkit-scrollbar {
+    width: 12px;
+}
+
+::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3); 
+    border-radius: 10px;
+    background: #ffffff;
+}
+
+::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.5); 
+    background: linear-gradient(45deg,#ffc371 0%, #ff5f6d 100%);
+}
+
+.licolor {
+    color: #3a1c71;
+    font-weight: bold;
+}
 
 button:focus,
 button:active,

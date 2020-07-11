@@ -59,6 +59,9 @@ def BusinessRegistrationView(request):
     return render(request, 'account//business/registration.html', {'user_form':user_form})
 
 def AccountSummaryView(request):
+    if not request.user.is_authenticated:
+        return redirect("login")
+        
     is_bus = request.user.is_business
     if is_bus:
         return render(request, 'account/account_information.html')

@@ -13,7 +13,7 @@
         <title>{% block title %}Gibele.ca - Bookings Made Easy{% endblock %}</title>
     </head>
     <body id="page-wrapper">
-        <nav class="navbar navbar-expand-lg navbar-dark nav-box-round bg-dark">
+        <nav class="navbar navbar-expand-lg navbar-dark nav-box-round bg-dark flex-shrink-1 flex-grow-0">
         
             <a class="logo navbar-brand navbb" href="/"><img src="{% static "img/logo_transparent.png" %}"></a>
             <form method="GET" class="mr-2 my-auto w-100 d-inline-block order-1">
@@ -39,7 +39,7 @@
                 {% if request.user.is_authenticated %}
                     <li>
                     <p class="mx-1">Welcome 
-                        <a href="{% if request.user %}{% url 'account:account' %}{% else %}{% url 'business:manage_service_list' %}{% endif %}">
+                        <a class="licolor" href="{% if request.user %}{% url 'account:account' %}{% else %}{% url 'business:manage_service_list' %}{% endif %}">
                             {% if user.first_name == None %}
                                 {{ user.username }}
                             {% else %}
@@ -61,12 +61,15 @@
                         <a class="btn btn-outline-primary" href="{% url 'account:account' %}" >Account</a>
                     </li>
                     <li>
-                    
                     <a class="btn btn-outline-primary" href="{% url 'logout' %}">Logout</a>
                     </li>
                 {% else %}
+                    <li>
                     <a class="btn btn-outline-primary" href="{% url 'account:signup' %}" >Sign Up</a>
+                    </li>
+                    <li>
                     <a class="btn btn-outline-primary" href="{% url 'login' %}">Login</a>
+                    </li>
                 {% endif %}
             </ul>
             </div>
@@ -87,25 +90,39 @@
             <h5 class="logo">Gibele</h5>
             <hr class="light">
             <li>©2020 Gibele Inc, All rights reserved.</li>
-            <li><a class="nav-link" href="/legal/">Privacy Policy</a></li>
-            <li><a class="nav-link" href="/legal/">Terms and Services</a></li>
+            <br>
+            <li><a class="licolor" href="/legal/">Privacy Policy</a></li>
+            <br>
+            <li><a class="licolor" href="/legal/">Terms of Service</a></li>
         </div>
         <div class="col-md-4">
             <hr class="light">
             <h5 class="logo">The Company</h5>
             <hr class="light">
-                <a class="nav-link" href="/#/">Gibele for Business</a>
-                <a class="nav-link" href="{% url 'account:consumer_registration' %}">Gibele for Consumers</a>
-                <li><a class="" href="/contact/">Contact Us</a></li>
-                <li><a class="nav-link" href="/about/">About Us</a></li>
+    
+                <a class="licolor" href="{% url 'account:registration' %}">Gibele for Business</a>
+                <br>
+                <br>
+                <a class="licolor" href="{% url 'account:consumer_registration' %}">Gibele for Consumers</a>
+                <br>
+                <br>
+                <a class="licolor" href="/">Contact Us</a>
+                <br>
+                <br>
+                <a class="licolor" href="/about/">About Us</a>
+            
         </div>
         <div class="col-md-4">
             <hr class="light">
             <h5 class="logo">Contact Information</h5>
             <hr class="light">
                 <li>Toronto, Ontario</li>
+                <br>
                 <li>M1C4W7</li>
-                <li><a class="nav-link" href="/contact/">support@gibele.com</a></li>
+                <br>
+                <a class="licolor" href="/">support@gibele.com</a>
+                <br>
+                <br>
                 <li><p>647-828-0723</p></li>
         </div>
         

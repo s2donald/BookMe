@@ -23,7 +23,7 @@ class Category(models.Model):
 #This is the model for the information we need from each company that is listed on the website
 class Company(models.Model):
     user = models.OneToOneField(Account, on_delete=models.CASCADE)
-    category = models.ManyToManyField(Category, related_name='companies', null=True, blank=True)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='companies', null=True, blank=True)
     description = models.CharField(max_length=200, db_index=True, blank=True)
     address = models.CharField(max_length=200)
     slug = models.SlugField(max_length=200, db_index=True, unique=True)
@@ -41,7 +41,7 @@ class Company(models.Model):
         verbose_name = 'company'
         verbose_name_plural = 'companies'
         index_together =(('id','slug'),)
-        
+
     def __str__(self):
         return self.user.username
     def get_absolute_url(self):

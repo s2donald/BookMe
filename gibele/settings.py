@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'bootstrap_modal_forms',
     'account.apps.AccountConfig',
     'business.apps.BusinessConfig',
     'consumer.apps.ConsumerConfig',

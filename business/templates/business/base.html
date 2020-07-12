@@ -8,13 +8,14 @@
         <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
         <link rel="stylesheet" href="{% static "css/bases.css" %}">
+        <link rel="stylesheet" href="{% static 'assets/css/bootstrap.css' %}">
 	    
 	
         <title>{% block title %}Gibele.ca - Bookings Made Easy{% endblock %}</title>
     </head>
     <body id="page-wrapper">
         <nav class="navbar navbar-expand-lg navbar-dark nav-box-round bg-dark flex-shrink-1 flex-grow-0">
-        
+    
             <a class="logo navbar-brand navbb" href="/"><img src="{% static "img/logo_transparent.png" %}"></a>
             <form method="GET" class="mr-2 my-auto w-100 d-inline-block order-1">
                 <div class="input-group">
@@ -31,7 +32,6 @@
                     
                 </div>
             </form>
-        
 
         <button class="navbar-toggler order-0" type="button" data-toggle="collapse" data-target="#navbarResponsive">
             <span class="navbar-toggler-icon"></span>
@@ -57,12 +57,12 @@
 
                 {% if request.user.is_authenticated %}
                     <div>
-                        <a class="btn btn-outline-primary" href="{% url 'account:account' %}" >Account</a>
+                        <a class="btn btn-outline-primary mt-1" href="{% url 'account:account' %}" >Account</a>
                         <a class="btn btn-outline-primary mt-1" href="{% url 'logout' %}">Logout</a>
                     </div>
                 {% else %}
                     <div>
-                        <a class="btn btn-outline-primary" href="{% url 'account:signup' %}" >Sign Up</a>
+                        <a class="btn btn-outline-primary mt-1" href="{% url 'account:signup' %}" >Sign Up</a>
                         <a class="btn btn-outline-primary mt-1" href="{% url 'login' %}">Login</a>
                     </div>
                 {% endif %}
@@ -75,6 +75,13 @@
             {% block content %}
             {% endblock %}
         </div>
+    {% block scripts %}
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+        <script src="https://use.fontawesome.com/releases/v5.0.8/js/all.js"></script>
+        <script src="{% static 'js/jquery.bootstrap.modal.forms.js' %}"></script>
+    {% endblock scripts %}
     </body>
     
     <footer class="bg-dark">
@@ -125,8 +132,4 @@
     </div>
     </footer>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-    <script src="https://use.fontawesome.com/releases/v5.0.8/js/all.js"></script>
 </html>

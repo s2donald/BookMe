@@ -6,15 +6,23 @@ from business.models import Company, Services, Category
 from business.forms import SearchForm
 from django.contrib.postgres.search import SearchVector
 from business.views import searchBarView
+from django.contrib.auth.decorators import login_required
 # Create your views here.
 
 def ConsumerRegistrationView(request):
     context = {}
-    searchBar = searchBarView(request)
-    category = searchBar[0]
-    categories = searchBar[1]
-    results = searchBar[2]
-    form = searchBar[3]
+    category = None
+    categories = Category.objects.all()
+    form = SearchForm()
+    Search = None
+    results = []
+    if 'Search' in request.GET:
+        form = SearchForm(request.GET)
+        if form.is_valid():
+            Search = form.cleaned_data['Search']
+            results = Company.objects.annotate(search=SearchVector('user','description'),).filter(search=Search)
+            return render(request,'business/company/list.html',{'category':category, 'categories':categories ,'companies':results, 'form':form})
+
     if request.method == 'POST':
         user_form = ConsumerRegistrationForm(request.POST)
         if user_form.is_valid():
@@ -35,6 +43,18 @@ def ConsumerRegistrationView(request):
 
 def BusinessRegistrationView(request):
     context = {}
+    category = None
+    categories = Category.objects.all()
+    form = SearchForm()
+    Search = None
+    results = []
+    if 'Search' in request.GET:
+        form = SearchForm(request.GET)
+        if form.is_valid():
+            Search = form.cleaned_data['Search']
+            results = Company.objects.annotate(search=SearchVector('user','description'),).filter(search=Search)
+            return render(request,'business/company/list.html',{'category':category, 'categories':categories ,'companies':results, 'form':form})
+
     if request.method == 'POST':
         user_form = BusinessRegistrationForm(request.POST)
         if user_form.is_valid():
@@ -50,16 +70,33 @@ def BusinessRegistrationView(request):
     else:
         user_form = BusinessRegistrationForm()
         context['business_registration_form'] = user_form
-    return render(request, 'account//business/registration.html', {'user_form':user_form})
+    return render(request, 'account//business/registration.html', {'user_form':user_form, 'category':category, 'categories':categories ,'companies':results, 'form':form})
 
 def AccountSummaryView(request):
+    category = None
+    categories = Category.objects.all()
+    form = SearchForm()
+    Search = None
+    results = []
+    if 'Search' in request.GET:
+        form = SearchForm(request.GET)
+        if form.is_valid():
+            Search = form.cleaned_data['Search']
+            results = Company.objects.annotate(search=SearchVector('user','description'),).filter(search=Search)
+            return render(request,'business/company/list.html',{'category':category, 'categories':categories ,'companies':results, 'form':form})
+
     if not request.user.is_authenticated:
         return redirect("login")
 
     is_bus = request.user.is_business
     if is_bus:
         my_company = Company.objects.get(user=request.user)
-        return render(request, 'account/account_information.html', {'company':my_company})
+        my_services = Services.objects.filter(business=my_company).exists()
+        if my_services:
+            count = 1
+        else:
+            count=0
+        return render(request, 'account/account_information.html', {'company':my_company, 'count':count, 'category':category, 'categories':categories ,'companies':results, 'form':form})
     return render(request, 'account/cons_account_information.html')
 
 def RegisteredAccountView(request):

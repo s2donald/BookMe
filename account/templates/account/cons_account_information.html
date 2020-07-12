@@ -15,14 +15,14 @@
             <div class="container">
                 <h1 class="text-center">Account Settings</h1>
                 <h2 class="mt-3 text-center">Account Details</h2>
-                <p class="mt-3">Username: {{request.user.username }} <button class="btn btn-outline-primary btn-sm">Change</button> </p>
-                <p>Name: {{request.user.first_name }} {{ request.user.last_name }} <button class="btn btn-outline-primary btn-sm">Change</button></p>
-                <p>Email: {{request.user.email }} <button class="btn btn-outline-primary btn-sm">Change</button></p>
-                <p>Phone: {{request.user.phone }} <button class="btn btn-outline-primary btn-sm">Change</button></p>
+                <p class="mt-3">Username: {{request.user.username }} <a class="btn btn-outline-primary btn-sm">Change</a> </p>
+                <p>Full Name: {{request.user.first_name }} {{ request.user.last_name }} <a class="btn btn-outline-primary btn-sm">Change</a></p>
+                <p>Email: {{request.user.email }} <a class="btn btn-outline-primary btn-sm">Change</a></p>
+                <p>Phone: {{request.user.phone }} <a class="btn btn-outline-primary btn-sm">Change</a></p>
                 {% if request.user.address == None %}
-                    <p>Add your address for mobile services: <button class="btn btn-outline-primary btn-sm">Add</button></p>
+                    <p>Add your address for mobile services: <a class="btn btn-outline-primary btn-sm">Add</a></p>
                 {% endif %}
-                <button class="form-control btn btn-outline-primary">Save Changes</button>
+                <a class="form-control btn btn-outline-primary">Save Changes</a>
             </div>
             
         </div>

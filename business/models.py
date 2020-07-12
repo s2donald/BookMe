@@ -40,12 +40,12 @@ class Company(models.Model):
         ordering = ('user',)
         verbose_name = 'company'
         verbose_name_plural = 'companies'
-        index_together =(('id','slug'),)
+        index_together =(('slug','id'),)
 
     def __str__(self):
         return self.user.username
     def get_absolute_url(self):
-        return reverse("business:company_detail", args=[self.id, self.slug])
+        return reverse("business:company_detail", args=[self.slug,self.id])
 
     def save(self, *args, **kwargs):
         if not self.slug:

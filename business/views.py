@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from .models import Category, Company, Services
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.postgres.search import SearchVector
-from .forms import SearchForm
+from .forms import SearchForm, AddServiceForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.views.generic.list import ListView
@@ -23,7 +23,7 @@ def searchBarView(request):
             return render(request,'business/company/list.html',{'category':category, 'categories':categories ,'companies':results})
 
     return (category, categories, results, form)
-    
+
 # Create your views here.
 def homepage(request, category_slug=None):
     category = None
@@ -106,4 +106,22 @@ def ManageServiceListView(request):
     if is_biz:
         company = get_object_or_404(Company, user=request.user)
         services = Services.objects.all().filter(business=company)
-        return render(request, 'business/company/manage/service/manage_service_list.html', {'services':services})
+        context = {}
+        if request.method == 'POST':
+            service_form = AddServiceForm(request.POST)
+            if service_form.is_valid():
+                name = service_form.cleaned_data.get('name')
+                description = service_form.cleaned_data.get('description')
+                price = service_form.cleaned_data.get('price')
+                service = Services.objects.create(business=company,name=name,description=description,price=price)
+                service.save()
+            else:
+                context['service_form'] = service_form
+            
+        else:
+            service_form = AddServiceForm()
+            context['service_form'] = service_form
+        
+        services = Services.objects.all().filter(business=company)
+        return render(request, 'business/company/manage/service/manage_service_list.html', {'services':services, 'service_form':service_form})
+

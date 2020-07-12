@@ -48,7 +48,6 @@ class BusinessRegistrationForm(UserCreationForm):
         user = super().save(commit=False)
         user.is_business = True
         user.save()
-
         address = self.cleaned_data.get('address')
         business = Company.objects.create(user=user, address=address)
         business.save()

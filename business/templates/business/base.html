@@ -21,6 +21,11 @@
                     {% csrf_token %}
                     {{ form.Search }}
                     <span class="input-group-append">
+                        <select name="dropdown">
+                                {% for c in categories %}
+                                    <option value={{ c.name }}>All {{c.name}}</option>
+                                {% endfor %}
+                            </select>
                         <button class="btn btn-outline-primary border-left-0" type="submit"><i class="fa fa-search"></i></button>
                     </span>
                     
@@ -49,27 +54,17 @@
                     </p>
                     </li>
                 {% endif %}
-                {% for c in categories %}
-                    <li class="nav-item dropdown"{% if category.slug == c.slug %}class="active"{% endif %}>
-                    <a class="nav-link dropdown-toggle" href="{{ c.get_absolute_url }}">{{ c.name }}</a>
-                    <span class="caret"></span>
-                    </li>
-                {% endfor %}
 
                 {% if request.user.is_authenticated %}
-                    <li>
+                    <div>
                         <a class="btn btn-outline-primary" href="{% url 'account:account' %}" >Account</a>
-                    </li>
-                    <li>
-                    <a class="btn btn-outline-primary" href="{% url 'logout' %}">Logout</a>
-                    </li>
+                        <a class="btn btn-outline-primary mt-1" href="{% url 'logout' %}">Logout</a>
+                    </div>
                 {% else %}
-                    <li>
-                    <a class="btn btn-outline-primary" href="{% url 'account:signup' %}" >Sign Up</a>
-                    </li>
-                    <li>
-                    <a class="btn btn-outline-primary" href="{% url 'login' %}">Login</a>
-                    </li>
+                    <div>
+                        <a class="btn btn-outline-primary" href="{% url 'account:signup' %}" >Sign Up</a>
+                        <a class="btn btn-outline-primary mt-1" href="{% url 'login' %}">Login</a>
+                    </div>
                 {% endif %}
             </ul>
             </div>

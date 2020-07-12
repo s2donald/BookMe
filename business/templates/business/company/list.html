@@ -7,10 +7,12 @@
         {% for company in companies %}
             <div class="card mb-4 text-center">
                     <a class="nav-link text-center" href="{{ company.get_absolute_url }}">
+
+                        <img align="left" class="img-responsive list-img" align="left" src="{% if company.image %}{{ company.image.url }}{% else %}{% static "img/no_image.png" %}{% endif %}">
                         <div class="card-body">
-                        <img class="card-img-top img-responsive list-img" align="left" src="{% if company.image %}{{ company.image.url }}{% else %}{% static "img/no_image.png" %}{% endif %}">
                             <h5>{{ company.user.username }}</h5>
-                            <p class="card-text">{{ company.description }}</p>
+                            <hr>
+                            <p class="card-text liblack">{{ company.description }}</p>
                         </div>
                     </a>
             </div>
@@ -20,6 +22,8 @@
                 
                 <div class="card-deck text-center">
             {% endif %}
+        {% empty %}
+            <h1>There are no services available yet.</h1>
         {% endfor %}
         
         </div>

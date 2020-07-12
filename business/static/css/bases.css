@@ -40,6 +40,9 @@ html, body {
     color: #3a1c71;
     font-weight: bold;
 }
+.liblack {
+    color: black;
+}
 
 button:focus,
 button:active,
@@ -169,10 +172,29 @@ form{
     .sear{
         width: 100%
     }
+    .list-img{
+        width:40vw !important;
+        height:40vw !important;
+        padding:10px 20px 10px 20px !important;
+        float:left !important;
+        text-align:center !important;
+        line-height:1.2 !important;
+        object-fit:contain !important;
+        object-position:50% 50% !important;
+    }
     
   }
 @media (max-width: 768px) {
-    
+    .list-img{
+        width:40vw !important;
+        height:40vw !important;
+        padding:10px 20px 10px 20px !important;
+        float:left !important;
+        text-align:center !important;
+        line-height:1.2 !important;
+        object-fit:contain !important;
+        object-position:50% 50% !important;
+    }
     .card-columns {
         column-count: 3;
     }
@@ -195,6 +217,16 @@ form{
     #searchbus {
         width: 100%;
     } 
+    .list-img{
+        width:30vw !important;
+        height:30vw !important;
+        padding:10px 20px 10px 20px !important;
+        float:left !important;
+        text-align:center !important;
+        line-height:1.2 !important;
+        object-fit:contain !important;
+        object-position:50% 50% !important;
+    }
 }
 
 /*--- Gibele logo  --*/

@@ -3,11 +3,27 @@ from .models import Category, Company, Services
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.postgres.search import SearchVector
 from .forms import SearchForm
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 
+def searchBarView(request):
+    category = None
+    categories = Category.objects.all()
+    form = SearchForm()
+    Search = None
+    results = []
+    if 'Search' in request.GET:
+        form = SearchForm(request.GET)
+        if form.is_valid():
+            Search = form.cleaned_data['Search']
+            results = Company.objects.annotate(search=SearchVector('user','description'),).filter(search=Search)
+            return render(request,'business/company/list.html',{'category':category, 'categories':categories ,'companies':results})
+
+    return (category, categories, results, form)
+    
 # Create your views here.
 def homepage(request, category_slug=None):
     category = None
@@ -72,35 +88,22 @@ def company_detail(request, id, slug):
             return render(request, 'business/company/list.html',{'category':category, 'categories':categories ,'companies':results})
     return render(request, 'business/company/detail.html', {'company':company,'category':category,'categories':categories, 'services':services, 'form':form})
 
-class BusinessMixin(object):
-    def get_queryset(self):
-        qs = super().get_queryset()
-        return qs.filter(business=self.request.user)
+@login_required
+def ManageServiceListView(request):
+    category = None
+    categories = Category.objects.all()
+    form = SearchForm()
+    Search = None
+    results = []
+    if 'Search' in request.GET:
+        form = SearchForm(request.GET)
+        if form.is_valid():
+            Search = form.cleaned_data['Search']
+            results = Company.objects.annotate(search=SearchVector('user','description'),).filter(search=Search)
+            return render(request, 'business/company/list.html',{'category':category, 'categories':categories ,'companies':results})
 
-class BusinessEditMixin(object):
-    def form_valid(self, form):
-        form.instance.owner = self.request.user
-        return super().form_valid(form)
-
-class BusinessServiceMixin(BusinessMixin, LoginRequiredMixin, PermissionRequiredMixin):
-    model = Services
-    fields = ['name', 'description', 'business' ,'slug','price']
-    success_url = reverse_lazy('manage_service_list')
-
-class BusinessServiceEditMixin(BusinessServiceMixin, BusinessEditMixin):
-    template_name = 'business/company/manage/service/form.html'
-
-#Lists all the services that the business owner(user) has created. 
-class ManageServiceListView(BusinessServiceMixin, ListView):
-    template_name = 'business/company/manage/service/list.html'
-    permission_required = 'business.view_service'
-
-class ServiceCreateView(BusinessServiceEditMixin, CreateView):
-    permission_required = 'business.add_service'
-
-class ServiceUpdateView(BusinessServiceEditMixin, UpdateView):
-    permission_required = 'business.change_service'
-
-class ServiceDeleteView(BusinessServiceEditMixin, DeleteView):
-    template_name = 'business/company/manage/service/delete.html'
-    permission_required = 'business.delete_service'
+    is_biz = request.user.is_business
+    if is_biz:
+        company = get_object_or_404(Company, user=request.user)
+        services = Services.objects.all().filter(business=company)
+        return render(request, 'business/company/manage/service/manage_service_list.html', {'services':services})

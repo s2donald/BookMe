@@ -15,16 +15,16 @@
             <div class="container">
                 <h1 class="text-center">Account Settings</h1>
 
-                <button class="form-control btn btn-outline-primary mt-1">Manage Your Services</button>
+                <a href="{% url 'business:manage_service_list' %}" class="form-control btn btn-outline-primary mt-1">Manage Your Services</a>
                 <h2 class="mt-3 text-center">Account Details</h2>
-                <p class="mt-3">Business Name: {{request.user.username }} <button class="btn btn-outline-primary btn-sm">Change</button> </p>
-                {% if request.user.first_name == None or request.user.last_name == None %}
+                <p class="mt-3">Business Name: {{ company.user.username }} <button class="btn btn-outline-primary btn-sm">Change</button> </p>
+                {% if company.user.first_name == None or company.user.last_name == None %}
                     <p>Add your services</p>
                 {% else %}
-                    <p>Full Name: {{request.user.first_name }} {{ request.user.last_name }} <button class="btn btn-outline-primary btn-sm">Change</button></p>
+                    <p>Full Name: {{company.user.first_name }} {{ company.user.last_name }} <button class="btn btn-outline-primary btn-sm">Change</button></p>
                 {% endif %}
-                <p>Email: {{request.user.email }} <button class="btn btn-outline-primary btn-sm">Change</button></p>
-                <p>Phone: {{request.user.phone }} <button class="btn btn-outline-primary btn-sm">Change</button></p>
+                <p>Email: {{company.user.email }} <button class="btn btn-outline-primary btn-sm">Change</button></p>
+                <p>Phone: {{company.user.phone }} <button class="btn btn-outline-primary btn-sm">Change</button></p>
                 {% if request.user.address == None %}
                     <p>Add your address for mobile services: <button class="btn btn-outline-primary btn-sm">Add</button></p>
                 {% endif %}

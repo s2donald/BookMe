@@ -2,18 +2,23 @@
 {% load static %}
 {% block content %}
 
-<div class="container my-3 text-center form-inline">
+<div class="container my-3 text-center form-inline justify-content-center">
     <form class="form-signin" method="POST" action="{% url 'login' %}">
       {% if count == 1 %}
         <h1 class="h3 mb-3 font-weight-normal">Your username and password didn't match.</h1>
         <p>Please try again or <a href="/register">create an account</a>.</p>
       {% else %}
-        <h1 class="h3 mb-3 font-weight-normal">Please, use the following form to log-in</h1>
+        <h1 class="h3 mb-3 font-weight-normal">Welcome back to Gibele!</h1>
+        <h3>Please use the following form to log-in</h3>
       {% endif %}
-      <label for="inputEmail" class="sr-only">Email address</label>
       {{ form.as_p }}
       {% csrf_token %}
       <button class="btn btn-lg btn-outline-primary" type="submit">Log in</button>
     </form>
+    <div class="text-center mt-3">
+        <a class="licolor" href="{% url 'account:signup'%}">Sign Up</a>
+        <strong>|</strong>
+        <a class="licolor" href="{% url 'business:homepage'%}">Forgot Password?</a>
+    </div>
 </div>
 {% endblock %}

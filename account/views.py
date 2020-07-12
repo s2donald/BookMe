@@ -2,22 +2,23 @@ from django.shortcuts import render, redirect
 from .forms import  BusinessRegistrationForm, ConsumerRegistrationForm, AccountAuthenticationForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import Permission, Group, Group
+from business.models import Company, Services, Category
+from business.forms import SearchForm
+from django.contrib.postgres.search import SearchVector
+from business.views import searchBarView
 # Create your views here.
-
 
 def ConsumerRegistrationView(request):
     context = {}
+    searchBar = searchBarView(request)
+    category = searchBar[0]
+    categories = searchBar[1]
+    results = searchBar[2]
+    form = searchBar[3]
     if request.method == 'POST':
         user_form = ConsumerRegistrationForm(request.POST)
         if user_form.is_valid():
-            #Now save the user and set the password
             user_form.save()
-            #new_user.set_password(user_form.cleaned_data['password1'])
-            # new_user.username = user_form.cleaned_data['email']
-            # new_user.slug = user_form.cleaned_data['business_name']
-            # if usertype == 'business':
-            #     new_user.is_business = True
-            # new_user.save()
             email = user_form.cleaned_data.get('email')
             raw_pass = user_form.cleaned_data.get('password1')
             account = authenticate(email=email, password=raw_pass)
@@ -29,7 +30,7 @@ def ConsumerRegistrationView(request):
     else:
         user_form = ConsumerRegistrationForm()
         context['consumer_registration_form'] = user_form
-    return render(request, 'account/consumer/registration.html', {'user_form':user_form})
+    return render(request, 'account/consumer/registration.html', {'user_form':user_form, 'category':category, 'categories':categories ,'companies':results, 'form':form})
 
 
 def BusinessRegistrationView(request):
@@ -37,14 +38,7 @@ def BusinessRegistrationView(request):
     if request.method == 'POST':
         user_form = BusinessRegistrationForm(request.POST)
         if user_form.is_valid():
-            #Now save the user and set the password
             user_form.save()
-            #new_user.set_password(user_form.cleaned_data['password1'])
-            # new_user.username = user_form.cleaned_data['email']
-            # new_user.slug = user_form.cleaned_data['business_name']
-            # if usertype == 'business':
-            #     new_user.is_business = True
-            # new_user.save()
             email = user_form.cleaned_data.get('email')
             raw_pass = user_form.cleaned_data.get('password1')
             account = authenticate(email=email, password=raw_pass)
@@ -61,10 +55,11 @@ def BusinessRegistrationView(request):
 def AccountSummaryView(request):
     if not request.user.is_authenticated:
         return redirect("login")
-        
+
     is_bus = request.user.is_business
     if is_bus:
-        return render(request, 'account/account_information.html')
+        my_company = Company.objects.get(user=request.user)
+        return render(request, 'account/account_information.html', {'company':my_company})
     return render(request, 'account/cons_account_information.html')
 
 def RegisteredAccountView(request):

@@ -1,6 +1,19 @@
 {% extends 'business/base.html' %}
 {% load static %}
 {% block content %}
+    <div class="modal fade" id="create-modal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog mt-5">
+            <div class="modal-content">
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" tabindex="-1" role="dialog" id="modal">
+    <div class="modal-dialog mt-5" role="document">
+        <div class="modal-content"></div>
+    </div>
+    </div>
+
     <div class="container text-center mt-3">
     <h1>My Services</h1>
     {% for service in services %}
@@ -12,16 +25,76 @@
         <p>You have not created any services yet.</p>
     {% endfor %}
 
-    <form method="post">
-        <div class="modal-header">
-            <h3>Add Service</h3>
-        </div>
-        {% csrf_token %}
-        {{ service_form.as_p }}
-        <button class="btn btn-sm btn-outline-primary mb-3" type="submit">Save Service</button>
-    </form>
+    
+    <button id="createservice" class="btn btn-sm btn-outline-primary mb-3" type="submit">Add Service</button>
+    
     </div>
 
 
     </div>
 {% endblock %}
+
+{% block extrascripts %}
+  <script type="text/javascript">
+      $(function () {
+          // Log in & Sign up buttons
+          // The formURL is given explicitly
+          $("#login-btn").modalForm({
+            formURL: "{% url 'login' %}"
+          });
+
+          $("#signup-btn").modalForm({
+            formURL: "{% url 'account:signup' %}"
+          });
+
+          // Create book button opens modal with id="create-modal"
+          $("#createservice").modalForm({
+            formURL: "{% url 'business:create_service' %}",
+            modalID: "#create-modal"
+          });
+
+          var asyncSuccessMessage = [
+            "<div ",
+            "style='position:fixed;top:0;z-index:10000;width:100%;border-radius:0;' ",
+            "class='alert alert-icon alert-success alert-dismissible fade show mb-0' role='alert'>",
+            "Success: Book was updated.",
+            "<button type='button' class='close' data-dismiss='alert' aria-label='Close'>",
+            "<span aria-hidden='true'>&times;</span>",
+            "</button>",
+            "</div>",
+            "<script>",
+            "$('.alert').fadeTo(2000, 500).slideUp(500, function () {$('.alert').slideUp(500).remove();});",
+            "<\/script>"
+          ].join("");
+
+          function updateBookModalForm() {
+            $(".update-book").each(function () {
+              $(this).modalForm({
+                formURL: $(this).data("form-url"),
+                asyncUpdate: true,
+                asyncSettings: {
+                  closeOnSubmit: false,
+                  successMessage: asyncSuccessMessage,
+                  dataUrl: "books/",
+                  dataElementId: "#books-table",
+                  dataKey: "table",
+                  addModalFormFunction: updateBookModalForm
+                }
+              });
+            });
+          }
+          updateBookModalForm();
+
+          // Read and Delete book buttons open modal with id="modal"
+          // The formURL is retrieved from the data of the element
+          $(".bs-modal").each(function () {
+              $(this).modalForm({formURL: $(this).data("form-url")});
+          });
+
+          // Hide message
+          $(".alert").fadeTo(2000, 500).slideUp(500, function () {
+              $(".alert").slideUp(500);
+          });
+      });
+  </script>
+{% endblock extrascripts %}

@@ -8,7 +8,6 @@
         <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
         <link rel="stylesheet" href="{% static "css/bases.css" %}">
-        <link rel="stylesheet" href="{% static 'assets/css/bootstrap.css' %}">
 	    
 	
         <title>{% block title %}Gibele.ca - Bookings Made Easy{% endblock %}</title>
@@ -82,6 +81,8 @@
         <script src="https://use.fontawesome.com/releases/v5.0.8/js/all.js"></script>
         <script src="{% static 'js/jquery.bootstrap.modal.forms.js' %}"></script>
     {% endblock scripts %}
+    {% block extrascripts %}
+    {% endblock extrascripts %}
     </body>
     
     <footer class="bg-dark">

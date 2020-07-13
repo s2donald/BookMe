@@ -106,22 +106,24 @@ def ManageServiceListView(request):
     if is_biz:
         company = get_object_or_404(Company, user=request.user)
         services = Services.objects.all().filter(business=company)
-        context = {}
-        if request.method == 'POST':
-            service_form = AddServiceForm(request.POST)
-            if service_form.is_valid():
-                name = service_form.cleaned_data.get('name')
-                description = service_form.cleaned_data.get('description')
-                price = service_form.cleaned_data.get('price')
-                service = Services.objects.create(business=company,name=name,description=description,price=price)
-                service.save()
-            else:
-                context['service_form'] = service_form
-            
-        else:
-            service_form = AddServiceForm()
-            context['service_form'] = service_form
-        
         services = Services.objects.all().filter(business=company)
-        return render(request, 'business/company/manage/service/manage_service_list.html', {'services':services, 'service_form':service_form})
+        return render(request, 'business/company/manage/service/manage_service_list.html', {'services':services, 'company':company,'category':category,'categories':categories, 'form':form})
 
+def CreateServiceView(request):
+    context = {}
+    company = get_object_or_404(Company, user=request.user)
+    if request.method == 'POST':
+        service_form = AddServiceForm(request.POST)
+        if service_form.is_valid():
+            name = service_form.cleaned_data.get('name')
+            description = service_form.cleaned_data.get('description')
+            price = service_form.cleaned_data.get('price')
+            service = Services.objects.create(business=company,name=name,description=description,price=price)
+            service.save()
+        else:
+            context['service_form'] = service_form
+            
+    else:
+        service_form = AddServiceForm()
+        context['service_form'] = service_form
+    return render(request, 'business/company/manage/service/create.html',{'service_form':service_form})

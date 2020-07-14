@@ -3,7 +3,8 @@
 {% block title %}{{ company.name }}{% endblock %}
 {% block content %}
     <div class="container padding bg-white">
-        <div class="col-md-12 col-sm-12 cardio">
+        <div class="row">
+        <div class="col-md-6 col-sm-12 cardio">
                 <div class="card text-center">
                     <img class="card-img-top" src="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/no_image.png" %}{% endif %}">
                     <div class="card-body">
@@ -16,6 +17,16 @@
                         </h3>
                     {% endfor %}
                 </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <img class="card-img-top" src="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/no_image.png" %}{% endif %}">
+                    <div class="card-body">
+                        <h1 class="card-title">Reviews</h1>
+                    </div>
+                    
+                </div>
+            </div>
             </div>
     </div>
 {% endblock %}

@@ -16,17 +16,49 @@
 
     <div class="container text-center mt-3">
     <h1>My Services</h1>
-    {% for service in services %}
-        <div>
-            <h3>{{ service.name }}</h3>
-            <p>{{ service.price }}</p>
-        </div>
-    {% empty %}
-        <p>You have not created any services yet.</p>
-    {% endfor %}
+
+    <button id="createservice" class="btn btn-outline-primary mb-3 form-control" type="submit">Add Service</button>
+
+    <div class="col-12 mb-3">
+        {% if services %}
+            <table id="service-table" class="table">
+                <thead>
+                <tr>
+                    <th class="text-center" scope="col">#</th>
+                    <th class="text-center" scope="col">Service</th>
+                    <th class="text-center" scope="col">Service Description</th>
+                    <th class="text-center" scope="col">Price ($)</th>
+                    <th class="text-center" scope="col">Available</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for service in services %}
+                    <tr>
+                        <th class="text-center" scope="row">{{ forloop.counter }}</th>
+                        <td class="text-center">{{ service.name }}</td>
+                        <td class="text-center">{{ service.description }}</td>
+                        <td class="text-center">{{ service.price }}</td>
+                        <td class="text-center">{{ service.available }}</td>
+                        <td class="text-center">
+                            <!-- Update book buttons -->
+                            <button type="button" class="update-service btn btn-sm btn-outline-primary" data-form-url="{% url 'business:update_service' service.pk %}">
+                                <span class="fa fa-pencil-alt"></span>
+                            </button>
+                            <!-- Delete book buttons -->
+                            <button type="button" class="bs-modal delete-service btn btn-sm btn-danger" data-form-url="{% url 'business:delete_service' service.pk %}">
+                                <span class="fa fa-trash"></span>
+                            </button>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p class="text-primary">You have not created any services yet.</p>
+        {% endif %}
+    </div>
 
     
-    <button id="createservice" class="btn btn-sm btn-outline-primary mb-3" type="submit">Add Service</button>
     
     </div>
 
@@ -57,7 +89,7 @@
             "<div ",
             "style='position:fixed;top:0;z-index:10000;width:100%;border-radius:0;' ",
             "class='alert alert-icon alert-success alert-dismissible fade show mb-0' role='alert'>",
-            "Success: Book was updated.",
+            "Success: Service was updated.",
             "<button type='button' class='close' data-dismiss='alert' aria-label='Close'>",
             "<span aria-hidden='true'>&times;</span>",
             "</button>",
@@ -67,23 +99,23 @@
             "<\/script>"
           ].join("");
 
-          function updateBookModalForm() {
-            $(".update-book").each(function () {
+          function updateServiceModalForm() {
+            $(".update-service").each(function () {
               $(this).modalForm({
                 formURL: $(this).data("form-url"),
                 asyncUpdate: true,
                 asyncSettings: {
                   closeOnSubmit: false,
                   successMessage: asyncSuccessMessage,
-                  dataUrl: "books/",
-                  dataElementId: "#books-table",
+                  dataUrl: "services/",
+                  dataElementId: "#service-table",
                   dataKey: "table",
-                  addModalFormFunction: updateBookModalForm
+                  addModalFormFunction: updateServiceModalForm
                 }
               });
             });
           }
-          updateBookModalForm();
+          updateServiceModalForm();
 
           // Read and Delete book buttons open modal with id="modal"
           // The formURL is retrieved from the data of the element

@@ -16,9 +16,9 @@
                 <h1 class="text-center">Account Settings</h1>
                 <h2 class="mt-3 text-center">Account Details</h2>
                 <p class="mt-3">Username: {{request.user.username }} <a class="btn btn-outline-primary btn-sm">Change</a> </p>
-                <p>Full Name: {{request.user.first_name }} {{ request.user.last_name }} <a class="btn btn-outline-primary btn-sm">Change</a></p>
-                <p>Email: {{request.user.email }} <a class="btn btn-outline-primary btn-sm">Change</a></p>
-                <p>Phone: {{request.user.phone }} <a class="btn btn-outline-primary btn-sm">Change</a></p>
+                <p>Full Name: {{request.user.first_name }} {{ request.user.last_name }} </p>
+                <p>Email: {{request.user.email }}</p>
+                <p>Phone: {{request.user.phone }}</p>
                 {% if request.user.address == None %}
                     <p>Add your address for mobile services: <a class="btn btn-outline-primary btn-sm">Add</a></p>
                 {% endif %}

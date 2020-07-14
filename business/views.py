@@ -8,7 +8,9 @@ from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMix
 from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
-
+from bootstrap_modal_forms.generic import (
+    BSModalDeleteView
+)
 def searchBarView(request):
     category = None
     categories = Category.objects.all()
@@ -109,6 +111,7 @@ def ManageServiceListView(request):
         services = Services.objects.all().filter(business=company)
         return render(request, 'business/company/manage/service/manage_service_list.html', {'services':services, 'company':company,'category':category,'categories':categories, 'form':form})
 
+@login_required
 def CreateServiceView(request):
     context = {}
     company = get_object_or_404(Company, user=request.user)
@@ -118,8 +121,11 @@ def CreateServiceView(request):
             name = service_form.cleaned_data.get('name')
             description = service_form.cleaned_data.get('description')
             price = service_form.cleaned_data.get('price')
-            service = Services.objects.create(business=company,name=name,description=description,price=price)
+            avail = True
+            slugname = name + '' + request.user.username
+            service = Services.objects.create(business=company,name=name,description=description,price=price, available=avail, slug=slugname)
             service.save()
+            return redirect('business:manage_service_list')
         else:
             context['service_form'] = service_form
             
@@ -127,3 +133,22 @@ def CreateServiceView(request):
         service_form = AddServiceForm()
         context['service_form'] = service_form
     return render(request, 'business/company/manage/service/create.html',{'service_form':service_form})
+
+#Remember we must validate everything before deleting
+def DeleteServiceView(request, pk):
+    service = Services.objects.get(id=pk)
+    if request.method == 'POST':
+        service.delete()
+        return redirect('business:manage_service_list')
+        
+
+    return render(request, 'business/company/manage/service/delete.html',{'service':service})
+
+def UpdateServiceView(request, pk):
+    service = Services.objects.get(id=pk)
+    if request.method == 'POST':
+        
+        return redirect('business:manage_service_list')
+        
+
+    return render(request, 'business/company/manage/service/delete.html',{'service':service})

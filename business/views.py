@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from .models import Category, Company, Services
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.postgres.search import SearchVector
-from .forms import SearchForm, AddServiceForm
+from .forms import SearchForm, AddServiceForm, UpdateServiceForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.views.generic.list import ListView
@@ -145,10 +145,17 @@ def DeleteServiceView(request, pk):
     return render(request, 'business/company/manage/service/delete.html',{'service':service})
 
 def UpdateServiceView(request, pk):
+    context = {}
+    company = get_object_or_404(Company, user=request.user)
     service = Services.objects.get(id=pk)
     if request.method == 'POST':
-        
-        return redirect('business:manage_service_list')
-        
+        service_update_form = UpdateServiceForm(request.POST)
+        if service_update_form.is_valid():
+            return redirect('business:manage_service_list')
+        else:
+            context['service_update_form'] = service_update_form
+    else:
+        service_update_form = UpdateServiceForm()
+        context['service_update_form'] = service_update_form
 
-    return render(request, 'business/company/manage/service/delete.html',{'service':service})
+    return render(request, 'business/company/manage/service/update.html',{'service':service, 'update_form':service_update_form})

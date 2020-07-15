@@ -21,7 +21,9 @@
                     {% csrf_token %}
                     {{ form.Search }}
                     <span class="input-group-append">
-                        <select name="dropdown">
+                    
+                        <select name="dropdown" class="form-control" style="width:auto;">
+                                <option value="All Services">All Services</option>
                                 {% for c in categories %}
                                     <option value={{ c.name }}>All {{c.name}}</option>
                                 {% endfor %}

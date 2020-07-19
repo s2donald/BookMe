@@ -36,7 +36,6 @@ class Company(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='companies', null=True, blank=True)
     description = models.TextField(max_length=200, db_index=True, blank=True)
     address = models.CharField(max_length=200)
-    # var us = new RegExp("^\\d{5}(-{0,1}\\d{4})?$");
     status = models.CharField(max_length=10, choices=STATUS_CHOICES,default='draft')
     postal_regex = RegexValidator(regex=r"^[ABCEGHJKLMNPRSTVXY]{1}\d{1}[A-Z]{1} *\d{1}[A-Z]{1}\d{1}$")
     postal = models.CharField(max_length=10, validators=[postal_regex])
@@ -56,6 +55,10 @@ class Company(models.Model):
 
     def __str__(self):
         return self.business_name
+
+    def get_account_url(self):
+        return reverse('account:company_detailed', args=[self.slug, self.id])
+
     def get_absolute_url(self):
         return reverse("business:company_detail", args=[self.slug,self.id])
 

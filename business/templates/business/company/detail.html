@@ -8,7 +8,7 @@
                 <div class="card text-center">
                     <img class="card-img-top" src="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/no_image.png" %}{% endif %}">
                     <div class="card-body">
-                        <h1 class="card-title">{{ company.user.username }}</h1>
+                        <h1 class="card-title">{{ company.business_name }}</h1>
                         <p class="card-text">{{ company.description }}</p>
                     </div>
                     {% for s in services %}

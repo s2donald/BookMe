@@ -3,25 +3,30 @@
 {% block content %}
     <div class="container mt-5">
     <div class="row">
-        <div class="col-md-8">
-            <h1 class="text-center">Your Schedule</h1>
-            <h2 class="mt-3">View Bookings</h2>
-        </div>
-
-        <div class="col-md-4">
+        <div class="col-md-12">
             <div class="container">
                 <h1 class="text-center">Account Settings</h1>
+                {% if my_companies %}
+                    <div class="row">
+                        <div class="col-md-6">
+                            <a href="{% url 'account:biz_list' %}" class="form-control btn btn-outline-primary">Manage Your Business Pages</a>
+                        </div>
+                        <div class="col-md-6">
+                            <a href="{% url 'account:biz_list' %}" class="form-control btn btn-outline-primary">Add a Business Page</a>
+                        </div>
+                    </div>
+                {% endif %}
                 <h2 class="mt-3 text-center">Account Details</h2>
-                <p class="mt-3">Username: {{request.user.username }} <a class="btn btn-outline-primary btn-sm">Change</a> </p>
                 <p>Full Name: {{request.user.first_name }} {{ request.user.last_name }} </p>
                 <p>Email: {{request.user.email }}</p>
                 <p>Phone: {{request.user.phone }}</p>
                 {% if request.user.address == None %}
                     <p>Add your address for mobile services: <a class="btn btn-outline-primary btn-sm">Add</a></p>
+                {% else %}
+                    <p>Home Address: {{request.user.address}}</p>
                 {% endif %}
-                <a class="form-control btn btn-outline-primary">Save Changes</a>
+                <a class="form-control btn btn-outline-primary">Update Account Details</a>
             </div>
-            
         </div>
     </div>
 

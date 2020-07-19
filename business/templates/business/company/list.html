@@ -10,7 +10,7 @@
 
                         <img align="left" class="img-responsive list-img" align="left" src="{% if company.image %}{{ company.image.url }}{% else %}{% static "img/no_image.png" %}{% endif %}">
                         <div class="card-body">
-                            <h5>{{ company.user.username }}</h5>
+                            <h5>{{ company.business_name }}</h5>
                             <hr>
                             <p class="card-text liblack">{{ company.description }}</p>
                         </div>

@@ -1,0 +1,26 @@
+{% extends 'business/base.html' %}
+{% load static %}
+{% block content %}
+    <div class="container mt-5">
+    <div class="row">
+        <h1>List of your business pages</h1>
+        <div class="col-md-12">
+            {% for company in my_companies %}
+                <div class="card mb-4 text-center">
+                    <a class="nav-link text-center" href="{{ company.get_account_url }}">
+
+                        <img align="left" class="img-responsive list-img" align="left" src="{% if company.image %}{{ company.image.url }}{% else %}{% static "img/no_image.png" %}{% endif %}">
+                        <div class="card-body">
+                            <h5>{{ company.business_name }}</h5>
+                            <hr>
+                            <p class="card-text liblack">{{ company.description }}</p>
+                        </div>
+                    </a>
+                </div>
+
+            {% endfor %}
+        </div>
+    </div>
+
+    </div>
+{% endblock  %}

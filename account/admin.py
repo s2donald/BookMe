@@ -5,10 +5,11 @@ from django.contrib.auth.models import Group
 # Register your models here.
 
 class AccountAdmin(UserAdmin):
-    list_display = ('email', 'username','date_joined','last_login','is_admin','is_staff', 'is_business', 'is_consumer')
-    search_fields = ('email', 'username',)
+    list_display = ('email','date_joined','last_login','is_admin','is_staff', 'is_business', 'is_consumer')
+    search_fields = ('email',)
     readonly_fields = ('date_joined','last_login')
 
+    ordering = ('email',)
     filter_horizontal = ()
     list_filter =()
     fieldsets = ()

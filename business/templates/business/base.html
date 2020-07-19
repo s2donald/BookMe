@@ -21,7 +21,6 @@
                     {% csrf_token %}
                     {{ form.Search }}
                     <span class="input-group">
-                    
                         <select name="dropdown" class="form-control" style="width:auto;">
                                 <option value="All Services">All Services</option>
                                 {% for c in categories %}
@@ -55,14 +54,16 @@
                     </p>
                     </li>
                 {% endif %}
-
+                <div class="center my-auto mx-1">
+                    <a href="" class="btn btn-outline-primary">Post a Service</a>
+                </div>
                 {% if request.user.is_authenticated %}
-                    <div>
+                    <div class="my-auto mx-1">
                         <a class="btn btn-outline-primary mt-1" href="{% url 'account:account' %}" >Account</a>
                         <a class="btn btn-outline-primary mt-1" href="{% url 'logout' %}">Logout</a>
                     </div>
                 {% else %}
-                    <div>
+                    <div class="my-auto mx-1">
                         <a class="btn btn-outline-primary mt-1" href="{% url 'account:signup' %}" >Sign Up</a>
                         <a class="btn btn-outline-primary mt-1" href="{% url 'login' %}">Login</a>
                     </div>
@@ -105,10 +106,10 @@
             <h5 class="logo">The Company</h5>
             <hr class="light">
     
-                <a class="licolor" href="{% url 'account:registration' %}">Gibele for Business</a>
+                <a class="licolor" href="">Gibele for Business</a>
                 <br>
                 <br>
-                <a class="licolor" href="{% url 'account:consumer_registration' %}">Gibele for Consumers</a>
+                <a class="licolor" href="">Gibele for Consumers</a>
                 <br>
                 <br>
                 <a class="licolor" href="/">Contact Us</a>

@@ -11,20 +11,7 @@ from django.urls import reverse_lazy
 from bootstrap_modal_forms.generic import (
     BSModalDeleteView
 )
-def searchBarView(request):
-    category = None
-    categories = Category.objects.all()
-    form = SearchForm()
-    Search = None
-    results = []
-    if 'Search' in request.GET:
-        form = SearchForm(request.GET)
-        if form.is_valid():
-            Search = form.cleaned_data['Search']
-            results = Company.objects.annotate(search=SearchVector('user','description'),).filter(search=Search)
-            return render(request,'business/company/list.html',{'category':category, 'categories':categories ,'companies':results})
 
-    return (category, categories, results, form)
 
 # Create your views here.
 def homepage(request, category_slug=None):
@@ -37,7 +24,7 @@ def homepage(request, category_slug=None):
         form = SearchForm(request.GET)
         if form.is_valid():
             Search = form.cleaned_data['Search']
-            results = Company.objects.annotate(search=SearchVector('user','description'),).filter(search=Search)
+            results = Company.objects.annotate(search=SearchVector('business_name','description'),).filter(search=Search)
             return render(request, 'business/company/list.html',{'category':category, 'categories':categories ,'companies':results})
     if category_slug:
         category = get_object_or_404(Category, slug=category_slug)
@@ -57,12 +44,14 @@ def company_list(request, category_slug=None, company_slug=None, tag_slug=None):
     form = SearchForm()
     Search = None
     results = []
+
     if 'Search' in request.GET:
         form = SearchForm(request.GET)
         if form.is_valid():
             Search = form.cleaned_data['Search']
-            results = Company.objects.annotate(search=SearchVector('user','description'),).filter(search=Search)
+            results = Company.objects.annotate(search=SearchVector('business_name','description'),).filter(search=Search)
             return render(request, 'business/company/list.html',{'category':category, 'categories':categories ,'companies':results})
+
     counts = companies.count()%6
     paginator = Paginator(companies, 4)
     page = request.GET.get('page')
@@ -72,6 +61,7 @@ def company_list(request, category_slug=None, company_slug=None, tag_slug=None):
         companiess = paginator.page(1)
     except EmptyPage:
         companiess = paginator.page(paginator.num_pages)
+
     return render(request, 'business/company/list.html',{'page':page,'category':category, 'companies':companiess, 'categories':categories, 'counts':counts, 'form':form,'tag':tag})
 
 def company_detail(request, id, slug):
@@ -123,7 +113,7 @@ def CreateServiceView(request):
             description = service_form.cleaned_data.get('description')
             price = service_form.cleaned_data.get('price')
             avail = True
-            slugname = name + '' + request.user.username
+            slugname = name + '' + request.user.slug
             service = Services.objects.create(business=company,name=name,description=description,price=price, available=avail, slug=slugname)
             service.save()
             return redirect('business:manage_service_list')

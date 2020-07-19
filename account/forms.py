@@ -8,7 +8,6 @@ from business.models import Company
 from django.core.validators import RegexValidator
 
 class ConsumerRegistrationForm(UserCreationForm):
-    username = forms.CharField(label='Username', max_length=30)
     password1 = forms.CharField(label='Password', widget=forms.PasswordInput)
     password2 = forms.CharField(label='Repeat password', widget=forms.PasswordInput)
     first_name = forms.CharField(max_length=30, required=True)
@@ -19,7 +18,7 @@ class ConsumerRegistrationForm(UserCreationForm):
 
     class Meta:
         model = Account
-        fields = ('username','email', 'first_name','last_name', 'phone', 'password1', 'password2')
+        fields = ('email', 'first_name','last_name', 'phone', 'password1', 'password2')
 
     def save(self):
         user = super().save(commit=False)
@@ -45,7 +44,7 @@ class BusinessRegistrationForm(UserCreationForm):
 
     class Meta:
         model = Account
-        fields = ('username','first_name','last_name','address','postal','state','city','email', 'phone',)
+        fields = ('first_name','last_name','address','postal','state','city','email', 'phone',)
     
     def save(self):
         user = super().save(commit=False)

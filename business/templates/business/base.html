@@ -14,13 +14,13 @@
     </head>
     <body id="page-wrapper">
         <nav class="navbar navbar-expand-lg navbar-dark nav-box-round bg-dark flex-shrink-1 flex-grow-0">
-    
+            <div class="container-fluid">
             <a class="logo navbar-brand navbb" href="/"><img src="{% static "img/logo_transparent.png" %}"></a>
             <form method="GET" class="mr-2 my-auto w-100 d-inline-block order-1">
                 <div class="input-group">
                     {% csrf_token %}
                     {{ form.Search }}
-                    <span class="input-group-append">
+                    <span class="input-group">
                     
                         <select name="dropdown" class="form-control" style="width:auto;">
                                 <option value="All Services">All Services</option>
@@ -33,11 +33,11 @@
                     
                 </div>
             </form>
-
+            
         <button class="navbar-toggler order-0" type="button" data-toggle="collapse" data-target="#navbarResponsive">
             <span class="navbar-toggler-icon"></span>
         </button>
-            
+        </div>
 
         <div class="navbar-collapse collapse flex-shrink-1 flex-grow-0 order-last" id="navbarResponsive">
             <ul class="navbar-nav mr-auto mt-2 mt-lg-0">

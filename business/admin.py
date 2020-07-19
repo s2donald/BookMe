@@ -13,7 +13,7 @@ class ServicesAdmin(admin.ModelAdmin):
 
 @admin.register(Company)
 class CompanyAdmin(admin.ModelAdmin):
-    list_display = ['user','slug','available','created','updated']
+    list_display = ['user','business_name','slug','available','created','updated']
     list_filter = ['available', 'created', 'updated']
     list_editable = ['available']
-    prepopulated_fields = {'slug':('user',)}
+    prepopulated_fields = {'slug':('business_name',)}

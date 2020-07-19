@@ -96,8 +96,8 @@ def AccountSummaryView(request):
             count = 1
         else:
             count=0
-        return render(request, 'account/account_information.html', {'company':my_company, 'count':count, 'category':category, 'categories':categories ,'companies':results, 'form':form})
-    return render(request, 'account/cons_account_information.html')
+        return render(request, 'account/account_information.html')
+    return render(request, 'account/cons_account_information.html', {'company':my_company, 'count':count, 'category':category, 'categories':categories ,'companies':results, 'form':form})
 
 def RegisteredAccountView(request):
     return render(request, 'account/register_done.html')

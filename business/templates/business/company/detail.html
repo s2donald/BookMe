@@ -4,7 +4,7 @@
 {% block content %}
     <div class="container padding bg-white">
         <div class="row">
-        <div class="col-md-6 col-sm-12 cardio">
+        <div class="col-lg-6 col-md-12 cardio">
                 <div class="card text-center">
                     <img class="card-img-top" src="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/no_image.png" %}{% endif %}">
                     <div class="card-body">
@@ -18,15 +18,70 @@
                     {% endfor %}
                 </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-lg-6">
                 <div class="card">
-                    <img class="card-img-top" src="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/no_image.png" %}{% endif %}">
-                    <div class="card-body">
-                        <h1 class="card-title">Reviews</h1>
-                    </div>
-                    
+                    <div id="map" style="width:100%;height:400px"></div>
+                    <div id="address">{{ address }}</div>
                 </div>
+                <div class="card-body"><h3>Reviews</h3></div>
             </div>
             </div>
     </div>
 {% endblock %}
+
+{% block extrascripts %}
+{% comment %} MAKE SURE YOU REMOVE YOUR KEY IN PRODUCTION {% endcomment %}
+<script>
+    
+    {% comment %} function initMap(){
+        var location = {lat: 43.790810, lng: -79.166140}
+        var map = new google.maps.Map(document.getElementById("map"), {
+            zoom: 14,
+            center: location
+        });
+        var marker = new google.maps.Marker({
+            position: location,
+            map: map,
+        });
+        var infowindow = new google.maps.InfoWindow({
+            content:"Hello World!"
+        });
+        google.maps.event.addListener(marker,'click',function() {
+            map.setZoom(16);
+            map.setCenter(marker.getPosition());
+
+            infowindow.open(map,marker);
+        });
+
+    } {% endcomment %}
+    function initMap() {
+        var map = new google.maps.Map(document.getElementById("map"), {
+            zoom: 16,
+            center: { lat: 43.790810, lng: -79.166140 }
+        });
+        var geocoder = new google.maps.Geocoder();
+
+        geocodeAddress(geocoder, map);
+        
+    }
+
+    function geocodeAddress(geocoder, resultsMap) {
+        var address = document.getElementById("address").innerHTML;
+        console.log(address)
+        geocoder.geocode({ address: address }, function(results, status) {
+            if (status === "OK") {
+            resultsMap.setCenter(results[0].geometry.location);
+            var marker = new google.maps.Marker({
+                map: resultsMap,
+                position: results[0].geometry.location
+            });
+            } else {
+            alert("Geocode was not successful for the following reason: " + status);
+            }
+        });
+    }
+
+</script>
+ <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBaZM_O3d1-xDrecS_fbcbvoT5qDmLmje0&callback=initMap"
+  type="text/javascript"></script>
+{% endblock extrascripts %}

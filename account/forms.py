@@ -36,20 +36,23 @@ class BusinessRegistrationForm(UserCreationForm):
     password1 = forms.CharField(label='Password', widget=forms.PasswordInput)
     password2 = forms.CharField(label='Repeat password', widget=forms.PasswordInput)
     username = forms.CharField(label='Business Name')
-    first_name = forms.CharField(label='Business Owner\'s First Name',max_length=30, required=True)
-    last_name = forms.CharField(label='Business Owner\'s Last Name',max_length=30, required=True)
     address = forms.CharField(label='Company Address')
+    postal_regex = RegexValidator(regex=r"^[ABCEGHJKLMNPRSTVXY]{1}\d{1}[A-Z]{1} *\d{1}[A-Z]{1}\d{1}$")
+    postal = forms.CharField(max_length=10, validators=[postal_regex],label='Postal Code')
+    state = forms.CharField(max_length=2, label='State/Province')
+    city = forms.CharField(max_length=30, label='City')
     email = forms.CharField(label='Business Email')
+
     class Meta:
         model = Account
-        fields = ('username','first_name','last_name','address','email', 'phone',)
+        fields = ('username','first_name','last_name','address','postal','state','city','email', 'phone',)
     
     def save(self):
         user = super().save(commit=False)
         user.is_business = True
         user.save()
         address = self.cleaned_data.get('address')
-        business = Company.objects.create(user=user, address=address)
+        business = Company.objects.create(user=user, address=address, postal=postal, state=state, city=city)
         business.save()
         return user
 

@@ -76,6 +76,7 @@ def company_list(request, category_slug=None, company_slug=None, tag_slug=None):
 
 def company_detail(request, id, slug):
     company = get_object_or_404(Company, id=id, slug=slug, available=True)
+    address = company.address
     category = None
     categories = Category.objects.all()
     services = Services.objects.all().filter(business=company)
@@ -88,7 +89,7 @@ def company_detail(request, id, slug):
             Search = form.cleaned_data['Search']
             results = Company.objects.annotate(search=SearchVector('user','description'),).filter(search=Search)
             return render(request, 'business/company/list.html',{'category':category, 'categories':categories ,'companies':results})
-    return render(request, 'business/company/detail.html', {'company':company,'category':category,'categories':categories, 'services':services, 'form':form})
+    return render(request, 'business/company/detail.html', {'address':address,'company':company,'category':category,'categories':categories, 'services':services, 'form':form})
 
 @login_required
 def ManageServiceListView(request):

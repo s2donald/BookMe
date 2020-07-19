@@ -5,6 +5,7 @@ from django.core.validators import RegexValidator
 from account.models import Account, MyAccountManager
 from django.utils.text import slugify
 from django.contrib.auth.models import AbstractBaseUser
+from django.utils import timezone
 # This category holds our different types of services such as
 #   automotive services, health and wellness services, home services, etc
 #   These should not be modified by the user
@@ -19,37 +20,48 @@ class Category(models.Model):
         return self.name
     def get_absolute_url(self):
         return reverse("business:company_list_by_category", args=[self.slug])
+
+class PublishedManager(models.Manager):
+    def get_queryset(self):
+        return super(PublishedManager, self).get_queryset().filter(status='published')
     
 #This is the model for the information we need from each company that is listed on the website
 class Company(models.Model):
-    user = models.OneToOneField(Account, on_delete=models.CASCADE)
+    STATUS_CHOICES = (
+        ('draft','Draft'),
+        ('published','Published'),
+    )
+    user = models.ForeignKey(Account, on_delete=models.CASCADE, related_name='company_page')
+    business_name = models.CharField(max_length=30, db_index=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='companies', null=True, blank=True)
-    description = models.CharField(max_length=200, db_index=True, blank=True)
+    description = models.TextField(max_length=200, db_index=True, blank=True)
     address = models.CharField(max_length=200)
+    # var us = new RegExp("^\\d{5}(-{0,1}\\d{4})?$");
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES,default='draft')
+    postal_regex = RegexValidator(regex=r"^[ABCEGHJKLMNPRSTVXY]{1}\d{1}[A-Z]{1} *\d{1}[A-Z]{1}\d{1}$")
+    postal = models.CharField(max_length=10, validators=[postal_regex])
+    state = models.CharField(max_length=2)
+    city = models.CharField(max_length=30)
     slug = models.SlugField(max_length=200, db_index=True, unique=True)
     image = models.ImageField(upload_to='companies/%Y/%m/%d', blank=True)
     available = models.BooleanField(default=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
-
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['user.username','address']
-    objects = MyAccountManager()
-
+    publish = models.DateTimeField(default=timezone.now)
     class Meta:
-        ordering = ('user',)
+        ordering = ('-publish',)
         verbose_name = 'company'
         verbose_name_plural = 'companies'
         index_together =(('slug','id'),)
 
     def __str__(self):
-        return self.user.username
+        return self.business_name
     def get_absolute_url(self):
         return reverse("business:company_detail", args=[self.slug,self.id])
 
     def save(self, *args, **kwargs):
         if not self.slug:
-            self.slug = slugify(self.user.username)
+            self.slug = slugify(self.business_name)
         super().save(*args, **kwargs)
 
 class Services(models.Model):

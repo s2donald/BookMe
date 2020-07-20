@@ -8,9 +8,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMix
 from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy, reverse
-from bootstrap_modal_forms.generic import (
-    BSModalDeleteView
-)
+from django.views import generic
 
 
 # Create your views here.
@@ -122,7 +120,7 @@ def CreateServiceView(request, pk, slug):
 @login_required
 def DeleteServiceView(request, pk, pks, slug):
     company = get_object_or_404(Company, user=request.user, id=pks, slug=slug)
-    service = Services.objects.all().filter(business=company).get(id=pk)
+    service = Services.objects.get(business=company, id=pk)
     if request.method == 'POST':
         service.delete()
         return redirect(reverse('business:manage_service_list', args=[pks, slug]))
@@ -134,15 +132,24 @@ def DeleteServiceView(request, pk, pks, slug):
 def UpdateServiceView(request, pk, pks, slug):
     context = {}
     company = get_object_or_404(Company, user=request.user, id=pks, slug=slug)
-    service = Services.objects.all().filter(business=company).get(id=pk)
+    service = Services.objects.get(business=company, id=pk)
+    data = {'name': service.name, 'description': service.description, 'price':service.price, 'available':service.available}
     if request.method == 'POST':
         service_update_form = UpdateServiceForm(request.POST)
         if service_update_form.is_valid():
+            name = service_update_form.cleaned_data.get('name')
+            description = service_update_form.cleaned_data.get('description')
+            price = service_update_form.cleaned_data.get('price')
+            serv = Services.objects.get(pk=pk)
+            serv.name = name
+            serv.description = description
+            serv.price = price
+            serv.save()
             return redirect(reverse('business:manage_service_list', args=[pks, slug]))
         else:
             context['service_update_form'] = service_update_form
     else:
-        service_update_form = UpdateServiceForm()
+        service_update_form = UpdateServiceForm(initial=data)
         context['service_update_form'] = service_update_form
 
     return render(request, 'business/company/manage/service/update.html',{'service':service, 'update_form':service_update_form})

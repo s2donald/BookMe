@@ -31,35 +31,37 @@ class ConsumerRegistrationForm(UserCreationForm):
             raise forms.ValidationError('Passwords don\'t match.')
         return cd['password2']
 
-class BusinessRegistrationForm(UserCreationForm):
-    password1 = forms.CharField(label='Password', widget=forms.PasswordInput)
-    password2 = forms.CharField(label='Repeat password', widget=forms.PasswordInput)
-    username = forms.CharField(label='Business Name')
-    address = forms.CharField(label='Company Address')
-    postal_regex = RegexValidator(regex=r"^[ABCEGHJKLMNPRSTVXY]{1}\d{1}[A-Z]{1} *\d{1}[A-Z]{1}\d{1}$")
-    postal = forms.CharField(max_length=10, validators=[postal_regex],label='Postal Code')
-    state = forms.CharField(max_length=2, label='State/Province')
-    city = forms.CharField(max_length=30, label='City')
-    email = forms.CharField(label='Business Email')
 
-    class Meta:
-        model = Account
-        fields = ('first_name','last_name','address','postal','state','city','email', 'phone',)
+#This was previously used to create a seperate account for businesses. Decided to have one account for businesses and to be able to book.
+# class BusinessRegistrationForm(UserCreationForm):
+#     password1 = forms.CharField(label='Password', widget=forms.PasswordInput)
+#     password2 = forms.CharField(label='Repeat password', widget=forms.PasswordInput)
+#     username = forms.CharField(label='Business Name')
+#     address = forms.CharField(label='Company Address')
+#     postal_regex = RegexValidator(regex=r"^[ABCEGHJKLMNPRSTVXY]{1}\d{1}[A-Z]{1} *\d{1}[A-Z]{1}\d{1}$")
+#     postal = forms.CharField(max_length=10, validators=[postal_regex],label='Postal Code')
+#     state = forms.CharField(max_length=2, label='State/Province')
+#     city = forms.CharField(max_length=30, label='City')
+#     email = forms.CharField(label='Business Email')
+
+#     class Meta:
+#         model = Account
+#         fields = ('first_name','last_name','address','postal','state','city','email', 'phone',)
     
-    def save(self):
-        user = super().save(commit=False)
-        user.is_business = True
-        user.save()
-        address = self.cleaned_data.get('address')
-        business = Company.objects.create(user=user, address=address, postal=postal, state=state, city=city)
-        business.save()
-        return user
+#     def save(self):
+#         user = super().save(commit=False)
+#         user.is_business = True
+#         user.save()
+#         address = self.cleaned_data.get('address')
+#         business = Company.objects.create(user=user, address=address, postal=postal, state=state, city=city)
+#         business.save()
+#         return user
 
-    def clean_password2(self):
-        cd = self.cleaned_data
-        if cd['password1'] != cd['password2']:
-            raise forms.ValidationError('Passwords don\'t match.')
-        return cd['password2']
+#     def clean_password2(self):
+#         cd = self.cleaned_data
+#         if cd['password1'] != cd['password2']:
+#             raise forms.ValidationError('Passwords don\'t match.')
+#         return cd['password2']
 
 class AccountAuthenticationForm(forms.ModelForm):
     password = forms.CharField(label='Password', widget=forms.PasswordInput)

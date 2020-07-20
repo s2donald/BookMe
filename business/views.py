@@ -7,7 +7,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from bootstrap_modal_forms.generic import (
     BSModalDeleteView
 )
@@ -82,30 +82,22 @@ def company_detail(request, id, slug):
     return render(request, 'business/company/detail.html', {'address':address,'company':company,'category':category,'categories':categories, 'services':services, 'form':form})
 
 @login_required
-def ManageServiceListView(request):
+def ManageServiceListView(request, id, slug):
     category = None
     categories = Category.objects.all()
-    form = SearchForm()
-    Search = None
-    results = []
-    if 'Search' in request.GET:
-        form = SearchForm(request.GET)
-        if form.is_valid():
-            Search = form.cleaned_data['Search']
-            results = Company.objects.annotate(search=SearchVector('user','description'),).filter(search=Search)
-            return render(request, 'business/company/list.html',{'category':category, 'categories':categories ,'companies':results})
+    
 
     is_biz = request.user.is_business
     if is_biz:
-        company = get_object_or_404(Company, user=request.user)
+        company = get_object_or_404(Company, user=request.user, id=id, slug=slug)
         services = Services.objects.all().filter(business=company)
         services = Services.objects.all().filter(business=company)
-        return render(request, 'business/company/manage/service/manage_service_list.html', {'services':services, 'company':company,'category':category,'categories':categories, 'form':form})
+        return render(request, 'business/company/manage/service/manage_service_list.html', {'services':services, 'company':company, 'category':category,'categories':categories})
 
 @login_required
-def CreateServiceView(request):
+def CreateServiceView(request, pk, slug):
     context = {}
-    company = get_object_or_404(Company, user=request.user)
+    company = get_object_or_404(Company, user=request.user, id=pk, slug=slug)
     if request.method == 'POST':
         service_form = AddServiceForm(request.POST)
         if service_form.is_valid():
@@ -116,7 +108,7 @@ def CreateServiceView(request):
             slugname = name + '' + request.user.slug
             service = Services.objects.create(business=company,name=name,description=description,price=price, available=avail, slug=slugname)
             service.save()
-            return redirect('business:manage_service_list')
+            return redirect(reverse('business:manage_service_list', args=[pk, slug]))
         else:
             context['service_form'] = service_form
             
@@ -125,24 +117,28 @@ def CreateServiceView(request):
         context['service_form'] = service_form
     return render(request, 'business/company/manage/service/create.html',{'service_form':service_form})
 
+
 #Remember we must validate everything before deleting
-def DeleteServiceView(request, pk):
-    service = Services.objects.get(id=pk)
+@login_required
+def DeleteServiceView(request, pk, pks, slug):
+    company = get_object_or_404(Company, user=request.user, id=pks, slug=slug)
+    service = Services.objects.all().filter(business=company).get(id=pk)
     if request.method == 'POST':
         service.delete()
-        return redirect('business:manage_service_list')
+        return redirect(reverse('business:manage_service_list', args=[pks, slug]))
         
 
     return render(request, 'business/company/manage/service/delete.html',{'service':service})
 
-def UpdateServiceView(request, pk):
+@login_required
+def UpdateServiceView(request, pk, pks, slug):
     context = {}
-    company = get_object_or_404(Company, user=request.user)
-    service = Services.objects.get(id=pk)
+    company = get_object_or_404(Company, user=request.user, id=pks, slug=slug)
+    service = Services.objects.all().filter(business=company).get(id=pk)
     if request.method == 'POST':
         service_update_form = UpdateServiceForm(request.POST)
         if service_update_form.is_valid():
-            return redirect('business:manage_service_list')
+            return redirect(reverse('business:manage_service_list', args=[pks, slug]))
         else:
             context['service_update_form'] = service_update_form
     else:

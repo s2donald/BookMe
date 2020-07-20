@@ -15,7 +15,7 @@
     </div>
 
     <div class="container text-center mt-3">
-    <h1>My Services</h1>
+    <h1>My Services for {{ company.business_name }}</h1>
 
     <button id="createservice" class="btn btn-outline-primary mb-3 form-control" type="submit">Add Service</button>
 
@@ -41,11 +41,11 @@
                         <td class="text-center">{{ service.available }}</td>
                         <td class="text-center">
                             <!-- Update book buttons -->
-                            <button type="button" class="update-service btn btn-sm btn-outline-primary" data-form-url="{% url 'business:update_service' service.pk %}">
+                            <button type="button" class="update-service btn btn-sm btn-outline-primary" data-form-url="{% url 'business:update_service' service.pk company.pk company.slug %}">
                                 <span class="fa fa-pencil-alt"></span>
                             </button>
                             <!-- Delete book buttons -->
-                            <button type="button" class="bs-modal delete-service btn btn-sm btn-danger" data-form-url="{% url 'business:delete_service' service.pk %}">
+                            <button type="button" class="bs-modal delete-service btn btn-sm btn-danger" data-form-url="{% url 'business:delete_service' service.pk company.pk company.slug%}">
                                 <span class="fa fa-trash"></span>
                             </button>
                         </td>
@@ -81,7 +81,7 @@
 
           // Create book button opens modal with id="create-modal"
           $("#createservice").modalForm({
-            formURL: "{% url 'business:create_service' %}",
+            formURL: "{% url 'business:create_service' company.pk company.slug %}",
             modalID: "#create-modal"
           });
 

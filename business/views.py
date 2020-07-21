@@ -89,7 +89,6 @@ def ManageServiceListView(request, id, slug):
     if is_biz:
         company = get_object_or_404(Company, user=request.user, id=id, slug=slug)
         services = Services.objects.all().filter(business=company)
-        services = Services.objects.all().filter(business=company)
         return render(request, 'business/company/manage/service/manage_service_list.html', {'services':services, 'company':company, 'category':category,'categories':categories})
 
 @login_required

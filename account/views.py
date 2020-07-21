@@ -131,6 +131,7 @@ def BusinessListViews(request):
 
 @login_required
 def BusinessAccountsView(request, id, slug):
+    companies = Company.objects.all().filter(user=request.user)
     company = get_object_or_404(Company, id=id, slug=slug, available=True)
     services = Services.objects.all().filter(business=company)
-    return render(request, 'business/company/manage/service/manage_service_list.html', {'services':services,'company':company})
+    return render(request, 'business/company/manage/service/manage_service_list.html', {'services':services,'company':company, 'companies':companies})

@@ -9,19 +9,90 @@
     </div>
 
     <div class="modal fade" tabindex="-1" role="dialog" id="modal">
-    <div class="modal-dialog mt-5" role="document">
-        <div class="modal-content"></div>
+      <div class="modal-dialog mt-5" role="document">
+          <div class="modal-content"></div>
+      </div>
     </div>
-    </div>
 
-    <div class="container text-center mt-3">
-    <h1>{{ company.business_name }} Services</h1>
+    <div class="wrapper">
+    <nav id="sidebar" class="active">
 
-    <button id="createservice" class="btn btn-outline-primary mb-3 form-control" type="submit">Add Service</button>
+            <div class="sidebar-header">
+                <h3>{{ company.business_name }}</h3>
+                <strong>GB</strong>
+            </div>
+            <ul class="list-unstyled components">
 
-    <div class="col-12 mb-3">
+                <li>
+                    <a href="#">
+                        <i class="fa fa-calendar-alt"></i>
+                        Schedule
+                    </a>
+                    <a href="#" class="#">
+                        <i class="fas fa-file-invoice-dollar"></i>
+                        Invoices
+                    </a>
+                    <a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle list-unstyled active">
+                        <i class="fas fa-city"></i>
+                        Business Profile
+                    </a>
+                    <ul class="collapse list-unstyled" id="pageSubmenu">
+                        <li>
+                            <a href="{{ c.get_account_url }}">Company Details</a>
+                        </li>
+                        <li class="active">
+                            <a href="{{ c.get_account_url }}">Services</a>
+                        </li>
+                        <li>
+                            <a href="{{ c.get_account_url }}">Staff Members</a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#">
+                        <i class="fas fa-cog"></i>
+                        Settings
+                    </a>
+                </li>
+                <li>
+                    
+                </li>
+                <li>
+                    <a href="{% url 'account:account' %}">
+                        <i class="fas fa-user-circle"></i>
+                        {{company.user.first_name}} {{company.user.last_name}}
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'logout' %}">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Logout
+                    </a>
+                </li>
+            </ul>
+
+            <ul class="list-unstyled CTAs">
+                <li>
+                    
+                </li>
+                <li>
+                    <a href="https://bootstrapious.com/p/bootstrap-sidebar" class="article">Back to article</a>
+                </li>
+            </ul>
+        </nav>
+      <div class="container">
+      <div class="col-md-12 mb-3">
+      <div id="content">
+        <div class="container-fluid">
+        <button type="button" id="sidebarCollapse" class="btn btn-outline-primary">
+                        <i class="fas fa-align-left"></i>
+                        <span>Toggle Sidebar</span>
+                    </button>
+        <h1>{{ company.business_name }} Services</h1>
+        <button id="createservice" class="btn btn-outline-primary mb-3 form-control" type="submit">Add Service</button>
         {% if services %}
-            <table id="service-table" class="table">
+        <div class="table-responsive">
+            <table id="service-table" class="table table-light table-hover" style="">
                 <thead>
                 <tr>
                     <th class="text-center" scope="col">#</th>
@@ -29,6 +100,7 @@
                     <th class="text-center" scope="col">Service Description</th>
                     <th class="text-center" scope="col">Price ($)</th>
                     <th class="text-center" scope="col">Available</th>
+                    <th class="text-center">Update/Delete</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -53,16 +125,14 @@
                 {% endfor %}
                 </tbody>
             </table>
+            </div>
         {% else %}
             <p class="">You have not created any services yet.</p>
         {% endif %}
+        </div>
     </div>
-
-    
-    
     </div>
-
-
+    </div>
     </div>
 {% endblock %}
 
@@ -129,4 +199,12 @@
           });
       });
   </script>
+  <script>
+      $(document).ready(function () {
+        $('#sidebarCollapse').on('click', function () {
+            $('#sidebar').toggleClass('active');
+        });
+      });
+  </script>
+
 {% endblock extrascripts %}

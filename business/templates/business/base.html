@@ -8,11 +8,11 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <link href="http://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="{% static "css/bases.css" %}">
-	    
-	
+        <script src="https://kit.fontawesome.com/a07c5b9658.js" crossorigin="anonymous"></script>
         <title>{% block title %}Gibele.ca - Bookings Made Easy{% endblock %}</title>
     </head>
     <body id="page-wrapper">
+        
         <nav class="navbar navbar-expand-lg navbar-dark nav-box-round bg-dark flex-shrink-1 flex-grow-0">
             <div class="container-fluid">
             <a class="logo navbar-brand navbb" href="/"><img src="{% static "img/logo_transparent.png" %}"></a>
@@ -59,8 +59,8 @@
                 </div>
                 {% if request.user.is_authenticated %}
                     <div class="my-auto mx-1">
-                        <a class="btn btn-outline-primary mt-1" href="{% url 'account:account' %}" >Account</a>
-                        <a class="btn btn-outline-primary mt-1" href="{% url 'logout' %}">Logout</a>
+                        <a class="btn btn-outline-primary mt-1" href="{% url 'account:account' %}" ><i class="fas fa-user-circle"></i> Account</a>
+                        <a class="btn btn-outline-primary mt-1" href="{% url 'logout' %}">Logout <i class="fas fa-sign-out-alt"></i></a>
                     </div>
                 {% else %}
                     <div class="my-auto mx-1">
@@ -81,8 +81,8 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 	    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-        <script src="https://use.fontawesome.com/releases/v5.0.8/js/all.js"></script>
         <script src="{% static 'js/jquery.bootstrap.modal.forms.js' %}"></script>
+
     {% endblock scripts %}
     {% block extrascripts %}
     {% endblock extrascripts %}

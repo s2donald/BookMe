@@ -68,11 +68,63 @@ class Company(models.Model):
         super().save(*args, **kwargs)
 
 class Services(models.Model):
+    price_choices = (
+        ('fixed','Fixed'),
+        ('start','Starting Price'),
+        ('variable','Variable'),
+        ('dont','Don\'t Show'),
+        ('free','Free')
+    )
+    hours_choices = (
+        ('zero','0 hours'),
+        ('one', '1 hour'),
+        ('two', '2 hours'),
+        ('three', '3 hours'),
+        ('four', '4 hours'),
+        ('five', '5 hours'),
+        ('six', '6 hours'),
+        ('seven', '7 hours'),
+        ('eight', '8 hours'),
+        ('nine', '9 hours'),
+        ('ten', '10 hours'),
+        ('eleven', '11 hours'),
+        ('twelve', '12 hours'),
+        ('thirteen', '13 hours'),
+        ('fourteen', '14 hours'),
+        ('fifteen', '15 hours'),
+        ('sixteen', '16 hours'),
+        ('seventeen', '17 hours'),
+        ('eighteen', '18 hours'),
+        ('nineteen', '19 hours'),
+        ('twenty', '20 hours'),
+        ('twentyone', '21 hours'),
+        ('twentytwo', '22 hours'),
+        ('twentythree', '23 hours')
+    )
+
+    minute_choices = (
+        ('zero', '0 minutes'),
+        ('five', '5 minutes'),
+        ('ten', '10 minutes'),
+        ('fifteen', '15 minutes'),
+        ('twenty', '20 minutes'),
+        ('twentyfive', '25 minutes'),
+        ('thirty', '30 minutes'),
+        ('thirtyfive', '35 minutes'),
+        ('fourty', '40 minutes'),
+        ('fourtyfive', '45 minutes'),
+        ('fifty', '50 minutes'),
+        ('fiftyfive', '55 minutes')
+    )
+
     name = models.CharField(max_length=200, db_index=True)
-    description = models.CharField(max_length=200, db_index=True)
+    description = models.TextField(max_length=200, db_index=True)
     business = models.ForeignKey(Company, related_name='services_offered', on_delete=models.CASCADE)
     slug = models.SlugField(max_length=200,db_index=True)
+    price_type = models.CharField(max_length=10, choices=price_choices, default='fixed')
     price = models.DecimalField(max_digits=10, decimal_places=2)
+    duration_hour = models.CharField(max_length=11, choices=hours_choices,default='zero')
+    duration_minute = models.CharField(max_length=11, choices=minute_choices,default='zero')
     available = models.BooleanField(default=True)
     class Meta:
         ordering = ('name',)

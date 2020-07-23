@@ -8,7 +8,7 @@ class CategoryAdmin(admin.ModelAdmin):
 
 @admin.register(Services)
 class ServicesAdmin(admin.ModelAdmin):
-    list_display = ['name', 'slug', 'price']
+    list_display = ['name', 'slug', 'price', 'price_type', 'duration_hour', 'duration_minute']
     prepopulated_fields = {'slug':('name',)}
 
 @admin.register(Company)

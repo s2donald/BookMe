@@ -100,10 +100,13 @@ def CreateServiceView(request, pk, slug):
         if service_form.is_valid():
             name = service_form.cleaned_data.get('name')
             description = service_form.cleaned_data.get('description')
+            price_type = service_form.cleaned_data.get('price_type')
             price = service_form.cleaned_data.get('price')
+            duration_hour = service_form.cleaned_data.get('duration_hour')
+            duration_minute = service_form.cleaned_data.get('duration_minute')
             avail = True
             slugname = name + '' + request.user.slug
-            service = Services.objects.create(business=company,name=name,description=description,price=price, available=avail, slug=slugname)
+            service = Services.objects.create(business=company,name=name,description=description,price=price, available=avail, slug=slugname, price_type=price_type,duration_hour=duration_hour,duration_minute=duration_minute)
             service.save()
             return redirect(reverse('business:manage_service_list', args=[pk, slug]))
         else:
@@ -132,17 +135,24 @@ def UpdateServiceView(request, pk, pks, slug):
     context = {}
     company = get_object_or_404(Company, user=request.user, id=pks, slug=slug)
     service = Services.objects.get(business=company, id=pk)
-    data = {'name': service.name, 'description': service.description, 'price':service.price, 'available':service.available}
+    data = {'name': service.name, 'description': service.description, 'price_type':service.price_type, 'price':service.price, 'available':service.available, 'duration_hour':service.duration_hour, 'duration_minute':service.duration_minute}
     if request.method == 'POST':
         service_update_form = UpdateServiceForm(request.POST)
         if service_update_form.is_valid():
             name = service_update_form.cleaned_data.get('name')
             description = service_update_form.cleaned_data.get('description')
             price = service_update_form.cleaned_data.get('price')
+            price_type= service_update_form.cleaned_data.get('price_type')
+            duration_hour=service_update_form.cleaned_data.get('duration_hour')
+            duration_minute=service_update_form.cleaned_data.get('duration_minute')
+
             serv = Services.objects.get(pk=pk)
             serv.name = name
             serv.description = description
             serv.price = price
+            serv.price_type=price_type
+            serv.duration_hour=duration_hour
+            serv.duration_minute=duration_minute
             serv.save()
             return redirect(reverse('business:manage_service_list', args=[pks, slug]))
         else:

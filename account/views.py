@@ -70,7 +70,7 @@ def ConsumerRegistrationView(request):
 #         user_form = BusinessRegistrationForm()
 #         context['business_registration_form'] = user_form
 #     return render(request, 'account//business/registration.html', {'user_form':user_form, 'category':category, 'categories':categories ,'companies':results, 'form':form})
-
+@login_required
 def AccountSummaryView(request):
     category = None
     categories = Category.objects.all()

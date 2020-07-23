@@ -1,34 +1,111 @@
 {% extends 'business/base.html' %}
 {% load static %}
 {% block content %}
+    <div class="wrapper">
+    <nav id="sidebar" class="active">
+
+            <div class="sidebar-header">
+                <h3>{{ company.business_name }}</h3>
+                <strong>GB</strong>
+            </div>
+            <ul class="list-unstyled components">
+
+                <li>
+                    <a href="#">
+                        <i class="fas fa-calendar"></i>
+                        Bookings
+                    </a>
+                    <a href="#" class="#">
+                        <i class="fas fa-file-invoice-dollar"></i>
+                        Receipts
+                    </a>
+                    <a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle list-unstyled active">
+                        <i class="fas fa-city"></i>
+                        Business Profile
+                    </a>
+                    <ul class="collapse list-unstyled" id="pageSubmenu">
+                        {% if my_companies %}
+                            <li>
+                                <a href="{% url 'account:biz_list' %}">Your Business Pages</a>
+                            </li>
+                        {% endif %}
+                        <li>
+                            <a href="{{ c.get_account_url }}">Add Business Page</a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#">
+                        <i class="fas fa-newspaper"></i>
+                        Reviews
+                    </a>
+                </li>
+                <li class="active">
+                    <a href="{% url 'account:account' %}">
+                        <i class="fas fa-user-circle"></i>
+                        {{request.user.first_name}} {{request.user.last_name}}
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'logout' %}">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Logout
+                    </a>
+                </li>
+            </ul>
+
+            <ul class="list-unstyled CTAs">
+                <li>
+                    
+                </li>
+                <li>
+                    <a href="https://bootstrapious.com/p/bootstrap-sidebar" class="article">Back to article</a>
+                </li>
+            </ul>
+        </nav>
+
     <div class="container mt-5">
     <div class="row">
         <div class="col-md-12">
-            <div class="container">
-                <h1 class="text-center">Account Settings</h1>
-                {% if my_companies %}
-                    <div class="row">
-                        <div class="col-md-6">
-                            <a href="{% url 'account:biz_list' %}" class="form-control btn btn-outline-primary">Manage Your Business Pages</a>
-                        </div>
-                {% endif %}
-                <div class="col-md-6">
-                    <a href="{% url 'account:biz_list' %}" class="form-control btn btn-outline-primary">Add a Business Page</a>
-                </div>
-                </div>
-                <h2 class="mt-3 text-center">Account Details</h2>
+            <button type="button" id="sidebarCollapse" class="btn btn-outline-primary">
+                <i class="fas fa-align-left"></i>
+                <span>Toggle Sidebar</span>
+            </button>
+            <h1 class="mt-3 text-center">Account Details</h1>
+            <div class="d-flex justify-content-between align-items-center px-1 borderdiv">
                 <p>Full Name: {{request.user.first_name }} {{ request.user.last_name }} </p>
+                <a class="btn btn-outline-primary py-0 mb-1" href="">Change</a>
+            </div>
+            <div class="d-flex justify-content-between align-items-center px-1 borderdiv mt-1">
                 <p>Email: {{request.user.email }}</p>
+                <a class="btn btn-outline-primary py-0 mb-1" href="">Change</a>
+            </div>
+            <div class="d-flex justify-content-between align-items-center px-1 borderdiv mt-1">
                 <p>Phone: {{request.user.phone }}</p>
+                <a class="btn btn-outline-primary py-0 mb-1" href="">Change</a>
+            </div>
+            <div class="d-flex justify-content-between align-items-center px-1 borderdiv mt-1">
                 {% if request.user.address == None %}
-                    <p>Add your address for mobile services: <a class="btn btn-outline-primary btn-sm">Add</a></p>
+                    <p>Add your address for mobile services: </p>
+                    <a class="btn btn-outline-primary py-0 mb-1">Add</a>
                 {% else %}
                     <p>Home Address: {{request.user.address}}</p>
+                    <a class="btn btn-outline-primary py-0 mb-1" href="">Change</a>
                 {% endif %}
-                <a class="form-control btn btn-outline-primary" href="">Update Account Details</a>
             </div>
         </div>
     </div>
-
+    </div>
+    </div>
     </div>
 {% endblock  %}
+
+{% block extrascripts %}
+    <script>
+      $(document).ready(function () {
+        $('#sidebarCollapse').on('click', function () {
+            $('#sidebar').toggleClass('active');
+        });
+      });
+  </script>
+{% endblock extrascripts %}

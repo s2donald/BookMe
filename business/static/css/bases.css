@@ -87,7 +87,7 @@ button:active,
 .nav-top-default {
     background: linear-gradient(90deg, #ff5f6d 0%,#ffc371 100%);
 }
-.bg-dark {
+.bg-light {
     background: linear-gradient(90deg, #ff5f6d 0%, #ffc371 100%);
 }
 .carousel-inner {
@@ -168,6 +168,11 @@ footer {
 .search-bar{
     max-width: 500px;
     width:100%
+}
+
+.borderdiv{
+    border:1px solid #cecece; 
+    border-radius: 4px;
 }
 
 /* ---------------------------------------------------

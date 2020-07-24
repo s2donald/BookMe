@@ -1,7 +1,9 @@
-<form method="post">
 {% load crispy_forms_tags %}
+{% load static %}
+
+<form method="post">
     {% csrf_token %}
-    <div class="modal-header">
+    <div class="modal-header bg-light">
         <h3 class="modal-title">Update "{{service.name}}" Service</h3>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>

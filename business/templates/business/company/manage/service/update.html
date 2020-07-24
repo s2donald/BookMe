@@ -1,4 +1,5 @@
 <form method="post">
+{% load crispy_forms_tags %}
     {% csrf_token %}
     <div class="modal-header">
         <h3 class="modal-title">Update "{{service.name}}" Service</h3>
@@ -7,7 +8,7 @@
         </button>
     </div>
     <div class="modal-body">
-        {{ update_form.as_p }}
+        {{ update_form|crispy }}
     </div>
 
     <div class="modal-footer">

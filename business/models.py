@@ -116,7 +116,12 @@ class Services(models.Model):
         ('fifty', '50 minutes'),
         ('fiftyfive', '55 minutes')
     )
-
+    beforeafter = (
+        ('none', '-'),
+        ('before','Before'),
+        ('after','After'),
+        ('bf','Before & After')
+    )
     name = models.CharField(max_length=200, db_index=True)
     description = models.TextField(max_length=200, db_index=True)
     business = models.ForeignKey(Company, related_name='services_offered', on_delete=models.CASCADE)
@@ -125,6 +130,10 @@ class Services(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2)
     duration_hour = models.CharField(max_length=11, choices=hours_choices,default='zero')
     duration_minute = models.CharField(max_length=11, choices=minute_choices,default='zero')
+    checkintime = models.CharField(max_length=10,choices=minute_choices,default='zero')
+    paddingtime_hour = models.CharField(max_length=10,choices=minute_choices,default='zero')
+    paddingtime_minute = models.CharField(max_length=10,choices=minute_choices,default='zero')
+    padding = models.CharField(max_length=20,choices=beforeafter, default='none')
     available = models.BooleanField(default=True)
     class Meta:
         ordering = ('name',)

@@ -1,15 +1,15 @@
 {% extends 'business/base.html' %}
 {% load static %}
 {% block content %}
-<div class="container form-inline flex-col">
-
+{% load crispy_forms_tags %}
+<div class="container">
     <div class="text-center col-md-12">
         <h1>Welcome to Gibele</h1>
         <p>Enter your details to create an account:</p>
         <p>An account must be created to be able to book services and list services.</p>
-        <form class="form-control" method="post">
-            {{ user_form.as_p }}
+        <form class="" method="post">
             {% csrf_token %}
+            {{ user_form|crispy }}
             <button class="btn btn-lg btn-outline-primary" type="submit" name="cons_reg">Create my account</button>
         </form>
     </div>

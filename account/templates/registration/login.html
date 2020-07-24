@@ -1,18 +1,14 @@
 {% extends 'business/base.html' %}
 {% load static %}
+{% load crispy_forms_tags%}
 {% block content %}
 
-<div class="container my-3 text-center form-inline justify-content-center">
+<div class="container">
+    <h1 class="h3 mb-3 font-weight-normal mt-1">Welcome back to Gibele!</h1>
+    <h3>Please use the following form to log-in</h3>
     <form class="form-signin" method="POST" action="{% url 'login' %}">
-      {% if count == 1 %}
-        <h1 class="h3 mb-3 font-weight-normal">Your username and password didn't match.</h1>
-        <p>Please try again or <a href="/register">create an account</a>.</p>
-      {% else %}
-        <h1 class="h3 mb-3 font-weight-normal">Welcome back to Gibele!</h1>
-        <h3>Please use the following form to log-in</h3>
-      {% endif %}
-      {{ form.as_p }}
       {% csrf_token %}
+      {{ form|crispy }}
       <button class="btn btn-lg btn-outline-primary" type="submit">Log in</button>
     </form>
     <div class="text-center mt-3">

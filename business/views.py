@@ -104,9 +104,14 @@ def CreateServiceView(request, pk, slug):
             price = service_form.cleaned_data.get('price')
             duration_hour = service_form.cleaned_data.get('duration_hour')
             duration_minute = service_form.cleaned_data.get('duration_minute')
+            checkintime=service_form.cleaned_data.get('checkintime')
+            padding=service_form.cleaned_data.get('padding')
+            paddingtime_hour=service_form.cleaned_data.get('paddingtime_hour')
+            paddingtime_minute=service_form.cleaned_data.get('paddingtime_minute')
             avail = True
             slugname = name + '' + request.user.slug
-            service = Services.objects.create(business=company,name=name,description=description,price=price, available=avail, slug=slugname, price_type=price_type,duration_hour=duration_hour,duration_minute=duration_minute)
+            service = Services.objects.create(business=company,name=name,description=description,price=price, available=avail, slug=slugname, 
+                                                price_type=price_type,duration_hour=duration_hour,duration_minute=duration_minute,checkintime=checkintime,padding=padding,paddingtime_hour=paddingtime_hour,paddingtime_minute=paddingtime_minute)
             service.save()
             return redirect(reverse('business:manage_service_list', args=[pk, slug]))
         else:
@@ -145,7 +150,10 @@ def UpdateServiceView(request, pk, pks, slug):
             price_type= service_update_form.cleaned_data.get('price_type')
             duration_hour=service_update_form.cleaned_data.get('duration_hour')
             duration_minute=service_update_form.cleaned_data.get('duration_minute')
-
+            checkintime=service_update_form.cleaned_data.get('checkintime')
+            padding=service_update_form.cleaned_data.get('padding')
+            paddingtime_hour=service_update_form.cleaned_data.get('paddingtime_hour')
+            paddingtime_minute=service_update_form.cleaned_data.get('paddingtime_minute')
             serv = Services.objects.get(pk=pk)
             serv.name = name
             serv.description = description
@@ -153,6 +161,10 @@ def UpdateServiceView(request, pk, pks, slug):
             serv.price_type=price_type
             serv.duration_hour=duration_hour
             serv.duration_minute=duration_minute
+            serv.checkintime=checkintime
+            serv.padding=padding
+            serv.paddingtime_hour=paddingtime_hour
+            serv.paddingtime_minute=paddingtime_minute
             serv.save()
             return redirect(reverse('business:manage_service_list', args=[pks, slug]))
         else:

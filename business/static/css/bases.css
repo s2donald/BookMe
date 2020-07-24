@@ -340,7 +340,52 @@ form{
 }
 
 /*---Media Queries --*/
-@media (max-width: 2460px){
+@media (max-width: 992px) {
+    html, body {
+        font-size: 20px;
+    }
+    .card-columns {
+        column-count: 3;
+    }
+    .sear{
+        width: 100%
+    }
+    .list-img{
+        width:40vw !important;
+        height:40vw !important;
+        padding:10px 20px 10px 20px !important;
+        float:left !important;
+        text-align:center !important;
+        line-height:1.2 !important;
+        object-fit:contain !important;
+        object-position:50% 50% !important;
+    }
+    
+  }
+@media (max-width: 768px) {
+    html, body {
+        font-size: 15px;
+    }
+    .list-img{
+        width:40vw !important;
+        height:40vw !important;
+        padding:10px 20px 10px 20px !important;
+        float:left !important;
+        text-align:center !important;
+        line-height:1.2 !important;
+        object-fit:contain !important;
+        object-position:50% 50% !important;
+    }
+    .card-columns {
+        column-count: 3;
+    }
+    .sear {
+        flex-direction: column;
+        text-align: center;
+    }
+    #searchbus {
+        width: 100%;
+    }
 
     /* ---------------------------------------------------
     SIDEBAR MEDIA QUERY
@@ -392,53 +437,6 @@ form{
     }
     #sidebarCollapse span {
         display: none;
-    }
-}
-@media (max-width: 992px) {
-    html, body {
-        font-size: 20px;
-    }
-    .card-columns {
-        column-count: 3;
-    }
-    .sear{
-        width: 100%
-    }
-    .list-img{
-        width:40vw !important;
-        height:40vw !important;
-        padding:10px 20px 10px 20px !important;
-        float:left !important;
-        text-align:center !important;
-        line-height:1.2 !important;
-        object-fit:contain !important;
-        object-position:50% 50% !important;
-    }
-    
-  }
-@media (max-width: 768px) {
-    html, body {
-        font-size: 15px;
-    }
-    .list-img{
-        width:40vw !important;
-        height:40vw !important;
-        padding:10px 20px 10px 20px !important;
-        float:left !important;
-        text-align:center !important;
-        line-height:1.2 !important;
-        object-fit:contain !important;
-        object-position:50% 50% !important;
-    }
-    .card-columns {
-        column-count: 3;
-    }
-    .sear {
-        flex-direction: column;
-        text-align: center;
-    }
-    #searchbus {
-        width: 100%;
     }
 
 }

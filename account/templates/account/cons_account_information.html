@@ -5,7 +5,7 @@
     <nav id="sidebar" class="active">
 
             <div class="sidebar-header">
-                <h3>{{ company.business_name }}</h3>
+                <h3>{{ request.user.first_name }} {{request.user.last_name}}</h3>
                 <strong>GB</strong>
             </div>
             <ul class="list-unstyled components">

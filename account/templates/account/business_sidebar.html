@@ -1,10 +1,58 @@
-<div class="bg-light">
-    <div class="toggle-btn">
-        <span>-</span>
-        <span>-</span>
-        <span>-</span>
-    </div>
-    <ul>
-        <li>Home</li>
-    </ul>
+<div class="wrapper">
+    <nav id="sidebar" class="active">
+
+            <div class="sidebar-header">
+                <h3>{{ company.business_name }}</h3>
+                <strong>GB</strong>
+            </div>
+            <ul class="list-unstyled components">
+
+                <li>
+                    <a href="#">
+                        <i class="fa fa-calendar-alt"></i>
+                        Schedule
+                    </a>
+                    <a href="#" class="#">
+                        <i class="fas fa-file-invoice-dollar"></i>
+                        Invoices
+                    </a>
+                    <a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle list-unstyled active">
+                        <i class="fas fa-city"></i>
+                        Business Profile
+                    </a>
+                    <ul class="collapse list-unstyled" id="pageSubmenu">
+                        <li>
+                            <a href="{{ c.get_account_url }}">Company Details</a>
+                        </li>
+                        <li class="active">
+                            <a href="{{ c.get_account_url }}">Services</a>
+                        </li>
+                        <li>
+                            <a href="{{ c.get_account_url }}">Staff Members</a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#">
+                        <i class="fas fa-cog"></i>
+                        Settings
+                    </a>
+                </li>
+                <li>
+                    
+                </li>
+                <li>
+                    <a href="{% url 'account:account' %}">
+                        <i class="fas fa-user-circle"></i>
+                        {{company.user.first_name}} {{company.user.last_name}}
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'logout' %}">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Logout
+                    </a>
+                </li>
+            </ul>
+        </nav>
 </div>

@@ -62,7 +62,7 @@
                     
                 </li>
                 <li>
-                    <a href="https://bootstrapious.com/p/bootstrap-sidebar" class="article">Back to article</a>
+                    
                 </li>
             </ul>
         </nav>
@@ -75,40 +75,128 @@
                 <span>Toggle Sidebar</span>
             </button>
             <h1 class="mt-3 text-center">Account Details</h1>
-            <div class="d-flex justify-content-between align-items-center px-1 borderdiv">
-                <p>Full Name: {{request.user.first_name }} {{ request.user.last_name }} </p>
-                <a class="btn btn-outline-primary py-0 mb-1" href="">Change</a>
-            </div>
-            <div class="d-flex justify-content-between align-items-center px-1 borderdiv mt-1">
-                <p>Email: {{request.user.email }}</p>
-                <a class="btn btn-outline-primary py-0 mb-1" href="">Change</a>
-            </div>
-            <div class="d-flex justify-content-between align-items-center px-1 borderdiv mt-1">
-                <p>Phone: {{request.user.phone }}</p>
-                <a class="btn btn-outline-primary py-0 mb-1" href="">Change</a>
-            </div>
-            <div class="d-flex justify-content-between align-items-center px-1 borderdiv mt-1">
-                {% if request.user.address == None %}
-                    <p>Add your address for mobile services: </p>
-                    <a class="btn btn-outline-primary py-0 mb-1">Add</a>
-                {% else %}
-                    <p>Home Address: {{request.user.address}}</p>
-                    <a class="btn btn-outline-primary py-0 mb-1" href="">Change</a>
-                {% endif %}
+            <div class="table-responsive">
+            <table id="account-table" class="table table-light table-hover" style="">
+                <thead>
+                <tr>
+                    <th class="text-center" scope="col"></th>
+                    <th class="text-center" scope="col">Account Details</th>
+                    <th class="text-center" scope="col"></th>
+                </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th class="text-center" scope="row">Full Name: </th>
+                        <td class="text-center">{{user.first_name }} {{ user.last_name }}</td>
+                        <td class="text-center">
+                            <!-- Update book buttons -->
+                            <button type="button" class="update-name btn btn-sm btn-outline-primary py-0 mb-1" data-form-url="{% url 'account:name' %}">
+                                Changes
+                            </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="text-center" scope="row">Email: </th>
+                        <td class="text-center">{{ user.email }}</td>
+                        <td class="text-center">
+                            <!-- Update book buttons -->
+                            <button type="button" class="update-name btn btn-sm btn-outline-primary py-0 mb-1" data-form-url="{% url 'account:name' %}">Change</button>
+                            
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="text-center" scope="row">Phone Number: </th>
+                        <td class="text-center">{{ user.phone }}</td>
+                        <td class="text-center">
+                            <!-- Update book buttons -->
+                            <button type="button" class="update-name btn btn-sm btn-outline-primary py-0 mb-1" data-form-url="{% url 'account:name' %}">Change</button>
+                            
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="text-center" scope="row">Home Address: </th>
+                        <td>
+                            {% if request.user.address == None %}
+                               <p class="text-center">You have not added a home address to your account.</p>
+                                <small class="text-left">Your home address is only given to those who you have booked a mobile appointment with. This information is not shared publicly.</small>
+                            {% else %}
+                                <p class="text-center">{{ user.address}}</p>
+                            {% endif %}
+                            
+                            
+                        </td>
+                        <td class="text-center">
+                            <!-- Update name buttons -->
+                            {% if request.user.address == None %}
+                                <button type="button" class="bs-modal delete-service btn btn-sm btn-outline-primary py-0 mb-1" data-form-url="{% url 'account:name' %}">Add</button>
+                            {% else %}
+                                <button type="button" class="bs-modal delete-service btn btn-sm btn-outline-primary py-0 mb-1" data-form-url="{% url 'account:name' %}">Change</button>
+                            {% endif %}
+                            
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
             </div>
         </div>
-    </div>
     </div>
     </div>
     </div>
 {% endblock  %}
 
 {% block extrascripts %}
+    <script type="text/javascript">
+        
+      $(function () {
+          var asyncSuccessMessage = [
+            "<div ",
+            "style='position:fixed;top:0;z-index:10000;width:100%;border-radius:0;' ",
+            "class='alert alert-icon alert-success alert-dismissible fade show mb-0' role='alert'>",
+            "Success: Account was updated.",
+            "<button type='button' class='close' data-dismiss='alert' aria-label='Close'>",
+            "<span aria-hidden='true'>&times;</span>",
+            "</button>",
+            "</div>",
+            "<script>",
+            "$('.alert').fadeTo(2000, 500).slideUp(500, function () {$('.alert').slideUp(500).remove();});",
+            "<\/script>"
+          ].join("");
+
+          function updateNameModalForm() {
+            $(".update-name").each(function () {
+              $(this).modalForm({
+                formURL: $(this).data("form-url"),
+                asyncUpdate: true,
+                asyncSettings: {
+                  closeOnSubmit: false,
+                  successMessage: asyncSuccessMessage,
+                  dataUrl: "account/",
+                  dataElementId: "#account-table",
+                  dataKey: "table",
+                  addModalFormFunction: updateNameModalForm
+                }
+              });
+            });
+          }
+          updateNameModalForm();
+
+          // Read and Delete book buttons open modal with id="modal"
+          // The formURL is retrieved from the data of the element
+          $(".bs-modal").each(function () {
+              $(this).modalForm({formURL: $(this).data("form-url")});
+          });
+
+          // Hide message
+          $(".alert").fadeTo(2000, 500).slideUp(500, function () {
+              $(".alert").slideUp(500);
+          });
+      });
+    </script>
     <script>
       $(document).ready(function () {
         $('#sidebarCollapse').on('click', function () {
             $('#sidebar').toggleClass('active');
         });
       });
-  </script>
+    </script>
 {% endblock extrascripts %}

@@ -63,12 +63,12 @@ class AddServiceForm(forms.Form):
     description = forms.CharField(label='Details Of Service',max_length=30, required=True, widget=forms.Textarea(attrs={'rows':2, 'cols':20}))
     price_type = forms.ChoiceField(label='Price Type',choices=price_choices)
     price = forms.DecimalField(label='Price ($)',max_digits=10, required=True)
-    duration_hour = forms.ChoiceField(label='Duration',choices=hours_choices)
-    duration_minute = forms.ChoiceField(label='',choices=minute_choices)
+    duration_hour = forms.ChoiceField(label='Duration Hour',choices=hours_choices)
+    duration_minute = forms.ChoiceField(label='Duration Minute',choices=minute_choices)
     checkintime = forms.ChoiceField(label='Check In Time',choices=minute_choices)
     padding = forms.ChoiceField(label='Padding',choices=beforeafter)
-    paddingtime_hour = forms.ChoiceField(label='Padding Time',choices=hours_choices)
-    paddingtime_minute = forms.ChoiceField(label='',choices=minute_choices)
+    paddingtime_hour = forms.ChoiceField(label='Padding Hour',choices=hours_choices)
+    paddingtime_minute = forms.ChoiceField(label='Padding Minute',choices=minute_choices)
     class Meta:
         model = Services
         fields = ('name','description','price_type','price','available','duration_hour',
@@ -79,12 +79,12 @@ class UpdateServiceForm(forms.Form):
     description = forms.CharField(label='Details Of Service',max_length=30, required=True, widget=forms.Textarea(attrs={'rows':2, 'cols':20}))
     price_type = forms.ChoiceField(label='Price Type',choices=price_choices)
     price = forms.DecimalField(label='Price ($)',max_digits=10, required=True)
-    duration_hour = forms.ChoiceField(label='Duration',choices=hours_choices)
-    duration_minute = forms.ChoiceField(label='',choices=minute_choices)
+    duration_hour = forms.ChoiceField(label='Duration Hour',choices=hours_choices)
+    duration_minute = forms.ChoiceField(label='Duration Minute',choices=minute_choices)
     checkintime = forms.ChoiceField(label='Check In Time',choices=minute_choices)
     padding = forms.ChoiceField(label='Padding',choices=beforeafter)
-    paddingtime_hour = forms.ChoiceField(label='Padding Time',choices=hours_choices)
-    paddingtime_minute = forms.ChoiceField(label='',choices=minute_choices)
+    paddingtime_hour = forms.ChoiceField(label='Padding Hour',choices=hours_choices)
+    paddingtime_minute = forms.ChoiceField(label='Padding Minute',choices=minute_choices)
     class Meta:
         model = Services
         fields = ('name','description','price_type','price','available','duration_hour','duration_minute',

@@ -1,11 +1,12 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .forms import  ConsumerRegistrationForm, AccountAuthenticationForm
+from .forms import  ConsumerRegistrationForm, AccountAuthenticationForm, UpdateNameForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import Permission, Group, Group
 from business.models import Company, Services, Category
 from business.forms import SearchForm
 from django.contrib.postgres.search import SearchVector
 from django.contrib.auth.decorators import login_required
+from .models import Account
 # Create your views here.
 
 def ConsumerRegistrationView(request):
@@ -89,6 +90,8 @@ def AccountSummaryView(request):
     if not request.user.is_authenticated:
         return redirect("login")
 
+
+
     return render(request, 'account/cons_account_information.html', {'my_companies':companies, 'category':category, 'categories':categories ,'companies':results, 'form':form})
 
 def RegisteredAccountView(request):
@@ -125,13 +128,40 @@ def SignUpView(request):
 
 @login_required
 def BusinessListViews(request):
+    if not request.user.is_authenticated:
+        return redirect("login")
+
     companies = Company.objects.all()
     companies = companies.filter(user=request.user)
     return render(request, 'account/company_page_list.html', {'my_companies':companies})
 
 @login_required
 def BusinessAccountsView(request, id, slug):
+    if not request.user.is_authenticated:
+        return redirect("login")
+
     companies = Company.objects.all().filter(user=request.user)
     company = get_object_or_404(Company, id=id, slug=slug, available=True)
     services = Services.objects.all().filter(business=company)
     return render(request, 'business/company/manage/service/manage_service_list.html', {'services':services,'company':company, 'companies':companies})
+
+
+def NameChangeView(request):
+    context={}
+    email = request.user.email
+    user = Account.objects.get(email=email)
+    data = {'first_name': user.first_name, 'last_name':user.last_name}
+    if request.method == 'POST':
+        user_form = UpdateNameForm(request.POST)
+        if user_form.is_valid():
+            user.first_name = user_form.cleaned_data.get('first_name')
+            user.last_name = user_form.cleaned_data.get('last_name')
+            user.save()
+            return redirect('account:account')
+        else:
+            context['update_name_form'] = user_form
+            
+    else:
+        user_form = UpdateNameForm(initial=data)
+        context['update_name_form'] = user_form
+    return render(request, 'account/consumer/name_update.html', {'update_form':user_form, 'user':user})

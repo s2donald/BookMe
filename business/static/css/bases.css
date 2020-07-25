@@ -338,11 +338,15 @@ a.article:hover {
 form{
     width:100%
 }
+.asteriskField {
+    display: none;
+}
 
 /*---Media Queries --*/
 @media (max-width: 992px) {
     html, body {
         font-size: 20px;
+        overflow-x: hidden;
     }
     .card-columns {
         column-count: 3;

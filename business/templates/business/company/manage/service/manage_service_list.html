@@ -70,6 +70,14 @@
                     </a>
                 </li>
             </ul>
+
+            <ul class="list-unstyled CTAs">
+                <li>
+                    
+                </li>
+                <li>
+                </li>
+            </ul>
         </nav>
       <div class="container">
       <div class="col-md-12 mb-3">
@@ -130,17 +138,7 @@
 {% block extrascripts %}
   <script type="text/javascript">
       $(function () {
-          // Log in & Sign up buttons
-          // The formURL is given explicitly
-          $("#login-btn").modalForm({
-            formURL: "{% url 'login' %}"
-          });
-
-          $("#signup-btn").modalForm({
-            formURL: "{% url 'account:signup' %}"
-          });
-
-          // Create book button opens modal with id="create-modal"
+          // Create service button opens modal with id="createservice"
           $("#createservice").modalForm({
             formURL: "{% url 'business:create_service' company.pk company.slug %}",
             modalID: "#create-modal"

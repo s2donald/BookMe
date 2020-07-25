@@ -10,7 +10,39 @@
         </button>
     </div>
     <div class="modal-body">
-        {{ update_form|crispy }}
+        {{ update_form.name|as_crispy_field }}
+                {{ update_form.description|as_crispy_field }}
+                <div class="form-row">
+                    <div class="form-group col-md-6 mb-0">
+                        {{ update_form.price_type|as_crispy_field }}
+                    </div>
+                    <div class="form-group col-md-6 mb-0">
+                        {{ update_form.price|as_crispy_field }}
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-6 mb-0">
+                        {{ update_form.duration_hour|as_crispy_field }}
+                    </div>
+                    <div class="form-group col-md-6 mb-0"> 
+                        {{ update_form.duration_minute|as_crispy_field }}
+                    </div>
+                </div>
+                <a class="licolor" href="#simpleCollapse" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="simpleCollapse">Advanced Options</a>
+                <div class="collapse" id="simpleCollapse">
+                    {{ update_form.checkintime|as_crispy_field }}
+                    <div class="form-row">
+                        <div class="form-group col-md-4 mb-0">
+                            {{ update_form.padding|as_crispy_field }}
+                        </div>
+                        <div class="form-group col-md-4 mb-0"> 
+                            {{ update_form.paddingtime_hour|as_crispy_field }}
+                        </div>
+                        <div class="form-group col-md-4 mb-0"> 
+                            {{ update_form.paddingtime_minute|as_crispy_field }}
+                        </div>
+                    </div>
+                </div>
     </div>
 
     <div class="modal-footer">

@@ -14,7 +14,7 @@ class ConsumerRegistrationForm(UserCreationForm):
     last_name = forms.CharField(max_length=30, required=True)
     phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$', message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
     phone = forms.CharField(label='Phone Number', validators=[phone_regex], required=True, max_length=30,)
-    email = forms.CharField(label='Email')
+    email = forms.EmailField(label='Email')
 
     class Meta:
         model = Account
@@ -51,3 +51,10 @@ class UpdateNameForm(forms.Form):
     class Meta:
         model = Account
         fields = ('first_name','last_name')
+
+class UpdateEmailForm(forms.Form):
+    email = forms.EmailField(label='Email')
+    
+    class Meta:
+        model = Account
+        fields = ('email')

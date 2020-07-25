@@ -1,6 +1,19 @@
 {% extends 'business/base.html' %}
 {% load static %}
 {% block content %}
+    <div class="modal fade" id="create-modal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog mt-5">
+            <div class="modal-content">
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" tabindex="-1" role="dialog" id="modal">
+      <div class="modal-dialog mt-5" role="document">
+          <div class="modal-content"></div>
+      </div>
+    </div>
+
     <div class="wrapper">
     <nav id="sidebar" class="active">
 
@@ -91,7 +104,7 @@
                         <td class="text-center">
                             <!-- Update book buttons -->
                             <button type="button" class="update-name btn btn-sm btn-outline-primary py-0 mb-1" data-form-url="{% url 'account:name' %}">
-                                Changes
+                                <span>Change</span>
                             </button>
                         </td>
                     </tr>
@@ -100,7 +113,7 @@
                         <td class="text-center">{{ user.email }}</td>
                         <td class="text-center">
                             <!-- Update book buttons -->
-                            <button type="button" class="update-name btn btn-sm btn-outline-primary py-0 mb-1" data-form-url="{% url 'account:name' %}">Change</button>
+                            <button type="button" class="update-name btn btn-sm btn-outline-primary py-0 mb-1" data-form-url="{% url 'account:email_update' %}">Change</button>
                             
                         </td>
                     </tr>
@@ -148,6 +161,10 @@
     <script type="text/javascript">
         
       $(function () {
+          $("#updatename").modalForm({
+              formURL: "{% url 'account:name'%}"
+          })
+
           var asyncSuccessMessage = [
             "<div ",
             "style='position:fixed;top:0;z-index:10000;width:100%;border-radius:0;' ",

@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .forms import  ConsumerRegistrationForm, AccountAuthenticationForm, UpdateNameForm
+from .forms import  ConsumerRegistrationForm, AccountAuthenticationForm, UpdateNameForm, UpdateEmailForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import Permission, Group, Group
 from business.models import Company, Services, Category
@@ -159,9 +159,28 @@ def NameChangeView(request):
             user.save()
             return redirect('account:account')
         else:
-            context['update_name_form'] = user_form
+            context['user_form'] = user_form
             
     else:
         user_form = UpdateNameForm(initial=data)
-        context['update_name_form'] = user_form
+        context['user_form'] = user_form
     return render(request, 'account/consumer/name_update.html', {'update_form':user_form, 'user':user})
+
+def emailChangeView(request):
+    context={}
+    email = request.user.email
+    user = Account.objects.get(email=email)
+    data = {'email': user.email}
+    if request.method == 'POST':
+        user_form = UpdateEmailForm(request.POST)
+        if user_form.is_valid():
+            user.email = user_form.cleaned_data.get('email')
+            user.save()
+            return redirect('account:account')
+        else:
+            context['update_name_form'] = user_form
+            
+    else:
+        user_form = UpdateEmailForm(initial=data)
+        context['update_name_form'] = user_form
+    return render(request, 'account/consumer/email_update.html', {'update_form':user_form, 'user':user})

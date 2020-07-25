@@ -3,6 +3,9 @@ from . import views
 app_name = 'account'
 urlpatterns = [
     path('name/', views.NameChangeView, name='name'),
+    path('email/', views.emailChangeView, name='email_update'),
+    # path('phone/', views.phoneChangeView, name='phone_update'),
+    # path('homeaddress/',views.homeAddressChangeView, name='home_updated'),
     path('<slug:slug>/<int:id>/', views.BusinessAccountsView , name='company_detailed'),
     path('list/', views.BusinessListViews, name='biz_list'),
     path('signup/', views.ConsumerRegistrationView, name ='signup'),

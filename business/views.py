@@ -111,7 +111,8 @@ def CreateServiceView(request, pk, slug):
             avail = True
             slugname = name + '' + request.user.slug
             service = Services.objects.create(business=company,name=name,description=description,price=price, available=avail, slug=slugname, 
-                                                price_type=price_type,duration_hour=duration_hour,duration_minute=duration_minute,checkintime=checkintime,padding=padding,paddingtime_hour=paddingtime_hour,paddingtime_minute=paddingtime_minute)
+                                                price_type=price_type,duration_hour=duration_hour,duration_minute=duration_minute,checkintime=checkintime,
+                                                padding=padding,paddingtime_hour=paddingtime_hour,paddingtime_minute=paddingtime_minute)
             service.save()
             return redirect(reverse('business:manage_service_list', args=[pk, slug]))
         else:

@@ -41,7 +41,7 @@ class Company(models.Model):
     postal = models.CharField(max_length=10, validators=[postal_regex])
     state = models.CharField(max_length=2)
     city = models.CharField(max_length=30)
-    slug = models.SlugField(max_length=200, db_index=True, unique=True)
+    slug = models.SlugField(max_length=200, db_index=True, unique_for_date='created')
     image = models.ImageField(upload_to='companies/%Y/%m/%d', blank=True)
     available = models.BooleanField(default=True)
     created = models.DateTimeField(auto_now_add=True)
@@ -64,7 +64,7 @@ class Company(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.slug:
-            self.slug = slugify(self.business_name)
+            self.slug = slugify(self.business_name) 
         super().save(*args, **kwargs)
 
 class Services(models.Model):

@@ -20,9 +20,9 @@ html, body {
     width: 100%;
     font-family: sans-serif;
     font-size: 20px;
-    color: #222;
-    background-color: white;
+    color: black;
 }
+
 
 .bg-white{
     background-color: white;
@@ -89,6 +89,9 @@ button:active,
 }
 .bg-light {
     background: linear-gradient(90deg, #ff5f6d 0%, #ffc371 100%);
+}
+.bg-dark {
+    background: #1b1b1b;
 }
 .carousel-inner {
     height: 500px;

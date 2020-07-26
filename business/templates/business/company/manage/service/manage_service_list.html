@@ -1,199 +1,45 @@
-{% extends 'business/base.html' %}
-{% load static %}
-{% block content %}
-    <div class="modal fade" id="create-modal" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog mt-5">
-            <div class="modal-content">
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade" tabindex="-1" role="dialog" id="modal">
-      <div class="modal-dialog mt-5" role="document">
-          <div class="modal-content"></div>
-      </div>
-    </div>
-
-    <div class="wrapper">
-    <nav id="sidebar" class="active">
-
-            <div class="sidebar-header">
-                <h3>{{ company.business_name }}</h3>
-                <strong>GB</strong>
-            </div>
-            <ul class="list-unstyled components">
-
-                <li>
-                    <a href="#">
-                        <i class="fa fa-calendar-alt"></i>
-                        Schedule
-                    </a>
-                    <a href="#" class="#">
-                        <i class="fas fa-file-invoice-dollar"></i>
-                        Invoices
-                    </a>
-                    <a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle list-unstyled active">
-                        <i class="fas fa-city"></i>
-                        Business Profile
-                    </a>
-                    <ul class="collapse list-unstyled" id="pageSubmenu">
-                        <li>
-                            <a href="{{ c.get_account_url }}">Company Details</a>
-                        </li>
-                        <li class="active">
-                            <a href="{{ c.get_account_url }}">Services</a>
-                        </li>
-                        <li>
-                            <a href="{{ c.get_account_url }}">Staff Members</a>
-                        </li>
-                    </ul>
-                </li>
-                <li>
-                    <a href="#">
-                        <i class="fas fa-cog"></i>
-                        Settings
-                    </a>
-                </li>
-                <li>
-                    
-                </li>
-                <li>
-                    <a href="{% url 'account:account' %}">
-                        <i class="fas fa-user-circle"></i>
-                        {{company.user.first_name}} {{company.user.last_name}}
-                    </a>
-                </li>
-                <li>
-                    <a href="{% url 'logout' %}">
-                        <i class="fas fa-sign-out-alt"></i>
-                        Logout
-                    </a>
-                </li>
-            </ul>
-
-            <ul class="list-unstyled CTAs">
-                <li>
-                    
-                </li>
-                <li>
-                </li>
-            </ul>
-        </nav>
-      <div class="container">
-      <div class="col-md-12 mb-3">
-      <div id="content">
-        <div class="container-fluid">
-        <button type="button" id="sidebarCollapse" class="btn btn-outline-primary">
-                        <i class="fas fa-align-left"></i>
-                        <span>Toggle Sidebar</span>
-                    </button>
-        <h1>{{ company.business_name }} Services</h1>
-        <button id="createservice" class="btn btn-outline-primary mb-3 form-control" type="submit">Add Service</button>
-        {% if services %}
-        <div class="table-responsive">
-            <table id="service-table" class="table table-light table-hover" style="">
-                <thead>
-                <tr>
-                    <th class="text-center" scope="col">#</th>
-                    <th class="text-center" scope="col">Service</th>
-                    <th class="text-center" scope="col">Service Description</th>
-                    <th class="text-center" scope="col">Price ($)</th>
-                    <th class="text-center" scope="col">Available</th>
-                    <th class="text-center">Update/Delete</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for service in services %}
-                    <tr>
-                        <th class="text-center" scope="row">{{ forloop.counter }}</th>
-                        <td class="text-center">{{ service.name }}</td>
-                        <td class="text-center">{{ service.description }}</td>
-                        <td class="text-center">{{ service.price }}</td>
-                        <td class="text-center">{{ service.available }}</td>
-                        <td class="text-center">
-                            <!-- Update book buttons -->
-                            <button type="button" class="update-service btn btn-sm btn-outline-primary" data-form-url="{% url 'business:update_service' service.pk company.pk company.slug %}">
-                                <span class="fa fa-pencil-alt"></span>
-                            </button>
-                            <!-- Delete book buttons -->
-                            <button type="button" class="bs-modal delete-service btn btn-sm btn-danger" data-form-url="{% url 'business:delete_service' service.pk company.pk company.slug%}">
-                                <span class="fa fa-trash"></span>
-                            </button>
-                        </td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-            </div>
-        {% else %}
-            <p class="">You have not created any services yet.</p>
-        {% endif %}
-        </div>
-    </div>
-    </div>
-    </div>
-    </div>
-{% endblock %}
-
-{% block extrascripts %}
-  <script type="text/javascript">
-      $(function () {
-          // Create service button opens modal with id="createservice"
-          $("#createservice").modalForm({
-            formURL: "{% url 'business:create_service' company.pk company.slug %}",
-            modalID: "#create-modal"
-          });
-
-          var asyncSuccessMessage = [
-            "<div ",
-            "style='position:fixed;top:0;z-index:10000;width:100%;border-radius:0;' ",
-            "class='alert alert-icon alert-success alert-dismissible fade show mb-0' role='alert'>",
-            "Success: Service was updated.",
-            "<button type='button' class='close' data-dismiss='alert' aria-label='Close'>",
-            "<span aria-hidden='true'>&times;</span>",
-            "</button>",
-            "</div>",
-            "<script>",
-            "$('.alert').fadeTo(2000, 500).slideUp(500, function () {$('.alert').slideUp(500).remove();});",
-            "<\/script>"
-          ].join("");
-
-          function updateServiceModalForm() {
-            $(".update-service").each(function () {
-              $(this).modalForm({
-                formURL: $(this).data("form-url"),
-                asyncUpdate: true,
-                asyncSettings: {
-                  closeOnSubmit: false,
-                  successMessage: asyncSuccessMessage,
-                  dataUrl: "services/",
-                  dataElementId: "#service-table",
-                  dataKey: "table",
-                  addModalFormFunction: updateServiceModalForm
-                }
-              });
-            });
-          }
-          updateServiceModalForm();
-
-          // Read and Delete book buttons open modal with id="modal"
-          // The formURL is retrieved from the data of the element
-          $(".bs-modal").each(function () {
-              $(this).modalForm({formURL: $(this).data("form-url")});
-          });
-
-          // Hide message
-          $(".alert").fadeTo(2000, 500).slideUp(500, function () {
-              $(".alert").slideUp(500);
-          });
-      });
-  </script>
-  <script>
-      $(document).ready(function () {
-        $('#sidebarCollapse').on('click', function () {
-            $('#sidebar').toggleClass('active');
-        });
-      });
-  </script>
-
-{% endblock extrascripts %}
+{% extends 'account/business_sidebar.html' %}
+{% block information %}
+<div class="mt-3"></div>
+<h1>{{ company.business_name }} Services</h1>
+<button id="createservice" class="btn btn-outline-primary mb-3 form-control" type="submit">Add Service</button>
+{% if services %}
+  <div class="table-responsive">
+    <table id="service-table" class="table table-light table-hover" style="">
+      <thead>
+        <tr>
+          <th class="text-center" scope="col">#</th>
+          <th class="text-center" scope="col">Service</th>
+          <th class="text-center" scope="col">Service Description</th>
+          <th class="text-center" scope="col">Price ($)</th>
+          <th class="text-center" scope="col">Available</th>
+          <th class="text-center">Update/Delete</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for service in services %}
+          <tr>
+            <th class="text-center" scope="row">{{ forloop.counter }}</th>
+            <td class="text-center">{{ service.name }}</td>
+            <td class="text-center">{{ service.description }}</td>
+            <td class="text-center">{{ service.price }}</td>
+            <td class="text-center">{{ service.available }}</td>
+            <td class="text-center">
+              <!-- Update Service buttons -->
+              <button type="button" class="update-service btn btn-sm btn-outline-primary" data-form-url="{% url 'business:update_service' service.pk company.pk company.slug %}">
+                <span class="fa fa-pencil-alt"></span>
+              </button>
+              <!-- Delete Service buttons -->
+              <button type="button" class="bs-modal delete-service btn btn-sm btn-danger" data-form-url="{% url 'business:delete_service' service.pk company.pk company.slug%}">
+                <span class="fa fa-trash"></span>
+              </button>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% else %}
+  <p class="">You have not created any services yet.</p>
+{% endif %}
+{% endblock information %}

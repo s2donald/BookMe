@@ -18,49 +18,48 @@
     <nav id="sidebar" class="">
 
             <div class="sidebar-header">
-                <h3>{{ company.business_name }}</h3>
+                <h3>{{ request.user.first_name }} {{request.user.last_name}}</h3>
                 <strong>GB</strong>
             </div>
             <ul class="list-unstyled components">
 
                 <li>
                     <a href="#">
-                        <i class="fa fa-calendar-alt"></i>
-                        Schedule
+                        <i class="fas fa-calendar"></i>
+                        Bookings
                     </a>
                     <a href="#" class="#">
                         <i class="fas fa-file-invoice-dollar"></i>
-                        Invoices
+                        Receipts
                     </a>
                     <a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle list-unstyled active">
                         <i class="fas fa-city"></i>
                         Business Profile
                     </a>
                     <ul class="collapse list-unstyled" id="pageSubmenu">
+                        {% if my_companies %}
+                            <li>
+                                <a href="{% url 'account:biz_list' %}">Your Business Pages</a>
+                            </li>
+                        {% endif %}
                         <li>
-                            <a href="{{ c.get_account_url }}">Company Details</a>
-                        </li>
-                        <li class="active">
-                            <a href="{{ c.get_account_url }}">Services</a>
+                            <a id="createpage" data-form-url="{% url 'account:add_biz' %}" style="cursor: pointer;">Add Business Page</a>
                         </li>
                         <li>
-                            <a href="{{ c.get_account_url }}">Staff Members</a>
+                            <a href="#">Gibele Subscriptions</a>
                         </li>
                     </ul>
                 </li>
                 <li>
                     <a href="#">
-                        <i class="fas fa-cog"></i>
-                        Settings
+                        <i class="fas fa-newspaper"></i>
+                        Reviews
                     </a>
                 </li>
-                <li>
-                    
-                </li>
-                <li>
+                <li class="active">
                     <a href="{% url 'account:account' %}">
                         <i class="fas fa-user-circle"></i>
-                        {{company.user.first_name}} {{company.user.last_name}}
+                        {{request.user.first_name}} {{request.user.last_name}}
                     </a>
                 </li>
                 <li>
@@ -76,40 +75,43 @@
                     
                 </li>
                 <li>
+                    
                 </li>
             </ul>
         </nav>
-      <div class="container">
-      <div class="col-md-12 mb-3">
-      <div id="content">
-        <div class="container-fluid">
-        <button type="button" id="sidebarCollapse" class="btn btn-outline-primary">
-                        <i class="fas fa-align-left"></i>
-                        <span>Toggle Sidebar</span>
-                    </button>
+
+    <div class="container mt-5">
+    <div class="row">
+        <div class="col-md-12">
+            <button type="button" id="sidebarCollapse" class="btn btn-outline-primary">
+                <i class="fas fa-align-left"></i>
+                <span>Toggle Sidebar</span>
+            </button>
             {% block information %}
-            {% endblock information%}
+            {% endblock information %}
         </div>
     </div>
     </div>
     </div>
-    </div>
-{% endblock %}
+{% endblock  %}
 
 {% block extrascripts %}
-  <script type="text/javascript">
+    <script type="text/javascript">
+        
       $(function () {
-          // Create service button opens modal with id="createservice"
-          $("#createservice").modalForm({
-            formURL: "{% url 'business:create_service' company.pk company.slug %}",
-            modalID: "#create-modal"
-          });
+          $("#createpage").modalForm({
+              formURL: "{% url 'account:add_biz' %}"
+          })
+
+          $("#updatename").modalForm({
+              formURL: "{% url 'account:name'%}"
+          })
 
           var asyncSuccessMessage = [
             "<div ",
             "style='position:fixed;top:0;z-index:10000;width:100%;border-radius:0;' ",
             "class='alert alert-icon alert-success alert-dismissible fade show mb-0' role='alert'>",
-            "Success: Service was updated.",
+            "Success: Account was updated.",
             "<button type='button' class='close' data-dismiss='alert' aria-label='Close'>",
             "<span aria-hidden='true'>&times;</span>",
             "</button>",
@@ -119,23 +121,23 @@
             "<\/script>"
           ].join("");
 
-          function updateServiceModalForm() {
-            $(".update-service").each(function () {
+          function updateNameModalForm() {
+            $(".update-name").each(function () {
               $(this).modalForm({
                 formURL: $(this).data("form-url"),
                 asyncUpdate: true,
                 asyncSettings: {
                   closeOnSubmit: false,
                   successMessage: asyncSuccessMessage,
-                  dataUrl: "services/",
-                  dataElementId: "#service-table",
+                  dataUrl: "account/",
+                  dataElementId: "#account-table",
                   dataKey: "table",
-                  addModalFormFunction: updateServiceModalForm
+                  addModalFormFunction: updateNameModalForm
                 }
               });
             });
           }
-          updateServiceModalForm();
+          updateNameModalForm();
 
           // Read and Delete book buttons open modal with id="modal"
           // The formURL is retrieved from the data of the element
@@ -148,13 +150,12 @@
               $(".alert").slideUp(500);
           });
       });
-  </script>
-  <script>
+    </script>
+    <script>
       $(document).ready(function () {
         $('#sidebarCollapse').on('click', function () {
             $('#sidebar').toggleClass('active');
         });
       });
-  </script>
-
+    </script>
 {% endblock extrascripts %}

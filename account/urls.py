@@ -4,6 +4,7 @@ app_name = 'account'
 urlpatterns = [
     path('name/', views.NameChangeView, name='name'),
     path('email/', views.emailChangeView, name='email_update'),
+    path('addbiz/',views.addBusinessView, name='add_biz'),
     # path('phone/', views.phoneChangeView, name='phone_update'),
     # path('homeaddress/',views.homeAddressChangeView, name='home_updated'),
     path('<slug:slug>/<int:id>/', views.BusinessAccountsView , name='company_detailed'),

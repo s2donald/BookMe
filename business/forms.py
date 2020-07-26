@@ -1,5 +1,10 @@
 from django import forms
-from .models import Category, Services
+from .models import Category, Services, Company
+from django.core.validators import RegexValidator
+STATUS_CHOICES = (
+        ('draft','Draft'),
+        ('published','Published'),
+    )
 price_choices = (
         ('fixed','Fixed'),
         ('start','Starting Price'),
@@ -89,3 +94,18 @@ class UpdateServiceForm(forms.Form):
         model = Services
         fields = ('name','description','price_type','price','available','duration_hour','duration_minute',
         'checkintime','padding','paddingtime_hour','paddingtime_minute')
+
+class AddCompanyForm(forms.Form):
+    business_name = forms.CharField(max_length=30, label='Business Name')
+    category = forms.ModelChoiceField(queryset=Category.objects.all(), label='Category')
+    description = forms.CharField(label='Brief Business Description', max_length=30, widget=forms.Textarea(attrs={'rows':3,'cols':20}))
+    address = forms.CharField(label='Business Address', max_length=200)
+    status = forms.ChoiceField(label='Status',choices=STATUS_CHOICES)
+    postal_regex = RegexValidator(regex=r"^[ABCEGHJKLMNPRSTVXY]{1}\d{1}[A-Z]{1} *\d{1}[A-Z]{1}\d{1}$")
+    postal = forms.CharField(max_length=10, validators=[postal_regex], label='Postal Code/ZIP Code')
+    state = forms.CharField(max_length=2, label='Province/State')
+    city = forms.CharField(max_length=30,label='City')
+
+    class Meta:
+        model = Company
+        fields = ('business_name', 'category', 'description', 'address', 'status', 'postal', 'state', 'city')

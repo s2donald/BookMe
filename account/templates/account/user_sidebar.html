@@ -45,9 +45,6 @@
                         <li>
                             <a id="createpage" data-form-url="{% url 'account:add_biz' %}" style="cursor: pointer;">Add Business Page</a>
                         </li>
-                        <li>
-                            <a href="#">Gibele Subscriptions</a>
-                        </li>
                     </ul>
                 </li>
                 <li>
@@ -103,9 +100,20 @@
               formURL: "{% url 'account:add_biz' %}"
           })
 
-          $("#updatename").modalForm({
+          $("#update-name").modalForm({
               formURL: "{% url 'account:name'%}"
           })
+
+          $("#update-email").modalForm({
+              formURL: "{% url 'account:email_update'%}"
+          })
+          $("#update-phone").modalForm({
+              formURL: "{% url 'account:phone_update'%}"
+          })
+          $("#update-address").modalForm({
+              formURL: "{% url 'account:home_updated'%}"
+          })
+
 
           var asyncSuccessMessage = [
             "<div ",

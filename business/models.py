@@ -37,7 +37,7 @@ class Company(models.Model):
     description = models.TextField(max_length=200, db_index=True, blank=True)
     address = models.CharField(max_length=200)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES,default='draft')
-    postal_regex = RegexValidator(regex=r"^[ABCEGHJKLMNPRSTVXY]{1}\d{1}[A-Z]{1} *\d{1}[A-Z]{1}\d{1}$")
+    postal_regex = RegexValidator(regex=r"^[ABCEGHJKLMNPRSTVXY]{1}\d{1}[A-Z]{1} *\d{1}[A-Z]{1}\d{1}$", message="A valid postal code/ZIP Code must be entered")
     postal = models.CharField(max_length=10, validators=[postal_regex])
     state = models.CharField(max_length=2)
     city = models.CharField(max_length=30)

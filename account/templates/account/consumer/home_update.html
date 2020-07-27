@@ -1,18 +1,16 @@
-
 {% load crispy_forms_tags %}
 {% load static %}
 
 <form method="post">
     {% csrf_token %}
     <div class="modal-header bg-light">
-        <h3 class="modal-title">Update Your Email Address</h3>
+        <h3 class="modal-title">Update Your Home Address</h3>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
     <div class="modal-body">
-        {{ update_form.email|as_crispy_field }}
-        
+        {{ update_form.address|as_crispy_field }}
     </div>
 
     <div class="modal-footer">

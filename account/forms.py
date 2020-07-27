@@ -58,3 +58,26 @@ class UpdateEmailForm(forms.Form):
     class Meta:
         model = Account
         fields = ('email')
+
+    def clean_email(self):
+        email = self.cleaned_data['email']
+        try:
+            match = Account.objects.get(email=email)
+        except User.DoesNotExist:
+            return email
+        raise forms.ValidationError('This email address is already in use.')
+
+class UpdatePhoneForm(forms.Form):
+    phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$', message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
+    phone = forms.CharField(label='Phone Number', validators=[phone_regex], required=True, max_length=30)
+    
+    class Meta:
+        model = Account
+        fields = ('phone')
+
+class UpdateHomeAddressForm(forms.Form):
+    address = forms.CharField(label='Home Address', max_length=30)
+
+    class Meta:
+        model = Account
+        fields = ('address')

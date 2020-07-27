@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .forms import  ConsumerRegistrationForm, AccountAuthenticationForm, UpdateNameForm, UpdateEmailForm
+from .forms import  ConsumerRegistrationForm, AccountAuthenticationForm, UpdateNameForm, UpdateEmailForm, UpdatePhoneForm, UpdateHomeAddressForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import Permission, Group, Group
 from business.models import Company, Services, Category
@@ -197,6 +197,7 @@ def NameChangeView(request):
         context['user_form'] = user_form
     return render(request, 'account/consumer/name_update.html', {'update_form':user_form, 'user':user})
 
+@login_required
 def emailChangeView(request):
     context={}
     email = request.user.email
@@ -215,3 +216,43 @@ def emailChangeView(request):
         user_form = UpdateEmailForm(initial=data)
         context['update_name_form'] = user_form
     return render(request, 'account/consumer/email_update.html', {'update_form':user_form, 'user':user})
+
+@login_required
+def phoneChangeView(request):
+    context={}
+    email = request.user.email
+    user = Account.objects.get(email=email)
+    data = {'phone': user.phone}
+    if request.method == 'POST':
+        user_form = UpdatePhoneForm(request.POST)
+        if user_form.is_valid():
+            user.phone = user_form.cleaned_data.get('phone')
+            user.save()
+            return redirect('account:account')
+        else:
+            context['update_phone_form'] = user_form
+            
+    else:
+        user_form = UpdatePhoneForm(initial=data)
+        context['update_phone_form'] = user_form
+    return render(request, 'account/consumer/phone_update.html', {'update_form':user_form, 'user':user})
+
+@login_required
+def homeAddressChangeView(request):
+    context={}
+    email = request.user.email
+    user = Account.objects.get(email=email)
+    data = {'address': user.address}
+    if request.method == 'POST':
+        user_form = UpdateHomeAddressForm(request.POST)
+        if user_form.is_valid():
+            user.address = user_form.cleaned_data.get('address')
+            user.save()
+            return redirect('account:account')
+        else:
+            context['update_home_form'] = user_form
+            
+    else:
+        user_form = UpdateHomeAddressForm(initial=data)
+        context['update_home_form'] = user_form
+    return render(request, 'account/consumer/home_update.html', {'update_form':user_form, 'user':user})

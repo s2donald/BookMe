@@ -1,6 +1,8 @@
 from django import forms
 from .models import Category, Services, Company
 from django.core.validators import RegexValidator
+from bootstrap_modal_forms.forms import BSModalModelForm
+
 STATUS_CHOICES = (
         ('draft','Draft'),
         ('published','Published'),
@@ -102,10 +104,14 @@ class AddCompanyForm(forms.Form):
     address = forms.CharField(label='Business Address', max_length=200)
     status = forms.ChoiceField(label='Status',choices=STATUS_CHOICES)
     postal_regex = RegexValidator(regex=r"^[ABCEGHJKLMNPRSTVXY]{1}\d{1}[A-Z]{1} *\d{1}[A-Z]{1}\d{1}$")
-    postal = forms.CharField(max_length=10, validators=[postal_regex], label='Postal Code/ZIP Code')
+    postal = forms.CharField(max_length=10, validators=[postal_regex], label='Postal Code/ZIP Code', error_messages={'invalid': 'Enter a valid Postal Code or ZIP Code.'})
     state = forms.CharField(max_length=2, label='Province/State')
     city = forms.CharField(max_length=30,label='City')
 
     class Meta:
         model = Company
         fields = ('business_name', 'category', 'description', 'address', 'status', 'postal', 'state', 'city')
+
+    
+        
+        

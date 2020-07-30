@@ -6,6 +6,7 @@ from django.contrib.auth.models import User
 from .models import Account
 from business.models import Company
 from django.core.validators import RegexValidator
+from bootstrap_modal_forms.forms import BSModalModelForm
 
 class ConsumerRegistrationForm(UserCreationForm):
     password1 = forms.CharField(label='Password', widget=forms.PasswordInput)
@@ -52,20 +53,20 @@ class UpdateNameForm(forms.Form):
         model = Account
         fields = ('first_name','last_name')
 
-class UpdateEmailForm(forms.Form):
+class UpdateEmailForm(BSModalModelForm):
     email = forms.EmailField(label='Email')
     
     class Meta:
         model = Account
-        fields = ('email')
+        fields = ('email',)
 
-    def clean_email(self):
-        email = self.cleaned_data['email']
-        try:
-            match = Account.objects.get(email=email)
-        except User.DoesNotExist:
-            return email
-        raise forms.ValidationError('This email address is already in use.')
+    # def clean_email(self):
+    #     email = self.cleaned_data['email']
+    #     try:
+    #         match = Account.objects.get(email=email)
+    #     except Account.DoesNotExist:
+    #         return email
+    #     raise forms.ValidationError('This email address is already in use.')
 
 class UpdatePhoneForm(forms.Form):
     phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$', message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")

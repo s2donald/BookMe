@@ -2,7 +2,7 @@
 {% load crispy_forms_tags %}
 {% load static %}
 
-<form method="post">
+<form method="post" id="emailupd">
     {% csrf_token %}
     <div class="modal-header bg-light">
         <h3 class="modal-title">Update Your Email Address</h3>
@@ -12,10 +12,29 @@
     </div>
     <div class="modal-body">
         {{ update_form.email|as_crispy_field }}
-        
     </div>
 
     <div class="modal-footer">
         <button type="submit" id="update-btn" class="btn btn-outline-primary">Update</button>
     </div>
 </form>
+
+<script type="text/javascript">
+    $(document).on('submit','#emailupd', function(e){
+        e.preventDefault();
+
+        $ajax({
+            type:'post',
+            url:"{% url 'account:email_update' %}",
+            data:$(this).serialize(),
+            context: this,
+            success: function(data, status){
+                location.reload();
+            }
+            error: function(request,type,errorThrown){
+                $('#emailupd').html(request.responseText)
+            }
+        });
+        return false;
+    });
+</script>

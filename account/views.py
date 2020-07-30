@@ -8,6 +8,10 @@ from django.contrib.postgres.search import SearchVector
 from django.contrib.auth.decorators import login_required
 from .models import Account
 from business.forms import AddCompanyForm
+from bootstrap_modal_forms.generic import (
+    BSModalUpdateView
+)
+from django.urls import reverse_lazy
 # Create your views here.
 
 def ConsumerRegistrationView(request):
@@ -74,10 +78,10 @@ def ConsumerRegistrationView(request):
 #     return render(request, 'account//business/registration.html', {'user_form':user_form, 'category':category, 'categories':categories ,'companies':results, 'form':form})
 @login_required
 def AccountSummaryView(request):
+    acct = get_object_or_404(Account, email=request.user.email)
     category = None
     categories = Category.objects.all()
-    companies = Company.objects.all()
-    companies = companies.filter(user=request.user)
+    companies = Company.objects.all().filter(user=request.user)
     form = SearchForm()
     Search = None
     results = []
@@ -93,7 +97,7 @@ def AccountSummaryView(request):
 
 
 
-    return render(request, 'account/cons_account_information.html', {'my_companies':companies, 'category':category, 'categories':categories ,'companies':results, 'form':form})
+    return render(request, 'account/cons_account_information.html', {'acct':acct,'my_companies':companies, 'category':category, 'categories':categories ,'companies':results, 'form':form})
 
 def RegisteredAccountView(request):
     return render(request, 'account/register_done.html')
@@ -170,7 +174,6 @@ def BusinessListViews(request):
 def BusinessAccountsView(request, id, slug):
     if not request.user.is_authenticated:
         return redirect("login")
-
     companies = Company.objects.all().filter(user=request.user)
     company = get_object_or_404(Company, id=id, slug=slug, available=True)
     services = Services.objects.all().filter(business=company)
@@ -196,6 +199,13 @@ def NameChangeView(request):
         user_form = UpdateNameForm(initial=data)
         context['user_form'] = user_form
     return render(request, 'account/consumer/name_update.html', {'update_form':user_form, 'user':user})
+
+class emailChangeViews(BSModalUpdateView):
+    model = Account
+    template_name = 'account/consumer/email_update.html'
+    form_class= UpdateEmailForm
+    success_message = 'Success: Email was updated.'
+    success_url = reverse_lazy('account:account')
 
 @login_required
 def emailChangeView(request):

@@ -1,5 +1,4 @@
 {% extends 'business/base.html' %}
-{% load static %}
 {% block content %}
     <div class="modal fade" id="create-modal" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog mt-5">
@@ -94,7 +93,6 @@
 
 {% block extrascripts %}
     <script type="text/javascript">
-        
       $(function () {
           $("#createpage").modalForm({
               formURL: "{% url 'account:add_biz' %}"
@@ -105,7 +103,7 @@
           })
 
           $("#update-email").modalForm({
-              formURL: "{% url 'account:email_update'%}"
+              formURL: "{% url 'account:email_update' acct.pk %}"
           })
           $("#update-phone").modalForm({
               formURL: "{% url 'account:phone_update'%}"
@@ -158,6 +156,7 @@
               $(".alert").slideUp(500);
           });
       });
+      
     </script>
     <script>
       $(document).ready(function () {

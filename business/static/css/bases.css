@@ -70,6 +70,11 @@ button:active,
   border-width: 0.1em;
 }
 
+.modal-body{
+    max-height: calc(80vh - 212px);
+    overflow-y: auto;
+}
+
 .navbar{
     padding: .8rem;
 }
@@ -414,6 +419,7 @@ form{
     }
     #sidebar.active {
         margin-left: 0 !important;
+        
     }
     #sidebar .sidebar-header h3,
     #sidebar .sidebar-header h5,

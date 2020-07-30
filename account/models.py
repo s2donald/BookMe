@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.core.validators import RegexValidator
 from django.utils.text import slugify
+from django.shortcuts import reverse
 # Create your models here.
 
 class MyAccountManager(BaseUserManager):

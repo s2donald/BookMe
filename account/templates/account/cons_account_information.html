@@ -25,7 +25,7 @@
                         <td class="text-center">{{ user.email }}</td>
                         <td class="text-center">
                             <!-- Update book buttons -->
-                            <button type="button" id="update-email"class="bs-modal btn btn-sm btn-outline-primary py-0 mb-1" data-form-url="{% url 'account:email_update' %}">Change</button>
+                            <button type="button" class="bs-modal btn btn-sm btn-outline-primary py-0 mb-1" data-form-url="{% url 'account:email_update' acct.pk %}">Change</button>
                             
                         </td>
                     </tr>
@@ -34,7 +34,7 @@
                         <td class="text-center">{{ user.phone }}</td>
                         <td class="text-center">
                             <!-- Update book buttons -->
-                            <button type="button" class="update-phone btn btn-sm btn-outline-primary py-0 mb-1" data-form-url="{% url 'account:phone_update' %}">Change</button>
+                            <button type="button" id="update-phone" class="btn btn-sm btn-outline-primary py-0 mb-1" data-form-url="{% url 'account:phone_update' %}">Change</button>
                             
                         </td>
                     </tr>

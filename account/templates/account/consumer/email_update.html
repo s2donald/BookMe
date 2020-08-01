@@ -15,26 +15,7 @@
     </div>
 
     <div class="modal-footer">
-        <button type="submit" id="update-btn" class="btn btn-outline-primary">Update</button>
+        <button type="submit" class="submit-btn btn btn-outline-primary">Update</button>
     </div>
 </form>
 
-<script type="text/javascript">
-    $(document).on('submit','#emailupd', function(e){
-        e.preventDefault();
-
-        $ajax({
-            type:'post',
-            url:"{% url 'account:email_update' %}",
-            data:$(this).serialize(),
-            context: this,
-            success: function(data, status){
-                location.reload();
-            }
-            error: function(request,type,errorThrown){
-                $('#emailupd').html(request.responseText)
-            }
-        });
-        return false;
-    });
-</script>

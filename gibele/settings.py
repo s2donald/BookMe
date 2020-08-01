@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'widget_tweaks',
     'bootstrap_modal_forms',
     'account.apps.AccountConfig',
     'business.apps.BusinessConfig',

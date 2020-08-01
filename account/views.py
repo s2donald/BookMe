@@ -12,6 +12,8 @@ from bootstrap_modal_forms.generic import (
     BSModalUpdateView
 )
 from django.urls import reverse_lazy
+from django.http import JsonResponse
+from django.template.loader import render_to_string
 # Create your views here.
 
 def ConsumerRegistrationView(request):
@@ -200,13 +202,6 @@ def NameChangeView(request):
         context['user_form'] = user_form
     return render(request, 'account/consumer/name_update.html', {'update_form':user_form, 'user':user})
 
-class emailChangeViews(BSModalUpdateView):
-    model = Account
-    template_name = 'account/consumer/email_update.html'
-    form_class= UpdateEmailForm
-    success_message = 'Success: Email was updated.'
-    success_url = reverse_lazy('account:account')
-
 @login_required
 def emailChangeView(request):
     context={}
@@ -226,6 +221,29 @@ def emailChangeView(request):
         user_form = UpdateEmailForm(initial=data)
         context['update_name_form'] = user_form
     return render(request, 'account/consumer/email_update.html', {'update_form':user_form, 'user':user})
+
+# def save_information_form(request, form, template_name):
+#     data = dict()
+#     if request.method == 'POST':
+#         if form.is_valid():
+#             form.save()
+#             data['form_is_valid'] = True
+#             account = Account.objects.get(email=request.user.email)
+#             data['html_account_info'] = render_to_string('account/cons_account_information.html', {'account':account})
+#         else:
+#             data['form_is_valid'] = False
+#     context = {'form':form}
+#     data['html_form'] = render_to_string(template_name, context, request=request)
+#     return JsonResponse(data)
+
+
+# @login_required
+# def emailUpdateView(request):
+#     if request.method=='POST':
+#         form = UpdateEmailForm(request.POST)
+#     else:
+#         form = UpdateEmailForm()
+#     return save_information_form(request, form, 'account/consumer/email_update.html')
 
 @login_required
 def phoneChangeView(request):

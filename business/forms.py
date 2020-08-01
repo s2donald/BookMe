@@ -65,7 +65,7 @@ minute_choices = (
 class SearchForm(forms.Form):
     Search = forms.CharField(label='Search Business or Service',widget=forms.TextInput(attrs={'class':'form-control border border','placeholder':'Search Business or Service'}))
     
-class AddServiceForm(forms.Form):
+class AddServiceForm(forms.ModelForm):
     name = forms.CharField(label='Service Name')
     description = forms.CharField(label='Details Of Service',max_length=30, required=True, widget=forms.Textarea(attrs={'rows':2, 'cols':20}))
     price_type = forms.ChoiceField(label='Price Type',choices=price_choices)

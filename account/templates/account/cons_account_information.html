@@ -15,7 +15,7 @@
                         <td class="text-center">{{user.first_name }} {{ user.last_name }}</td>
                         <td class="text-center">
                             <!-- Update book buttons -->
-                            <button type="button" class="update-name btn btn-sm btn-outline-primary py-0 mb-1" data-form-url="{% url 'account:name' %}">
+                            <button type="button" id="update-name" class="update-name btn btn-sm btn-outline-primary py-0 mb-1" data-form-url="{% url 'account:name' %}">
                                 <span>Change</span>
                             </button>
                         </td>
@@ -24,8 +24,8 @@
                         <th class="text-center" scope="row">Email: </th>
                         <td class="text-center">{{ user.email }}</td>
                         <td class="text-center">
-                            <!-- Update book buttons -->
-                            <button type="button" class="bs-modal btn btn-sm btn-outline-primary py-0 mb-1" data-form-url="{% url 'account:email_update' acct.pk %}">Change</button>
+                            <!-- Update email buttons -->
+                            <button type="button" id="update-email" class="btn btn-sm btn-outline-primary py-0 mb-1" data-form-url="{% url 'account:email_update' %}">Change</button>
                             
                         </td>
                     </tr>

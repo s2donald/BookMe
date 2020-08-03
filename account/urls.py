@@ -1,5 +1,6 @@
 from django.urls import path
 from . import views
+from django.contrib.auth import views as auth_views
 app_name = 'account'
 urlpatterns = [
     path('name/', views.NameChangeView, name='name'),

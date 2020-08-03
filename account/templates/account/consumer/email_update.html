@@ -19,3 +19,24 @@
     </div>
 </form>
 
+<script type="text/javascript">
+    $(document).on('submit','#emailupd', function(e){
+        e.preventDefault();
+        $.ajax({
+        type: $(this).attr('method'),
+        url: this.action,
+        data: $(this).serialize(),
+        context: this,
+        success: function(data, status) {
+            data['']
+            location.reload();
+        },
+        error: function (request, type, errorThrown) {
+            console.log('error boi')
+            $('#emailupd').p(request.responseText);
+        }
+    });
+    return false;
+        
+    });
+</script>

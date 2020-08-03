@@ -53,7 +53,7 @@ class UpdateNameForm(forms.Form):
         model = Account
         fields = ('first_name','last_name')
 
-class UpdateEmailForm(BSModalModelForm):
+class UpdateEmailForm(forms.ModelForm):
     email = forms.EmailField(label='Email')
     
     class Meta:

@@ -9,7 +9,8 @@ from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy, reverse
 from django.views import generic
-
+from django.http import JsonResponse
+from django.template.loader import render_to_string
 
 # Create your views here.
 def homepage(request, category_slug=None):

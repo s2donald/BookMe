@@ -81,7 +81,7 @@ class AddServiceForm(forms.ModelForm):
         fields = ('name','description','price_type','price','available','duration_hour',
         'checkintime','padding','paddingtime_hour','paddingtime_minute')
 
-class UpdateServiceForm(forms.Form):
+class UpdateServiceForm(forms.ModelForm):
     name = forms.CharField(label='Service Name')
     description = forms.CharField(label='Details Of Service',max_length=30, required=True, widget=forms.Textarea(attrs={'rows':2, 'cols':20}))
     price_type = forms.ChoiceField(label='Price Type',choices=price_choices)
@@ -97,7 +97,7 @@ class UpdateServiceForm(forms.Form):
         fields = ('name','description','price_type','price','available','duration_hour','duration_minute',
         'checkintime','padding','paddingtime_hour','paddingtime_minute')
 
-class AddCompanyForm(forms.Form):
+class AddCompanyForm(forms.ModelForm):
     business_name = forms.CharField(max_length=30, label='Business Name')
     category = forms.ModelChoiceField(queryset=Category.objects.all(), label='Category')
     description = forms.CharField(label='Brief Business Description', max_length=30, widget=forms.Textarea(attrs={'rows':3,'cols':20}))

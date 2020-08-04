@@ -1,5 +1,5 @@
 from django.db import models
-from business.models import Account, Company
+from business.models import Account, Company, Services
 # Create your models here.
 
 class Bookings(models.Model):
@@ -8,5 +8,11 @@ class Bookings(models.Model):
     #We must add a timeslot for the booking
     has_paid = models.BooleanField(default=False)
     #We must also create a receipt model to handle the reciepts and link to the booking
+    start = models.DateTimeField()
+    end = models.DateTimeField()
+
+class ScheduleTime(models.Model):
+    time_slot = models.TimeField()
+    service = models.ForeignKey(Services, on_delete=models.CASCADE)
 
 

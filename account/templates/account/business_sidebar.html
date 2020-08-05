@@ -24,7 +24,7 @@
             <ul class="list-unstyled components">
 
                 <li>
-                    <a href="#">
+                    <a href="{{ company.get_schedule_url }}">
                         <i class="fa fa-calendar-alt"></i>
                         Schedule
                     </a>
@@ -38,13 +38,13 @@
                     </a>
                     <ul class="collapse list-unstyled" id="pageSubmenu">
                         <li>
-                            <a href="{{ c.get_account_url }}">Company Details</a>
+                            <a href="{{ company.get_account_url }}">Company Details</a>
                         </li>
                         <li class="active">
-                            <a href="{{ c.get_account_url }}">Services</a>
+                            <a href="{{ company.get_account_url }}">Services</a>
                         </li>
                         <li>
-                            <a href="{{ c.get_account_url }}">Staff Members</a>
+                            <a href="{{ company.get_account_url }}">Staff Members</a>
                         </li>
                     </ul>
                 </li>

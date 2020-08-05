@@ -6,10 +6,10 @@ from django.utils import timezone
 class Bookings(models.Model):
     #The user who booked
     user = models.ForeignKey(Account, on_delete=models.CASCADE)
-    #The company that was booked
-    company = models.OneToOneField(Company, on_delete=models.CASCADE)
     #The service booked
-    service = models.OneToOneField(Services, on_delete=models.CASCADE)
+    service = models.ForeignKey(Services, on_delete=models.CASCADE)
+    #Add the company the service is with
+    company = models.ForeignKey(Company, on_delete=models.CASCADE)
     #We must add a timeslot for the booking
     has_paid = models.BooleanField(default=False)
     #We must also create a receipt model to handle the reciepts and link to the booking

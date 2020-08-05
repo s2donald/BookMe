@@ -4,4 +4,4 @@ from .models import Bookings
 
 @admin.register(Bookings)
 class BookingAdmin(admin.ModelAdmin):
-    list_display = ['service','user', 'company', 'start', 'end', 'has_paid']
+    list_display = ['company','service','user', 'start', 'end', 'has_paid']

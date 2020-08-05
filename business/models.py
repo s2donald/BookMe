@@ -131,7 +131,7 @@ class Services(models.Model):
     duration_hour = models.CharField(max_length=11, choices=hours_choices,default='zero')
     duration_minute = models.CharField(max_length=11, choices=minute_choices,default='zero')
     checkintime = models.CharField(max_length=10,choices=minute_choices,default='zero')
-    paddingtime_hour = models.CharField(max_length=10,choices=minute_choices,default='zero')
+    paddingtime_hour = models.CharField(max_length=11,choices=hours_choices,default='zero')
     paddingtime_minute = models.CharField(max_length=10,choices=minute_choices,default='zero')
     padding = models.CharField(max_length=20,choices=beforeafter, default='none')
     available = models.BooleanField(default=True)

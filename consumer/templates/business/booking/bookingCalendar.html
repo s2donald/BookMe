@@ -1,4 +1,34 @@
 {% extends 'account/business_sidebar.html' %}
 {% block information %}
     <h1>Hello World</h1>
+    <div class="container-fluid">
+        <div id="calendar"></div>
+    </div>
+{% endblock %}
+
+{% block calendarscript %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function(){
+            if (window.innerWidth >= 768 ) {
+                var leftitems = 'prev,next today'
+                var rightitems = 'dayGridMonth,timeGridWeek,timeGridDay'
+                var initviewcal = 'dayGridMonth'
+            } else {
+                var leftitems = 'prev,next'
+                var rightitems = ''
+                var initviewcal = 'listDay'
+                console.log(window.innerWidth)
+            }
+            var calendarEl = document.getElementById('calendar');
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: initviewcal,
+                headerToolbar: {
+                    left: leftitems,
+                    center: 'title',
+                    right: rightitems
+                }
+            });
+            calendar.render()
+        });
+    </script>
 {% endblock %}

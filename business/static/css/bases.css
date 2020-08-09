@@ -28,6 +28,10 @@ html, body {
     background-color: white;
 }
 
+.bg-purple{
+    background-color: #6d7fcc;
+}
+
 ::-webkit-scrollbar {
     width: 12px;
 }
@@ -479,9 +483,9 @@ form{
 /*--- Gibele logo  --*/
 .logo{
     font-family: 'Fredoka One', cursive;
-    font-size: 25px;
+    font-size: 15px;
     text-decoration: none;
-    
+    background-size: 15px 15px;
 }
 
 /*---Firefox Bug Fix --*/

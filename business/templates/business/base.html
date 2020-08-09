@@ -14,21 +14,15 @@
         <title>{% block title %}Gibele.com - Bookings Made Easy{% endblock %}</title>
     </head>
     <body id="page-wrapper">
-        <nav class="navbar navbar-expand-lg navbar-dark nav-box-round bg-light flex-shrink-1 flex-grow-0">
+        <nav class="navbar navbar-expand-lg navbar-dark nav-box-round bg-light flex-shrink-2 flex-grow-0">
             <div class="container-fluid">
-            <a class="logo navbar-brand navbb" href="/"><img src="{% static "img/logo_transparent.png" %}"></a>
+            <a class="logo navbar-brand navbb" href="/"><img width="150px" height="32px" src="{% static "img/logo.svg" %}"></a>
             <form method="GET" class="mr-2 my-auto w-100 d-inline-block order-1">
                 <div class="input-group">
                     {% csrf_token %}
                     {{ form.Search }}
-                    <span class="input-group">
-                        <select name="dropdown" class="form-control" style="width:auto;">
-                                <option value="All Services">All Services</option>
-                                {% for c in categories %}
-                                    <option value={{ c.name }}>All {{c.name}}</option>
-                                {% endfor %}
-                            </select>
-                        <button class="btn btn-outline-primary border-left-0" type="submit"><i class="fa fa-search"></i></button>
+                    <span class="input-group-append">
+                        <button class="btn btn-outline-primary border-left-0" type="submit"><i class="fas fa-search"></i></button>
                     </span>
                     
                 </div>
@@ -72,6 +66,13 @@
             </ul>
             </div>
         
+        </nav>
+        <nav class="navbar bg-purple nav-box-round flex-shrink-2 flex-grow-0">
+                                <option value="All Services">All Services</option>
+                                {% for c in categories %}
+                                    <option value={{ c.name }}>{{c.name}}</option>
+                                {% endfor %}
+
         </nav>
 
         <div class="main">

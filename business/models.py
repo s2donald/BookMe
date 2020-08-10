@@ -21,6 +21,19 @@ class Category(models.Model):
     def get_absolute_url(self):
         return reverse("business:company_list_by_category", args=[self.slug])
 
+class SubCategory(models.Model):
+    name = models.CharField(max_length=200, db_index=True)
+    slug = models.SlugField(max_length=200, unique=True)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    class Meta:
+        ordering = ('name',)
+        verbose_name = 'sub-category'
+        verbose_name_plural = 'sub-categories'
+    def __str__(self):
+        return self.name
+    def get_absolute_url(self):
+        return reverse("business:company_list_by_category", args=[self.slug])
+
 class PublishedManager(models.Manager):
     def get_queryset(self):
         return super(PublishedManager, self).get_queryset().filter(status='published')
@@ -34,6 +47,7 @@ class Company(models.Model):
     user = models.ForeignKey(Account, on_delete=models.CASCADE, related_name='company_page')
     business_name = models.CharField(max_length=30, db_index=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='companies', null=True, blank=True)
+    subcategory = models.ManyToManyField(SubCategory)
     description = models.TextField(max_length=200, db_index=True, blank=True)
     address = models.CharField(max_length=200)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES,default='draft')

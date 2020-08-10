@@ -29,3 +29,4 @@ class Bookings(models.Model):
 
 
 
+

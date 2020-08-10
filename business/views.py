@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Category, Company, Services
+from .models import Category, Company, Services, SubCategory
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.postgres.search import SearchVector
 from .forms import SearchForm, AddServiceForm, UpdateServiceForm
@@ -16,6 +16,7 @@ from django.template.loader import render_to_string
 def homepage(request, category_slug=None):
     category = None
     categories = Category.objects.all()
+    subcategories = SubCategory.objects.all()
     form = SearchForm()
     Search = None
     results = []
@@ -23,20 +24,29 @@ def homepage(request, category_slug=None):
         form = SearchForm(request.GET)
         if form.is_valid():
             Search = form.cleaned_data['Search']
+            
             results = Company.objects.annotate(search=SearchVector('business_name','description'),).filter(search=Search)
-            return render(request, 'business/company/list.html',{'category':category, 'categories':categories ,'companies':results})
+            return render(request, 'business/company/list.html',{'category':category, 'categories':categories ,'companies':results, 'name': Search})
     if category_slug:
         category = get_object_or_404(Category, slug=category_slug)
-    return render(request, 'business/home.html', {'category':category, 'categories':categories, 'form':form})
+    return render(request, 'business/home.html', {'category':category, 'categories':categories, 'subcategories':subcategories,'form':form})
 
 def company_list(request, category_slug=None, company_slug=None, tag_slug=None):
     category = None
     categories = Category.objects.all()
+    subcategories = SubCategory.objects.all()
     companies = Company.objects.all()
     tag=None
     if category_slug:
-        category = get_object_or_404(Category, slug=category_slug)
-        companies = companies.filter(category=category)
+        try:
+            category = get_object_or_404(Category, slug=category_slug)
+            companies = companies.filter(category=category)
+            name = category.name
+        except:
+            subcategory = get_object_or_404(SubCategory, slug=category_slug)
+            companies = companies.filter(subcategory=subcategory)
+            name = subcategory.name
+        
     if tag_slug:
         tag = get_object_or_404(Tag, slug=tag_slug)
         companies = companies.filter(tags__in=[tag])
@@ -49,7 +59,7 @@ def company_list(request, category_slug=None, company_slug=None, tag_slug=None):
         if form.is_valid():
             Search = form.cleaned_data['Search']
             results = Company.objects.annotate(search=SearchVector('business_name','description'),).filter(search=Search)
-            return render(request, 'business/company/list.html',{'category':category, 'categories':categories ,'companies':results})
+            return render(request, 'business/company/list.html',{'category':category, 'categories':categories ,'companies':results, 'subcategories':subcategories})
 
     counts = companies.count()%6
     paginator = Paginator(companies, 4)
@@ -61,7 +71,7 @@ def company_list(request, category_slug=None, company_slug=None, tag_slug=None):
     except EmptyPage:
         companiess = paginator.page(paginator.num_pages)
 
-    return render(request, 'business/company/list.html',{'page':page,'category':category, 'companies':companiess, 'categories':categories, 'counts':counts, 'form':form,'tag':tag})
+    return render(request, 'business/company/list.html',{'page':page,'subcategories':subcategories,'category':category, 'companies':companiess, 'categories':categories, 'counts':counts, 'form':form,'tag':tag, 'name':name})
 
 def company_detail(request, id, slug):
     company = get_object_or_404(Company, id=id, slug=slug, available=True)

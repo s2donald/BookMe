@@ -67,13 +67,33 @@
             </div>
         
         </nav>
-        <nav class="navbar bg-purple nav-box-round flex-shrink-2 flex-grow-0">
-                                <option value="All Services">All Services</option>
-                                {% for c in categories %}
-                                    <option value={{ c.name }}>{{c.name}}</option>
-                                {% endfor %}
+        {% if categories %}
 
+        <div class="collapse show" id="collapseExample">
+        <nav class="navbar bg-purple nav-box-round flex-shrink-1 flex-grow-0" id="collapseExample">
+            
+            <div class="container-fluid">
+            {% for c in categories %}
+                <div class="btn-group my-1">
+                    <a type="button" class="btn btn-sm btn-outline-dark" href="{{ c.get_absolute_url }}">{{c.name}}</a>
+                    <a type="button" class="btn btn-sm btn-outline-dark dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <span class="sr-only">Toggle Dropdown</span>
+                    </a>
+                    <div class="dropdown-menu float-xs-right">
+                        {% for sc in subcategories %}
+                        {% if sc.category.name == c.name %}
+                            <a href="{{ sc.get_absolute_url }}" class="dropdown-item">{{ sc.name }}</a>
+                        {% endif %}
+                        {% endfor %}
+                    </div>
+                    
+                </div>
+            {% endfor %}
+            </div>
         </nav>
+        </div>
+        
+        {% endif %}
 
         <div class="main">
             {% block content %}

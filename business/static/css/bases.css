@@ -23,7 +23,6 @@ html, body {
     color: black;
 }
 
-
 .bg-white{
     background-color: white;
 }
@@ -56,7 +55,7 @@ html, body {
     color: black;
 }
 
-button:focus,
+
 button:active,
 .btn.btn-outline-primary{
     opacity: 100%;
@@ -65,12 +64,27 @@ button:active,
     color: #ffffff;
     border-width: 0.1em;
 }
-.btn.btn-outline-primary:hover, 
-.btn.btn-outline-primary:focus,
+.btn.btn-outline-primary:hover,
 .btn.btn-outline-primary:active{
   color: #606FCC;
   background-color:#ffffff;
   border-color: #606FCC;
+  border-width: 0.1em;
+}
+
+button:active,
+.btn.btn-outline-dark{
+    opacity: 100%;
+    background-color: #6d7fcc;
+    border-color: #6d7fcc;
+    color: #ffffff;
+    border-width: 0.1em;
+}
+.btn.btn-outline-dark:hover,
+.btn.btn-outline-dark:active{
+  color: #6d7fcc;
+  background-color:#ffffff;
+  border-color: #000;
   border-width: 0.1em;
 }
 
@@ -133,6 +147,14 @@ button:active,
     text-shadow: 1px 1px 1px #000;
     color: green;
 }
+.dropdown{
+    margin-top: -0.5rem;
+    position: relative; 
+ }
+.dropdown-menu{
+    min-width: 1rem;
+    position: absolute;
+  }
 
 li {
     list-style: none;
@@ -241,7 +263,7 @@ footer {
     padding: 10px !important;
 }
 
-#sidebar.active .dropdown-toggle::after {
+#sidebar.active .dropfix.dropdown-toggle::after {
     top: auto;
     bottom: 10px;
     right: 50%;
@@ -290,7 +312,7 @@ a[data-toggle="collapse"] {
     position: relative;
 }
 
-.dropdown-toggle::after {
+.dropfix.dropdown-toggle::after {
     display: block;
     position: absolute;
     top: 50%;
@@ -413,7 +435,7 @@ form{
         text-align: center;
         margin-left: -80px !important;
     }
-    .dropdown-toggle::after {
+    .dropfix.dropdown-toggle::after {
         top: auto;
         bottom: 10px;
         right: 50%;

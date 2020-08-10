@@ -2,10 +2,15 @@
 {% load static %}
 {% block content %}
     <div class="container text-center bg-white">
-        <h1>{% if category %}{{ category.name }}{% else %}Services{% endif %}</h1>
+        {% if category %}
+            <h1>{{ category.name }}</h1>
+        {% else %}
+            <h1>{% if name %}Results for {{ name }}{% else %}No Results Found{% endif %}</h1>
+        {% endif %}
+        
         <div class="card-deck text-center">
         {% for company in companies %}
-            <div class="card mb-4 text-center">
+            <div class="card mb-4 text-center shadow">
                     <a class="nav-link text-center" href="{{ company.get_absolute_url }}">
 
                         <img align="left" class="img-responsive list-img" align="left" src="{% if company.image %}{{ company.image.url }}{% else %}{% static "img/no_image.png" %}{% endif %}">

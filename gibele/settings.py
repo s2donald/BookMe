@@ -136,3 +136,11 @@ MEDIA_URL ='/media/'
 MEDIA_ROOT=os.path.join(BASE_DIR,'media/')
 
 LOGIN_REDIRECT_URL = 'business:homepage'
+
+
+EMAIL_HOST = 'smtp.zoho.com'
+EMAIL_PORT = 465
+EMAIL_HOST_USER = 'noreply@gibele.com'
+EMAIL_HOST_PASSWORD = 'vEK97wFvxY27jTEhqQY8Qv6L!'
+EMAIL_USE_TLS = False
+EMAIL_USE_SSL = True

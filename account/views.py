@@ -1,3 +1,4 @@
+from .tasks import bizaddedEmailSent
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import  ConsumerRegistrationForm, AccountAuthenticationForm, UpdateNameForm, UpdateEmailForm, UpdatePhoneForm, UpdateHomeAddressForm
 from django.contrib.auth import authenticate, login, logout
@@ -155,6 +156,8 @@ def addBusinessView(request):
                                                 description=description,address=address,postal=postal,
                                                 state=state,city=city,status=status)
             company.save()
+            user_id = user.id
+            bizaddedEmailSent.delay(user_id)
             return redirect('account:account')
         else:
             context['user_form'] = user_form

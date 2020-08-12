@@ -4,7 +4,7 @@
 {% block content %}
 
 <div class="container">
-    <h1 class="h3 mb-3 font-weight-normal mt-1">Welcome back to Gibele!</h1>
+    <h1 class="text-center col-md-12">Welcome back to Gibele!</h1>
     <h3>Please use the following form to log-in</h3>
     <form class="form-signin" method="POST" action="{% url 'login' %}">
       {% csrf_token %}

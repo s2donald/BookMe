@@ -1,7 +1,7 @@
 {% extends 'business/base.html' %}
 {% load static %}
 {% block title %}{{ company.business_name }} - Gibele.com{% endblock %}
-{% block content %}
+{% comment %} {% block content %}
     <div class="container padding bg-white">
         <div class="row">
         <div class="col-lg-6 col-md-12 cardio">
@@ -29,7 +29,420 @@
             </div>
             </div>
     </div>
-{% endblock %}
+{% endblock %} {% endcomment %}
+
+{% block content %}
+    <!-- Hero Section-->
+    <section class="pt-7 pb-5 d-flex align-items-end dark-overlay bg-cover" style="background-image: url('img/photo/restaurant-1515164783716-8e6920f3e77c.jpg');">
+      <div class="container overlay-content">
+        <div class="d-flex justify-content-between align-items-start flex-column flex-lg-row align-items-lg-end">
+          <div class="text-white mb-4 mb-lg-0">
+            <div class="badge badge-pill badge-transparent px-3 py-2 mb-4">Eat &amp; Drink</div>
+            <h1 class="text-shadow verified">Fifteen Restaurant & Bar</h1>
+            <p><i class="fa-map-marker-alt fas mr-2"></i> 53 Broadway, Brooklyn, NY 1129</p>
+            <p class="mb-0 d-flex align-items-center"><i class="fa fa-xs fa-star text-primary"></i><i class="fa fa-xs fa-star text-primary"></i><i class="fa fa-xs fa-star text-primary"></i><i class="fa fa-xs fa-star text-primary"></i><i class="fa fa-xs fa-star text-gray-200 mr-4">                   </i>8 Reviews</p>
+          </div>
+          <div class="calltoactions"><a class="btn btn-primary" href="#leaveReview" onclick="$('#leaveReview').collapse('show')" data-smooth-scroll>Leave a Review</a></div>
+        </div>
+      </div>
+    </section>
+    <section class="py-6">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8">
+            <!-- About Listing-->
+            <div class="text-block">
+              <h3 class="mb-3">About</h3>
+              <p class="text-muted"> Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore.</p>
+              <p class="text-muted"> Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+            </div>
+            <div class="text-block">
+              <!-- Listing Location-->
+              <h3 class="mb-4">Location</h3>
+              <div class="map-wrapper-300 mb-3">
+                <div id="map" style="width:100%;height:400px"></div>
+              </div>
+            </div>
+            <div class="text-block">
+              <!-- Gallery-->
+              <h3 class="mb-4">Gallery</h3>
+              <div class="row gallery ml-n1 mr-n1">
+                <div class="col-lg-4 col-6 px-1 mb-2"><a href="img/photo/restaurant-1515164783716-8e6920f3e77c.jpg"><img class="img-fluid" src="img/photo/restaurant-1515164783716-8e6920f3e77c.jpg" alt="..."></a></div>
+                <div class="col-lg-4 col-6 px-1 mb-2"><a href="img/photo/restaurant-1466978913421-dad2ebd01d17.jpg"><img class="img-fluid" src="img/photo/restaurant-1466978913421-dad2ebd01d17.jpg" alt="..."></a></div>
+                <div class="col-lg-4 col-6 px-1 mb-2"><a href="img/photo/restaurant-1477763858572-cda7deaa9bc5.jpg"><img class="img-fluid" src="img/photo/restaurant-1477763858572-cda7deaa9bc5.jpg" alt="..."></a></div>
+                <div class="col-lg-4 col-6 px-1 mb-2"><a href="img/photo/restaurant-1505275350441-83dcda8eeef5.jpg"><img class="img-fluid" src="img/photo/restaurant-1505275350441-83dcda8eeef5.jpg" alt="..."></a></div>
+                <div class="col-lg-4 col-6 px-1 mb-2"><a href="img/photo/restaurant-1508766917616-d22f3f1eea14.jpg"><img class="img-fluid" src="img/photo/restaurant-1508766917616-d22f3f1eea14.jpg" alt="..."></a></div>
+                <div class="col-lg-4 col-6 px-1 mb-2"><a href="img/photo/restaurant-1430931071372-38127bd472b8.jpg"><img class="img-fluid" src="img/photo/restaurant-1430931071372-38127bd472b8.jpg" alt="..."></a></div>
+              </div>
+            </div>
+            <!-- Amenities-->
+            <div class="text-block">
+              <h3 class="mb-4">Amenities</h3>
+              <ul class="amenities-list list-inline">
+                <li class="list-inline-item mb-3">
+                  <div class="d-flex align-items-center">
+                    <div class="icon-circle bg-secondary mr-2"><i class="fa fa-check"></i></div><span>Elevator</span>
+                  </div>
+                </li>
+                <li class="list-inline-item mb-3">
+                  <div class="d-flex align-items-center">
+                    <div class="icon-circle bg-secondary mr-2"><i class="fa fa-check"></i></div><span>Vegan friendly</span>
+                  </div>
+                </li>
+                <li class="list-inline-item mb-3">
+                  <div class="d-flex align-items-center">
+                    <div class="icon-circle bg-secondary mr-2"><i class="fa fa-check"></i></div><span>Alcohol served</span>
+                  </div>
+                </li>
+                <li class="list-inline-item mb-3">
+                  <div class="d-flex align-items-center">
+                    <div class="icon-circle bg-secondary mr-2"><i class="fa fa-check"></i></div><span>No smoking</span>
+                  </div>
+                </li>
+                <li class="list-inline-item mb-3">
+                  <div class="d-flex align-items-center">
+                    <div class="icon-circle bg-secondary mr-2"><i class="fa fa-check"></i></div><span>Parking spaces (paid)</span>
+                  </div>
+                </li>
+                <li class="list-inline-item mb-3">
+                  <div class="d-flex align-items-center">
+                    <div class="icon-circle bg-secondary mr-2"><i class="fa fa-check"></i></div><span>WiFi</span>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="text-block">
+              <p class="subtitle text-sm text-primary">Reviews    </p>
+              <h5 class="mb-4">Listing Reviews </h5>
+              <div class="media d-block d-sm-flex review">
+                <div class="text-md-center mr-4 mr-xl-5"><img class="d-block avatar avatar-xl p-2 mb-2" src="img/avatar/avatar-8.jpg" alt="Padmé Amidala"><span class="text-uppercase text-muted text-sm">Dec 2018</span></div>
+                <div class="media-body">
+                  <h6 class="mt-2 mb-1">Padmé Amidala</h6>
+                  <div class="mb-2"><i class="fa fa-xs fa-star text-primary"></i><i class="fa fa-xs fa-star text-primary"></i><i class="fa fa-xs fa-star text-primary"></i><i class="fa fa-xs fa-star text-primary"></i><i class="fa fa-xs fa-star text-primary"></i>
+                  </div>
+                  <p class="text-muted text-sm">One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in his bed into a horrible vermin. He lay on his armour-like back, and if he lifted his head a little he could see his brown belly, slightly domed and divided by arches into stiff sections     </p>
+                </div>
+              </div>
+              <div class="media d-block d-sm-flex review">
+                <div class="text-md-center mr-4 mr-xl-5"><img class="d-block avatar avatar-xl p-2 mb-2" src="img/avatar/avatar-2.jpg" alt="Luke Skywalker"><span class="text-uppercase text-muted text-sm">Dec 2018</span></div>
+                <div class="media-body">
+                  <h6 class="mt-2 mb-1">Luke Skywalker</h6>
+                  <div class="mb-2"><i class="fa fa-xs fa-star text-primary"></i><i class="fa fa-xs fa-star text-primary"></i><i class="fa fa-xs fa-star text-primary"></i><i class="fa fa-xs fa-star text-primary"></i><i class="fa fa-xs fa-star text-gray-200"></i>
+                  </div>
+                  <p class="text-muted text-sm">The bedding was hardly able to cover it and seemed ready to slide off any moment. His many legs, pitifully thin compared with the size of the rest of him, waved about helplessly as he looked. &quot;What's happened to me?&quot; he thought. It wasn't a dream.     </p>
+                </div>
+              </div>
+              <div class="media d-block d-sm-flex review">
+                <div class="text-md-center mr-4 mr-xl-5"><img class="d-block avatar avatar-xl p-2 mb-2" src="img/avatar/avatar-3.jpg" alt="Princess Leia"><span class="text-uppercase text-muted text-sm">Dec 2018</span></div>
+                <div class="media-body">
+                  <h6 class="mt-2 mb-1">Princess Leia</h6>
+                  <div class="mb-2"><i class="fa fa-xs fa-star text-primary"></i><i class="fa fa-xs fa-star text-primary"></i><i class="fa fa-xs fa-star text-primary"></i><i class="fa fa-xs fa-star text-gray-200"></i><i class="fa fa-xs fa-star text-gray-200"></i>
+                  </div>
+                  <p class="text-muted text-sm">His room, a proper human room although a little too small, lay peacefully between its four familiar walls. A collection of textile samples lay spread out on the table.     </p>
+                </div>
+              </div>
+              <div class="media d-block d-sm-flex review">
+                <div class="text-md-center mr-4 mr-xl-5"><img class="d-block avatar avatar-xl p-2 mb-2" src="img/avatar/avatar-4.jpg" alt="Jabba Hut"><span class="text-uppercase text-muted text-sm">Dec 2018</span></div>
+                <div class="media-body">
+                  <h6 class="mt-2 mb-1">Jabba Hut</h6>
+                  <div class="mb-2"><i class="fa fa-xs fa-star text-primary"></i><i class="fa fa-xs fa-star text-primary"></i><i class="fa fa-xs fa-star text-primary"></i><i class="fa fa-xs fa-star text-primary"></i><i class="fa fa-xs fa-star text-primary"></i>
+                  </div>
+                  <p class="text-muted text-sm">Samsa was a travelling salesman - and above it there hung a picture that he had recently cut out of an illustrated magazine and housed in a nice, gilded frame.     </p>
+                </div>
+              </div>
+              <div class="py-5">
+                <button class="btn btn-outline-primary" type="button" data-toggle="collapse" data-target="#leaveReview" aria-expanded="false" aria-controls="leaveReview">Leave a review</button>
+                <div class="collapse mt-4" id="leaveReview">
+                  <h5 class="mb-4">Leave a review</h5>
+                  <form class="form" id="contact-form" method="get" action="#">
+                    <div class="row">
+                      <div class="col-sm-6">
+                        <div class="form-group">
+                          <label class="form-label" for="name">Your name *</label>
+                          <input class="form-control" type="text" name="name" id="name" placeholder="Enter your name" required="required">
+                        </div>
+                      </div>
+                      <div class="col-sm-6">
+                        <div class="form-group">
+                          <label class="form-label" for="rating">Your rating *</label>
+                          <select class="custom-select focus-shadow-0" name="rating" id="rating">
+                            <option value="5">&#9733;&#9733;&#9733;&#9733;&#9733; (5/5)</option>
+                            <option value="4">&#9733;&#9733;&#9733;&#9733;&#9734; (4/5)</option>
+                            <option value="3">&#9733;&#9733;&#9733;&#9734;&#9734; (3/5)</option>
+                            <option value="2">&#9733;&#9733;&#9734;&#9734;&#9734; (2/5)</option>
+                            <option value="1">&#9733;&#9734;&#9734;&#9734;&#9734; (1/5)</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label" for="email">Your email *</label>
+                      <input class="form-control" type="email" name="email" id="email" placeholder="Enter your  email" required="required">
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label" for="review">Review text *</label>
+                      <textarea class="form-control" rows="4" name="review" id="review" placeholder="Enter your review" required="required"></textarea>
+                    </div>
+                    <button class="btn btn-primary" type="submit">Post review</button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-4">
+            <div class="pl-xl-4">
+              <!-- Opening Hours      -->
+              <div class="card border-0 shadow mb-5">
+                <div class="card-header bg-gray-100 py-4 border-0">
+                  <div class="media align-items-center">
+                    <div class="media-body">
+                      <p class="subtitle text-sm text-primary">Opening in 5 minutes</p>
+                      <h4 class="mb-0">Opening Hours </h4>
+                    </div>
+                    <svg class="svg-icon svg-icon svg-icon-light w-3rem h-3rem ml-3 text-muted">
+                      <use xlink:href="#wall-clock-1"> </use>
+                    </svg>
+                  </div>
+                </div>
+                <div class="card-body">
+                  <table class="table text-sm mb-0">
+                    <tr>
+                      <th class="pl-0 border-0">Sunday</th>
+                      <td class="pr-0 text-right border-0">8:00 am - 6:00 pm</td>
+                    </tr>
+                    <tr>
+                      <th class="pl-0">Monday</th>
+                      <td class="pr-0 text-right">8:00 am - 6:00 pm</td>
+                    </tr>
+                    <tr>
+                      <th class="pl-0">Tuesday</th>
+                      <td class="pr-0 text-right">8:00 am - 6:00 pm</td>
+                    </tr>
+                    <tr>
+                      <th class="pl-0">Wednesday</th>
+                      <td class="pr-0 text-right">8:00 am - 6:00 pm</td>
+                    </tr>
+                    <tr>
+                      <th class="pl-0">Thursday</th>
+                      <td class="pr-0 text-right">8:00 am - 6:00 pm</td>
+                    </tr>
+                    <tr>
+                      <th class="pl-0">Friday</th>
+                      <td class="pr-0 text-right">8:00 am - 6:00 pm</td>
+                    </tr>
+                    <tr>
+                      <th class="pl-0">Saturday</th>
+                      <td class="pr-0 text-right">Closed</td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+              <!-- Contact-->
+              <div class="card border-0 shadow mb-5">
+                <div class="card-header bg-gray-100 py-4 border-0">
+                  <div class="media align-items-center">
+                    <div class="media-body">
+                      <p class="subtitle text-sm text-primary">Drop Us a Line</p>
+                      <h4 class="mb-0">Contact</h4>
+                    </div>
+                    <svg class="svg-icon svg-icon svg-icon-light w-3rem h-3rem ml-3 text-muted">
+                      <use xlink:href="#fountain-pen-1"> </use>
+                    </svg>
+                  </div>
+                </div>
+                <div class="card-body">
+                  <ul class="list-unstyled mb-4">
+                    <li class="mb-2"> <a class="text-gray-00 text-sm text-decoration-none" href="#"><i class="fa fa-phone mr-3"></i><span class="text-muted">(020) 123 456 789</span></a></li>
+                    <li class="mb-2"> <a class=" text-sm text-decoration-none" href="#"><i class="fa fa-envelope mr-3"></i><span class="text-muted">info@example.com</span></a></li>
+                    <li class="mb-2"> <a class=" text-sm text-decoration-none" href="#"><i class="fa fa-globe mr-3"></i><span class="text-muted">www.example.com</span></a></li>
+                    <li class="mb-2"> <a class="text-blue text-sm text-decoration-none" href="#"><i class="fab fa-facebook mr-3"></i><span class="text-muted">Facebook</span></a></li>
+                    <li class="mb-2"> <a class=" text-sm text-decoration-none" href="#"><i class="fab fa-twitter mr-3"></i><span class="text-muted">Twitter</span></a></li>
+                    <li class="mb-2"> <a class=" text-sm text-decoration-none" href="#"><i class="fab fa-instagram mr-3"></i><span class="text-muted">Instagram</span></a></li>
+                    <li class="mb-2"> <a class=" text-sm text-decoration-none" href="#"><i class="fab fa-google-plus mr-3"></i><span class="text-muted">Google+</span></a></li>
+                  </ul>
+                  <div class="text-center"><a class="btn btn-outline-primary btn-block" href="#"> <i class="far fa-paper-plane mr-2"></i>Send a Message</a></div>
+                </div>
+              </div>
+              <div class="text-center">
+                <p><a class="text-secondary" href="#"> <i class="fa fa-heart"></i> Bookmark This Listing</a></p><span>79 people bookmarked this place </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <div class="py-6 bg-gray-100"> 
+      <div class="container">
+        <h5 class="mb-0">Similar places</h5>
+        <p class="subtitle text-sm text-primary mb-4">You may also like         </p>
+        <!-- Slider main container-->
+        <div class="swiper-container swiper-container-mx-negative items-slider">
+          <!-- Additional required wrapper-->
+          <div class="swiper-wrapper pb-5">
+            <!-- Slides-->
+            <div class="swiper-slide h-auto px-2">
+              <!-- venue item-->
+              <div class="w-100 h-100" data-marker-id="59c0c8e33b1527bfe2abaf92">
+                <div class="card h-100 border-0 shadow">
+                  <div class="card-img-top overflow-hidden dark-overlay bg-cover" style="background-image: url(img/photo/restaurant-1430931071372-38127bd472b8.jpg); min-height: 200px;"><a class="tile-link" href="detail.html"></a>
+                    <div class="card-img-overlay-bottom z-index-20">
+                      <h4 class="text-white text-shadow">Blue Hill</h4>
+                      <p class="mb-2 text-xs"><i class="fa fa-star text-warning"></i><i class="fa fa-star text-warning"></i><i class="fa fa-star text-warning"></i><i class="fa fa-star text-warning"></i><i class="fa fa-star text-gray-300">                    </i>
+                      </p>
+                    </div>
+                    <div class="card-img-overlay-top d-flex justify-content-between align-items-center">
+                      <div class="badge badge-transparent badge-pill px-3 py-2">Restaurants</div><a class="card-fav-icon position-relative z-index-40" href="javascript: void();"> 
+                        <svg class="svg-icon text-white">
+                          <use xlink:href="#heart-1"> </use>
+                        </svg></a>
+                    </div>
+                  </div>
+                  <div class="card-body">
+                    <p class="text-sm text-muted mb-3"> Cupidatat excepteur non dolore laborum et quis nostrud veniam dolore deserunt. Pariatur dolore ut in elit id nulla. Irur...</p>
+                    <p class="text-sm text-muted text-uppercase mb-1">By <a href="#" class="text-dark">Matt Damon</a></p>
+                    <p class="text-sm mb-0"><a class="mr-1" href="#">Restaurant,</a><a class="mr-1" href="#">Contemporary</a>
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="swiper-slide h-auto px-2">
+              <!-- venue item-->
+              <div class="w-100 h-100" data-marker-id="59c0c8e322f3375db4d89128">
+                <div class="card h-100 border-0 shadow">
+                  <div class="card-img-top overflow-hidden dark-overlay bg-cover" style="background-image: url(img/photo/restaurant-1436018626274-89acd1d6ec9d.jpg); min-height: 200px;"><a class="tile-link" href="detail.html"></a>
+                    <div class="card-img-overlay-bottom z-index-20">
+                      <h4 class="text-white text-shadow">Plutorque</h4>
+                      <p class="mb-2 text-xs"><i class="fa fa-star text-warning"></i><i class="fa fa-star text-warning"></i><i class="fa fa-star text-warning"></i><i class="fa fa-star text-warning"></i><i class="fa fa-star text-warning"></i>
+                      </p>
+                    </div>
+                    <div class="card-img-overlay-top d-flex justify-content-between align-items-center">
+                      <div class="badge badge-transparent badge-pill px-3 py-2">Restaurant</div><a class="card-fav-icon position-relative z-index-40" href="javascript: void();"> 
+                        <svg class="svg-icon text-white">
+                          <use xlink:href="#heart-1"> </use>
+                        </svg></a>
+                    </div>
+                  </div>
+                  <div class="card-body">
+                    <p class="text-sm text-muted mb-3"> Proident irure eiusmod velit veniam consectetur id minim irure et nostrud mollit magna velit. Commodo amet proident aliq...</p>
+                    <p class="text-sm text-muted text-uppercase mb-1">By <a href="#" class="text-dark">Matt Damon</a></p>
+                    <p class="text-sm mb-0"><a class="mr-1" href="#">Restaurant,</a><a class="mr-1" href="#">Fusion</a>
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="swiper-slide h-auto px-2">
+              <!-- venue item-->
+              <div class="w-100 h-100" data-marker-id="59c0c8e3a31e62979bf147c9">
+                <div class="card h-100 border-0 shadow">
+                  <div class="card-img-top overflow-hidden dark-overlay bg-cover" style="background-image: url(img/photo/restaurant-1466978913421-dad2ebd01d17.jpg); min-height: 200px;"><a class="tile-link" href="detail.html"></a>
+                    <div class="card-img-overlay-bottom z-index-20">
+                      <h4 class="text-white text-shadow">Junipoor</h4>
+                      <p class="mb-2 text-xs"><i class="fa fa-star text-warning"></i><i class="fa fa-star text-warning"></i><i class="fa fa-star text-warning"></i><i class="fa fa-star text-warning"></i><i class="fa fa-star text-warning"></i>
+                      </p>
+                    </div>
+                    <div class="card-img-overlay-top d-flex justify-content-between align-items-center">
+                      <div class="badge badge-transparent badge-pill px-3 py-2">Music club</div><a class="card-fav-icon position-relative z-index-40" href="javascript: void();"> 
+                        <svg class="svg-icon text-white">
+                          <use xlink:href="#heart-1"> </use>
+                        </svg></a>
+                    </div>
+                  </div>
+                  <div class="card-body">
+                    <p class="text-sm text-muted mb-3"> Lorem amet ex duis in et fugiat consectetur laborum eiusmod labore. Quis cupidatat et do dolor in in magna. Eu sit quis ...</p>
+                    <p class="text-sm text-muted text-uppercase mb-1">By <a href="#" class="text-dark">Matt Damon</a></p>
+                    <p class="text-sm mb-0"><a class="mr-1" href="#">Music,</a><a class="mr-1" href="#">Techno,</a><a class="mr-1" href="#">House</a>
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="swiper-slide h-auto px-2">
+              <!-- venue item-->
+              <div class="w-100 h-100" data-marker-id="59c0c8e3503eb77d487e8082">
+                <div class="card h-100 border-0 shadow">
+                  <div class="card-img-top overflow-hidden dark-overlay bg-cover" style="background-image: url(img/photo/restaurant-1477763858572-cda7deaa9bc5.jpg); min-height: 200px;"><a class="tile-link" href="detail.html"></a>
+                    <div class="card-img-overlay-bottom z-index-20">
+                      <h4 class="text-white text-shadow">Musix</h4>
+                      <p class="mb-2 text-xs"><i class="fa fa-star text-warning"></i><i class="fa fa-star text-warning"></i><i class="fa fa-star text-warning"></i><i class="fa fa-star text-gray-300">                    </i><i class="fa fa-star text-gray-300">                    </i>
+                      </p>
+                    </div>
+                    <div class="card-img-overlay-top d-flex justify-content-between align-items-center">
+                      <div class="badge badge-transparent badge-pill px-3 py-2">Music club</div><a class="card-fav-icon position-relative z-index-40" href="javascript: void();"> 
+                        <svg class="svg-icon text-white">
+                          <use xlink:href="#heart-1"> </use>
+                        </svg></a>
+                    </div>
+                  </div>
+                  <div class="card-body">
+                    <p class="text-sm text-muted mb-3"> Deserunt eiusmod Lorem proident consequat elit culpa laboris ea cupidatat. Consequat dolore proident ipsum qui sint enim...</p>
+                    <p class="text-sm text-muted text-uppercase mb-1">By <a href="#" class="text-dark">Matt Damon</a></p>
+                    <p class="text-sm mb-0"><a class="mr-1" href="#">Music,</a><a class="mr-1" href="#">Club,</a><a class="mr-1" href="#">Rock</a>
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="swiper-slide h-auto px-2">
+              <!-- venue item-->
+              <div class="w-100 h-100" data-marker-id="59c0c8e39aa2eed0626e485d">
+                <div class="card h-100 border-0 shadow">
+                  <div class="card-img-top overflow-hidden dark-overlay bg-cover" style="background-image: url(img/photo/restaurant-1504087697492-238a6bf49ce8.jpg); min-height: 200px;"><a class="tile-link" href="detail.html"></a>
+                    <div class="card-img-overlay-bottom z-index-20">
+                      <h4 class="text-white text-shadow">Prosure</h4>
+                      <p class="mb-2 text-xs"><i class="fa fa-star text-warning"></i><i class="fa fa-star text-warning"></i><i class="fa fa-star text-warning"></i><i class="fa fa-star text-warning"></i><i class="fa fa-star text-warning"></i>
+                      </p>
+                    </div>
+                    <div class="card-img-overlay-top d-flex justify-content-between align-items-center">
+                      <div class="badge badge-transparent badge-pill px-3 py-2">Restaurant</div><a class="card-fav-icon position-relative z-index-40" href="javascript: void();"> 
+                        <svg class="svg-icon text-white">
+                          <use xlink:href="#heart-1"> </use>
+                        </svg></a>
+                    </div>
+                  </div>
+                  <div class="card-body">
+                    <p class="text-sm text-muted mb-3"> Cillum sunt reprehenderit ea non irure veniam dolore commodo labore fugiat est consequat velit. Cupidatat nisi qui ad si...</p>
+                    <p class="text-sm text-muted text-uppercase mb-1">By <a href="#" class="text-dark">Matt Damon</a></p>
+                    <p class="text-sm mb-0"><a class="mr-1" href="#">Nisi,</a><a class="mr-1" href="#">Ex,</a><a class="mr-1" href="#">Eiusmod</a>
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="swiper-slide h-auto px-2">
+              <!-- venue item-->
+              <div class="w-100 h-100" data-marker-id="59c0c8e39aa2edasd626e485d">
+                <div class="card h-100 border-0 shadow">
+                  <div class="card-img-top overflow-hidden dark-overlay bg-cover" style="background-image: url(img/photo/restaurant-1505275350441-83dcda8eeef5.jpg); min-height: 200px;"><a class="tile-link" href="detail.html"></a>
+                    <div class="card-img-overlay-bottom z-index-20">
+                      <h4 class="text-white text-shadow">Take That</h4>
+                      <p class="mb-2 text-xs"><i class="fa fa-star text-warning"></i><i class="fa fa-star text-warning"></i><i class="fa fa-star text-warning"></i><i class="fa fa-star text-warning"></i><i class="fa fa-star text-gray-300">                    </i>
+                      </p>
+                    </div>
+                    <div class="card-img-overlay-top d-flex justify-content-between align-items-center">
+                      <div class="badge badge-transparent badge-pill px-3 py-2">Café</div><a class="card-fav-icon position-relative z-index-40" href="javascript: void();"> 
+                        <svg class="svg-icon text-white">
+                          <use xlink:href="#heart-1"> </use>
+                        </svg></a>
+                    </div>
+                  </div>
+                  <div class="card-body">
+                    <p class="text-sm text-muted mb-3"> Cillum sunt reprehenderit ea non irure veniam dolore commodo labore fugiat est consequat velit. Cupidatat nisi qui ad si...</p>
+                    <p class="text-sm text-muted text-uppercase mb-1">By <a href="#" class="text-dark">Matt Damon</a></p>
+                    <p class="text-sm mb-0"><a class="mr-1" href="#">Nisi,</a><a class="mr-1" href="#">Ex,</a><a class="mr-1" href="#">Eiusmod</a>
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- If we need pagination-->
+          <div class="swiper-pagination"></div>
+        </div>
+      </div>
+    </div>
+{% endblock content %}
 
 {% block extrascripts %}
 {% comment %} MAKE SURE YOU REMOVE YOUR KEY IN PRODUCTION {% endcomment %}

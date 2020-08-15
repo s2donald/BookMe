@@ -23,7 +23,7 @@
             <ul class="list-unstyled components">
 
                 <li>
-                    <a href="#">
+                    <a href="{% url 'account:booking_consumer' %}">
                         <i class="fas fa-calendar"></i>
                         Bookings
                     </a>
@@ -33,7 +33,7 @@
                     </a>
                     <a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false" class="dropfix dropdown-toggle list-unstyled active">
                         <i class="fas fa-city"></i>
-                        Business Profile
+                        Business
                     </a>
                     <ul class="collapse list-unstyled" id="pageSubmenu">
                         {% if my_companies %}

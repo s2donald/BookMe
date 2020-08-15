@@ -9,10 +9,11 @@ urlpatterns = [
     path('addbiz/',views.addBusinessView, name='add_biz'),
     path('phone/', views.phoneChangeView, name='phone_update'),
     path('homeaddress/',views.homeAddressChangeView, name='home_updated'),
-    path('schedule/<slug:slug>/<int:id>/', consviews.bookingScheduleView, name='booking_sched'),
+    path('schedule/<slug:slug>/<int:id>/', consviews.bookingScheduleView, name='booking_business'),
     path('services/<slug:slug>/<int:id>/', views.BusinessAccountsView , name='company_detailed'),
     path('list/', views.BusinessListViews, name='biz_list'),
     path('signup/', views.ConsumerRegistrationView, name ='signup'),
     path('done/', views.RegisteredAccountView, name='registered'),
+    path('bookings/',consviews.FutPastBooking, name='booking_consumer'),
     path('', views.AccountSummaryView, name='account')
 ]

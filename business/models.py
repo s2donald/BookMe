@@ -74,7 +74,7 @@ class Company(models.Model):
         return reverse('account:company_detailed', args=[self.slug, self.id])
 
     def get_schedule_url(self):
-        return reverse('account:booking_sched', args=[self.slug, self.id])
+        return reverse('account:booking_business', args=[self.slug, self.id])
 
     def get_absolute_url(self):
         return reverse("business:company_detail", args=[self.slug,self.id])

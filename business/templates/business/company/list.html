@@ -1,38 +1,39 @@
 {% extends 'business/base.html' %}
 {% load static %}
 {% block content %}
-    <div class="container text-center bg-white">
+    <div class="container">
         {% if category %}
-            <h1>{{ category.name }}</h1>
+            <h1 class="text-center">{{ category.name }}</h1>
         {% else %}
-            <h1>{% if name %}Results for {{ name }}{% else %}No Results Found{% endif %}</h1>
+            <h1 class="text-center">{% if name %}Results for {{ name }}{% else %}No Results Found{% endif %}</h1>
         {% endif %}
-        
-        <div class="card-deck text-center">
-        {% for company in companies %}
-            <div class="card mb-4 text-center shadow">
-                    <a class="nav-link text-center" href="{{ company.get_absolute_url }}">
-
-                        <img align="left" class="img-responsive list-img" align="left" src="{% if company.image %}{{ company.image.url }}{% else %}{% static "img/no_image.png" %}{% endif %}">
-                        <div class="card-body">
-                            <h5>{{ company.business_name }}</h5>
-                            <hr>
-                            <p class="card-text liblack">{{ company.description }}</p>
-                        </div>
-                    </a>
-            </div>
-
-            {% if forloop.counter|divisibleby:1 %}
+        <div class="row">
+            {% for company in companies %}
+                <!-- venue item-->
+            <div class="col-sm-6 mb-5 hover-animate" data-marker-id="59c0c8e33b1527bfe2abaf92">
+              <div class="card h-100 border-0 shadow">
+                <div class="card-img-top overflow-hidden dark-overlay bg-cover" style="background-image: url({% if company.image %}{{ company.image.url }}{% else %}{% static "img/no_image.png" %}{% endif %}); min-height: 200px;"><a class="tile-link" href="{{ company.get_absolute_url }}"></a>
+                  <div class="card-img-overlay-bottom z-index-20">
+                    <p class="mb-2 text-xs"><i class="fa fa-star text-warning"></i><i class="fa fa-star text-warning"></i><i class="fa fa-star text-warning"></i><i class="fa fa-star text-warning"></i><i class="fa fa-star text-gray-300">                    </i>
+                    </p>
+                  </div>
+                  <div class="card-img-overlay-top d-flex justify-content-between align-items-center">
+                    <div class="badge badge-transparent badge-pill px-3 py-2">{{ category.name }}</div><a class="card-fav-icon position-relative z-index-40" href="{{ company.get_absolute_url }}"> 
+                      <svg class="svg-icon text-white">
+                        <use xlink:href="#heart-1"> </use>
+                      </svg></a>
+                  </div>
                 </div>
-                
-                <div class="card-deck text-center">
-            {% endif %}
-        {% empty %}
-            <h1>There are no services available yet.</h1>
-        {% endfor %}
-        
+                <div class="card-body">
+                  <h4 class="text-shadow">{{ company.business_name }}</h4>
+                  <p class="text-sm text-muted mb-3"> {{ company.description }}</p>
+                </div>
+              </div>
+            </div>
+            {% empty %}
+                <h1>There are no services available yet.</h1>
+            {% endfor %}
         </div>
+        {% include "business/pagination.html" with page=companies %}
     </div>
-    {% include "business/pagination.html" with page=companies %}
-    <hr>
 {% endblock %}

@@ -5,7 +5,15 @@
     <head>
         <meta charset="utf-8">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="author" content="Stephen Donald">
+        <meta name="type" content="SaaS Website">
+        <meta name="site_name" content="Gibele">
+        <meta name="theme-color" content="#6d7fcc">
+        <meta name="robots" content="index, follow">
+        <meta name="description" content="Book appointments online with Gibele. Search for bookable services offered by our partners across many different industries such as Automotive, Healthcare, Mobile Services, Home Services, Personal Care, and other Professional Services">
         <link href="http://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="{% static "css/bases.css" %}">
         <link rel="stylesheet" href="{% static "css/calendarmain.css"%}">
@@ -37,7 +45,6 @@
 
         <div class="navbar-collapse collapse flex-shrink-1 flex-grow-0 order-last" id="navbarResponsive">
             <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-                
                 {% if request.user.is_authenticated %}
                     <li>
                     <p class="mx-1">Welcome 
@@ -51,8 +58,8 @@
                     </p>
                     </li>
                 {% endif %}
-                <div class="center my-auto mx-1">
-                    <a href="" class="btn btn-outline-primary">Post a Service</a>
+                <div class="my-auto mx-1">
+                    <a href="" class="btn btn-outline-primary inline-block">Add a business</a>
                 </div>
                 {% if request.user.is_authenticated %}
                     <div class="my-auto mx-1">
@@ -77,8 +84,8 @@
             <div class="container-fluid">
             {% for c in categories %}
                 <div class="btn-group my-1">
-                    <a type="button" class="btn btn-sm btn-outline-dark" href="{{ c.get_absolute_url }}">{{c.name}}</a>
-                    <a type="button" class="btn btn-sm btn-outline-dark dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <a class="btn btn-sm btn-outline-dark" href="{{ c.get_absolute_url }}">{{c.name}}</a>
+                    <a class="btn btn-sm btn-outline-dark dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <span class="sr-only">Toggle Dropdown</span>
                     </a>
                     <div class="dropdown-menu float-xs-right">

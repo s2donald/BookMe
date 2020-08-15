@@ -48,7 +48,7 @@ html, body {
 }
 
 .licolor {
-    color: #606FCC;
+    color: #6d7fcc;
     font-weight: bold;
 }
 .liblack {
@@ -59,16 +59,16 @@ html, body {
 button:active,
 .btn.btn-outline-primary{
     opacity: 100%;
-    background-color: #606FCC;
-    border-color: #606FCC;
+    background-color: #6d7fcc;
+    border-color: #6d7fcc;
     color: #ffffff;
     border-width: 0.1em;
 }
 .btn.btn-outline-primary:hover,
 .btn.btn-outline-primary:active{
-  color: #606FCC;
+  color: #6d7fcc;
   background-color:#ffffff;
-  border-color: #606FCC;
+  border-color: #6d7fcc;
   border-width: 0.1em;
 }
 
@@ -84,7 +84,7 @@ button:active,
 .btn.btn-outline-dark:active{
   color: #6d7fcc;
   background-color:#ffffff;
-  border-color: #000;
+  border-color: #000000;
   border-width: 0.1em;
 }
 
@@ -219,60 +219,19 @@ footer {
     background-size: cover;
   }
 
+  .detail-slider {
+    overflow: hidden;
+    max-height: 300px;
+  }
+  
+  .detail-slider img {
+    visibility: hidden;
+  }
+  
+  .detail-slider.swiper-container-horizontal img {
+    visibility: visible;
+  }
 
-/*
-* ===================================================
-*     Swiper theming
-* ===================================================
-*/
-.swiper-container-mx-negative {
-    margin-left: -16px;
-    margin-right: -16px;
-    padding-left: 8px;
-    padding-right: 8px;
-  }
-  
-  .swiper-container-mx-negative.items-slider-full {
-    margin-right: -15px;
-  }
-  
-  .swiper-button-prev,
-  .swiper-container-rtl .swiper-button-next {
-    background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%2027%2044'%3E%3Cpath%20d%3D'M0%2C22L22%2C0l2.1%2C2.1L4.2%2C22l19.9%2C19.9L22%2C44L0%2C22L0%2C22L0%2C22z'%20fill%3D'#4E66F8'%2F%3E%3C%2Fsvg%3E");
-    left: 10px;
-    right: auto;
-  }
-  
-  .swiper-button-next,
-  .swiper-container-rtl .swiper-button-prev {
-    background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%2027%2044'%3E%3Cpath%20d%3D'M27%2C22L27%2C22L5%2C44l-2.1-2.1L22.8%2C22L2.9%2C2.1L5%2C0L27%2C22L27%2C22z'%20fill%3D'%23#4E66F8'%2F%3E%3C%2Fsvg%3E");
-    right: 10px;
-    left: auto;
-  }
-  
-  .swiper-pagination-white .swiper-pagination-bullet {
-    opacity: .6;
-    background: #fff;
-  }
-  
-  .swiper-pagination-white .swiper-pagination-bullet-active {
-    opacity: 1;
-    background: #fff;
-  }
-  
-  .swiper-pagination-bullet-active {
-    opacity: 1;
-    background: #4E66F8;
-  }
-  
-  .swiper .swiper-pagination-bullet-active {
-    opacity: 1;
-    background: #4E66F8;
-  }
-  
-  .swiper-pagination-progressbar .swiper-pagination-progressbar-fill {
-    background: #4E66F8;
-  }
 
 /* ---------------------------------------------------
     SIDEBAR STYLE
@@ -384,7 +343,11 @@ a[data-toggle="collapse"] {
     right: 20px;
     transform: translateY(-50%);
 }
-
+.img-fluid {
+    max-width: 100%;
+    height: auto;
+  }
+  
 ul ul a {
     font-size: 0.9em !important;
     padding-left: 30px !important;

@@ -1,36 +1,6 @@
 {% extends 'business/base.html' %}
 {% load static %}
 {% block title %}{{ company.business_name }} - Gibele.com{% endblock %}
-{% comment %} {% block content %}
-    <div class="container padding bg-white">
-        <div class="row">
-        <div class="col-lg-6 col-md-12 cardio">
-                <div class="card text-center">
-                    <img class="card-img-top" src="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/no_image.png" %}{% endif %}">
-                    <div class="card-body">
-                        <h1 class="card-title">{{ company.business_name }}</h1>
-                        <p class="card-text">{{ company.description }}</p>
-                    </div>
-                    {% for s in services %}
-                        <h3 class="padding mx-3">
-                            <div class="card padding shadow"><h3 class="mt-3 card-title">{{ s.name }}</h3><small>{{ s.description }} <p>${{ s.price }}:</p></small> <button type="submit" class="btn btn-outline-primary">Book Now</button></div>
-                        </h3>
-                    {% endfor %}
-                </div>
-            </div>
-            <div class="col-lg-6">
-                <div class="card">
-                    <div id="map" style="width:100%;height:400px"></div>
-                    <div id="address">{{ address }}</div>
-                </div>
-                <div class="card-body">
-                    <h3>Reviews</h3>
-                </div>
-            </div>
-            </div>
-    </div>
-{% endblock %} {% endcomment %}
-
 {% block content %}
     <!-- Hero Section-->
     <section>
@@ -42,20 +12,12 @@
           <div class="swiper-slide"><a href="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/no_image.png" %}{% endif %}" data-toggle="gallery-top" title="Our street"><img class="img-fluid" src="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/no_image.png" %}{% endif %}" alt="Our street"></a></div>
           <div class="swiper-slide"><a href="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/no_image.png" %}{% endif %}" data-toggle="gallery-top" title="Outside"><img class="img-fluid" src="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/no_image.png" %}{% endif %}" alt="Outside"></a></div>
           <div class="swiper-slide"><a href="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/no_image.png" %}{% endif %}" data-toggle="gallery-top" title="Rear entrance"><img class="img-fluid" src="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/no_image.png" %}{% endif %}" alt="Rear entrance"></a></div>
-          <div class="swiper-slide"><a href="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/no_image.png" %}{% endif %}" data-toggle="gallery-top" title="Kitchen"><img class="img-fluid" src="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/no_image.png" %}{% endif %}" alt="Kitchen"></a></div>
-          <div class="swiper-slide"><a href="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/no_image.png" %}{% endif %}" data-toggle="gallery-top" title="Bedroom"><img class="img-fluid" src="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/no_image.png" %}{% endif %}" alt="Bedroom"></a></div>
-          <div class="swiper-slide"><a href="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/no_image.png" %}{% endif %}" data-toggle="gallery-top" title="Bedroom"><img class="img-fluid" src="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/no_image.png" %}{% endif %}" alt="Bedroom"></a></div>
         </div>
         <div class="swiper-pagination swiper-pagination-white"></div>
-        <div class="swiper-button-prev swiper-button-white"></div>
-        <div class="swiper-button-next swiper-button-white"></div>
+        <div class="swiper-button-prev swiper-button-white circle-slide"></div>
+        <div class="swiper-button-next swiper-button-white circle-slide"></div>
       </div>
     </section>
-    {% comment %} <section class="pt-7 pb-5 d-flex align-items-end dark-overlay bg-cover" style="background-image: url({% if company.image %}{{ company.image.url }}{% else %}{% static "/img/no_image.png" %}{% endif %});">
-      <div class="container overlay-content">
-        
-      </div>
-    </section> {% endcomment %}
     <section class="py-6">
       <div class="container">
         <div class="row">
@@ -65,40 +27,40 @@
             <div class="text-black mb-4 mb-lg-0">
             <div class="badge badge-pill px-3 py-2 mb-4">Automotive Services</div>
             <h1 class="text-shadow verified">{{ company.business_name }}</h1>
-            <p><i class="fa-map-marker-alt fas mr-2"></i><div id="address">{{ address }}</div></p>
-            <p class="mb-0 d-flex align-items-center"><i class="fa fa-xs fa-star text-primary"></i><i class="fa fa-xs fa-star text-primary"></i><i class="fa fa-xs fa-star text-primary"></i><i class="fa fa-xs fa-star text-primary"></i><i class="fa fa-xs fa-star text-gray-200 mr-4">                   </i>8 Reviews</p>
+            <div class="text-block">
+                <p class="licolor"><i class="fa-map-marker-alt fa mr-1"></i><div id="address">{{ address }}</div></p>
+                <p class="mb-0 d-flex align-items-center"><i class="fa fa-xs fa-star licolor"></i><i class="fa fa-xs fa-star licolor"></i><i class="fa fa-xs fa-star licolor"></i><i class="fa fa-xs fa-star licolor"></i><i class="fa fa-xs fa-star text-gray-200 mr-4">                   </i>8 Reviews</p>
+            </div>
           </div>
         </div>
+            <div class="text-block">
+                {% if services %}
+                    <h2>Services</h1>
+                    {% for s in services %}
+                        <h3 class="mb-3">{{ s.name }}</h3>
+                        <p class="text-muted">{{ s.description }}</p>
+                        <p>${{ s.price }}</p>
+                        <button type="submit" class="btn btn-outline-primary">Book Now</button>
+                        <hr>
+                        
+                    {% endfor %}
+                {% endif %}
+            </div>
+            {% if company.description %}
               <h3 class="mb-3">About</h3>
-              <p class="text-muted"> {{company.description }}</p>
-            </div>
-            <div class="text-block">
-                {% for s in services %}
-                    <h3 class="mb-3">{{ s.name }}</h3>
-                    <p class="text-muted">{{ s.description }}</p>
-                    <p>${{ s.price }}</p>
-                    <button type="submit" class="btn btn-outline-primary">Book Now</button>
-                    <hr>
-                    
-                {% endfor %}
-            </div>
-            <div class="text-block">
-              <!-- Listing Location-->
-              <h3 class="mb-4">Location</h3>
-              <div class="map-wrapper-300 mb-3">
-                <div id="map" style="width:100%;height:400px"></div>
-              </div>
+              <p class="text-muted"> {{ company.description }}</p>
+            {% endif %}
             </div>
             <div class="text-block">
               <!-- Gallery-->
               <h3 class="mb-4">Gallery</h3>
               <div class="row gallery ml-n1 mr-n1">
-                <div class="col-lg-4 col-6 px-1 mb-2"><a href="img/photo/restaurant-1515164783716-8e6920f3e77c.jpg"><img class="img-fluid" src="img/photo/restaurant-1515164783716-8e6920f3e77c.jpg" alt="..."></a></div>
-                <div class="col-lg-4 col-6 px-1 mb-2"><a href="img/photo/restaurant-1466978913421-dad2ebd01d17.jpg"><img class="img-fluid" src="img/photo/restaurant-1466978913421-dad2ebd01d17.jpg" alt="..."></a></div>
-                <div class="col-lg-4 col-6 px-1 mb-2"><a href="img/photo/restaurant-1477763858572-cda7deaa9bc5.jpg"><img class="img-fluid" src="img/photo/restaurant-1477763858572-cda7deaa9bc5.jpg" alt="..."></a></div>
-                <div class="col-lg-4 col-6 px-1 mb-2"><a href="img/photo/restaurant-1505275350441-83dcda8eeef5.jpg"><img class="img-fluid" src="img/photo/restaurant-1505275350441-83dcda8eeef5.jpg" alt="..."></a></div>
-                <div class="col-lg-4 col-6 px-1 mb-2"><a href="img/photo/restaurant-1508766917616-d22f3f1eea14.jpg"><img class="img-fluid" src="img/photo/restaurant-1508766917616-d22f3f1eea14.jpg" alt="..."></a></div>
-                <div class="col-lg-4 col-6 px-1 mb-2"><a href="img/photo/restaurant-1430931071372-38127bd472b8.jpg"><img class="img-fluid" src="img/photo/restaurant-1430931071372-38127bd472b8.jpg" alt="..."></a></div>
+                <div class="col-lg-4 col-6 px-1 mb-2"><a href="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/no_image.png" %}{% endif %}"><img class="img-fluid" src="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/no_image.png" %}{% endif %}" alt="..."></a></div>
+                <div class="col-lg-4 col-6 px-1 mb-2"><a href=""><img class="img-fluid" src="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/no_image.png" %}{% endif %}" alt="..."></a></div>
+                <div class="col-lg-4 col-6 px-1 mb-2"><a href=""><img class="img-fluid" src="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/no_image.png" %}{% endif %}" alt="..."></a></div>
+                <div class="col-lg-4 col-6 px-1 mb-2"><a href=""><img class="img-fluid" src="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/no_image.png" %}{% endif %}" alt="..."></a></div>
+                <div class="col-lg-4 col-6 px-1 mb-2"><a href=""><img class="img-fluid" src="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/no_image.png" %}{% endif %}" alt="..."></a></div>
+                <div class="col-lg-4 col-6 px-1 mb-2"><a href=""><img class="img-fluid" src="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/no_image.png" %}{% endif %}" alt="..."></a></div>
               </div>
             </div>
             <!-- Amenities-->
@@ -141,8 +103,8 @@
               </ul>
             </div>
             <div class="text-block">
-              <p class="subtitle text-sm text-primary">Reviews    </p>
-              <h5 class="mb-4">Listing Reviews </h5>
+              <p class="subtitle text-sm licolor">Reviews    </p>
+              <h5 class="mb-4">Reviews </h5>
               <div class="media d-block d-sm-flex review">
                 <div class="text-md-center mr-4 mr-xl-5"><img class="d-block avatar avatar-xl p-2 mb-2" src="img/avatar/avatar-8.jpg" alt="Padmé Amidala"><span class="text-uppercase text-muted text-sm">Dec 2018</span></div>
                 <div class="media-body">
@@ -152,37 +114,12 @@
                   <p class="text-muted text-sm">One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in his bed into a horrible vermin. He lay on his armour-like back, and if he lifted his head a little he could see his brown belly, slightly domed and divided by arches into stiff sections     </p>
                 </div>
               </div>
-              <div class="media d-block d-sm-flex review">
-                <div class="text-md-center mr-4 mr-xl-5"><img class="d-block avatar avatar-xl p-2 mb-2" src="img/avatar/avatar-2.jpg" alt="Luke Skywalker"><span class="text-uppercase text-muted text-sm">Dec 2018</span></div>
-                <div class="media-body">
-                  <h6 class="mt-2 mb-1">Luke Skywalker</h6>
-                  <div class="mb-2"><i class="fa fa-xs fa-star text-primary"></i><i class="fa fa-xs fa-star text-primary"></i><i class="fa fa-xs fa-star text-primary"></i><i class="fa fa-xs fa-star text-primary"></i><i class="fa fa-xs fa-star text-gray-200"></i>
-                  </div>
-                  <p class="text-muted text-sm">The bedding was hardly able to cover it and seemed ready to slide off any moment. His many legs, pitifully thin compared with the size of the rest of him, waved about helplessly as he looked. &quot;What's happened to me?&quot; he thought. It wasn't a dream.     </p>
-                </div>
-              </div>
-              <div class="media d-block d-sm-flex review">
-                <div class="text-md-center mr-4 mr-xl-5"><img class="d-block avatar avatar-xl p-2 mb-2" src="img/avatar/avatar-3.jpg" alt="Princess Leia"><span class="text-uppercase text-muted text-sm">Dec 2018</span></div>
-                <div class="media-body">
-                  <h6 class="mt-2 mb-1">Princess Leia</h6>
-                  <div class="mb-2"><i class="fa fa-xs fa-star text-primary"></i><i class="fa fa-xs fa-star text-primary"></i><i class="fa fa-xs fa-star text-primary"></i><i class="fa fa-xs fa-star text-gray-200"></i><i class="fa fa-xs fa-star text-gray-200"></i>
-                  </div>
-                  <p class="text-muted text-sm">His room, a proper human room although a little too small, lay peacefully between its four familiar walls. A collection of textile samples lay spread out on the table.     </p>
-                </div>
-              </div>
-              <div class="media d-block d-sm-flex review">
-                <div class="text-md-center mr-4 mr-xl-5"><img class="d-block avatar avatar-xl p-2 mb-2" src="img/avatar/avatar-4.jpg" alt="Jabba Hut"><span class="text-uppercase text-muted text-sm">Dec 2018</span></div>
-                <div class="media-body">
-                  <h6 class="mt-2 mb-1">Jabba Hut</h6>
-                  <div class="mb-2"><i class="fa fa-xs fa-star text-primary"></i><i class="fa fa-xs fa-star text-primary"></i><i class="fa fa-xs fa-star text-primary"></i><i class="fa fa-xs fa-star text-primary"></i><i class="fa fa-xs fa-star text-primary"></i>
-                  </div>
-                  <p class="text-muted text-sm">Samsa was a travelling salesman - and above it there hung a picture that he had recently cut out of an illustrated magazine and housed in a nice, gilded frame.     </p>
-                </div>
-              </div>
+
+              
               <div class="py-5">
                 <button class="btn btn-outline-primary" type="button" data-toggle="collapse" data-target="#leaveReview" aria-expanded="false" aria-controls="leaveReview">Leave a review</button>
                 <div class="collapse mt-4" id="leaveReview">
-                  <h5 class="mb-4">Leave a review</h5>
+                  <h5 class="mb-4">Reviews</h5>
                   <form class="form" id="contact-form" method="get" action="#">
                     <div class="row">
                       <div class="col-sm-6">
@@ -271,23 +208,19 @@
                 <div class="card-header bg-gray-100 py-4 border-0">
                   <div class="media align-items-center">
                     <div class="media-body">
-                      <p class="subtitle text-sm text-primary">Drop Us a Line</p>
-                      <h4 class="mb-0">Contact</h4>
+                      <h4 class="mb-0 licolor">Contact Information</h4>
                     </div>
-                    <svg class="svg-icon svg-icon svg-icon-light w-3rem h-3rem ml-3 text-muted">
-                      <use xlink:href="#fountain-pen-1"> </use>
-                    </svg>
                   </div>
                 </div>
                 <div class="card-body">
                   <ul class="list-unstyled mb-4">
-                    <li class="mb-2"> <a class="text-gray-00 text-sm text-decoration-none" href="#"><i class="fa fa-phone mr-3"></i><span class="text-muted">(020) 123 456 789</span></a></li>
-                    <li class="mb-2"> <a class=" text-sm text-decoration-none" href="#"><i class="fa fa-envelope mr-3"></i><span class="text-muted">info@example.com</span></a></li>
-                    <li class="mb-2"> <a class=" text-sm text-decoration-none" href="#"><i class="fa fa-globe mr-3"></i><span class="text-muted">www.example.com</span></a></li>
-                    <li class="mb-2"> <a class="text-blue text-sm text-decoration-none" href="#"><i class="fab fa-facebook mr-3"></i><span class="text-muted">Facebook</span></a></li>
-                    <li class="mb-2"> <a class=" text-sm text-decoration-none" href="#"><i class="fab fa-twitter mr-3"></i><span class="text-muted">Twitter</span></a></li>
-                    <li class="mb-2"> <a class=" text-sm text-decoration-none" href="#"><i class="fab fa-instagram mr-3"></i><span class="text-muted">Instagram</span></a></li>
-                    <li class="mb-2"> <a class=" text-sm text-decoration-none" href="#"><i class="fab fa-google-plus mr-3"></i><span class="text-muted">Google+</span></a></li>
+                    <li class="mb-2"> <a class="licolor text-sm text-decoration-none" href="#"><i class="fa fa-phone mr-3"></i><span class="text-muted">(020) 123 456 789</span></a></li>
+                    <li class="mb-2"> <a class="licolor text-sm text-decoration-none" href="#"><i class="fa fa-envelope mr-3"></i><span class="text-muted">info@example.com</span></a></li>
+                    <li class="mb-2"> <a class="licolor text-sm text-decoration-none" href="#"><i class="fa fa-globe mr-3"></i><span class="text-muted">www.example.com</span></a></li>
+                    <li class="mb-2"> <a class="licolor text-blue text-sm text-decoration-none" href="#"><i class="fab fa-facebook mr-3"></i><span class="text-muted">Facebook</span></a></li>
+                    <li class="mb-2"> <a class="licolor text-sm text-decoration-none" href="#"><i class="fab fa-twitter mr-3"></i><span class="text-muted">Twitter</span></a></li>
+                    <li class="mb-2"> <a class="licolor text-sm text-decoration-none" href="#"><i class="fab fa-instagram mr-3"></i><span class="text-muted">Instagram</span></a></li>
+                    <li class="mb-2"> <a class="licolor text-sm text-decoration-none" href="#"><i class="fab fa-google-plus mr-3"></i><span class="text-muted">Google+</span></a></li>
                   </ul>
                   <div class="text-center"><a class="btn btn-outline-primary btn-block" href="#"> <i class="far fa-paper-plane mr-2"></i>Send a Message</a></div>
                 </div>
@@ -475,60 +408,61 @@
 
 {% block extrascripts %}
 
-    
-    
+    <script src="{% static 'js/vendor/magnific-popup/jquery.magnific-popup.min.js' %}"></script>
+    <!-- Initialize Swiper -->
+  <script src="{% static 'js/bases.js' %}"></script>
 {% comment %} MAKE SURE YOU REMOVE YOUR KEY IN PRODUCTION {% endcomment %}
-<script>
-    
-    {% comment %} function initMap(){
-        var location = {lat: 43.790810, lng: -79.166140}
-        var map = new google.maps.Map(document.getElementById("map"), {
-            zoom: 14,
-            center: location
-        });
-        var marker = new google.maps.Marker({
-            position: location,
-            map: map,
-        });
-        var infowindow = new google.maps.InfoWindow({
-            content:"Hello World!"
-        });
-        google.maps.event.addListener(marker,'click',function() {
-            map.setZoom(16);
-            map.setCenter(marker.getPosition());
-
-            infowindow.open(map,marker);
-        });
-
-    } {% endcomment %}
-    function initMap() {
-        var map = new google.maps.Map(document.getElementById("map"), {
-            zoom: 16,
-            center: { lat: 43.790810, lng: -79.166140 }
-        });
-        var geocoder = new google.maps.Geocoder();
-
-        geocodeAddress(geocoder, map);
+    <script>
         
-    }
-
-    function geocodeAddress(geocoder, resultsMap) {
-        var address = document.getElementById("address").innerHTML;
-        console.log(address)
-        geocoder.geocode({ address: address }, function(results, status) {
-            if (status === "OK") {
-            resultsMap.setCenter(results[0].geometry.location);
-            var marker = new google.maps.Marker({
-                map: resultsMap,
-                position: results[0].geometry.location
+        {% comment %} function initMap(){
+            var location = {lat: 43.790810, lng: -79.166140}
+            var map = new google.maps.Map(document.getElementById("map"), {
+                zoom: 14,
+                center: location
             });
-            } else {
-            alert("Geocode was not successful for the following reason: " + status);
-            }
-        });
-    }
+            var marker = new google.maps.Marker({
+                position: location,
+                map: map,
+            });
+            var infowindow = new google.maps.InfoWindow({
+                content:"Hello World!"
+            });
+            google.maps.event.addListener(marker,'click',function() {
+                map.setZoom(16);
+                map.setCenter(marker.getPosition());
 
-</script>
- <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBaZM_O3d1-xDrecS_fbcbvoT5qDmLmje0&callback=initMap"
-  type="text/javascript"></script>
+                infowindow.open(map,marker);
+            });
+
+        } {% endcomment %}
+        function initMap() {
+            var map = new google.maps.Map(document.getElementById("map"), {
+                zoom: 16,
+                center: { lat: 43.790810, lng: -79.166140 }
+            });
+            var geocoder = new google.maps.Geocoder();
+
+            geocodeAddress(geocoder, map);
+            
+        }
+
+        function geocodeAddress(geocoder, resultsMap) {
+            var address = document.getElementById("address").innerHTML;
+            console.log(address)
+            geocoder.geocode({ address: address }, function(results, status) {
+                if (status === "OK") {
+                resultsMap.setCenter(results[0].geometry.location);
+                var marker = new google.maps.Marker({
+                    map: resultsMap,
+                    position: results[0].geometry.location
+                });
+                } else {
+                alert("Geocode was not successful for the following reason: " + status);
+                }
+            });
+        }
+
+    </script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBaZM_O3d1-xDrecS_fbcbvoT5qDmLmje0&callback=initMap"
+    type="text/javascript"></script>
 {% endblock extrascripts %}

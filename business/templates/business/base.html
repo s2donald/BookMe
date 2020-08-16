@@ -11,15 +11,18 @@
         <meta name="author" content="Stephen Donald">
         <meta name="type" content="SaaS Website">
         <meta name="site_name" content="Gibele">
-        <meta name="theme-color" content="#6d7fcc">
+        <meta name="theme-color" content="#854fee">
         <meta name="robots" content="index, follow">
         <meta name="description" content="Book appointments online with Gibele. Search for bookable services offered by our partners across many different industries such as Automotive, Healthcare, Mobile Services, Home Services, Personal Care, and other Professional Services">
         <link href="http://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="{% static "css/bases.css" %}">
         <link rel="stylesheet" href="{% static "css/calendarmain.css"%}">
+        <link rel="stylesheet" href="{% static "css/magnific-popup.css"%}">
+        <link rel="stylesheet" href="{% static "scss/swiper.scss"%}">
         <!-- swiper-->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.4.1/css/swiper.min.css">
         <script src="{% static "js/calendarmain.js" %}"></script>
+        <script src="{% static "js/bases.js" %}"></script>
         <script src="https://kit.fontawesome.com/a07c5b9658.js" crossorigin="anonymous"></script>
         <title>{% block title %}Gibele.com - Bookings Made Easy{% endblock %}</title>
     </head>
@@ -32,7 +35,7 @@
                     {% csrf_token %}
                     {{ form.Search }}
                     <span class="input-group-append">
-                        <button class="btn btn-outline-primary border-left-0" type="submit"><i class="fas fa-search"></i></button>
+                        <button class="btn btn-dark border-left-0" type="submit"><i class="fas fa-search"></i></button>
                     </span>
                     
                 </div>

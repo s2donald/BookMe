@@ -11,6 +11,7 @@ from django.urls import reverse_lazy, reverse
 from django.views import generic
 from django.http import JsonResponse
 from django.template.loader import render_to_string
+from consumer.models import Reviews
 
 # Create your views here.
 def homepage(request, category_slug=None):
@@ -61,8 +62,7 @@ def company_list(request, category_slug=None, company_slug=None, tag_slug=None):
             results = Company.objects.annotate(search=SearchVector('business_name','description'),).filter(search=Search)
             return render(request, 'business/company/list.html',{'category':category, 'categories':categories ,'companies':results, 'subcategories':subcategories})
 
-    counts = companies.count()%6
-    paginator = Paginator(companies, 4)
+    paginator = Paginator(companies, 6)
     page = request.GET.get('page')
     try:
         companiess = paginator.page(page)
@@ -71,7 +71,7 @@ def company_list(request, category_slug=None, company_slug=None, tag_slug=None):
     except EmptyPage:
         companiess = paginator.page(paginator.num_pages)
 
-    return render(request, 'business/company/list.html',{'page':page,'subcategories':subcategories,'category':category, 'companies':companiess, 'categories':categories, 'counts':counts, 'form':form,'tag':tag, 'name':name})
+    return render(request, 'business/company/list.html',{'page':page,'subcategories':subcategories,'category':category, 'companies':companiess, 'categories':categories, 'form':form,'tag':tag, 'name':name})
 
 def company_detail(request, id, slug):
     company = get_object_or_404(Company, id=id, slug=slug, available=True)
@@ -88,7 +88,9 @@ def company_detail(request, id, slug):
             Search = form.cleaned_data['Search']
             results = Company.objects.annotate(search=SearchVector('user','description'),).filter(search=Search)
             return render(request, 'business/company/list.html',{'category':category, 'categories':categories ,'companies':results})
-    return render(request, 'business/company/detail.html', {'address':address,'company':company,'category':category,'categories':categories, 'services':services, 'form':form})
+
+    reviews = Reviews.objects.filter(company=company)
+    return render(request, 'business/company/detail.html', {'address':address,'company':company,'category':category,'categories':categories, 'services':services, 'form':form, 'reviews':reviews})
 
 @login_required
 def ManageServiceListView(request, id, slug):

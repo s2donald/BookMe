@@ -1,4 +1,5 @@
 {% extends 'account/user_sidebar.html' %}
+{% load crispy_forms_tags %}
 {% block information %}
 <section class="py-5">
       <div class="content">
@@ -12,31 +13,29 @@
                   <h5>Personal Details</h5>
                 </div>
                 <div class="col-sm-3 text-right">
-                  <button class="btn btn-link pl-0 text-primary collapsed" type="button" data-toggle="collapse" data-target="#personalDetails" aria-expanded="false" aria-controls="personalDetails">Update</button>
+                  <button class="btn btn-link pl-0 licolor collapsed" type="button" data-toggle="collapse" data-target="#personalDetails" aria-expanded="false" aria-controls="personalDetails">Update</button>
                 </div>
               </div>
-              <p class="text-sm text-muted"><i class="fa fa-id-card fa-fw mr-2"></i>John Doe<br><i class="fa fa-birthday-cake fa-fw mr-2"></i>06/22/1980<br><i class="fa fa-envelope-open fa-fw mr-2"></i>john.doe@directory.com  <span class="mx-2"> | </span>  <i class="fa fa-phone fa-fw mr-2"></i>+42055544466</p>
+              <p class="text-sm text-muted"><i class="fa fa-id-card fa-fw mr-2"></i>{{ user.first_name }} {{user.last_name }}<br><i class="fa fa-envelope-open fa-fw mr-2"></i>{{ user.email }} <br> <i class="fa fa-phone fa-fw mr-2"></i>{{ user.phone }}</p>
               <div class="collapse" id="personalDetails">
-                <form action="#">
-                  <div class="row pt-4">
-                    <div class="form-group col-md-6">
-                      <label class="form-label" for="name">Name</label>
-                      <input class="form-control" type="text" name="name" id="name" value="John Doe">
+                <form method="POST" id="personalForm">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-md-6">
+                            {{ personal_form.first_name|as_crispy_field }}
+                        </div>
+                        <div class="col-md-6">
+                            {{ personal_form.last_name|as_crispy_field }}
+                        </div>
+                        <div class="col-md-12">
+                            {{ personal_form.email|as_crispy_field}}
+                        </div>
+                        <div class="col-md-12">
+                            {{ personal_form.phone|as_crispy_field}}
+                        </div>
                     </div>
-                    <div class="form-group col-md-6">
-                      <label class="form-label" for="date">Date of birth</label>
-                      <input class="form-control" type="text" name="date" id="date" value="06/22/1980">
-                    </div>
-                    <div class="form-group col-md-6">
-                      <label class="form-label" for="email">Email address</label>
-                      <input class="form-control" type="email" name="email" id="email" value="john.doe@directory.com">
-                    </div>
-                    <div class="form-group col-md-6">
-                      <label class="form-label" for="phone">Phone number</label>
-                      <input class="form-control" type="text" name="phone" id="phone" value="+42055544466">
-                    </div>
-                  </div>
-                  <button class="btn btn-outline-primary mb-4" type="submit">Save your personal details</button>
+                    <button type="submit" class="btn btn-outline-primary">Update</button>
+                    <input type="hidden" name="form_type" value="personalForm">
                 </form>
               </div>
             </div>
@@ -46,88 +45,21 @@
                   <h5>Address</h5>
                 </div>
                 <div class="col-sm-3 text-right">
-                  <button class="btn btn-link pl-0 text-primary collapsed" type="button" data-toggle="collapse" data-target="#address" aria-expanded="false" aria-controls="address">Change</button>
+                  <button class="btn btn-link pl-0 licolor collapsed" type="button" data-toggle="collapse" data-target="#address" aria-expanded="false" aria-controls="address">Change</button>
                 </div>
               </div>
               <div class="media text-sm text-muted"> <i class="fa fa-address-book fa-fw mr-2"></i>
-                <div class="media-body mt-n1">123 Main St., Apt #7<br>San Francisco, CA, 902 10</div>
+                <div class="media-body mt-n1">{{ user.address }}<br>{{ user.city }}, CA, 902 10</div>
               </div>
               <div class="collapse" id="address">
-                <form action="#">
-                  <div class="row pt-4">
-                    <div class="form-group col-md-6">
-                      <label class="form-label" for="street">Street</label>
-                      <input class="form-control" type="text" name="street" id="street" value="123 Main St.">
-                    </div>
-                    <div class="form-group col-md-6">
-                      <label class="form-label" for="apt">Apt. (optional)</label>
-                      <input class="form-control" type="text" name="apt" id="apt" value="Apt #7">
-                    </div>
-                    <div class="form-group col-md-6">
-                      <label class="form-label" for="city">City</label>
-                      <input class="form-control" type="text" name="city" id="city" value="San Francisco">
-                    </div>
-                    <div class="form-group col-md-6">
-                      <label class="form-label" for="state">State</label>
-                      <select class="selectpicker form-control" name="state" id="state" data-style="btn-selectpicker">
-                        <option value="state_0">Alabama    </option>
-                        <option value="state_1">Alaska    </option>
-                        <option value="state_2">Arizona    </option>
-                        <option value="state_3">Arkansas    </option>
-                        <option value="state_4" selected>California    </option>
-                        <option value="state_5">Colorado    </option>
-                        <option value="state_6">Connecticut    </option>
-                        <option value="state_7">Delaware    </option>
-                        <option value="state_8">Florida    </option>
-                        <option value="state_9">Georgia    </option>
-                        <option value="state_10">Hawaii    </option>
-                        <option value="state_11">Idaho    </option>
-                        <option value="state_12">Illinois    </option>
-                        <option value="state_13">Indiana    </option>
-                        <option value="state_14">Iowa    </option>
-                        <option value="state_15">Kansas    </option>
-                        <option value="state_16">Kentucky    </option>
-                        <option value="state_17">Louisiana    </option>
-                        <option value="state_18">Maine    </option>
-                        <option value="state_19">Maryland    </option>
-                        <option value="state_20">Massachusetts    </option>
-                        <option value="state_21">Michigan    </option>
-                        <option value="state_22">Minnesota    </option>
-                        <option value="state_23">Mississippi    </option>
-                        <option value="state_24">Missouri    </option>
-                        <option value="state_25">Montana    </option>
-                        <option value="state_26">Nebraska    </option>
-                        <option value="state_27">Nevada    </option>
-                        <option value="state_28">New Hampshire    </option>
-                        <option value="state_29">New Jersey    </option>
-                        <option value="state_30">New Mexico    </option>
-                        <option value="state_31">New York    </option>
-                        <option value="state_32">North Carolina    </option>
-                        <option value="state_33">North Dakota    </option>
-                        <option value="state_34">Ohio    </option>
-                        <option value="state_35">Oklahoma    </option>
-                        <option value="state_36">Oregon    </option>
-                        <option value="state_37">Pennsylvania    </option>
-                        <option value="state_38">Rhode Island    </option>
-                        <option value="state_39">South Carolina    </option>
-                        <option value="state_40">South Dakota    </option>
-                        <option value="state_41">Tennessee    </option>
-                        <option value="state_42">Texas    </option>
-                        <option value="state_43">Utah    </option>
-                        <option value="state_44">Vermont    </option>
-                        <option value="state_45">Virginia    </option>
-                        <option value="state_46">Washington    </option>
-                        <option value="state_47">West Virginia    </option>
-                        <option value="state_48">Wisconsin    </option>
-                        <option value="state_49">Wyoming    </option>
-                      </select>
-                    </div>
-                    <div class="form-group col-md-6">
-                      <label class="form-label" for="zip">ZIP</label>
-                      <input class="form-control" type="text" name="zip" id="zip" value="902 10">
+                <form method="post">
+                  {% csrf_token %}
+                  <div class="row">
+                    <div class="col-md-12">
+                        {{ address_form.address|as_crispy_field}}
                     </div>
                   </div>
-                  <button class="btn btn-outline-primary">Save address</button>
+                  <button type="submit" class="btn btn-outline-primary">Save address</button>
                 </form>
               </div>
             </div>
@@ -218,3 +150,34 @@
             </div> {% endcomment %}
 
 {% endblock information %}
+
+{% block extrascripts %}
+ <script type="text/javascript">
+    
+    $(document).ready(function(){
+        var $mypersonalForm = $('#personalForm')
+        
+        $mypersonalForm.submit(function(e){
+            e.preventDefault();
+            var $formData = $(this).serialize()
+            var $thisURL = ''
+        $.ajax({
+            type:'POST',
+            url: $thisURL,
+            data: $formData,
+            success:function(){
+
+            }
+            error:function(){
+                console.log('hellp')
+            }
+
+        });
+        });
+
+
+
+        
+    });
+ </script>
+{% endblock extrascripts %}

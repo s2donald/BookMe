@@ -1,6 +1,6 @@
 from .tasks import bizaddedEmailSent
 from django.shortcuts import render, redirect, get_object_or_404
-from .forms import  ConsumerRegistrationForm, AccountAuthenticationForm, UpdateNameForm, UpdateEmailForm, UpdatePhoneForm, UpdateHomeAddressForm
+from .forms import  ConsumerRegistrationForm, AccountAuthenticationForm, UpdatePersonalForm, UpdateHomeAddressForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import Permission, Group, Group
 from business.models import Company, Services, Category
@@ -88,6 +88,7 @@ def AccountSummaryView(request):
     form = SearchForm()
     Search = None
     results = []
+    context={}
     if 'Search' in request.GET:
         form = SearchForm(request.GET)
         if form.is_valid():
@@ -98,9 +99,42 @@ def AccountSummaryView(request):
     if not request.user.is_authenticated:
         return redirect("login")
 
+    personal_data = {'first_name': acct.first_name, 
+                    'last_name': acct.last_name, 
+                    'email':acct.email, 
+                    'phone':acct.phone}
 
+    address_data = {'address': acct.address}
+    if request.method=='POST':
+        if request.POST.get("form_type") == 'personalForm':
+            personal_form = UpdatePersonalForm(request.POST)
+            address_form = UpdateHomeAddressForm(initial=address_data)
+            if personal_form.is_valid():
+                acct.first_name = personal_form.cleaned_data.get('first_name')
+                acct.last_name = personal_form.cleaned_data.get('last_name')
+                acct.email = personal_form.cleaned_data.get('email')
+                acct.phone = personal_form.cleaned_data.get('phone')
+                acct.save()
+                return redirect('account:account')
+            else:
+                context['update_personal_form'] = personal_form
+        else:
+            address_form = UpdateHomeAddressForm(request.POST)
+            personal_form = UpdatePersonalForm(initial=personal_data)
+            if address_form.is_valid():
+                acct.address = address_form.cleaned_data.get('address')
+                acct.save()
+                return redirect('account:account')
+            else:
+                context['update_address_form'] = address_form
+    else:
+        personal_form = UpdatePersonalForm(initial=personal_data)
+        address_form = UpdateHomeAddressForm(initial=address_data)
 
-    return render(request, 'account/cons_account_information.html', {'acct':acct,'my_companies':companies, 'category':category, 'categories':categories ,'companies':results, 'form':form})
+    context['update_personal_form'] = personal_form
+    context['update_address_form'] = address_form
+
+    return render(request, 'account/cons_account_information.html', {'personal_form':personal_form,'address_form':address_form,'acct':acct,'my_companies':companies, 'category':category, 'categories':categories ,'companies':results, 'form':form})
 
 def RegisteredAccountView(request):
     return render(request, 'account/register_done.html')

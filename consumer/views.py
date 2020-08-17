@@ -15,3 +15,4 @@ def bookingScheduleView(request, id, slug):
 def FutPastBooking(request):
     my_companies = Company.objects.filter(user=request.user)
     return render(request, 'account/bookingsched.html',{'my_companies':my_companies})
+

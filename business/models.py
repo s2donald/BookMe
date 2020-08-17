@@ -6,6 +6,7 @@ from account.models import Account, MyAccountManager
 from django.utils.text import slugify
 from django.contrib.auth.models import AbstractBaseUser
 from django.utils import timezone
+
 # This category holds our different types of services such as
 #   automotive services, health and wellness services, home services, etc
 #   These should not be modified by the user
@@ -50,6 +51,7 @@ class Company(models.Model):
     subcategory = models.ManyToManyField(SubCategory)
     description = models.TextField(max_length=200, db_index=True, blank=True)
     address = models.CharField(max_length=200)
+    avgrating = models.DecimalField(max_digits=5, decimal_places=2)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES,default='draft')
     postal_regex = RegexValidator(regex=r"^[ABCEGHJKLMNPRSTVXY]{1}\d{1}[A-Z]{1} *\d{1}[A-Z]{1}\d{1}$", message="A valid postal code/ZIP Code must be entered")
     postal = models.CharField(max_length=10, validators=[postal_regex])
@@ -66,7 +68,7 @@ class Company(models.Model):
         verbose_name = 'company'
         verbose_name_plural = 'companies'
         index_together =(('slug','id'),)
-
+        
     def __str__(self):
         return self.business_name
 

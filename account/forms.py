@@ -45,36 +45,24 @@ class AccountAuthenticationForm(forms.ModelForm):
         if not authenticate(email=email, password=password):
             raise forms.ValidationError("Please enter a valid Email and Password. Fields are case-sensitive.")
 
-class UpdateNameForm(forms.Form):
+class UpdatePersonalForm(forms.Form):
     first_name = forms.CharField(label='First Name',max_length=30)
     last_name = forms.CharField(label='Last Name',max_length=30)
-    
-    class Meta:
-        model = Account
-        fields = ('first_name','last_name')
-
-class UpdateEmailForm(forms.ModelForm):
     email = forms.EmailField(label='Email')
-    
-    class Meta:
-        model = Account
-        fields = ('email',)
-
-    # def clean_email(self):
-    #     email = self.cleaned_data['email']
-    #     try:
-    #         match = Account.objects.get(email=email)
-    #     except Account.DoesNotExist:
-    #         return email
-    #     raise forms.ValidationError('This email address is already in use.')
-
-class UpdatePhoneForm(forms.Form):
     phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$', message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
     phone = forms.CharField(label='Phone Number', validators=[phone_regex], required=True, max_length=30)
-    
     class Meta:
         model = Account
-        fields = ('phone')
+        fields = ('first_name','last_name','email','phone')
+
+    def clean_email(self):
+        email = self.cleaned_data['email']
+        acct = Account.objects.filter(email=email)
+        if acct:
+            raise forms.ValidationError("Email address is already in use.")
+        return email
+
+
 
 class UpdateHomeAddressForm(forms.Form):
     address = forms.CharField(label='Home Address', max_length=30)

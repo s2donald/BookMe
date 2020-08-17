@@ -28,8 +28,8 @@
             <div class="badge badge-pill px-3 py-2 mb-4">Automotive Services</div>
             <h1 class="text-shadow verified">{{ company.business_name }}</h1>
             <div class="text-block">
-                <p class="licolor"><i class="fa-map-marker-alt fa mr-1"></i><div id="address">{{ address }}</div></p>
-                <p class="mb-0 d-flex align-items-center"><i class="fa fa-xs fa-star licolor"></i><i class="fa fa-xs fa-star licolor"></i><i class="fa fa-xs fa-star licolor"></i><i class="fa fa-xs fa-star licolor"></i><i class="fa fa-xs fa-star text-gray-200 mr-4">                   </i>8 Reviews</p>
+                <p class="licolor text-block"><i class="fa-map-marker-alt fa mr-1"></i> {{ address }}</p>
+                <p class="mb-0 d-flex align-items-center"><i class="fa fa-xs fa-star licolor"></i><i class="fa fa-xs fa-star licolor"></i><i class="fa fa-xs fa-star licolor"></i><i class="fa fa-xs fa-star licolor"></i><i class="fa fa-xs fa-star text-gray-200 mr-4">                   </i>{{ reviews|length }} Reviews</p>
             </div>
           </div>
         </div>
@@ -50,19 +50,38 @@
               <h3 class="mb-3">About</h3>
               <p class="text-muted"> {{ company.description }}</p>
             {% endif %}
+            <hr>
             </div>
             <div class="text-block">
+                <h3 class="mb-3">Location</h3>
+                <div id="map"></div>
+                <hr>
+            </div>
+            
+            <div class="text-block">
+
               <!-- Gallery-->
               <h3 class="mb-4">Gallery</h3>
               <div class="row gallery ml-n1 mr-n1">
-                <div class="col-lg-4 col-6 px-1 mb-2"><a href="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/no_image.png" %}{% endif %}"><img class="img-fluid" src="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/no_image.png" %}{% endif %}" alt="..."></a></div>
-                <div class="col-lg-4 col-6 px-1 mb-2"><a href=""><img class="img-fluid" src="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/no_image.png" %}{% endif %}" alt="..."></a></div>
-                <div class="col-lg-4 col-6 px-1 mb-2"><a href=""><img class="img-fluid" src="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/no_image.png" %}{% endif %}" alt="..."></a></div>
-                <div class="col-lg-4 col-6 px-1 mb-2"><a href=""><img class="img-fluid" src="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/no_image.png" %}{% endif %}" alt="..."></a></div>
-                <div class="col-lg-4 col-6 px-1 mb-2"><a href=""><img class="img-fluid" src="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/no_image.png" %}{% endif %}" alt="..."></a></div>
-                <div class="col-lg-4 col-6 px-1 mb-2"><a href=""><img class="img-fluid" src="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/no_image.png" %}{% endif %}" alt="..."></a></div>
-              </div>
+                <div class="swiper-container gallery-slider">
+                <!-- Additional required wrapper-->
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide"><a href="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/no_image.png" %}{% endif %}"><img class="img-fluid" src="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/no_image.png" %}{% endif %}" alt="..."></a></div>
+                    <div class="swiper-slide"><a href=""><img class="img-fluid" src="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/no_image.png" %}{% endif %}" alt="..."></a></div>
+                    <div class="swiper-slide"><a href=""><img class="img-fluid" src="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/no_image.png" %}{% endif %}" alt="..."></a></div>
+                    <div class="swiper-slide"><a href=""><img class="img-fluid" src="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/no_image.png" %}{% endif %}" alt="..."></a></div>
+                    <div class="swiper-slide"><a href=""><img class="img-fluid" src="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/no_image.png" %}{% endif %}" alt="..."></a></div>
+                    <div class="swiper-slide"><a href=""><img class="img-fluid" src="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/no_image.png" %}{% endif %}" alt="..."></a></div>
+                    <div class="swiper-slide"><a href=""><img class="img-fluid" src="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/no_image.png" %}{% endif %}" alt="..."></a></div>
+
+                </div>
+                    <div class="swiper-pagination swiper-pagination-white"></div>
+                    <div class="swiper-button-prev swiper-button-white circle-slide"></div>
+                    <div class="swiper-button-next swiper-button-white circle-slide"></div>
+                </div>
+                </div>
             </div>
+            
             <!-- Amenities-->
             <div class="text-block">
               <h3 class="mb-4">Amenities</h3>
@@ -102,19 +121,26 @@
                 </li>
               </ul>
             </div>
+            
             <div class="text-block">
-              <p class="subtitle text-sm licolor">Reviews    </p>
-              <h5 class="mb-4">Reviews </h5>
+                <div class="d-flex justify-content-between">
+                    <h5 class="mb-4 licolor">Reviews </h5>
+                </div>
+            
+              {% for review in reviews %}
               <div class="media d-block d-sm-flex review">
-                <div class="text-md-center mr-4 mr-xl-5"><img class="d-block avatar avatar-xl p-2 mb-2" src="img/avatar/avatar-8.jpg" alt="Padmé Amidala"><span class="text-uppercase text-muted text-sm">Dec 2018</span></div>
+                <div class="text-md-center mr-4 mr-xl-5"><img class="d-block avatar avatar-xl p-2 mb-2" src="img/avatar/avatar-8.jpg" alt="{{ review.reviewer.first_name }} {{ review.reviewer.last_name }}"><span class="text-uppercase text-muted text-sm">Date(Mon day year)</span></div>
                 <div class="media-body">
-                  <h6 class="mt-2 mb-1">Padmé Amidala</h6>
-                  <div class="mb-2"><i class="fa fa-xs fa-star text-primary"></i><i class="fa fa-xs fa-star text-primary"></i><i class="fa fa-xs fa-star text-primary"></i><i class="fa fa-xs fa-star text-primary"></i><i class="fa fa-xs fa-star text-primary"></i>
+                  <h6 class="mt-2 mb-1">{{ review.reviewer.first_name }} {{ review.reviewer.last_name }}</h6>
+                  <div class="mb-2">{% for i in '1234' %}<i class="fa fa-xs fa-star licolor"></i>{% endfor %}{% for i in '1' %}<i class="fa fa-xs fa-star "></i>{% endfor %}
                   </div>
-                  <p class="text-muted text-sm">One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in his bed into a horrible vermin. He lay on his armour-like back, and if he lifted his head a little he could see his brown belly, slightly domed and divided by arches into stiff sections     </p>
+                  <p class="text-muted text-sm">{{ review.review }}     </p>
                 </div>
               </div>
-
+              {% empty %}
+                <h6>There are no reviews</h6>
+              {% endfor %}
+            
               
               <div class="py-5">
                 <button class="btn btn-outline-primary" type="button" data-toggle="collapse" data-target="#leaveReview" aria-expanded="false" aria-controls="leaveReview">Leave a review</button>
@@ -162,12 +188,8 @@
                 <div class="card-header bg-gray-100 py-4 border-0">
                   <div class="media align-items-center">
                     <div class="media-body">
-                      <p class="subtitle text-sm text-primary">Opening in 5 minutes</p>
-                      <h4 class="mb-0">Opening Hours </h4>
+                      <h4 class="mb-0 licolor">Business Hours </h4>
                     </div>
-                    <svg class="svg-icon svg-icon svg-icon-light w-3rem h-3rem ml-3 text-muted">
-                      <use xlink:href="#wall-clock-1"> </use>
-                    </svg>
                   </div>
                 </div>
                 <div class="card-body">
@@ -226,13 +248,15 @@
                 </div>
               </div>
               <div class="text-center">
-                <p><a class="text-secondary" href="#"> <i class="fa fa-heart"></i> Bookmark This Listing</a></p><span>79 people bookmarked this place </span>
+                <p><a class="licolor" href="#"> <i class="fa fa-bolt"></i> Favourite This Company</a></p><span>79 people saved this business </span>
               </div>
             </div>
           </div>
         </div>
       </div>
     </section>
+
+
     <div class="py-6 bg-gray-100"> 
       <div class="container">
         <h5 class="mb-0">Similar places</h5>
@@ -268,6 +292,7 @@
                 </div>
               </div>
             </div>
+
             <div class="swiper-slide h-auto px-2">
               <!-- venue item-->
               <div class="w-100 h-100" data-marker-id="59c0c8e322f3375db4d89128">
@@ -447,7 +472,7 @@
         }
 
         function geocodeAddress(geocoder, resultsMap) {
-            var address = document.getElementById("address").innerHTML;
+            var address = '{{ address }}';
             console.log(address)
             geocoder.geocode({ address: address }, function(results, status) {
                 if (status === "OK") {

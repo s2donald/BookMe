@@ -1,7 +1,7 @@
 from django.db import models
 from business.models import Account, Company, Services
 from django.utils import timezone
-
+from django.core.validators import MinValueValidator, MaxValueValidator
 # Create your models here.
 
 class Bookings(models.Model):
@@ -27,6 +27,15 @@ class Bookings(models.Model):
     def __str__(self):
         return self.service.name
 
+class Reviews(models.Model):
+    reviewer = models.ForeignKey(Account, on_delete=models.CASCADE)
+    company = models.ForeignKey(Company, on_delete=models.CASCADE)
+    review = models.TextField(max_length=200)
+    star = models.IntegerField(validators=[MinValueValidator(1),MaxValueValidator(5)])
+
+    class Meta:
+        unique_together=(('reviewer','company'),)
+        index_together=(('reviewer','company'),)
 
 
 

@@ -27,7 +27,29 @@ a:focus {
     text-decoration: none;
     transition: all 0.3s;
 }
+.bg-secondary {
+    background-color: #854fee !important;
+  }
+  
+  a.bg-secondary:hover, a.bg-secondary:focus,
+  button.bg-secondary:hover,
+  button.bg-secondary:focus {
+    background-color: #854fee !important;
+  }
 
+  .icon-circle {
+    width: 20px;
+    height: 20px;
+    text-align: center;
+    color: #fff;
+    border-radius: 50%;
+    font-size: .5rem;
+    line-height: 20px;
+  }
+  
+  .icon-circle i {
+    vertical-align: middle;
+  }
 .hover-animate {
     transition: all 0.2s ease-in-out;
   }
@@ -284,6 +306,12 @@ footer {
   
   .detail-slider.swiper-container-horizontal img {
     visibility: visible;
+  }
+  .gallery-slider{
+    width: 100%;
+    height: 100%;
+    margin-left: auto;
+    margin-right: auto;
   }
 
   /*

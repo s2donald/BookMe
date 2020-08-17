@@ -272,6 +272,25 @@ $(function () {
         }
     });
 
+    var swiper = new Swiper('.gallery-slider', {
+        slidesPerView: 3,
+        slidesPerColumn: 2,
+        spaceBetween: 0,
+        
+        // If we need pagination
+        pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+            dynamicBullets: true
+        },
+
+        // Navigation arrows
+        navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+        },
+      });
+
     var testimonialsSlider = new Swiper('.testimonials-slider', {
         slidesPerView: 2,
         spaceBetween: 20,

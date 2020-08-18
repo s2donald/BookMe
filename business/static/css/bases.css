@@ -102,6 +102,41 @@ a.licolor:hover, a.licolor:focus {
     color: black;
 }
 
+.btn {
+    white-space: nowrap;
+    text-align: center;
+ }
+
+.btn.btn-link:hover{
+    background: whitesmoke;
+    background-clip: padding-box;
+    color: #d52ecd;
+}
+
+.btn-social {
+    position: relative;
+    padding-left: 3rem;
+  }
+  
+  .btn-social-icon {
+    position: absolute;
+    left: 1rem;
+    width: 2rem;
+    top: 50%;
+    -webkit-transform: translateY(-50%);
+    transform: translateY(-50%);
+  }
+
+.detail-slider img {
+    visibility: hidden;
+  }
+  
+  .detail-slider.swiper-container-horizontal img {
+    visibility: visible;
+  }
+  
+
+
 .btn{
     position: relative;
     border: 3px solid transparent;
@@ -313,6 +348,12 @@ footer {
     margin-left: auto;
     margin-right: auto;
   }
+  .subtitle {
+    margin-bottom: 0;
+    text-transform: uppercase;
+    color: #854fee;
+    font-weight: bold;
+  }
 
   /*
 * ===================================================
@@ -467,6 +508,7 @@ footer {
   .swiper-pagination-progressbar .swiper-pagination-progressbar-fill {
     background: #9a6ee2;
   }
+
 
 
 /* ---------------------------------------------------
@@ -822,134 +864,64 @@ figure {
 
 
 
-/*
-Extra small (xs) devices (portrait phones, less than 576px)
-No media query since this is the default in Bootstrap
-
-Small (sm) devices (landscape phones, 576px and up)
-@media (min-width: 576px) { ... }
-
-Medium (md) devices (tablets, 768px and up)
-@media (min-width: 768px) { ... }
-
-Large (lg) devices (desktops, 992px and up)
-@media (min-width: 992px) { ... }
-
-Extra (xl) large devices (large desktops, 1200px and up)
-@media (min-width: 1200px) { ... }
-*/
-
-
-
-/*
-#page-wrapper{
-    position: relative;
-}
-
-* {
-    margin: 0;
-    padding:0;
-    box-sizing: border-box;
-}
-
-a{
-    text-decoration: none;
-    color: #000;
-}
-
-body{
-    background-color: #eee;
-}
-
-li {
-    list-style: none;
-}
-#category{
-    display: flex;
-    justify-content: flex-end;
-}
-#header{
-    position: fixed;
-    top: 0;
-    min-height: 75px;
-    padding: 0px 20px;
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    background-color: #eee;
-}
-@media (max-width: 600px){
-    #header{
-        flex-wrap: wrap;
-    }
-}
-
-#nav-bar{
-    display: flex;
-}
-
-#logo{
-    font-family: 'Fredoka One', cursive;
-    font-size: 3vw;
-}
-@media (max-width: 650px) {
-    #logo {
-      margin-top: 15px;
-      width: 100%;
-      position: relative;
-    }
-  }
-
-footer{
-    text-align: center;
-    flex-direction: row;
-}
-
-
-.btn {
-    padding:0 20px;
-    height: 40px;
-}
-
-nav {
-    font-weight: 400;
-  }
-  
-  @media (max-width: 650px) {
-    nav {
-      margin-top: 10px;
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      padding: 0 50px;
-    }
-    nav li {
-      padding-bottom: 5px;
-    }
-  }
-  
-  nav > ul {
-    width: 35vw;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-  }
-  
-  @media (max-width: 650px) {
-    nav > ul {
-      flex-direction: column;
-    }
-  }
-  
-  */
-
-  /*
-  Google Maps
-  */
-
   #map {
       height: 500px;
       width: 100%;
   }
+
+  /*--- Homepage --*/
+  .hero-home {
+    display: -ms-flexbox;
+    display: flex;
+    position: relative;
+    -ms-flex-align: center;
+    align-items: center;
+  }
+  
+  @media (min-width: 768px) {
+    .hero-home {
+      min-height: 600px;
+    }
+  }
+
+  .hero-slider {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+  
+  .hero-slider .swiper-slide {
+    height: 100%;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
+  }
+
+  .light-overlay,
+.dark-overlay,
+.gradient-overlay {
+  position: relative;
+  overflow: hidden;
+}
+
+.light-overlay .overlay-content,
+.dark-overlay .overlay-content,
+.gradient-overlay .overlay-content {
+  position: relative;
+  z-index: 20;
+}
+
+.light-overlay::after,
+.dark-overlay::after,
+.gradient-overlay::after {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  content: ' ';
+  opacity: .3;
+  background: #000;
+}

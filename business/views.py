@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Category, Company, Services, SubCategory
+from .models import Category, Company, Services, SubCategory, Amenities
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.postgres.search import SearchVector
 from .forms import SearchForm, AddServiceForm, UpdateServiceForm
@@ -78,6 +78,7 @@ def company_detail(request, id, slug):
     address = company.address
     category = None
     categories = Category.objects.all()
+    comp_categ = company.category
     services = Services.objects.all().filter(business=company)
     form = SearchForm()
     Search = None
@@ -89,8 +90,9 @@ def company_detail(request, id, slug):
             results = Company.objects.annotate(search=SearchVector('user','description'),).filter(search=Search)
             return render(request, 'business/company/list.html',{'category':category, 'categories':categories ,'companies':results})
 
-    reviews = Reviews.objects.filter(company=company)
-    return render(request, 'business/company/detail.html', {'address':address,'company':company,'category':category,'categories':categories, 'services':services, 'form':form, 'reviews':reviews})
+    reviews = Reviews.objects.filter(company=company).order_by('-created')
+    amenities = Amenities.objects.filter(company=company).order_by('amenity')
+    return render(request, 'business/company/detail.html', {'comp_categ':comp_categ,'amenities':amenities,'address':address,'company':company,'category':category,'categories':categories, 'services':services, 'form':form, 'reviews':reviews})
 
 @login_required
 def ManageServiceListView(request, id, slug):

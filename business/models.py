@@ -162,3 +162,11 @@ class Services(models.Model):
         return self.name
     def get_absolute_url(self):
         return reverse("business:company_detail", args=[self.id, self.slug])
+
+class Amenities(models.Model):
+    company=models.ForeignKey(Company, on_delete=models.CASCADE)
+    amenity = models.CharField(max_length=30)
+
+    class Meta:
+        verbose_name = 'Amenity'
+        verbose_name_plural = 'Amenities'

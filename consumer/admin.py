@@ -8,4 +8,4 @@ class BookingAdmin(admin.ModelAdmin):
 
 @admin.register(Reviews)
 class ReviewAdmin(admin.ModelAdmin):
-    list_display = ['reviewer','company','review', 'star']
+    list_display = ['reviewer','company','review', 'star', 'created']

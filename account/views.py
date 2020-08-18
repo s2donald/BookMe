@@ -12,9 +12,16 @@ from business.forms import AddCompanyForm
 from bootstrap_modal_forms.generic import (
     BSModalUpdateView
 )
+from django.views import View
 from django.urls import reverse_lazy
 from django.http import JsonResponse
+import json
 from django.template.loader import render_to_string
+from django.http import JsonResponse
+from django.forms.models import model_to_dict
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from .serializers import AccountSerializer
 # Create your views here.
 
 def ConsumerRegistrationView(request):
@@ -104,7 +111,10 @@ def AccountSummaryView(request):
                     'email':acct.email, 
                     'phone':acct.phone}
 
-    address_data = {'address': acct.address}
+    address_data = {'address': acct.address,
+                    'province':acct.province,
+                    'city':acct.city,
+                    'postal':acct.postal}
     if request.method=='POST':
         if request.POST.get("form_type") == 'personalForm':
             personal_form = UpdatePersonalForm(request.POST)
@@ -123,6 +133,9 @@ def AccountSummaryView(request):
             personal_form = UpdatePersonalForm(initial=personal_data)
             if address_form.is_valid():
                 acct.address = address_form.cleaned_data.get('address')
+                acct.postal = address_form.cleaned_data.get('postal')
+                acct.city = address_form.cleaned_data.get('city')
+                acct.province = address_form.cleaned_data.get('province')
                 acct.save()
                 return redirect('account:account')
             else:
@@ -218,89 +231,6 @@ def BusinessAccountsView(request, id, slug):
     services = Services.objects.filter(business=company)
     return render(request, 'business/company/manage/service/manage_service_list.html', {'services':services,'company':company, 'companies':companies})
 
-@login_required
-def NameChangeView(request):
-    context={}
-    email = request.user.email
-    user = Account.objects.get(email=email)
-    data = {'first_name': user.first_name, 'last_name':user.last_name}
-    if request.method == 'POST':
-        user_form = UpdateNameForm(request.POST)
-        if user_form.is_valid():
-            user.first_name = user_form.cleaned_data.get('first_name')
-            user.last_name = user_form.cleaned_data.get('last_name')
-            user.save()
-            return redirect('account:account')
-        else:
-            context['user_form'] = user_form
-            
-    else:
-        user_form = UpdateNameForm(initial=data)
-        context['user_form'] = user_form
-    return render(request, 'account/consumer/name_update.html', {'update_form':user_form, 'user':user})
-
-@login_required
-def emailChangeView(request):
-    context={}
-    email = request.user.email
-    user = Account.objects.get(email=email)
-    data = {'email': user.email}
-    if request.method == 'POST':
-        user_form = UpdateEmailForm(request.POST)
-        if user_form.is_valid():
-            user.email = user_form.cleaned_data.get('email')
-            user.save()
-            return redirect('account:account')
-        else:
-            context['update_name_form'] = user_form
-            
-    else:
-        user_form = UpdateEmailForm(initial=data)
-        context['update_name_form'] = user_form
-    return render(request, 'account/consumer/email_update.html', {'update_form':user_form, 'user':user})
-
-# def save_information_form(request, form, template_name):
-#     data = dict()
-#     if request.method == 'POST':
-#         if form.is_valid():
-#             form.save()
-#             data['form_is_valid'] = True
-#             account = Account.objects.get(email=request.user.email)
-#             data['html_account_info'] = render_to_string('account/cons_account_information.html', {'account':account})
-#         else:
-#             data['form_is_valid'] = False
-#     context = {'form':form}
-#     data['html_form'] = render_to_string(template_name, context, request=request)
-#     return JsonResponse(data)
-
-
-# @login_required
-# def emailUpdateView(request):
-#     if request.method=='POST':
-#         form = UpdateEmailForm(request.POST)
-#     else:
-#         form = UpdateEmailForm()
-#     return save_information_form(request, form, 'account/consumer/email_update.html')
-
-@login_required
-def phoneChangeView(request):
-    context={}
-    email = request.user.email
-    user = Account.objects.get(email=email)
-    data = {'phone': user.phone}
-    if request.method == 'POST':
-        user_form = UpdatePhoneForm(request.POST)
-        if user_form.is_valid():
-            user.phone = user_form.cleaned_data.get('phone')
-            user.save()
-            return redirect('account:account')
-        else:
-            context['update_phone_form'] = user_form
-            
-    else:
-        user_form = UpdatePhoneForm(initial=data)
-        context['update_phone_form'] = user_form
-    return render(request, 'account/consumer/phone_update.html', {'update_form':user_form, 'user':user})
 
 @login_required
 def homeAddressChangeView(request):
@@ -321,3 +251,25 @@ def homeAddressChangeView(request):
         user_form = UpdateHomeAddressForm(initial=data)
         context['update_home_form'] = user_form
     return render(request, 'account/consumer/home_update.html', {'update_form':user_form, 'user':user})
+
+@api_view(['GET'])
+def accountList(request):
+    acct = Account.objects.get(email=request.user.email)
+    serializer = AccountSerializer(acct, many=False)
+    return Response(serializer.data)
+
+@api_view(['POST'])
+def accountUpdate(request):
+    acct = Account.objects.get(email=request.user.email)
+    serializer = AccountSerializer(instance=acct,data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+    return Response(serializer.data)
+
+class personalValidationView(View):
+    def post(self, request):
+        data=json.loads(request.body)
+        email = data['email']
+        if (request.user.email!=str(email)) and (Account.objects.filter(email=email).exists()):
+            return JsonResponse({'email_error':'This email already exists!'}, status=409)
+        return JsonResponse({'email_valid':True})

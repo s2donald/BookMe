@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, AbstractUser
 from django.core.validators import RegexValidator
 from django.utils.text import slugify
 from django.shortcuts import reverse
@@ -44,6 +44,9 @@ class Account(AbstractBaseUser):
     phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$', message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
     phone = models.CharField("Phone Number",validators=[phone_regex], max_length=17)
     address = models.CharField(max_length=200)
+    postal = models.CharField(max_length=35)
+    province = models.CharField(max_length=35)
+    city = models.CharField(max_length=35)
     is_business= models.BooleanField(default=False)
     is_consumer= models.BooleanField(default=False)
     date_joined = models.DateTimeField(verbose_name='date joined', auto_now_add=True)

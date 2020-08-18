@@ -2,16 +2,46 @@
 {% load static %}
 {% block content %}
 {% load crispy_forms_tags %}
-<div class="container">
-    <div class="text-center col-md-12">
-        <h1>Welcome to Gibele</h1>
-        <p>Enter your details to create an account:</p>
-        <p>An account must be created to be able to book services and list services.</p>
-        <form class="" method="post">
-            {% csrf_token %}
-            {{ user_form|crispy }}
-            <button class="btn btn-lg btn-outline-primary" type="submit" name="cons_reg">Create my account</button>
-        </form>
+<div class="container-fluid">
+    <div class="row min-vh-100">
+        <div class="col-md-8 col-lg-6 col-xl-5 position-relative">
+            
+            <h1>Welcome to Gibele</h1>
+            <p>Enter your details to create an account:</p>
+            <p>An account must be created to be able to book services and list services.</p>
+            <form class="" method="post">
+                {% csrf_token %}
+                <div class="row">
+                <div class="col-md-12">
+                    {{ user_form.email|as_crispy_field }}
+                </div>
+                <div class="col-md-12">
+                    {{ user_form.phone|as_crispy_field }}
+                </div>
+                <div class="col-md-6">
+                    {{ user_form.password1|as_crispy_field }}
+                </div>
+                <div class="col-md-6">
+                    {{ user_form.password2|as_crispy_field }}
+                </div>
+                
+                <div class="col-md-6">
+                    {{ user_form.first_name|as_crispy_field }}
+                </div>
+                <div class="col-md-6">
+                    {{ user_form.last_name|as_crispy_field }}
+                </div>
+                </div>
+                
+                <button class="btn btn-lg btn-outline-primary" type="submit" name="cons_reg">Create my account</button>
+                <hr class="my-3 hr-text letter-spacing-2" data-content="OR">
+              <a class="btn btn-primary btn-block btn-social mb-3 center"><i class="fa-2x fa-facebook-f fab btn-social-icon"> </i>     Sign Up With Facebook!</a>
+            </form>
+        </div>
+        <div class="col-md-4 col-lg-6 col-xl-7">
+            <!-- Image-->
+            <div class="bg-cover h-100 mr-n3" style="background-image: url({% static "/img/signup-pexel.jpg" %});"></div>
+        </div>
     </div>
 </div>
 

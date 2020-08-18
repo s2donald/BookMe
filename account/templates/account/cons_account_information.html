@@ -16,21 +16,23 @@
                   <button class="btn btn-link pl-0 licolor collapsed" type="button" data-toggle="collapse" data-target="#personalDetails" aria-expanded="false" aria-controls="personalDetails">Update</button>
                 </div>
               </div>
-              <p class="text-sm text-muted"><i class="fa fa-id-card fa-fw mr-2"></i>{{ user.first_name }} {{user.last_name }}<br><i class="fa fa-envelope-open fa-fw mr-2"></i>{{ user.email }} <br> <i class="fa fa-phone fa-fw mr-2"></i>{{ user.phone }}</p>
+              <p class="text-sm text-muted"><i class="fa fa-id-card fa-fw mr-2 licolor"></i>{{ user.first_name }} {{user.last_name }}<br><i class="fa fa-envelope-open fa-fw mr-2 licolor"></i>{{ user.email }} <br> <i class="fa fa-phone fa-fw mr-2 licolor"></i>{{ user.phone }}</p>
               <div class="collapse" id="personalDetails">
-                <form method="POST" id="personalForm">
+                <form method="POST" id="personalForm" data-url="{% url 'account:account'%}">
                     {% csrf_token %}
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-6" id="fname">
                             {{ personal_form.first_name|as_crispy_field }}
+                            
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-6" id="lname">
                             {{ personal_form.last_name|as_crispy_field }}
                         </div>
-                        <div class="col-md-12">
+                        <div class="col-md-12" id="pemail">
                             {{ personal_form.email|as_crispy_field}}
+                            <div class="invalid_feedback invalid-feedback m-0 p-0" style="display:none"></div>
                         </div>
-                        <div class="col-md-12">
+                        <div class="col-md-12" id="pphone">
                             {{ personal_form.phone|as_crispy_field}}
                         </div>
                     </div>
@@ -48,16 +50,26 @@
                   <button class="btn btn-link pl-0 licolor collapsed" type="button" data-toggle="collapse" data-target="#address" aria-expanded="false" aria-controls="address">Change</button>
                 </div>
               </div>
-              <div class="media text-sm text-muted"> <i class="fa fa-address-book fa-fw mr-2"></i>
-                <div class="media-body mt-n1">{{ user.address }}<br>{{ user.city }}, CA, 902 10</div>
+              <div class="media text-sm text-muted"> <i class="fa fa-address-book fa-fw mr-2 licolor"></i>
+                <div class="media-body mt-n1" id="user_information_addy">{{ user.address }}<br>{{ user.city }}, {{ user.province }}, {{user.postal}}</div>
               </div>
               <div class="collapse" id="address">
                 <form method="post">
                   {% csrf_token %}
                   <div class="row">
-                    <div class="col-md-12">
+                    <div class="col-md-12 my-0">
                         {{ address_form.address|as_crispy_field}}
                     </div>
+                    <div class="col-md-6 mx-0">
+                        {{ address_form.province|as_crispy_field}}
+                    </div>
+                    <div class="col-md-6">
+                        {{ address_form.city|as_crispy_field}}
+                    </div>
+                    <div class="col-md-5">
+                        {{ address_form.postal|as_crispy_field}}
+                    </div>
+                    
                   </div>
                   <button type="submit" class="btn btn-outline-primary">Save address</button>
                 </form>
@@ -69,115 +81,122 @@
               <div class="card-header bg-primary-light py-4 border-0">
                 <div class="media align-items-center">
                   <div class="media-body">
-                    <h4 class="h6 subtitle text-sm text-primary">What info is shared with others?</h4>
+                    <h4 class="h6 subtitle text-sm licolor">What info is shared with others?</h4>
                   </div>
-                  <svg class="svg-icon svg-icon svg-icon-light w-3rem h-3rem ml-3 text-primary">
-                    <use xlink:href="#identity-1"> </use>
-                  </svg>
                 </div>
               </div>
               <div class="card-body p-4">
-                <p class="text-muted text-sm card-text">Directory only releases contact information for hosts and guests <strong>after a reservation is confirmed</strong>.</p>
-                <p class="text-muted text-sm card-text">Amet nisi eiusmod minim commodo sit voluptate aute ut quis ea veniam sunt proident ex. <strong>Exercitation culpa laboris</strong> consequat fugiat non ipsum veniam Lorem aliqua deserunt tempor elit veniam.</p>
+                <p class="text-muted text-sm card-text">Gibele will only share the required personal contact information with the service provider <strong>after a booking has been confirmed</strong>.</p>
               </div>
             </div>
           </div>
         </div>
       </div>
     </section>
-{% comment %} <div class="table-responsive">
-            <table id="account-table" class="table table-light table-hover mt-3" style="">
-                <thead>
-                <tr>
-                    <th class="text-center" scope="col"></th>
-                    <th class="text-center" scope="col"><h1 class="text-center">Account Details</h1></th>
-                    <th class="text-center" scope="col"></th>
-                </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <th class="text-center" scope="row">Full Name: </th>
-                        <td class="text-center">{{user.first_name }} {{ user.last_name }}</td>
-                        <td class="text-center">
-                            <!-- Update book buttons -->
-                            <button type="button" id="update-name" class="update-name btn btn-sm btn-outline-primary py-0 mb-1" data-form-url="{% url 'account:name' %}">
-                                <span>Change</span>
-                            </button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th class="text-center" scope="row">Email: </th>
-                        <td class="text-center">{{ user.email }}</td>
-                        <td class="text-center">
-                            <!-- Update email buttons -->
-                            <button type="button" id="update-email" class="btn btn-sm btn-outline-primary py-0 mb-1" data-form-url="{% url 'account:email_update' %}">Change</button>
-                            
-                        </td>
-                    </tr>
-                    <tr>
-                        <th class="text-center" scope="row">Phone Number: </th>
-                        <td class="text-center">{{ user.phone }}</td>
-                        <td class="text-center">
-                            <!-- Update book buttons -->
-                            <button type="button" id="update-phone" class="btn btn-sm btn-outline-primary py-0 mb-1" data-form-url="{% url 'account:phone_update' %}">Change</button>
-                            
-                        </td>
-                    </tr>
-                    <tr>
-                        <th class="text-center" scope="row">Home Address: </th>
-                        <td>
-                            {% if request.user.address == None %}
-                               <p class="text-center">You have not added a home address to your account.</p>
-                                <small class="text-left">Your home address is only given to those who you have booked a mobile appointment with. This information is not shared publicly.</small>
-                            {% else %}
-                                <p class="text-center">{{ user.address}}</p>
-                            {% endif %}
-                            
-                            
-                        </td>
-                        <td class="text-center">
-                            <!-- Update name buttons -->
-                            {% if request.user.address == None %}
-                                <button type="button" class="bs-modal delete-service btn btn-sm btn-outline-primary py-0 mb-1" data-form-url="{% url 'account:name' %}">Add</button>
-                            {% else %}
-                                <button type="button" id="home-update" class="bs-modal delete-service btn btn-sm btn-outline-primary py-0 mb-1" data-form-url="{% url 'account:home_updated' %}">Change</button>
-                            {% endif %}
-                            
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            </div> {% endcomment %}
-
 {% endblock information %}
 
-{% block extrascripts %}
+{% block ajaxscripts %}
  <script type="text/javascript">
+    console.log('Register Working boi')
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    const csrftoken = getCookie('csrftoken');
+
+    const emailField = document.querySelector("#id_email");
+    const feedBackArea = document.querySelector(".invalid_feedback")
+
+    emailField.addEventListener('change', (e) =>{
+        console.log('It works wonderfully');
+        const emailVal = e.target.value;
+        emailField.classList.remove("is-invalid");
+        feedBackArea.style.display="none";
+        if (emailVal.length > 0) {
+            fetch("/account/updatep/", {
+                body: JSON.stringify({email: emailVal}),
+                method: 'POST',
+                headers:{
+                    'Content-type':'application/json',
+                    'X-CSRFToken':csrftoken,
+                }
+            })
+            .then((res) => res.json())
+            .then((data) => {
+                console.log("data", data);
+                if (data.email_error){
+                    emailField.classList.add("is-invalid");
+                    feedBackArea.style.display="block";
+                    feedBackArea.innerHTML=`<p>${data.email_error}</p>`
+
+                }
+                else{
+                    emailField.classList.remove("is-invalid");
+                    feedBackArea.style.display="none";
+                }
+            });
+        }
+    });
     
-    $(document).ready(function(){
-        var $mypersonalForm = $('#personalForm')
+    {% comment %} personalinfoForms()
+
+    function personalinfoForms(){
+        var inform = document.getElementById('user_information')
+
+        var url = 'http://127.0.0.1:8000/account/liist/'
+        fetch(url)
+        .then((resp) => resp.json())
+        .then(function(data){
+            console.log('Data:', data)
+            var list = data
+            console.log(list.first_name)
+        })
+    }
+
+    var persForm = document.getElementById('personalDetails')
+    persForm.addEventListener('submit', function(e){
+        e.preventDefault()
+        console.log('Form Works')
+    }) {% endcomment %}
+
+    {% comment %} $(document).ready(function(){
         
-        $mypersonalForm.submit(function(e){
+        $('#personalForm').on('submit',function(e){
             e.preventDefault();
             var $formData = $(this).serialize()
             var $thisURL = ''
-        $.ajax({
-            type:'POST',
-            url: $thisURL,
-            data: $formData,
-            success:function(){
+            var $hero = $('.hero-heading');
+            $.ajax({
+                type:'POST',
+                url: $thisURL,
+                data: $formData,
+                complete: function(){
+                    $('#div_id_last_name').remove();
+                },
+                success:function(){
+                    console.log($formData)
+                },
+                error:function(){
+                    console.log('error')
+                },
 
-            }
-            error:function(){
-                console.log('hellp')
-            }
-
-        });
-        });
+            });
+        }); 
 
 
 
         
-    });
+    });{% endcomment %}
  </script>
-{% endblock extrascripts %}
+{% endblock ajaxscripts %}

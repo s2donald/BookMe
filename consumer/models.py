@@ -32,10 +32,13 @@ class Reviews(models.Model):
     company = models.ForeignKey(Company, on_delete=models.CASCADE)
     review = models.TextField(max_length=200)
     star = models.IntegerField(validators=[MinValueValidator(1),MaxValueValidator(5)])
-
+    created = models.DateTimeField(auto_now_add=True)
     class Meta:
+        ordering = ('-created',)
         unique_together=(('reviewer','company'),)
         index_together=(('reviewer','company'),)
+        verbose_name = 'Review'
+        verbose_name_plural = 'Reviews'
 
 
 

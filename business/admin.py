@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Company, Category, Services, SubCategory
+from .models import Company, Category, Services, SubCategory, Amenities
 # Register your models here.
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
@@ -22,3 +22,7 @@ class CompanyAdmin(admin.ModelAdmin):
     list_filter = ['available', 'created', 'updated']
     list_editable = ['available']
     prepopulated_fields = {'slug':('business_name',)}
+
+@admin.register(Amenities)
+class AmenitiesAdmin(admin.ModelAdmin):
+    list_display = ['company','amenity']

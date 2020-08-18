@@ -26,6 +26,13 @@ class ConsumerRegistrationForm(UserCreationForm):
         user.is_consumer = True
         user.save()
 
+    def clean_email(self):
+        email = self.cleaned_data['email']
+        acct = Account.objects.filter(email=email)
+        if acct:
+            raise forms.ValidationError("Email address is already in use.")
+        return email
+
     def clean_password2(self):
         cd = self.cleaned_data
         if cd['password1'] != cd['password2']:
@@ -65,8 +72,10 @@ class UpdatePersonalForm(forms.Form):
 
 
 class UpdateHomeAddressForm(forms.Form):
-    address = forms.CharField(label='Home Address', max_length=30)
-
+    address = forms.CharField(label='Home Address', max_length=35)
+    province = forms.CharField(label='Province/State', max_length=35)
+    postal = forms.CharField(label='Postal Code/ZIP Code', max_length=35)
+    city = forms.CharField(label='City', max_length=35)
     class Meta:
         model = Account
-        fields = ('address')
+        fields = ('address','province','postal','city')

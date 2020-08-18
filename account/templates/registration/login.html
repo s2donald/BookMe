@@ -3,18 +3,27 @@
 {% load crispy_forms_tags%}
 {% block content %}
 
-<div class="container">
-    <h1 class="text-center col-md-12">Welcome back to Gibele!</h1>
-    <h3>Please use the following form to log-in</h3>
-    <form class="form-signin" method="POST" action="{% url 'login' %}">
-      {% csrf_token %}
-      {{ form|crispy }}
-      <button class="btn btn-lg btn-outline-primary" type="submit">Log in</button>
-    </form>
-    <div class="text-center mt-3">
-        <a class="licolor" href="{% url 'account:signup'%}">Sign Up</a>
-        <strong>|</strong>
-        <a class="licolor" href="{% url 'business:homepage'%}">Forgot Password?</a>
+<div class="container-fluid px-3">
+  <div class="row min-vh-100">
+    <div class="col-md-4 col-lg-6 col-xl-7 d-none d-md-block">
+        <!-- Image-->
+        <div class="bg-cover h-100 mr-n3" style="background-image: url({% static "/img/signin-pexel.jpg" %});"></div>
     </div>
+    <div class="col-md-8 col-lg-6 col-xl-5">
+      <h1 class="text-center col-md-12">Welcome back to Gibele!</h1>
+      <h3>Please use the following form to log-in</h3>
+      <form class="form-signin" method="POST" action="{% url 'login' %}">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <button class="btn btn-lg btn-outline-primary" type="submit">Log in</button>
+      </form>
+      <div class="text-center mt-3">
+          <a class="licolor" href="{% url 'account:signup'%}">Sign Up</a>
+          <strong>|</strong>
+          <a class="licolor" href="{% url 'business:homepage'%}">Forgot Password?</a>
+      </div>
+    </div>
+  </div>
+    
 </div>
 {% endblock %}

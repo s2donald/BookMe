@@ -12,6 +12,12 @@
     
 }
 
+.mybg-img{
+    object-fit: fit;
+    background-repeat: no-repeat, repeat;
+    display: block;
+}
+
 a:link {
     text-decoration:none;
     color: black;

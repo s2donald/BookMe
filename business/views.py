@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from .models import Category, Company, Services, SubCategory, Amenities
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.postgres.search import SearchVector
-from .forms import SearchForm, AddServiceForm, UpdateServiceForm
+from .forms import SearchForm, AddServiceForm, UpdateServiceForm, homeSearchForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.views.generic.list import ListView
@@ -13,11 +13,11 @@ from django.http import JsonResponse
 from django.template.loader import render_to_string
 from consumer.models import Reviews
 
-# Create your views here.
-def homepage(request, category_slug=None):
+def allsearch(request):
     category = None
     categories = Category.objects.all()
     subcategories = SubCategory.objects.all()
+    companies = Company.objects.all()
     form = SearchForm()
     Search = None
     results = []
@@ -27,10 +27,29 @@ def homepage(request, category_slug=None):
             Search = form.cleaned_data['Search']
             
             results = Company.objects.annotate(search=SearchVector('business_name','description'),).filter(search=Search)
-            return render(request, 'business/company/list.html',{'category':category, 'categories':categories ,'companies':results, 'name': Search})
+            return render(request, 'business/company/list.html',{'category':category, 'categories':categories ,'companies':results, 'name': Search,'form':form})
+    
+    paginator = Paginator(companies, 6)
+    page = request.GET.get('page')
+    try:
+        companiess = paginator.page(page)
+    except PageNotAnInteger:
+        companiess = paginator.page(1)
+    except EmptyPage:
+        companiess = paginator.page(paginator.num_pages)
+    
+    return render(request, 'business/home.html', {'page':page,'category':category, 'categories':categories, 'subcategories':subcategories,'form':form, 'companies':companiess})
+
+# Create your views here.
+def homepage(request, category_slug=None):
+    category = None
+    categories = Category.objects.all()
+    subcategories = SubCategory.objects.all()
+    form = SearchForm()
+    search = homeSearchForm()
     if category_slug:
         category = get_object_or_404(Category, slug=category_slug)
-    return render(request, 'business/home.html', {'category':category, 'categories':categories, 'subcategories':subcategories,'form':form})
+    return render(request, 'business/home.html', {'search':search, 'category':category, 'categories':categories, 'subcategories':subcategories,'form':form})
 
 def company_list(request, category_slug=None, company_slug=None, tag_slug=None):
     category = None
@@ -81,14 +100,6 @@ def company_detail(request, id, slug):
     comp_categ = company.category
     services = Services.objects.all().filter(business=company)
     form = SearchForm()
-    Search = None
-    results = []
-    if 'Search' in request.GET:
-        form = SearchForm(request.GET)
-        if form.is_valid():
-            Search = form.cleaned_data['Search']
-            results = Company.objects.annotate(search=SearchVector('user','description'),).filter(search=Search)
-            return render(request, 'business/company/list.html',{'category':category, 'categories':categories ,'companies':results})
 
     reviews = Reviews.objects.filter(company=company).order_by('-created')
     amenities = Amenities.objects.filter(company=company).order_by('amenity')
@@ -148,7 +159,6 @@ def DeleteServiceView(request, pk, pks, slug):
         service.delete()
         return redirect(reverse('business:manage_service_list', args=[pks, slug]))
         
-
     return render(request, 'business/company/manage/service/delete.html',{'service':service})
 
 @login_required

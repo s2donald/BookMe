@@ -93,15 +93,7 @@ def AccountSummaryView(request):
     categories = Category.objects.all()
     companies = Company.objects.all().filter(user=request.user)
     form = SearchForm()
-    Search = None
-    results = []
     context={}
-    if 'Search' in request.GET:
-        form = SearchForm(request.GET)
-        if form.is_valid():
-            Search = form.cleaned_data['Search']
-            results = Company.objects.annotate(search=SearchVector('user','description'),).filter(search=Search)
-            return render(request,'business/company/list.html',{'category':category, 'categories':categories ,'companies':results, 'form':form})
 
     if not request.user.is_authenticated:
         return redirect("login")
@@ -147,7 +139,7 @@ def AccountSummaryView(request):
     context['update_personal_form'] = personal_form
     context['update_address_form'] = address_form
 
-    return render(request, 'account/cons_account_information.html', {'personal_form':personal_form,'address_form':address_form,'acct':acct,'my_companies':companies, 'category':category, 'categories':categories ,'companies':results, 'form':form})
+    return render(request, 'account/cons_account_information.html', {'personal_form':personal_form,'address_form':address_form,'acct':acct,'my_companies':companies, 'category':category, 'categories':categories , 'form':form})
 
 def RegisteredAccountView(request):
     return render(request, 'account/register_done.html')

@@ -3,33 +3,41 @@
 
 {% block content %}
     <section class="hero-home" style="background-image:url({% static 'img/background-home.jpg' %});background-color: #cccccc;">
-      <div class="container top-6 z-index-20">
+      <div class="container z-index-20">
         <div class="row">
           <div class="col-xl-12">
             <div class="text-center text-white text-lg-left">
               <p class="subtitle letter-spacing-4 mb-2 text-secondary text-shadow">The best services on Gibele</p>
-              <h1 class="display-3 font-weight-bold text-shadow">Life is for service</h1>
+              <h1 class="header-font font-weight-bold text-shadow">Life is for service</h1>
             </div>
             <div class="search-bar bg-white bg-home">
-              <form action="#">
+              <form action="{% url 'business:post-search' %}" method="GET" width="100%">
                 {% csrf_token %}
-                <div class="row marg-top padd1 paddquart paddleft15">
+                <div class="row marg-top padd1 paddquart padd15 form-group">
                     <div class="col-lg-4 d-flex align-items-center">
                         {{ search.Search }}
                     </div>
-                    <div class="col-lg-3 d-flex input-group">
+                    <div class="col-lg-3 d-flex align-items-center form-group">
                         {{ search.Location }}
                     </div>
-                    <div class="col-lg-3 d-flex form-group no-divider">
-                    <select class="selectpicker btn-form-control" title="Categories" data-style="btn-form-control">
-                      <option value="small">Restaurants</option>
-                      <option value="medium">Hotels</option>
-                      <option value="large">Cafes</option>
-                      <option value="x-large">Garages</option>
-                    </select>
+                    <div class="col-lg-3 d-flex align-items-center form-group no-divider">
+                        <select class="selectcolor selectpicker show-tick form-control" data-size="5" title="Categories">
+                            <option class="selectcolor" value="small">All Services</option>
+                            {% for c in categories %}
+                                <optgroup label="{{ c.name }}">
+                                    <option class="selectcolor" value="small">All {{c.name}}</option>
+                                    {% for sc in subcategories %}
+                                        {% if sc.category.name == c.name %}
+                                            <option data-subtext="{{c.name}}" class="selectcolor" value="small">{{sc.name}}</option>
+                                        {% endif %}
+                                    {% endfor %}
+                                </optgroup>
+                            
+                            {% endfor %}
+                        </select>
                   </div>
-                  <div class="col-lg-2 align-items-center">
-                    <div class="btn btn-outline-primary btn-block h-100"><i class="fas fa-search"></i></div>
+                  <div class="col-lg-2">
+                    <button type="submit" class="btn btn-outline-primary btn-block h-100">Search</button>
                   </div>
                 </div>
               </form>

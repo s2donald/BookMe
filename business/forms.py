@@ -67,7 +67,7 @@ class SearchForm(forms.Form):
     
 class homeSearchForm(forms.Form):
     Search = forms.CharField(label='Search Business or Service',widget=forms.TextInput(attrs={'class':'form-control border','placeholder':'Search Business or Service'}))
-    Location = forms.CharField(label='Location',widget=forms.TextInput(attrs={'class':'form-control border','placeholder':'Location'}))
+    Location = forms.CharField(required=False, label='Location',widget=forms.TextInput(attrs={'class':'form-control border','placeholder':'Location'}))
 
 class AddServiceForm(forms.ModelForm):
     name = forms.CharField(label='Service Name')

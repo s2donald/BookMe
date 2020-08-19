@@ -14,7 +14,7 @@ def bookingScheduleView(request, id, slug):
     categories = Category.objects.all()
     subcategories = SubCategory.objects.all()
     company = get_object_or_404(Company, id=id, slug=slug, available=True)
-    bookings = Bookings.objects.get(company=company)
+    bookings = Bookings.objects.filter(company=company)
 
     return render(request, 'business/booking/bookingCalendar.html', {'company':company, 'bookings':bookings, 'my_companies':my_companies,'form':form,'categories':categories,'subcategories':subcategories})
 

@@ -27,6 +27,32 @@ def allsearch(request):
             Search = form.cleaned_data['Search']
             
             results = Company.objects.annotate(search=SearchVector('business_name','description'),).filter(search=Search)
+            return render(request, 'business/company/list.html',{'category':category, 'categories':categories ,'companies':results, 'name': Search,'form':form,'subcategories':subcategories})
+    
+    paginator = Paginator(companies, 6)
+    page = request.GET.get('page')
+    try:
+        companiess = paginator.page(page)
+    except PageNotAnInteger:
+        companiess = paginator.page(1)
+    except EmptyPage:
+        companiess = paginator.page(paginator.num_pages)
+    
+    return render(request, 'business/home.html', {'page':page,'category':category, 'categories':categories, 'subcategories':subcategories,'form':form, 'companies':companiess})
+
+def homesearch(request):
+    category = None
+    categories = Category.objects.all()
+    subcategories = SubCategory.objects.all()
+    companies = Company.objects.all()
+    form = homeSearchForm()
+    Search = None
+    results = []
+    if 'Search' in request.GET:
+        form = SearchForm(request.GET)
+        if form.is_valid():
+            Search = form.cleaned_data['Search']
+            results = Company.objects.annotate(search=SearchVector('business_name','description'),).filter(search=Search)
             return render(request, 'business/company/list.html',{'category':category, 'categories':categories ,'companies':results, 'name': Search,'form':form})
     
     paginator = Paginator(companies, 6)
@@ -39,6 +65,7 @@ def allsearch(request):
         companiess = paginator.page(paginator.num_pages)
     
     return render(request, 'business/home.html', {'page':page,'category':category, 'categories':categories, 'subcategories':subcategories,'form':form, 'companies':companiess})
+
 
 # Create your views here.
 def homepage(request, category_slug=None):

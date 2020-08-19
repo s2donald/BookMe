@@ -12,6 +12,12 @@
     
 }
 
+.header-font{
+    font-family: 'Luckiest Guy', cursive;
+    color:whitesmoke;
+    font-size:75px !important;
+}
+
 .mybg-img{
     object-fit: fit;
     background-repeat: no-repeat, repeat;
@@ -68,7 +74,8 @@ a:focus {
 html, body {
     height: 100%;
     width: 100%;
-    font-family: sans-serif;
+    font-family: bello-pro, sans-serif;
+    font-style: normal;
     font-size: 20px;
     color: var(--title-color);
 }
@@ -82,23 +89,32 @@ html, body {
 }
 
 .top-6{
-    padding-top: 6rem
+    padding-top: 6rem;
 }
 
 .marg-top{
-    margin-top: 3rem
+    margin-top: 3rem;
 }
 
 .padd1{
-    padding: 1rem
+    padding: 1rem;
 }
 .paddquart{
-    padding: 0.25rem
+    padding: 0.25rem;
 }
-paddleft15{
-    padding-left: 1.5rem
+.padd15{
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
 }
 
+a:link{
+    color:#854fee;
+}
+
+.selectcolor:hover, .selectcolor:focus{
+    color: #fff !important;
+    background: #854fee !important;
+}
 
 
 
@@ -106,21 +122,6 @@ paddleft15{
     background-color: #6d7fcc;
 }
 
-::-webkit-scrollbar {
-    width: 12px;
-}
-
-::-webkit-scrollbar-track {
-    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3); 
-    border-radius: 10px;
-    background: #ffffff;
-}
-
-::-webkit-scrollbar-thumb {
-    border-radius: 10px;
-    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.5); 
-    background: linear-gradient(45deg,#ffc371 0%, #ff5f6d 100%);
-}
 
 .licolor {
     color: #854fee;
@@ -240,10 +241,7 @@ button:active,
 .navbar{
     padding: .8rem;
 }
-.navbb img {
-    height: 100px;
-    margin: 5px;
-}
+
 .navbar-nav li {
     padding-right: 20px;
     padding-top: 20px;
@@ -348,7 +346,6 @@ footer {
 }
 
 .search-bar{
-    max-width: 500px;
     width:100%
 }
 
@@ -475,6 +472,42 @@ footer {
   .pagination-sm .page-item:last-child .page-link {
     border-top-right-radius: 0.2rem;
     border-bottom-right-radius: 0.2rem;
+  }
+
+  /*
+  *Select Picker*
+  */
+  .btn.btn-selectpicker {
+    color: #ced4da;
+    border-color: #ced4da;
+    color: #854fee;
+  }
+  
+  .btn.btn-selectpicker:hover {
+    color: #854fee;
+    background-color: #ced4da;
+    border-color: #ced4da;
+  }
+  
+  .btn.btn-selectpicker:focus, .btn.btn-selectpicker.focus {
+    box-shadow: 0 0 0 0.2rem rgba(206, 212, 218, 0.5);
+  }
+  
+  .btn.btn-selectpicker.disabled, .btn.btn-selectpicker:disabled {
+    color: #ced4da;
+    background-color: transparent;
+  }
+  
+  .btn.btn-selectpicker:not(:disabled):not(.disabled):active, .btn.btn-selectpicker:not(:disabled):not(.disabled).active,
+  .show > .btn.btn-selectpicker.dropdown-toggle {
+    color: #854fee;
+    background-color: #ced4da;
+    border-color: #ced4da;
+  }
+  
+  .btn.btn-selectpicker:not(:disabled):not(.disabled):active:focus, .btn.btn-selectpicker:not(:disabled):not(.disabled).active:focus,
+  .show > .btn.btn-selectpicker.dropdown-toggle:focus {
+    box-shadow: 0 0 0 0.2rem rgba(206, 212, 218, 0.5);
   }
 
   /*
@@ -740,8 +773,13 @@ form{
     
   }
 @media (max-width: 768px) {
+    .header-font{
+        font-family: 'Luckiest Guy', cursive;
+        color:whitesmoke;
+        font-size:55px !important;
+    }
     html, body {
-        font-size: 15px;
+        font-size: 17px;
     }
     .list-img{
         width:40vw !important;
@@ -841,14 +879,6 @@ form{
     }
 }
 
-/*--- Gibele logo  --*/
-.logo{
-    font-family: 'Fredoka One', cursive;
-    font-size: 15px;
-    text-decoration: none;
-    background-size: 15px 15px;
-}
-
 /*---Firefox Bug Fix --*/
 .carousel-item {
   transition: -webkit-transform 0.5s ease;
@@ -931,33 +961,6 @@ figure {
     background-position: center center;
     background-size: cover;
   }
-
-  .light-overlay,
-.dark-overlay,
-.gradient-overlay {
-  position: relative;
-  overflow: hidden;
-}
-
-.light-overlay .overlay-content,
-.dark-overlay .overlay-content,
-.gradient-overlay .overlay-content {
-  position: relative;
-  z-index: 20;
-}
-
-.light-overlay::after,
-.dark-overlay::after,
-.gradient-overlay::after {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  content: ' ';
-  opacity: .3;
-  background: #000;
-}
 
 
 

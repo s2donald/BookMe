@@ -22,6 +22,7 @@
         <link rel="stylesheet" href="{% static "css/calendarmain.css"%}">
         <link rel="stylesheet" href="{% static "css/magnific-popup.css"%}">
         <link rel="stylesheet" href="{% static "scss/swiper.scss"%}">
+        <link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=swap" rel="stylesheet">
         <!-- swiper-->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.4.1/css/swiper.min.css">
         <script src="{% static "js/calendarmain.js" %}"></script>
@@ -30,7 +31,7 @@
     <body id="page-wrapper">
         <nav class="navbar navbar-expand-lg navbar-dark nav-box-round bg-light flex-shrink-2 flex-grow-0">
             <div class="container-fluid justify-content-between">
-                <a class="navbar-brand navbb" href="/"><img width="150px" height="150px" src="{% static "/img/logo.svg" %}"></a>
+                <a class="mb-1 pr-2" href="/"><img width="50px" height="50px" style="background: white;" src="{% static "/img/favicon/logo/GibeleLogo.svg" %}"></a>
                 <form method="GET" class="mr-2 my-auto w-100 d-inline-block order-1" action="{% url 'business:post-search' %}">
                     <div class="input-group">
                         {% csrf_token %}
@@ -83,7 +84,7 @@
             </div>
         
         </nav>
-        {% if categories %}
+        {% comment %} {% if categories %}
 
         <div class="collapse show" id="collapseExample">
         <nav class="navbar bg-purple nav-box-round flex-shrink-1 flex-grow-0" id="collapseExample">
@@ -109,7 +110,7 @@
         </nav>
         </div>
         
-        {% endif %}
+        {% endif %} {% endcomment %}
 
         <div class="main">
             {% block content %}

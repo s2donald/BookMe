@@ -22,6 +22,7 @@ from django.forms.models import model_to_dict
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .serializers import AccountSerializer
+import re
 # Create your views here.
 
 def ConsumerRegistrationView(request):
@@ -262,6 +263,11 @@ class personalValidationView(View):
     def post(self, request):
         data=json.loads(request.body)
         email = data['email']
+        phone = data['phone']
+        regex= r'^\+?1?\d{9,15}$'
+        result = re.match(regex, phone)
         if (request.user.email!=str(email)) and (Account.objects.filter(email=email).exists()):
             return JsonResponse({'email_error':'This email already exists!'}, status=409)
+        if not (result):
+            return JsonResponse({'phone_error':'Please enter a valid phone number.'}, status=409)
         return JsonResponse({'email_valid':True})

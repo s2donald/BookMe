@@ -63,11 +63,11 @@ minute_choices = (
     )
 
 class SearchForm(forms.Form):
-    Search = forms.CharField(label='Search Business or Service',widget=forms.TextInput(attrs={'class':'form-control border border','placeholder':'Search Business or Service'}))
+    Search = forms.CharField(label='Search Business or Service',widget=forms.TextInput(attrs={'class':'form-control border','placeholder':'Search Business or Service'}))
     
 class homeSearchForm(forms.Form):
-    Search = forms.CharField(label='Search Business or Service',widget=forms.TextInput(attrs={'class':'form-control border border','placeholder':'Search Business or Service'}))
-    Category = forms.SelectDateWidget()
+    Search = forms.CharField(label='Search Business or Service',widget=forms.TextInput(attrs={'class':'form-control border','placeholder':'Search Business or Service'}))
+    Location = forms.CharField(label='Location',widget=forms.TextInput(attrs={'class':'form-control border','placeholder':'Location'}))
 
 class AddServiceForm(forms.ModelForm):
     name = forms.CharField(label='Service Name')

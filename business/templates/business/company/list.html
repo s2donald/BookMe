@@ -10,7 +10,7 @@
         <div class="row">
             {% for company in companies %}
                 <!-- venue item-->
-            <div class="col-sm-6 col-lg-4 mb-5 hover-animate" data-marker-id="59c0c8e33b1527bfe2abaf92">
+            <div class="col-sm-6 col-lg-4 mb-5 hover-animate">
               <div class="card h-100 border-0 shadow">
                 <div class="card-img-top overflow-hidden dark-overlay bg-cover" style="background-image: url({% if company.image %}{{ company.image.url }}{% else %}{% static "img/no_image.png" %}{% endif %}); min-height: 200px;"><a class="tile-link" href="#"></a>
                   <div class="card-img-overlay-bottom z-index-20">

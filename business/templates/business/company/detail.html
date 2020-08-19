@@ -75,12 +75,12 @@
                 <!-- Additional required wrapper-->
                 <div class="swiper-wrapper">
                     <div class="swiper-slide"><a href="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/no_image.png" %}{% endif %}"><img class="img-fluid" src="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/no_image.png" %}{% endif %}" alt="..."></a></div>
-                    <div class="swiper-slide"><a href=""><img class="img-fluid" src="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/no_image.png" %}{% endif %}" alt="..."></a></div>
-                    <div class="swiper-slide"><a href=""><img class="img-fluid" src="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/no_image.png" %}{% endif %}" alt="..."></a></div>
-                    <div class="swiper-slide"><a href=""><img class="img-fluid" src="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/no_image.png" %}{% endif %}" alt="..."></a></div>
-                    <div class="swiper-slide"><a href=""><img class="img-fluid" src="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/no_image.png" %}{% endif %}" alt="..."></a></div>
-                    <div class="swiper-slide"><a href=""><img class="img-fluid" src="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/no_image.png" %}{% endif %}" alt="..."></a></div>
-                    <div class="swiper-slide"><a href=""><img class="img-fluid" src="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/no_image.png" %}{% endif %}" alt="..."></a></div>
+                    <div class="swiper-slide"><a href="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/no_image.png" %}{% endif %}"><img class="img-fluid" src="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/no_image.png" %}{% endif %}" alt="..."></a></div>
+                    <div class="swiper-slide"><a href="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/no_image.png" %}{% endif %}"><img class="img-fluid" src="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/no_image.png" %}{% endif %}" alt="..."></a></div>
+                    <div class="swiper-slide"><a href="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/no_image.png" %}{% endif %}"><img class="img-fluid" src="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/no_image.png" %}{% endif %}" alt="..."></a></div>
+                    <div class="swiper-slide"><a href="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/no_image.png" %}{% endif %}"><img class="img-fluid" src="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/no_image.png" %}{% endif %}" alt="..."></a></div>
+                    <div class="swiper-slide"><a href="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/no_image.png" %}{% endif %}"><img class="img-fluid" src="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/no_image.png" %}{% endif %}" alt="..."></a></div>
+                    <div class="swiper-slide"><a href="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/no_image.png" %}{% endif %}"><img class="img-fluid" src="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/no_image.png" %}{% endif %}" alt="..."></a></div>
 
                 </div>
                     <div class="swiper-pagination swiper-pagination-white"></div>
@@ -254,14 +254,14 @@
               <!-- venue item-->
               <div class="w-100 h-100" data-marker-id="59c0c8e33b1527bfe2abaf92">
                 <div class="card h-100 border-0 shadow">
-                  <div class="card-img-top overflow-hidden dark-overlay bg-cover" style="background-image: url(img/photo/restaurant-1430931071372-38127bd472b8.jpg); min-height: 200px;"><a class="tile-link" href="detail.html"></a>
+                  <div class="card-img-top overflow-hidden dark-overlay bg-cover" style="background-image: url({% if company.image %}{{ company.image.url }}{% else %}{% static "/img/no_image.png" %}{% endif %}); min-height: 200px;"><a class="tile-link" href="detail.html"></a>
                     <div class="card-img-overlay-bottom z-index-20">
-                      <h4 class="text-white text-shadow">Blue Hill</h4>
+                      <h4 class="text-white text-shadow">Title</h4>
                       <p class="mb-2 text-xs"><i class="fa fa-star text-warning"></i><i class="fa fa-star text-warning"></i><i class="fa fa-star text-warning"></i><i class="fa fa-star text-warning"></i><i class="fa fa-star text-gray-300">                    </i>
                       </p>
                     </div>
                     <div class="card-img-overlay-top d-flex justify-content-between align-items-center">
-                      <div class="badge badge-transparent badge-pill px-3 py-2">Restaurants</div><a class="card-fav-icon position-relative z-index-40" href="javascript: void();"> 
+                      <div class="badge badge-transparent badge-pill px-3 py-2">Industry</div><a class="card-fav-icon position-relative z-index-40" href="javascript: void();"> 
                         <svg class="svg-icon text-white">
                           <use xlink:href="#heart-1"> </use>
                         </svg></a>
@@ -269,8 +269,8 @@
                   </div>
                   <div class="card-body">
                     <p class="text-sm text-muted mb-3"> Cupidatat excepteur non dolore laborum et quis nostrud veniam dolore deserunt. Pariatur dolore ut in elit id nulla. Irur...</p>
-                    <p class="text-sm text-muted text-uppercase mb-1">By <a href="#" class="text-dark">Matt Damon</a></p>
-                    <p class="text-sm mb-0"><a class="mr-1" href="#">Restaurant,</a><a class="mr-1" href="#">Contemporary</a>
+                    <p class="text-sm text-muted text-uppercase mb-1"> <a href="#" class="text-dark"></a></p>
+                    <p class="text-sm mb-0"><a class="mr-1" href="#">Some related industry</a><a class="mr-1" href="#">Contemporary</a>
                     </p>
                   </div>
                 </div>
@@ -281,14 +281,14 @@
               <!-- venue item-->
               <div class="w-100 h-100" data-marker-id="59c0c8e322f3375db4d89128">
                 <div class="card h-100 border-0 shadow">
-                  <div class="card-img-top overflow-hidden dark-overlay bg-cover" style="background-image: url(img/photo/restaurant-1436018626274-89acd1d6ec9d.jpg); min-height: 200px;"><a class="tile-link" href="detail.html"></a>
+                  <div class="card-img-top overflow-hidden dark-overlay bg-cover" style="background-image: url({% if company.image %}{{ company.image.url }}{% else %}{% static "/img/no_image.png" %}{% endif %}); min-height: 200px;"><a class="tile-link" href="detail.html"></a>
                     <div class="card-img-overlay-bottom z-index-20">
-                      <h4 class="text-white text-shadow">Plutorque</h4>
+                      <h4 class="text-white text-shadow">Title</h4>
                       <p class="mb-2 text-xs"><i class="fa fa-star text-warning"></i><i class="fa fa-star text-warning"></i><i class="fa fa-star text-warning"></i><i class="fa fa-star text-warning"></i><i class="fa fa-star text-warning"></i>
                       </p>
                     </div>
                     <div class="card-img-overlay-top d-flex justify-content-between align-items-center">
-                      <div class="badge badge-transparent badge-pill px-3 py-2">Restaurant</div><a class="card-fav-icon position-relative z-index-40" href="javascript: void();"> 
+                      <div class="badge badge-transparent badge-pill px-3 py-2">Another one</div><a class="card-fav-icon position-relative z-index-40" href="javascript: void();"> 
                         <svg class="svg-icon text-white">
                           <use xlink:href="#heart-1"> </use>
                         </svg></a>
@@ -296,8 +296,8 @@
                   </div>
                   <div class="card-body">
                     <p class="text-sm text-muted mb-3"> Proident irure eiusmod velit veniam consectetur id minim irure et nostrud mollit magna velit. Commodo amet proident aliq...</p>
-                    <p class="text-sm text-muted text-uppercase mb-1">By <a href="#" class="text-dark">Matt Damon</a></p>
-                    <p class="text-sm mb-0"><a class="mr-1" href="#">Restaurant,</a><a class="mr-1" href="#">Fusion</a>
+                    <p class="text-sm text-muted text-uppercase mb-1">By <a href="#" class="text-dark"></a></p>
+                    <p class="text-sm mb-0"><a class="mr-1" href="#">Another one,</a><a class="mr-1" href="#">Company</a>
                     </p>
                   </div>
                 </div>
@@ -307,14 +307,14 @@
               <!-- venue item-->
               <div class="w-100 h-100" data-marker-id="59c0c8e3a31e62979bf147c9">
                 <div class="card h-100 border-0 shadow">
-                  <div class="card-img-top overflow-hidden dark-overlay bg-cover" style="background-image: url(img/photo/restaurant-1466978913421-dad2ebd01d17.jpg); min-height: 200px;"><a class="tile-link" href="detail.html"></a>
+                  <div class="card-img-top overflow-hidden dark-overlay bg-cover" style="background-image: url({% if company.image %}{{ company.image.url }}{% else %}{% static "/img/no_image.png" %}{% endif %}); min-height: 200px;"><a class="tile-link" href="detail.html"></a>
                     <div class="card-img-overlay-bottom z-index-20">
-                      <h4 class="text-white text-shadow">Junipoor</h4>
+                      <h4 class="text-white text-shadow">Title</h4>
                       <p class="mb-2 text-xs"><i class="fa fa-star text-warning"></i><i class="fa fa-star text-warning"></i><i class="fa fa-star text-warning"></i><i class="fa fa-star text-warning"></i><i class="fa fa-star text-warning"></i>
                       </p>
                     </div>
                     <div class="card-img-overlay-top d-flex justify-content-between align-items-center">
-                      <div class="badge badge-transparent badge-pill px-3 py-2">Music club</div><a class="card-fav-icon position-relative z-index-40" href="javascript: void();"> 
+                      <div class="badge badge-transparent badge-pill px-3 py-2">Anotheerr Related</div><a class="card-fav-icon position-relative z-index-40" href="javascript: void();"> 
                         <svg class="svg-icon text-white">
                           <use xlink:href="#heart-1"> </use>
                         </svg></a>
@@ -322,8 +322,8 @@
                   </div>
                   <div class="card-body">
                     <p class="text-sm text-muted mb-3"> Lorem amet ex duis in et fugiat consectetur laborum eiusmod labore. Quis cupidatat et do dolor in in magna. Eu sit quis ...</p>
-                    <p class="text-sm text-muted text-uppercase mb-1">By <a href="#" class="text-dark">Matt Damon</a></p>
-                    <p class="text-sm mb-0"><a class="mr-1" href="#">Music,</a><a class="mr-1" href="#">Techno,</a><a class="mr-1" href="#">House</a>
+                    <p class="text-sm text-muted text-uppercase mb-1">By <a href="#" class="text-dark"></a></p>
+                    <p class="text-sm mb-0"><a class="mr-1" href="#">You guessed it</a><a class="mr-1" href="#"></a>Gibele Sponsored<a class="mr-1" href="#">Gibele</a>
                     </p>
                   </div>
                 </div>
@@ -333,14 +333,14 @@
               <!-- venue item-->
               <div class="w-100 h-100" data-marker-id="59c0c8e3503eb77d487e8082">
                 <div class="card h-100 border-0 shadow">
-                  <div class="card-img-top overflow-hidden dark-overlay bg-cover" style="background-image: url(img/photo/restaurant-1477763858572-cda7deaa9bc5.jpg); min-height: 200px;"><a class="tile-link" href="detail.html"></a>
+                  <div class="card-img-top overflow-hidden dark-overlay bg-cover" style="background-image: url({% if company.image %}{{ company.image.url }}{% else %}{% static "/img/no_image.png" %}{% endif %}); min-height: 200px;"><a class="tile-link" href="detail.html"></a>
                     <div class="card-img-overlay-bottom z-index-20">
-                      <h4 class="text-white text-shadow">Musix</h4>
+                      <h4 class="text-white text-shadow">Approved</h4>
                       <p class="mb-2 text-xs"><i class="fa fa-star text-warning"></i><i class="fa fa-star text-warning"></i><i class="fa fa-star text-warning"></i><i class="fa fa-star text-gray-300">                    </i><i class="fa fa-star text-gray-300">                    </i>
                       </p>
                     </div>
                     <div class="card-img-overlay-top d-flex justify-content-between align-items-center">
-                      <div class="badge badge-transparent badge-pill px-3 py-2">Music club</div><a class="card-fav-icon position-relative z-index-40" href="javascript: void();"> 
+                      <div class="badge badge-transparent badge-pill px-3 py-2">This is cool</div><a class="card-fav-icon position-relative z-index-40" href="javascript: void();"> 
                         <svg class="svg-icon text-white">
                           <use xlink:href="#heart-1"> </use>
                         </svg></a>
@@ -348,8 +348,8 @@
                   </div>
                   <div class="card-body">
                     <p class="text-sm text-muted mb-3"> Deserunt eiusmod Lorem proident consequat elit culpa laboris ea cupidatat. Consequat dolore proident ipsum qui sint enim...</p>
-                    <p class="text-sm text-muted text-uppercase mb-1">By <a href="#" class="text-dark">Matt Damon</a></p>
-                    <p class="text-sm mb-0"><a class="mr-1" href="#">Music,</a><a class="mr-1" href="#">Club,</a><a class="mr-1" href="#">Rock</a>
+                    <p class="text-sm text-muted text-uppercase mb-1">By <a href="#" class="text-dark"></a></p>
+                    <p class="text-sm mb-0"><a class="mr-1" href="#">Quick Demo </a><a class="mr-1" href="#">Of</a><a class="mr-1" href="#">The slides</a>
                     </p>
                   </div>
                 </div>
@@ -359,14 +359,14 @@
               <!-- venue item-->
               <div class="w-100 h-100" data-marker-id="59c0c8e39aa2eed0626e485d">
                 <div class="card h-100 border-0 shadow">
-                  <div class="card-img-top overflow-hidden dark-overlay bg-cover" style="background-image: url(img/photo/restaurant-1504087697492-238a6bf49ce8.jpg); min-height: 200px;"><a class="tile-link" href="detail.html"></a>
+                  <div class="card-img-top overflow-hidden dark-overlay bg-cover" style="background-image: url({% if company.image %}{{ company.image.url }}{% else %}{% static "/img/no_image.png" %}{% endif %}); min-height: 200px;"><a class="tile-link" href="detail.html"></a>
                     <div class="card-img-overlay-bottom z-index-20">
-                      <h4 class="text-white text-shadow">Prosure</h4>
+                      <h4 class="text-white text-shadow">Title</h4>
                       <p class="mb-2 text-xs"><i class="fa fa-star text-warning"></i><i class="fa fa-star text-warning"></i><i class="fa fa-star text-warning"></i><i class="fa fa-star text-warning"></i><i class="fa fa-star text-warning"></i>
                       </p>
                     </div>
                     <div class="card-img-overlay-top d-flex justify-content-between align-items-center">
-                      <div class="badge badge-transparent badge-pill px-3 py-2">Restaurant</div><a class="card-fav-icon position-relative z-index-40" href="javascript: void();"> 
+                      <div class="badge badge-transparent badge-pill px-3 py-2">Another one</div><a class="card-fav-icon position-relative z-index-40" href="javascript: void();"> 
                         <svg class="svg-icon text-white">
                           <use xlink:href="#heart-1"> </use>
                         </svg></a>
@@ -374,8 +374,8 @@
                   </div>
                   <div class="card-body">
                     <p class="text-sm text-muted mb-3"> Cillum sunt reprehenderit ea non irure veniam dolore commodo labore fugiat est consequat velit. Cupidatat nisi qui ad si...</p>
-                    <p class="text-sm text-muted text-uppercase mb-1">By <a href="#" class="text-dark">Matt Damon</a></p>
-                    <p class="text-sm mb-0"><a class="mr-1" href="#">Nisi,</a><a class="mr-1" href="#">Ex,</a><a class="mr-1" href="#">Eiusmod</a>
+                    <p class="text-sm text-muted text-uppercase mb-1">By <a href="#" class="text-dark"></a></p>
+                    <p class="text-sm mb-0"><a class="mr-1" href="#">Cooler</a><a class="mr-1" href="#">Than</a><a class="mr-1" href="#">Joe</a>
                     </p>
                   </div>
                 </div>
@@ -385,14 +385,14 @@
               <!-- venue item-->
               <div class="w-100 h-100" data-marker-id="59c0c8e39aa2edasd626e485d">
                 <div class="card h-100 border-0 shadow">
-                  <div class="card-img-top overflow-hidden dark-overlay bg-cover" style="background-image: url(img/photo/restaurant-1505275350441-83dcda8eeef5.jpg); min-height: 200px;"><a class="tile-link" href="detail.html"></a>
+                  <div class="card-img-top overflow-hidden dark-overlay bg-cover" style="background-image: url({% if company.image %}{{ company.image.url }}{% else %}{% static "/img/no_image.png" %}{% endif %}); min-height: 200px;"><a class="tile-link" href="detail.html"></a>
                     <div class="card-img-overlay-bottom z-index-20">
                       <h4 class="text-white text-shadow">Take That</h4>
                       <p class="mb-2 text-xs"><i class="fa fa-star text-warning"></i><i class="fa fa-star text-warning"></i><i class="fa fa-star text-warning"></i><i class="fa fa-star text-warning"></i><i class="fa fa-star text-gray-300">                    </i>
                       </p>
                     </div>
                     <div class="card-img-overlay-top d-flex justify-content-between align-items-center">
-                      <div class="badge badge-transparent badge-pill px-3 py-2">Café</div><a class="card-fav-icon position-relative z-index-40" href="javascript: void();"> 
+                      <div class="badge badge-transparent badge-pill px-3 py-2">Money</div><a class="card-fav-icon position-relative z-index-40" href="javascript: void();"> 
                         <svg class="svg-icon text-white">
                           <use xlink:href="#heart-1"> </use>
                         </svg></a>
@@ -400,8 +400,8 @@
                   </div>
                   <div class="card-body">
                     <p class="text-sm text-muted mb-3"> Cillum sunt reprehenderit ea non irure veniam dolore commodo labore fugiat est consequat velit. Cupidatat nisi qui ad si...</p>
-                    <p class="text-sm text-muted text-uppercase mb-1">By <a href="#" class="text-dark">Matt Damon</a></p>
-                    <p class="text-sm mb-0"><a class="mr-1" href="#">Nisi,</a><a class="mr-1" href="#">Ex,</a><a class="mr-1" href="#">Eiusmod</a>
+                    <p class="text-sm text-muted text-uppercase mb-1">By <a href="#" class="text-dark"></a></p>
+                    <p class="text-sm mb-0"><a class="mr-1" href="#">Money</a><a class="mr-1" href="#">Money,</a><a class="mr-1" href="#">MONEYY</a>
                     </p>
                   </div>
                 </div>

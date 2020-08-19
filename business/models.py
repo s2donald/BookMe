@@ -6,7 +6,8 @@ from account.models import Account, MyAccountManager
 from django.utils.text import slugify
 from django.contrib.auth.models import AbstractBaseUser
 from django.utils import timezone
-
+from django.db.models.signals import pre_save
+from gibele.utils import unique_slug_generator
 # This category holds our different types of services such as
 #   automotive services, health and wellness services, home services, etc
 #   These should not be modified by the user
@@ -57,7 +58,7 @@ class Company(models.Model):
     postal = models.CharField(max_length=10, validators=[postal_regex])
     state = models.CharField(max_length=2)
     city = models.CharField(max_length=30)
-    slug = models.SlugField(max_length=200, db_index=True, unique_for_date='created')
+    slug = models.SlugField(max_length=200, db_index=True, blank=True, unique=True)
     image = models.ImageField(upload_to='companies/%Y/%m/%d', blank=True)
     available = models.BooleanField(default=True)
     created = models.DateTimeField(auto_now_add=True)
@@ -81,10 +82,14 @@ class Company(models.Model):
     def get_absolute_url(self):
         return reverse("business:company_detail", args=[self.slug,self.id])
 
-    def save(self, *args, **kwargs):
-        if not self.slug:
-            self.slug = slugify(self.business_name) 
-        super().save(*args, **kwargs)
+
+
+def slug_generator(sender, instance, *args, **kwargs):
+    if not instance.slug:
+        instance.slug = unique_slug_generator(instance)
+
+pre_save.connect(slug_generator, sender=Company)
+
 
 class Services(models.Model):
     price_choices = (

@@ -71,15 +71,6 @@ def company_list(request, category_slug=None, company_slug=None, tag_slug=None):
         tag = get_object_or_404(Tag, slug=tag_slug)
         companies = companies.filter(tags__in=[tag])
     form = SearchForm()
-    Search = None
-    results = []
-
-    if 'Search' in request.GET:
-        form = SearchForm(request.GET)
-        if form.is_valid():
-            Search = form.cleaned_data['Search']
-            results = Company.objects.annotate(search=SearchVector('business_name','description'),).filter(search=Search)
-            return render(request, 'business/company/list.html',{'category':category, 'categories':categories ,'companies':results, 'subcategories':subcategories})
 
     paginator = Paginator(companies, 6)
     page = request.GET.get('page')
@@ -97,20 +88,20 @@ def company_detail(request, id, slug):
     address = company.address
     category = None
     categories = Category.objects.all()
+    subcategories = SubCategory.objects.all()
     comp_categ = company.category
     services = Services.objects.all().filter(business=company)
     form = SearchForm()
 
     reviews = Reviews.objects.filter(company=company).order_by('-created')
     amenities = Amenities.objects.filter(company=company).order_by('amenity')
-    return render(request, 'business/company/detail.html', {'comp_categ':comp_categ,'amenities':amenities,'address':address,'company':company,'category':category,'categories':categories, 'services':services, 'form':form, 'reviews':reviews})
+    return render(request, 'business/company/detail.html', {'subcategories':subcategories,'comp_categ':comp_categ,'amenities':amenities,'address':address,'company':company,'category':category,'categories':categories, 'services':services, 'form':form, 'reviews':reviews})
 
 @login_required
 def ManageServiceListView(request, id, slug):
     category = None
     categories = Category.objects.all()
     
-
     is_biz = request.user.is_business
     if is_biz:
         company = get_object_or_404(Company, user=request.user, id=id, slug=slug)

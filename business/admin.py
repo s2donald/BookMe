@@ -21,7 +21,6 @@ class CompanyAdmin(admin.ModelAdmin):
     list_display = ['user','business_name','slug','available','created','updated']
     list_filter = ['available', 'created', 'updated']
     list_editable = ['available']
-    prepopulated_fields = {'slug':('business_name',)}
 
 @admin.register(Amenities)
 class AmenitiesAdmin(admin.ModelAdmin):

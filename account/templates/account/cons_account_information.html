@@ -30,10 +30,11 @@
                         </div>
                         <div class="col-md-12" id="pemail">
                             {{ personal_form.email|as_crispy_field}}
-                            <div class="invalid_feedback invalid-feedback m-0 p-0" style="display:none"></div>
+                            <div class="invalid_feedback m-0 p-0" style="display:none"></div>
                         </div>
                         <div class="col-md-12" id="pphone">
                             {{ personal_form.phone|as_crispy_field}}
+                            <div class="invalid_phone m-0 p-0" style="display:none; color:red;"></div>
                         </div>
                     </div>
                     <button type="submit" class="btn btn-outline-primary">Update</button>
@@ -97,35 +98,37 @@
 
 {% block ajaxscripts %}
  <script type="text/javascript">
-    console.log('Register Working boi')
     function getCookie(name) {
-        let cookieValue = null;
-        if (document.cookie && document.cookie !== '') {
-            const cookies = document.cookie.split(';');
-            for (let i = 0; i < cookies.length; i++) {
-                const cookie = cookies[i].trim();
-                // Does this cookie string begin with the name we want?
-                if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                    break;
-                }
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
             }
         }
+    }
         return cookieValue;
     }
     const csrftoken = getCookie('csrftoken');
 
     const emailField = document.querySelector("#id_email");
+    const phoneField = document.querySelector("#id_phone");
     const feedBackArea = document.querySelector(".invalid_feedback")
+    const feedBackreaPhone = document.querySelector(".invalid_phone")
 
-    emailField.addEventListener('change', (e) =>{
+    emailField.addEventListener('keyup', (e) =>{
         console.log('It works wonderfully');
         const emailVal = e.target.value;
+        const phoneVal = '';
         emailField.classList.remove("is-invalid");
         feedBackArea.style.display="none";
         if (emailVal.length > 0) {
             fetch("/account/updatep/", {
-                body: JSON.stringify({email: emailVal}),
+                body: JSON.stringify({email: emailVal, phone:phoneVal}),
                 method: 'POST',
                 headers:{
                     'Content-type':'application/json',
@@ -148,55 +151,38 @@
             });
         }
     });
-    
-    {% comment %} personalinfoForms()
 
-    function personalinfoForms(){
-        var inform = document.getElementById('user_information')
-
-        var url = 'http://127.0.0.1:8000/account/liist/'
-        fetch(url)
-        .then((resp) => resp.json())
-        .then(function(data){
-            console.log('Data:', data)
-            var list = data
-            console.log(list.first_name)
-        })
-    }
-
-    var persForm = document.getElementById('personalDetails')
-    persForm.addEventListener('submit', function(e){
-        e.preventDefault()
-        console.log('Form Works')
-    }) {% endcomment %}
-
-    {% comment %} $(document).ready(function(){
+    phoneField.addEventListener('change', (e) =>{
         
-        $('#personalForm').on('submit',function(e){
-            e.preventDefault();
-            var $formData = $(this).serialize()
-            var $thisURL = ''
-            var $hero = $('.hero-heading');
-            $.ajax({
-                type:'POST',
-                url: $thisURL,
-                data: $formData,
-                complete: function(){
-                    $('#div_id_last_name').remove();
-                },
-                success:function(){
-                    console.log($formData)
-                },
-                error:function(){
-                    console.log('error')
-                },
+        const phoneVal = e.target.value;
+        const emailVal='';
+        console.log(phoneVal);
+        phoneField.classList.remove("is-invalid");
+        feedBackreaPhone.style.display="none";
+        if (phoneVal.length > 0) {
+            fetch("/account/updatep/", {
+                body: JSON.stringify({email: emailVal, phone:phoneVal}),
+                method: 'POST',
+                headers:{
+                    'Content-type':'application/json',
+                    'X-CSRFToken':csrftoken,
+                }
+            })
+            .then((res) => res.json())
+            .then((data) => {
+                console.log("data", data);
+                if (data.phone_error){
+                    phoneField.classList.add("is-invalid");
+                    feedBackreaPhone.style.display="block";
+                    feedBackreaPhone.innerHTML=`<p>${data.phone_error}</p>`
 
+                }
+                else{
+                    phoneField.classList.remove("is-invalid");
+                    feedBackreaPhone.style.display="none";
+                }
             });
-        }); 
-
-
-
-        
-    });{% endcomment %}
+        }
+    });
  </script>
 {% endblock ajaxscripts %}

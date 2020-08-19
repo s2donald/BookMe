@@ -1,34 +1,61 @@
 {% extends 'account/user_sidebar.html' %}
+{% load static %}
 {% block information %}
 <section class="py-5">
       <div class="container">
         <h1 class="hero-heading mb-4">Your upcoming bookings</h1>
-        <p class="text-muted mb-5">You have no upcoming appointments.</p>
-        <p class="mb-6"> <img class="img-fluid" src="img/illustration/undraw_trip_dv9f.svg" alt="" style="width: 400px;"></p>
+        {% for future in futureBookings %}
+            <div class="col-sm-12 mb-5 hover-animate">
+              <div class="card h-100 border-0 shadow">
 
-
-        <h2 class="mb-5">Your past bookings</h2>
-        <div class="row">
-        
-          <!-- place item-->
-          <div class="col-xl-3 col-md-4 col-sm-6 mb-5" data-marker-id="59c0c8e3503eb77d487e8082">
-            <div class="card h-100 border-0 shadow">
-              <div class="card-img-top overflow-hidden"><a href="user-booking-detail.html"><img class="img-fluid" src="img/photo/photo-1494526585095-c41746248156.jpg" alt="Sunny Private Studio-Apartment"/></a></div>
-              <div class="card-body d-flex align-items-center">
-                <div class="w-100">
-                  <p class="subtitle font-weight-normal text-sm mb-2">March 2019</p>
-                  <h6 class="card-title"><a class="text-decoration-none text-dark" href="user-booking-detail.html">Sunny Private Studio-Apartment</a></h6>
-                  <div class="d-flex card-subtitle mb-3">
-                    <p class="flex-grow-1 mb-0 text-muted text-sm">Shared room</p>
-                    <p class="flex-shrink-1 mb-0 card-stars text-xs text-right"><i class="fa fa-star text-warning"></i><i class="fa fa-star text-warning"></i><i class="fa fa-star text-warning"></i><i class="fa fa-star text-warning"></i><i class="fa fa-star text-gray-300">                                  </i>
-                    </p>
+                <div class="card-body">
+                  <div class="card-img-overlay-top d-flex justify-content-between align-items-center">
+                    <div class="badge badge-transparent badge-pill px-3 py-2">{{ future.company.category.name }}</div>
                   </div>
+                  <h2 class="text-shadow">{{ future.service }}</h4>
+                  <h4 class="text-shadow">{{ future.company }}</h4>
+                  <p class="text-sm text-muted mb-3"> Appointment Time: {{ future.start }}</p>
+                </div>
+                <div class="card-body text-center">
+                    <a class="btn btn-outline-primary">Write a review</a>
+                    <a class="btn btn-outline-primary" href="#">Book Again</a>
                 </div>
               </div>
             </div>
-          </div>
+        {% empty %}
+            <p class="text-muted mb-5">You have no upcoming appointments.</p>
+        {% endfor %}
+        <p class="mb-6"> <img class="img-fluid" src="img/illustration/undraw_trip_dv9f.svg" alt="" style="width: 400px;"></p>
 
-        </div>
+        {% if pastBookings %}
+            <h2 class="mb-5">Your past bookings</h2>
+            {% for past in pastBookings %}
+                <div class="row">
+            
+                    <div class="col-sm-12 mb-5 hover-animate">
+                    <div class="card h-100 border-0 shadow">
+
+                        <div class="card-body">
+                        <div class="card-img-overlay-top d-flex justify-content-between align-items-center">
+                            <div class="badge badge-transparent badge-pill px-3 py-2">{{ past.company.category.name }}</div>
+                        </div>
+                        <h2 class="text-shadow">{{ past.service }}</h4>
+                        <h4 class="text-shadow">{{ past.company }}</h4>
+                        <p class="text-sm text-muted mb-3"> Appointment Time: {{ past.start }}</p>
+                        </div>
+                        <div class="card-body text-center">
+                            <a class="btn btn-outline-primary">Write a review</a>
+                            <a class="btn btn-outline-primary" href="#">Book Again</a>
+                        </div>
+                    </div>
+                    </div>
+
+                </div>
+            {% empty %}
+            
+            {% endfor %}
+        {% endif %}
+        
       </div>
     </section>
 {% endblock %}

@@ -1,5 +1,6 @@
 {% extends 'business/base.html' %}
 {% load static %}
+{% load hosts %}
 {% block content %}
     <div class="container">
         {% if category %}
@@ -29,7 +30,7 @@
                   <p class="text-sm text-muted mb-3"> {{ company.description }}</p>
                 </div>
                 <div class="card-body justify-content-between">
-                    <a class="btn btn-outline-primary">Book Now</a>
+                    <a href="{% host_url 'bookingurls' host 'bookingurl' slug=company.slug %}"class="btn btn-outline-primary">Book Now</a>
                     <a href="{{ company.get_absolute_url }}" class="btn btn-outline-primary">View Details</a>
                 </div>
               </div>

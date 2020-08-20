@@ -25,17 +25,20 @@ SECRET_KEY = 'b3+j2=q*i#mg^c!2ndq#00y5bobz6*xq&v#7^^7&+$73_#e=8e'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = ['gibele.com', '.gibele.com']
+SESSION_COOKIE_DOMAIN=".gibele.com"
+DOMAIN_NAME='gibele.com'
 
 # Application definition
 
 INSTALLED_APPS = [
+    'django_hosts',
     'widget_tweaks',
     'bootstrap_modal_forms',
     'account.apps.AccountConfig',
     'business.apps.BusinessConfig',
     'consumer.apps.ConsumerConfig',
+    'calendarapp.apps.CalendarappConfig',
     'crispy_forms',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -50,6 +53,7 @@ INSTALLED_APPS = [
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 MIDDLEWARE = [
+    'django_hosts.middleware.HostsRequestMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -57,10 +61,12 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django_hosts.middleware.HostsResponseMiddleware',
 ]
 
 ROOT_URLCONF = 'gibele.urls'
-
+ROOT_HOSTCONF = 'gibele.hosts'
+DEFAULT_HOST = 'www'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',

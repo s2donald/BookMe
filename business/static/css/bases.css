@@ -12,6 +12,15 @@
     
 }
 
+.bg-booking{
+  /* Full height */
+  height: 100%; 
+  /* Center and scale the image nicely */
+  background-position: center;
+  background-repeat: repeat-y;
+  background-size: cover;
+}
+
 .header-font{
     font-family: 'Luckiest Guy', cursive;
     color:#fff;
@@ -74,9 +83,9 @@ a:focus {
 html, body {
     height: 100%;
     width: 100%;
-    font-family: bello-pro, sans-serif;
+    font-family: 'Baloo Tamma 2', sans-serif cursive;
     font-style: normal;
-    font-size: 20px;
+    font-size: 22px;
     color: var(--title-color);
 }
 
@@ -119,7 +128,8 @@ a:link{
 
 
 .bg-purple{
-    background-color: #6d7fcc;
+    background-color: #854fee;
+    
 }
 
 

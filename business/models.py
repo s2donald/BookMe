@@ -82,6 +82,9 @@ class Company(models.Model):
     def get_absolute_url(self):
         return reverse("business:company_detail", args=[self.slug,self.id])
 
+    def get_booking_url(self):
+        return reverse("calendarapp:bookingurls", args=[self.slug])
+
 
 
 def slug_generator(sender, instance, *args, **kwargs):

@@ -20,57 +20,37 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
     <link rel="stylesheet" href="{% static "css/bases.css" %}">
-
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" type="text/css" href="https://npmcdn.com/flatpickr/dist/themes/dark.css">
     <title>{{ company.business_name }} - Booking with Gibele</title>
   </head>
-  <body class="bg-booking" style="background-image:url({% static 'img/background-booking.jpg' %});">
+  <body class="bg-booking" style="background-image:url({% static 'img/background-booking.jpg' %});background-color:black;">
         <div class="bg-dark inline-block container-fluid ">
             <div class="row justify-content-between ">
                 <a class="mb-1 pr-2 mt-1 ml-1" href="{% host_url 'business:homepage' host 'www' %}"><img width="50px" height="50px" style="background: white;" src="{% static "/img/favicon/logo/GibeleLogo.svg" %}"></a>
-                <p class="font-weight-bold text-white d-none d-sm-block pr-2 mt-1 ml-1">Powered by Gibele</p>
+                <p class="font-weight-bold text-white pr-2 mt-1 ml-1">Powered by Gibele</p>
                 
             </div>
         </div>
         <div class="container align-items-center text-center text-white mt-2">
+
             <h4>Select Your Service</h4>
+            <div class="d-flex align-items-center justify-content-center">
+            <button style="height:40px;" href="{% host_url 'bookingurls' host 'bookingurl' slug=company.slug %}" class="btn btn-outline-primary align-items-center d-none" id="backbtn"><i class="fas fa-long-arrow-alt-left"></i></button>
             <h1>{{ company.business_name }}</h1>
+            </div>
             <div class="row justify-content-around">
                 <p>Rating:</p>
             </div>
-            {% comment %} {% if company.image %}
-                <section class="pt-7 pb-5 d-flex align-items-end" 
-    style="width:50%; height:200px; background-image: url('{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/automotive-noimage1.jpg" %}{% endif %}');"></section>
-                
-            {% endif %} {% endcomment %}
-            
-                <div class="text-block">
-                {% if services %}
-                <h2>Services</h2>
-                <hr>
-                {% for s in services %}
-                    {% for s in services %}
-                        <div class="row text-center no-gutters">
-                            <div class="col-md-6">
-                                <h3 class="mb-3">{{ s.name }}</h3>
-                                <p class="licolor">{{ s.description }}</p>
-                            </div>
-                            <div class="col-md-6">
-                                <p>${{ s.price }}</p>
-                                <button type="submit" class="btn btn-sm btn-outline-primary" style="height:50px">Book Now</button>
-                            </div>
-                            
-                        </div>
-                        
-                        <hr>
-                    {% endfor %}
-                    {% endfor %}
-                {% endif %}
-            </div>
+            <script type="text/javascript" src="https://kit.fontawesome.com/a07c5b9658.js" crossorigin="anonymous"></script>
+            <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+            <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+            <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+            <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+            {% block booking %}
+            {% endblock %}
         </div>
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
   </body>
 </html>

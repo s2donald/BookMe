@@ -1,0 +1,124 @@
+{% extends 'bookingpage/bookingpage.html'%}
+{% load hosts %}
+{% block booking %}
+<div class="text-block dark-overlay justify-content-center align-items-center">
+    {% if service %}
+        <h2>{{ service.name }}</h2>
+        <hr class="hrwhite">
+            <div class="row text-center underlay">
+                <form method="POST" class="justify-content-center">
+                    {% csrf_token %}
+                    <div class="container">
+                    <div class="col-md-12 d-flex justify-content-center">
+                        
+                        <h3 class="mb-3">Select The Staff Member</h3>
+                    </div>
+                    <div class="col-md-12 d-flex justify-content-center">
+                        <h3 class="mb-3">Select Your Preferred Date and Time</h3>
+                    </div>
+                    
+                    <div class="row d-flex justify-content-center">
+                        <div class="pl-6" id="datepicker"></div>
+                        
+                        <div class="col-md-6 ">
+                            <div class="text-center" id="booking-header"><h4 class="text-center">Available Booking Times</h4></div>
+                            <div class="bookingbutton">
+                                <form method="post">
+                                    {% csrf_token %}
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                    <div id="address"></div>
+                    <div class="feedback"></div>
+                </form>
+                
+            </div>
+            <hr class="hrwhite">
+    {% endif %}
+</div>
+<script>
+    function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+        return cookieValue;
+    }
+    const csrftoken = getCookie('csrftoken');
+    const bkbtn = document.querySelector("#backbtn");
+    bkbtn.classList.remove("d-none");
+
+
+    jQuery( "#datepicker" ).flatpickr({
+        format:'d.m.Y H:i',
+        inline:true,
+        defaultHour: 12,
+        minDate: 'today',
+        position: "center",
+        disable: [ { 'from': '2020-09-02'} ], 
+    });
+
+    const todays = document.querySelector("#datepicker")._flatpickr.selectedDates
+    if(todays==undefined){
+        
+    }
+    const dates = document.querySelector("#datepicker");
+    const helper = document.querySelector('.bookingbutton');
+    dates.addEventListener('change', (e) =>{
+        const date = document.querySelector("#datepicker")._flatpickr.selectedDates[0];
+        const month = date.getMonth();
+        const day = date.getDate();
+        const year = date.getFullYear();
+        const weekday = date.getDay();
+        const service_id = '{{ service.id }}'
+
+        fetch("/bookingtime/", {
+            body: JSON.stringify({month: month, day: day, year: year, id: service_id, weekday:weekday}),
+            method: 'POST',
+            headers:{
+                'Content-type':'application/json',
+                'X-CSRFToken':csrftoken,
+            },
+        })
+        .then((res) => res.json())
+        .then((data) => {
+            var i = 0
+            var j = 0
+            h=``
+            astring = ``
+            for (d in data.appointment_slots){
+                j = i + 1
+                h = `<button class="btn btn-outline-primary mb-1 show" id="show`+j+` method="post"">${data.appointment_slots[i]}</button>`
+                astring = astring+h
+                i = i + 1
+            }
+            console.log(month, day, year)
+            if (j>0){
+                helper.innerHTML=astring
+                $("body").on("click", ".bookingbutton .show", function(){
+                    const timev = $(this).text();
+
+                    console.log(timev, '',service_id, '',month, '',day, '',year, '')
+                });
+            }
+            else{
+                helper.innerHTML=`<p>No slots available</p>`
+            }
+            
+        });
+    });
+    
+    
+</script>
+
+{% endblock %}

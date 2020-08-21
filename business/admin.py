@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Company, Category, Services, SubCategory, Amenities
+from .models import Company, Category, Services, SubCategory, Amenities, OpeningHours
 # Register your models here.
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
@@ -25,3 +25,7 @@ class CompanyAdmin(admin.ModelAdmin):
 @admin.register(Amenities)
 class AmenitiesAdmin(admin.ModelAdmin):
     list_display = ['company','amenity']
+
+@admin.register(OpeningHours)
+class HoursAdmin(admin.ModelAdmin):
+    list_display = ['company','weekday','from_hour','to_hour']

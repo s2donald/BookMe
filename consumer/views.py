@@ -5,6 +5,8 @@ from business.models import Company, SubCategory, Category
 from .models import Bookings
 from datetime import datetime
 from business.forms import SearchForm
+from django.http import JsonResponse
+
 # Create your views here.
 
 @login_required

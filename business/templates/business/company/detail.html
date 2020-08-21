@@ -1,5 +1,6 @@
 {% extends 'business/base.html' %}
 {% load static %}
+{% load hosts %}
 {% block title %}{{ company.business_name }} - Gibele.com{% endblock %}
 {% block content %}
     <!-- Hero Section-->
@@ -48,7 +49,7 @@
                         <h3 class="mb-3">{{ s.name }}</h3>
                         <p class="text-muted">{{ s.description }}</p>
                         <p>${{ s.price }}</p>
-                        <button type="submit" class="btn btn-outline-primary">Book Now</button>
+                        <a href="{% host_url 'bookingserviceurls' pk=s.id host 'bookingurl' slug=company.slug %}" class="btn btn-outline-primary">Book Now</a>
                         <hr>
                         
                     {% endfor %}

@@ -39,7 +39,89 @@ class SubCategory(models.Model):
 class PublishedManager(models.Manager):
     def get_queryset(self):
         return super(PublishedManager, self).get_queryset().filter(status='published')
-    
+
+WEEKDAYS = [
+  (0, ("Sunday")),
+  (1, ("Monday")),
+  (2, ("Tuesday")),
+  (3, ("Wednesday")),
+  (4, ("Thursday")),
+  (5, ("Friday")),
+  (6, ("Saturday")),
+]
+
+INTERVAL = [
+    (0, '0 Minutes'),
+    (5, '5 Minutes'),
+    (10, '10 Minutes'),
+    (15, '15 Minutes'),
+    (20, '20 Minutes'),
+    (25, '25 Minutes'),
+    (30, '30 Minutes'),
+    (35, '35 Minutes'),
+    (40, '40 Minutes'),
+    (45, '45 Minutes'),
+    (50, '50 Minutes'),
+    (55, '55 Minutes')
+]
+
+price_choices = (
+    ('fixed','Fixed'),
+    ('start','Starting Price'),
+    ('variable','Variable'),
+    ('dont','Don\'t Show'),
+    ('free','Free')
+)
+hours_choices = (
+    (0,'0 Hours'),
+    (1, '1 Hour'),
+    (2, '2 Hours'),
+    (3, '3 Hours'),
+    (4, '4 Hours'),
+    (5, '5 Hours'),
+    (6, '6 Hours'),
+    (7, '7 Hours'),
+    (8, '8 Hours'),
+    (9, '9 Hours'),
+    (10, '10 Hours'),
+    (11, '11 Hours'),
+    (12, '12 Hours'),
+    (13, '13 Hours'),
+    (14, '14 Hours'),
+    (15, '15 Hours'),
+    (16, '16 Hours'),
+    (17, '17 Hours'),
+    (18, '18 Hours'),
+    (19, '19 Hours'),
+    (20, '20 Hours'),
+    (21, '21 Hours'),
+    (22, '22 Hours'),
+    (23, '23 Hours')
+ )
+
+minute_choices = (
+    (0, '0 Minutes'),
+    (5, '5 Minutes'),
+    (10, '10 Minutes'),
+    (15, '15 Minutes'),
+    (20, '20 Minutes'),
+    (25, '25 Minutes'),
+    (30, '30 Minutes'),
+    (35, '35 Minutes'),
+    (40, '40 Minutes'),
+    (45, '45 Minutes'),
+    (50, '50 Minutes'),
+    (55, '55 Minutes')
+ )
+ 
+beforeafter = (
+    ('none', '-'),
+    ('before','Before'),
+    ('after','After'),
+    ('bf','Before & After')
+ )
+
+
 #This is the model for the information we need from each company that is listed on the website
 class Company(models.Model):
     STATUS_CHOICES = (
@@ -59,6 +141,7 @@ class Company(models.Model):
     state = models.CharField(max_length=2)
     city = models.CharField(max_length=30)
     slug = models.SlugField(max_length=200, db_index=True, blank=True, unique=True)
+    interval = models.IntegerField(choices=INTERVAL, default=1)
     image = models.ImageField(upload_to='companies/%Y/%m/%d', blank=True)
     available = models.BooleanField(default=True)
     created = models.DateTimeField(auto_now_add=True)
@@ -93,73 +176,33 @@ def slug_generator(sender, instance, *args, **kwargs):
 
 pre_save.connect(slug_generator, sender=Company)
 
+class OpeningHours(models.Model):
+    company = models.ForeignKey(Company, on_delete=models.CASCADE)
+    weekday = models.IntegerField(choices=WEEKDAYS)
+    from_hour = models.TimeField()
+    to_hour = models.TimeField()
+    is_closed = models.BooleanField(default=False)
+    class Meta:
+        ordering = ('weekday', 'from_hour')
+        unique_together = ('weekday', 'company')
+
+    def __unicode__(self):
+        return u'%s: %s - %s' % (self.get_weekday_display(),
+                                 self.from_hour, self.to_hour)
+
 
 class Services(models.Model):
-    price_choices = (
-        ('fixed','Fixed'),
-        ('start','Starting Price'),
-        ('variable','Variable'),
-        ('dont','Don\'t Show'),
-        ('free','Free')
-    )
-    hours_choices = (
-        ('zero','0 hours'),
-        ('one', '1 hour'),
-        ('two', '2 hours'),
-        ('three', '3 hours'),
-        ('four', '4 hours'),
-        ('five', '5 hours'),
-        ('six', '6 hours'),
-        ('seven', '7 hours'),
-        ('eight', '8 hours'),
-        ('nine', '9 hours'),
-        ('ten', '10 hours'),
-        ('eleven', '11 hours'),
-        ('twelve', '12 hours'),
-        ('thirteen', '13 hours'),
-        ('fourteen', '14 hours'),
-        ('fifteen', '15 hours'),
-        ('sixteen', '16 hours'),
-        ('seventeen', '17 hours'),
-        ('eighteen', '18 hours'),
-        ('nineteen', '19 hours'),
-        ('twenty', '20 hours'),
-        ('twentyone', '21 hours'),
-        ('twentytwo', '22 hours'),
-        ('twentythree', '23 hours')
-    )
-
-    minute_choices = (
-        ('zero', '0 minutes'),
-        ('five', '5 minutes'),
-        ('ten', '10 minutes'),
-        ('fifteen', '15 minutes'),
-        ('twenty', '20 minutes'),
-        ('twentyfive', '25 minutes'),
-        ('thirty', '30 minutes'),
-        ('thirtyfive', '35 minutes'),
-        ('fourty', '40 minutes'),
-        ('fourtyfive', '45 minutes'),
-        ('fifty', '50 minutes'),
-        ('fiftyfive', '55 minutes')
-    )
-    beforeafter = (
-        ('none', '-'),
-        ('before','Before'),
-        ('after','After'),
-        ('bf','Before & After')
-    )
     name = models.CharField(max_length=200, db_index=True)
     description = models.TextField(max_length=200, db_index=True)
     business = models.ForeignKey(Company, related_name='services_offered', on_delete=models.CASCADE)
     slug = models.SlugField(max_length=200,db_index=True)
     price_type = models.CharField(max_length=10, choices=price_choices, default='fixed')
     price = models.DecimalField(max_digits=10, decimal_places=2)
-    duration_hour = models.CharField(max_length=11, choices=hours_choices,default='zero')
-    duration_minute = models.CharField(max_length=11, choices=minute_choices,default='zero')
-    checkintime = models.CharField(max_length=10,choices=minute_choices,default='zero')
-    paddingtime_hour = models.CharField(max_length=11,choices=hours_choices,default='zero')
-    paddingtime_minute = models.CharField(max_length=10,choices=minute_choices,default='zero')
+    duration_hour = models.IntegerField(choices=hours_choices,default=0)
+    duration_minute = models.IntegerField(choices=minute_choices,default=5)
+    checkintime = models.IntegerField(choices=minute_choices,default=0)
+    paddingtime_hour = models.IntegerField(choices=hours_choices,default=0)
+    paddingtime_minute = models.IntegerField(choices=minute_choices,default=0)
     padding = models.CharField(max_length=20,choices=beforeafter, default='none')
     available = models.BooleanField(default=True)
     class Meta:

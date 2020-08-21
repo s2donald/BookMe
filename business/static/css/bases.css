@@ -11,6 +11,15 @@
     --box-shadow: 0px 10px 30px rgba(57,56,61,0.205);
     
 }
+.underlay {
+  background-color: rgba(0, 0, 0, 0.3);
+  z-index:1;
+  position:relative;
+  border-radius: 16px 16px 16px 16px;
+}
+hr.hrwhite{
+  border-top: 2px solid whitesmoke;
+}
 
 .bg-booking{
   /* Full height */

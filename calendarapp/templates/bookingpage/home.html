@@ -1,0 +1,24 @@
+{% extends 'bookingpage/bookingpage.html'%}
+{% load hosts %}
+{% block booking %}
+<div class="text-block dark-overlay">
+    {% if services %}
+        <h2>All Services</h2>
+        <hr class="hrwhite">
+        {% for s in services %}
+            <div class="row text-center no-gutters underlay">
+                <div class="col-md-6">
+                    <h3 class="mb-3">{{ s.name }}</h3>
+                    <p class="licolor">{{ s.description }}</p>
+                </div>
+                <div class="col-md-6">
+                    <p class="text">${{ s.price }}</p>
+                    <a href="{% host_url 'bookingserviceurls' pk=s.id host 'bookingurl' slug=company.slug %}" class="btn btn-sm btn-outline-primary" style="height:50px">Book Now</a>
+                </div>                 
+            </div>
+            <hr class="hrwhite">
+        {% endfor %}
+    {% endif %}
+</div>
+
+{% endblock booking %}

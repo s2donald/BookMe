@@ -12,6 +12,17 @@ class AccountAdmin(UserAdmin):
     ordering = ('email',)
     filter_horizontal = ()
     list_filter =()
-    fieldsets = ()
+    fieldsets = (
+        (None, {'fields': ('email', )}),
+        (('Personal info'), {'fields': ('first_name', 'last_name')}),
+        (('Permissions'), {'fields': ('is_admin','is_staff', 'is_business', 'is_consumer')}),
+        (('Important dates'), {'fields': ('last_login', 'date_joined')}),
+    )
+    add_fieldsets = (
+        (None, {
+            'classes': ('wide',),
+            'fields': ('email',),
+        }),
+    )
 
 admin.site.register(Account, AccountAdmin)

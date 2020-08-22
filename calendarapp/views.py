@@ -6,6 +6,7 @@ from django.views import View
 import json
 from django.core import serializers
 import datetime
+from account.forms import UpdatePersonalForm
 # Create your views here.
 
 
@@ -16,7 +17,8 @@ def bookingurl(request):
     user = request.user
     company = request.viewing_company
     services = Services.objects.filter(business=company)
-    return render(request, 'bookingpage/home.html', {'user': user, 'company':company, 'services':services})
+    form = UpdatePersonalForm()
+    return render(request, 'bookingpage/home.html', {'user': user, 'company':company, 'services':services, 'personal_form':form})
 
 def bookingServiceView(request, pk):
     user = request.user
@@ -50,6 +52,9 @@ class bookingTimes(View):
         b_open = open_hours.from_hour
         b_close = open_hours.to_hour
         interval= company.interval
+
+        is_auth = request.user.is_authenticated
+
         if open_hours.is_closed==False:
             slist = list(time_slots(b_open,b_close,interval))
         else:
@@ -59,9 +64,29 @@ class bookingTimes(View):
         # com = serializers.serialize("json",open_hours)
         
         
-        return JsonResponse({'appointment_slots':slist})
+        return JsonResponse({'appointment_slots':slist, 'auth':is_auth})
 
 class confbook(View):
     def post(self, request):
         data=json.loads(request.body)
         return JsonResponse({'sdata':'It Works'})
+
+class phoneValidationView(View):
+    def post(self, request):
+        data=json.loads(request.body)
+        email = data['email']
+        phone = data['phone']
+        regex= r'^\+?1?\d{9,15}$'
+        result = re.match(regex, phone)
+        if (request.user.email!=str(email)) and (Account.objects.filter(email=email).exists()):
+            return JsonResponse({'email_error':'This email already exists!'}, status=409)
+        if not (result):
+            return JsonResponse({'phone_error':'Please enter a valid phone number.'}, status=409)
+        return JsonResponse({'email_valid':True})
+
+class createAppointment(View):
+    def post(self, request):
+        data=json.loads(request.body)
+        time = data['time']
+        return JsonResponse({'time':True})
+

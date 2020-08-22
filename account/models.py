@@ -38,7 +38,6 @@ class MyAccountManager(BaseUserManager):
 
 class Account(AbstractBaseUser):
     email = models.EmailField(verbose_name='Email', max_length=60, unique=True)
-    slug = models.SlugField(max_length=200, unique=True)
     first_name = models.CharField(verbose_name="First Name", max_length=30, unique=False,null=True, blank=True)
     last_name = models.CharField(verbose_name="Last Name", max_length=30, unique=False, null=True, blank=True)
     phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$', message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
@@ -62,8 +61,6 @@ class Account(AbstractBaseUser):
     objects = MyAccountManager()
 
     def save(self, *args, **kwargs):
-        if not self.slug:
-            self.slug = slugify(self.email)
         super().save(*args, **kwargs)
 
     def set_business(self):

@@ -12,7 +12,7 @@
     
 }
 .underlay {
-  background-color: rgba(0, 0, 0, 0.3);
+  background-color: rgba(0, 0, 0, 0.5);
   z-index:1;
   position:relative;
   border-radius: 16px 16px 16px 16px;

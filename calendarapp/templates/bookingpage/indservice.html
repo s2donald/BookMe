@@ -5,8 +5,8 @@
     {% if service %}
         <h2>{{ service.name }}</h2>
         <hr class="hrwhite">
-            <div class="row text-center underlay">
-                <form method="POST" class="justify-content-center">
+            <div class="row text-center underlay mb-3">
+                <form method="POST" class="justify-content-center fform">
                     {% csrf_token %}
                     <div class="container">
                     <div class="col-md-12 d-flex justify-content-center">
@@ -17,21 +17,51 @@
                         <h3 class="mb-3">Select Your Preferred Date and Time</h3>
                     </div>
                     
-                    <div class="row d-flex justify-content-center">
+                    <div class="row d-flex justify-content-center mb-3">
                         <div class="pl-6" id="datepicker"></div>
                         
                         <div class="col-md-6 ">
                             <div class="text-center" id="booking-header"><h4 class="text-center">Available Booking Times</h4></div>
-                            <div class="bookingbutton">
-                                <form method="post">
-                                    {% csrf_token %}
-                                </form>
-                            </div>
+                            <div class="bookingbutton"></div>
                         </div>
                     </div>
                     </div>
                     <div id="address"></div>
-                    <div class="feedback"></div>
+                </form>
+                <form action="post" class="justify-content-center" >
+                    {% csrf_token %}
+                    <div class="authver justify-content-center container d-none" id="authform">
+                        <div class="row">
+                            <h3>Enter Your Details or Sign into Gibele</h3>
+                            <div class="col-md-6 d-flex">
+                                <p><label for="id_first_name">First Name</label>
+                                <input type="text" id="id_first_name" name="first_name" maxlength="30"></p>
+                            </div>
+                            <div class="col-md-6 d-flex">
+                                <p><label for="id_last_name">Last Name</label>
+                                <input type="text" id="id_last_name" name="last_name" maxlength="30"></p>
+                            </div>
+                            <div class="col-md-12 d-flex">
+                                <p><label for="id_phone">Phone Number</label>
+                                <input type="text" id="id_phone" name="phone" maxlength="200"></p>
+                                <div class="invalid_phone m-0 p-0" style="display:none; color:red;"></div>
+                            </div>
+                            <div class="col-md-12 d-flex">
+                                <p><label for="id_address">Address</label>
+                                <input type="text" id="id_address" name="address" maxlength="200"></p>
+                            </div>
+                        </div>
+                        <a class="btn btn-outline-primary mb-1 person">Submit</a>
+                    </div>
+                </form>
+                <form action="post" class="justify-content-center" id="confirmForm">
+                    {% csrf_token %}
+                    <div class="sform d-none container">
+                        <h3>Confirm Appointment To Secure Slot</h3>
+                        <div class="text-block appoint"></div>
+                        <a class="btn btn-outline-primary mb-3 confbtn">Confirm and Secure Spot</a>
+                    </div>
+                    
                 </form>
                 
             </div>
@@ -74,14 +104,19 @@
     }
     const dates = document.querySelector("#datepicker");
     const helper = document.querySelector('.bookingbutton');
+    const firform = document.querySelector(".fform");
+    const secform = document.querySelector(".sform");
+    const authenticateform = document.querySelector("#authform");
+    const bookingtime = document.querySelector(".appoint");
     dates.addEventListener('change', (e) =>{
         const date = document.querySelector("#datepicker")._flatpickr.selectedDates[0];
         const month = date.getMonth();
         const day = date.getDate();
         const year = date.getFullYear();
         const weekday = date.getDay();
+        const newdate = date.toJSON().substring(0,10)
         const service_id = '{{ service.id }}'
-
+        console.log(date.toDateString())
         fetch("/bookingtime/", {
             body: JSON.stringify({month: month, day: day, year: year, id: service_id, weekday:weekday}),
             method: 'POST',
@@ -98,17 +133,50 @@
             astring = ``
             for (d in data.appointment_slots){
                 j = i + 1
-                h = `<button class="btn btn-outline-primary mb-1 show" id="show`+j+` method="post"">${data.appointment_slots[i]}</button>`
+                h = `<a class="btn btn-outline-primary mb-1 show" id="show`+j+`">${data.appointment_slots[i]}</a>`
                 astring = astring+h
                 i = i + 1
             }
             console.log(month, day, year)
             if (j>0){
+                const authen = data.auth
                 helper.innerHTML=astring
                 $("body").on("click", ".bookingbutton .show", function(){
                     const timev = $(this).text();
+                    if(!(authen)){
+                        firform.innerHTML=""
+                        authenticateform.classList.remove("d-none");
 
-                    console.log(timev, '',service_id, '',month, '',day, '',year, '')
+            
+                    }
+                    else{
+                        firform.innerHTML=""
+                        authenticateform.innerHTML=""
+                        bookingtime.innerHTML = `<p style="font-size:25px;">You are booking an appointment with <strong>{{ company.business_name }}</strong> at <strong>`+timev+`</strong> on <strong>`+ date.toDateString()+`</strong> for a <strong>{{ service.name }}</strong>.</p><p>Please confirm your appointment by clicking the confirm button below.</p>`
+                        secform.classList.remove("d-none");
+                        const lconf = document.querySelector(".confbtn")
+                        lconf.addEventListener('click', (event)=>{
+                            fetch("{% host_url 'creatingBooking' host 'bookingurl' slug=company.slug %}", {
+                                body: JSON.stringify({time:timev}),
+                                method: 'POST',
+                                headers:{
+                                    'Content-type':'application/json',
+                                    'X-CSRFToken':csrftoken,
+                                },
+                            })
+                            .then((res) => res.json())
+                            .then((data) => {
+                                if (data.time){
+                                    bookingtime.innerHTML = `<p>Hello</p>`
+                                }
+                            });
+                        });
+                        
+
+
+                    }
+                    
+                    console.log(timev, '',service_id, '',month, '',day, '',year, '', authen)
                 });
             }
             else{

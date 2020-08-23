@@ -88,5 +88,12 @@ class createAppointment(View):
     def post(self, request):
         data=json.loads(request.body)
         time = data['time']
-        return JsonResponse({'time':True})
+        date = data['date']
+        s_id = data['s_id']
+        company = request.viewing_company
+        user = request.user
+        if user.is_authenticated:
+            email = user.email
+        
+        return JsonResponse({'time':time, 's_id':s_id, 'date':date})
 

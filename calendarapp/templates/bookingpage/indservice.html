@@ -61,6 +61,10 @@
                         <div class="text-block appoint"></div>
                         <a class="btn btn-outline-primary mb-3 confbtn">Confirm and Secure Spot</a>
                     </div>
+                    <div class="conffeedback d-none">
+                        <h3>Appointment Confirmed!</h3>
+                        <div class="text-block appoints"></div>
+                    </div>
                     
                 </form>
                 
@@ -90,12 +94,12 @@
 
 
     jQuery( "#datepicker" ).flatpickr({
-        format:'d.m.Y H:i',
+        dateFormat: "Y-m-d",
         inline:true,
         defaultHour: 12,
         minDate: 'today',
         position: "center",
-        disable: [ { 'from': '2020-09-02'} ], 
+        disable: [ { 'from': '2020-09-02'} ],
     });
 
     const todays = document.querySelector("#datepicker")._flatpickr.selectedDates
@@ -108,6 +112,15 @@
     const secform = document.querySelector(".sform");
     const authenticateform = document.querySelector("#authform");
     const bookingtime = document.querySelector(".appoint");
+    const feedbackConf = document.querySelector(".conffeedback");
+    const bookingtimes = document.querySelector(".appoints");
+    var bookingdate = ""
+    var bookedtime = ""
+    var authen = ""
+    var count = 0
+    var booktime
+    var bookdate
+    var serv_id
     dates.addEventListener('change', (e) =>{
         const date = document.querySelector("#datepicker")._flatpickr.selectedDates[0];
         const month = date.getMonth();
@@ -116,7 +129,6 @@
         const weekday = date.getDay();
         const newdate = date.toJSON().substring(0,10)
         const service_id = '{{ service.id }}'
-        console.log(date.toDateString())
         fetch("/bookingtime/", {
             body: JSON.stringify({month: month, day: day, year: year, id: service_id, weekday:weekday}),
             method: 'POST',
@@ -137,53 +149,64 @@
                 astring = astring+h
                 i = i + 1
             }
-            console.log(month, day, year)
             if (j>0){
-                const authen = data.auth
+                authen = data.auth
                 helper.innerHTML=astring
-                $("body").on("click", ".bookingbutton .show", function(){
-                    const timev = $(this).text();
-                    if(!(authen)){
-                        firform.innerHTML=""
-                        authenticateform.classList.remove("d-none");
-
-            
-                    }
-                    else{
-                        firform.innerHTML=""
-                        authenticateform.innerHTML=""
-                        bookingtime.innerHTML = `<p style="font-size:25px;">You are booking an appointment with <strong>{{ company.business_name }}</strong> at <strong>`+timev+`</strong> on <strong>`+ date.toDateString()+`</strong> for a <strong>{{ service.name }}</strong>.</p><p>Please confirm your appointment by clicking the confirm button below.</p>`
-                        secform.classList.remove("d-none");
-                        const lconf = document.querySelector(".confbtn")
-                        lconf.addEventListener('click', (event)=>{
-                            fetch("{% host_url 'creatingBooking' host 'bookingurl' slug=company.slug %}", {
-                                body: JSON.stringify({time:timev}),
-                                method: 'POST',
-                                headers:{
-                                    'Content-type':'application/json',
-                                    'X-CSRFToken':csrftoken,
-                                },
-                            })
-                            .then((res) => res.json())
-                            .then((data) => {
-                                if (data.time){
-                                    bookingtime.innerHTML = `<p>Hello</p>`
-                                }
-                            });
-                        });
-                        
-
-
-                    }
-                    
-                    console.log(timev, '',service_id, '',month, '',day, '',year, '', authen)
-                });
+                bookingdate = date.toDateString()
             }
             else{
                 helper.innerHTML=`<p>No slots available</p>`
             }
             
         });
+
+        $("body").on("click", ".bookingbutton .show", function(){
+            const timev = $(this).text();
+                if(!(true)){
+                    firform.innerHTML=""
+                    authenticateform.classList.remove("d-none");
+                }
+                else{
+                    firform.innerHTML=""
+                    authenticateform.innerHTML=""
+                    bookingtime.innerHTML = `<p style="font-size:25px;">You are booking an appointment with <strong>{{ company.business_name }}</strong> at <strong>`+timev+`</strong> on <strong>`+ date.toDateString()+`</strong> for a <strong>{{ service.name }}</strong>.</p><p style="font-size:25px;">Please confirm your appointment by clicking the confirm button below.</p>`
+                    secform.classList.remove("d-none");
+                        
+                    booktime = timev
+                    bookdate = bookingdate
+                    serv_id = service_id
+    
+                }
+                    
+                    
+            });
+        const lconf = document.querySelector(".confbtn")
+        lconf.addEventListener('click', addBooking, {once:true});
+            
+        function addBooking(){
+            count = count + 1
+                
+            if(count==1){
+                console.log("hello")
+                fetch("{% host_url 'creatingBooking' host 'bookingurl' slug=company.slug %}", {
+                    body: JSON.stringify({time:booktime, date:bookdate, s_id:serv_id}),
+                    method: 'POST',
+                    headers:{
+                        'Content-type':'application/json',
+                        'X-CSRFToken':csrftoken,
+                    },
+                })
+                .then((res) => res.json())
+                .then((data) => {
+                    if (data.time){
+                        secform.classList.add("d-none");
+                        feedbackConf.classList.remove("d-none");
+                        bookingtimes.innerHTML = `<p style="font-size:25px;">Thank you for setting an appointment with us! Your appointment with <strong>{{ company.business_name }}</strong> will take place on <strong>`+ data.date +`</strong> at <strong>`+data.time+`</strong> for a <strong>{{ service.name }}</strong>.</p><p style="font-size:25px;">We have sent the additional details of your service to your email.</p>`
+                    }
+                });
+                count = count + 1
+            }
+        }                   
     });
     
     

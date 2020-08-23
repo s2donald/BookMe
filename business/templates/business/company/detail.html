@@ -77,12 +77,14 @@
                 <div class="swiper-wrapper">
                     <div class="swiper-slide"><a href="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/no_image.png" %}{% endif %}"><img class="img-fluid" src="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/no_image.png" %}{% endif %}" alt="..."></a></div>
                     <div class="swiper-slide"><a href="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/no_image.png" %}{% endif %}"><img class="img-fluid" src="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/no_image.png" %}{% endif %}" alt="..."></a></div>
+                    <div class="swiper-slide"><a href="{% static "/img/no_image.png" %}"><img class="img-fluid" src="{% static "/img/no_image.png" %}" alt="..."></a></div>
+                    <div class="swiper-slide"><a href="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/no_image.png" %}{% endif %}"><img class="img-fluid" src="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/no_image.png" %}{% endif %}" alt="..."></a></div>
+                    <div class="swiper-slide"><a href="{% static "/img/no_image.png" %}"><img class="img-fluid" src="{% static "/img/no_image.png" %}" alt="..."></a></div>
+                    <div class="swiper-slide"><a href="{% static "/img/no_image.png" %}"><img class="img-fluid" src="{% static "/img/no_image.png" %}" alt="..."></a></div>
                     <div class="swiper-slide"><a href="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/no_image.png" %}{% endif %}"><img class="img-fluid" src="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/no_image.png" %}{% endif %}" alt="..."></a></div>
                     <div class="swiper-slide"><a href="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/no_image.png" %}{% endif %}"><img class="img-fluid" src="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/no_image.png" %}{% endif %}" alt="..."></a></div>
                     <div class="swiper-slide"><a href="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/no_image.png" %}{% endif %}"><img class="img-fluid" src="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/no_image.png" %}{% endif %}" alt="..."></a></div>
-                    <div class="swiper-slide"><a href="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/no_image.png" %}{% endif %}"><img class="img-fluid" src="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/no_image.png" %}{% endif %}" alt="..."></a></div>
-                    <div class="swiper-slide"><a href="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/no_image.png" %}{% endif %}"><img class="img-fluid" src="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/no_image.png" %}{% endif %}" alt="..."></a></div>
-
+                    <div class="swiper-slide"><a href="{% static "/img/no_image.png" %}"><img class="img-fluid" src="{% static "/img/no_image.png" %}" alt="..."></a></div>
                 </div>
                     <div class="swiper-pagination swiper-pagination-white"></div>
                     <div class="swiper-button-prev swiper-button-white circle-slide"></div>
@@ -127,43 +129,6 @@
               {% endfor %}
             
               
-              <div class="py-5">
-                <button class="btn btn-outline-primary" type="button" data-toggle="collapse" data-target="#leaveReview" aria-expanded="false" aria-controls="leaveReview">Leave a review</button>
-                <div class="collapse mt-4" id="leaveReview">
-                  <h5 class="mb-4">Reviews</h5>
-                  <form class="form" id="contact-form" method="get" action="#">
-                    <div class="row">
-                      <div class="col-sm-6">
-                        <div class="form-group">
-                          <label class="form-label" for="name">Your name *</label>
-                          <input class="form-control" type="text" name="name" id="name" placeholder="Enter your name" required="required">
-                        </div>
-                      </div>
-                      <div class="col-sm-6">
-                        <div class="form-group">
-                          <label class="form-label" for="rating">Your rating *</label>
-                          <select class="custom-select focus-shadow-0" name="rating" id="rating">
-                            <option value="5">&#9733;&#9733;&#9733;&#9733;&#9733; (5/5)</option>
-                            <option value="4">&#9733;&#9733;&#9733;&#9733;&#9734; (4/5)</option>
-                            <option value="3">&#9733;&#9733;&#9733;&#9734;&#9734; (3/5)</option>
-                            <option value="2">&#9733;&#9733;&#9734;&#9734;&#9734; (2/5)</option>
-                            <option value="1">&#9733;&#9734;&#9734;&#9734;&#9734; (1/5)</option>
-                          </select>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="form-group">
-                      <label class="form-label" for="email">Your email *</label>
-                      <input class="form-control" type="email" name="email" id="email" placeholder="Enter your  email" required="required">
-                    </div>
-                    <div class="form-group">
-                      <label class="form-label" for="review">Review text *</label>
-                      <textarea class="form-control" rows="4" name="review" id="review" placeholder="Enter your review" required="required"></textarea>
-                    </div>
-                    <button class="btn btn-primary" type="submit">Post review</button>
-                  </form>
-                </div>
-              </div>
             </div>
           </div>
           <div class="col-lg-4">
@@ -181,31 +146,59 @@
                   <table class="table text-sm mb-0">
                     <tr>
                       <th class="pl-0 border-0">Sunday</th>
-                      <td class="pr-0 text-right border-0">8:00 am - 6:00 pm</td>
+                      {% if sun_hour.is_closed %}
+                        <td class="pr-0 text-right border-0">Closed</td>
+                      {% else %}
+                        <td class="pr-0 text-right border-0">{{ sun_hour.from_hour|date:"%I:%M %p"}} - {{ sun_hour.to_hour }}</td>
+                      {% endif %}
                     </tr>
                     <tr>
                       <th class="pl-0">Monday</th>
-                      <td class="pr-0 text-right">8:00 am - 6:00 pm</td>
+                      {% if mon_hour.is_closed %}
+                        <td class="pr-0 text-right border-0">Closed</td>
+                      {% else %}
+                        <td class="pr-0 text-right border-0">{{ mon_hour.from_hour }} - {{ mon_hour.to_hour }}</td>
+                      {% endif %}
                     </tr>
                     <tr>
                       <th class="pl-0">Tuesday</th>
-                      <td class="pr-0 text-right">8:00 am - 6:00 pm</td>
+                      {% if tues_hour.is_closed %}
+                        <td class="pr-0 text-right border-0">Closed</td>
+                      {% else %}
+                        <td class="pr-0 text-right border-0">{{ tues_hour.from_hour }} - {{ tues_hour.to_hour }}</td>
+                      {% endif %}
                     </tr>
                     <tr>
                       <th class="pl-0">Wednesday</th>
-                      <td class="pr-0 text-right">8:00 am - 6:00 pm</td>
+                      {% if wed_hour.is_closed %}
+                        <td class="pr-0 text-right border-0">Closed</td>
+                      {% else %}
+                        <td class="pr-0 text-right border-0">{{ wed_hour.from_hour }} - {{ wed_hour.to_hour }}</td>
+                      {% endif %}
                     </tr>
                     <tr>
                       <th class="pl-0">Thursday</th>
-                      <td class="pr-0 text-right">8:00 am - 6:00 pm</td>
+                      {% if thur_hour.is_closed %}
+                        <td class="pr-0 text-right border-0">Closed</td>
+                      {% else %}
+                        <td class="pr-0 text-right border-0">{{ thur_hour.from_hour }} - {{ thur_hour.to_hour }}</td>
+                      {% endif %}
                     </tr>
                     <tr>
                       <th class="pl-0">Friday</th>
-                      <td class="pr-0 text-right">8:00 am - 6:00 pm</td>
+                      {% if fri_hour.is_closed %}
+                        <td class="pr-0 text-right border-0">Closed</td>
+                      {% else %}
+                        <td class="pr-0 text-right border-0">{{ fri_hour.from_hour }} - {{ fri_hour.to_hour }}</td>
+                      {% endif %}
                     </tr>
                     <tr>
                       <th class="pl-0">Saturday</th>
-                      <td class="pr-0 text-right">Closed</td>
+                      {% if sat_hour.is_closed %}
+                        <td class="pr-0 text-right border-0">Closed</td>
+                      {% else %}
+                        <td class="pr-0 text-right border-0">{{ sat_hour.from_hour }} - {{ sat_hour.to_hour }}</td>
+                      {% endif %}
                     </tr>
                   </table>
                 </div>

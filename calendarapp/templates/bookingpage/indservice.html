@@ -145,14 +145,14 @@
             astring = ``
             for (d in data.appointment_slots){
                 j = i + 1
-                h = `<a class="btn btn-outline-primary mb-1 show" id="show`+j+`">${data.appointment_slots[i]}</a>`
+                h = `<a class="btn btn-outline-primary mb-1 show" style="height:auto;" id="show`+j+`">${data.appointment_slots[i]}</a>`
                 astring = astring+h
                 i = i + 1
             }
             if (j>0){
                 authen = data.auth
                 helper.innerHTML=astring
-                bookingdate = date.toDateString()
+                bookingdate = date
             }
             else{
                 helper.innerHTML=`<p>No slots available</p>`
@@ -189,7 +189,7 @@
             if(count==1){
                 console.log("hello")
                 fetch("{% host_url 'creatingBooking' host 'bookingurl' slug=company.slug %}", {
-                    body: JSON.stringify({time:booktime, date:bookdate, s_id:serv_id}),
+                    body: JSON.stringify({time:booktime, date:bookdate.toDateString(), month:bookdate.getMonth(),day:bookdate.getDate(),year:date.getFullYear(), s_id:serv_id}),
                     method: 'POST',
                     headers:{
                         'Content-type':'application/json',
@@ -198,6 +198,7 @@
                 })
                 .then((res) => res.json())
                 .then((data) => {
+                    console.log(data.time, '', data.start)
                     if (data.time){
                         secform.classList.add("d-none");
                         feedbackConf.classList.remove("d-none");

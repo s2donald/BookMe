@@ -7,7 +7,7 @@ from django.core.validators import MinValueValidator, MaxValueValidator,RegexVal
 
 class Bookings(models.Model):
     #The user's information name who booked
-    guest = Account.objects.get(email='guest@guest.com')
+    guest = Account.objects.get(email='guest@gibele.com')
     user = models.ForeignKey(Account, on_delete=models.CASCADE, default=guest)
     first_name = models.CharField(verbose_name="First Name", max_length=30, unique=False,null=True, blank=True)
     last_name = models.CharField(verbose_name="Last Name", max_length=30, unique=False, null=True, blank=True)

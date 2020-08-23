@@ -67,6 +67,7 @@ MIDDLEWARE = [
 ROOT_URLCONF = 'gibele.urls'
 ROOT_HOSTCONF = 'gibele.hosts'
 DEFAULT_HOST = 'www'
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',

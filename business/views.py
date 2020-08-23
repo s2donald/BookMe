@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Category, Company, Services, SubCategory, Amenities
+from .models import Category, Company, Services, SubCategory, Amenities, OpeningHours
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.postgres.search import SearchVector
 from .forms import SearchForm, AddServiceForm, UpdateServiceForm, homeSearchForm
@@ -119,10 +119,16 @@ def company_detail(request, id, slug):
     comp_categ = company.category
     services = Services.objects.all().filter(business=company)
     form = SearchForm()
-
     reviews = Reviews.objects.filter(company=company).order_by('-created')
     amenities = Amenities.objects.filter(company=company).order_by('amenity')
-    return render(request, 'business/company/detail.html', {'subcategories':subcategories,'comp_categ':comp_categ,'amenities':amenities,'address':address,'company':company,'category':category,'categories':categories, 'services':services, 'form':form, 'reviews':reviews})
+    sun_hour = OpeningHours.objects.get(company=company, weekday=0)
+    mon_hour = OpeningHours.objects.get(company=company, weekday=1)
+    tues_hour = OpeningHours.objects.get(company=company, weekday=2)
+    wed_hour = OpeningHours.objects.get(company=company, weekday=3)
+    thur_hour = OpeningHours.objects.get(company=company, weekday=4)
+    fri_hour = OpeningHours.objects.get(company=company, weekday=5)
+    sat_hour = OpeningHours.objects.get(company=company, weekday=6)
+    return render(request, 'business/company/detail.html', {'sun_hour':sun_hour,'mon_hour':mon_hour,'tues_hour':tues_hour,'wed_hour':wed_hour,'thur_hour':thur_hour,'fri_hour':fri_hour,'sat_hour':sat_hour,'subcategories':subcategories,'comp_categ':comp_categ,'amenities':amenities,'address':address,'company':company,'category':category,'categories':categories, 'services':services, 'form':form, 'reviews':reviews})
 
 @login_required
 def ManageServiceListView(request, id, slug):

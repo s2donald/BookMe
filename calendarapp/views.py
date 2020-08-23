@@ -7,6 +7,7 @@ import json
 from django.core import serializers
 import datetime
 from account.forms import UpdatePersonalForm
+# from account.models import Account
 # Create your views here.
 
 
@@ -37,6 +38,7 @@ def time_slots(start_time, end_time, interval):
         yield t.strftime('%I:%M %p')
         t = (datetime.datetime.combine(datetime.date.today(), t) +
              datetime.timedelta(minutes=interval)).time()
+        print(t)
 
 class bookingTimes(View):
     def post(self, request):
@@ -87,13 +89,43 @@ class phoneValidationView(View):
 class createAppointment(View):
     def post(self, request):
         data=json.loads(request.body)
-        time = data['time']
         date = data['date']
+        time = data['time']
+        month = data['month']+1
+        day = data['day']
+        year = data['year']
         s_id = data['s_id']
         company = request.viewing_company
         user = request.user
+        service = get_object_or_404(Services, id=s_id)
+        startdate = datetime.datetime(year,month,day)
+        starttime = datetime.datetime.strptime(time,'%I:%M %p').time()
+        start = datetime.datetime.combine(startdate, starttime)
+        end = start + datetime.timedelta(hours=service.duration_hour,minutes=service.duration_minute)
+        print(end)
         if user.is_authenticated:
             email = user.email
-        
-        return JsonResponse({'time':time, 's_id':s_id, 'date':date})
+            first_name = user.first_name
+            last_name = user.last_name
+            phone = user.phone
+            address = user.address
+            postal = user.postal
+            province = user.province
+            city = user.city
+            booking = Bookings.objects.create(user=user,first_name=first_name,last_name=last_name,
+                                                phone=phone,address=address,postal=postal,
+                                                province=province,city=city,service=service, company=company,
+                                                start=start, end=end)
+            booking.save()
+        else:
+            email = 'guest@gibele.com'
+            user = get_object_or_404(Account,email=email)
+            first_name = data['first_name']
+            last_name = data['last_name']
+            phone = data['phone']
+            address = data['address']
+            postal = data['postal']
+            province = data['province']
+            city = data['city']
+        return JsonResponse({'time':time, 's_id':s_id,'start':start,'date':date,'time':time})
 

@@ -5,7 +5,7 @@ from django.http import JsonResponse
 from django.views import View
 import json
 from django.core import serializers
-import datetime
+import datetime, pytz
 from account.forms import UpdatePersonalForm
 # from account.models import Account
 # Create your views here.
@@ -31,34 +31,52 @@ def bizadmin(request):
     user = request.user
     return render(request, 'businessadmin/bizadmin.html', {'user': user})
 
-def time_slots(start_time, end_time, interval):
+def time_slots(start_time, end_time, interval, duration_hour, duration_minute, year, month, day, company):
     t = start_time
-    print(t)
-    while t <= end_time:
-        yield t.strftime('%I:%M %p')
+    servDate = datetime.datetime(year,month,day).astimezone(pytz.timezone("UTC"))
+    availableDay = []
+    while t < end_time:
+        begTime = t
+        servStart = datetime.datetime.combine(servDate, t).astimezone(pytz.timezone("UTC"))
+        endTime = (datetime.datetime.combine(servDate, t) +
+                    datetime.timedelta(hours=duration_hour,minutes=duration_minute)).astimezone(pytz.timezone("UTC"))
+        objects = Bookings.objects.filter(company=company)
+        objlength = len(objects)
+        count = 0
+        for i in range(objlength):
+            if (objects[i].start.date() == servStart.date()):
+                s = objects[i].start.time()
+                g = objects[i].end.time()
+                if((servStart.time()<=s<endTime.time()) or (servStart.time()<g<endTime.time())):
+                    count = 1
+        if count==0:
+            availableDay.append(t.strftime("%I:%M %p"))
         t = (datetime.datetime.combine(datetime.date.today(), t) +
              datetime.timedelta(minutes=interval)).time()
-        print(t)
+    return availableDay
 
 class bookingTimes(View):
     def post(self, request):
         data=json.loads(request.body)
         s_id = data['id']
-        month = data['month']
+        month = data['month']+1
         year = data['year']
         day = data['day']
         weekday = data['weekday']
+        date=data['date']
         company = request.viewing_company
         open_hours = get_object_or_404(OpeningHours,company=company, weekday=weekday)
         #We need to add the service time and validate whether the service can be fit in the timeslot
         b_open = open_hours.from_hour
         b_close = open_hours.to_hour
         interval= company.interval
-
+        duration_hour = Services.objects.get(pk=s_id).duration_hour
+        duration_minute = Services.objects.get(pk=s_id).duration_minute
         is_auth = request.user.is_authenticated
 
         if open_hours.is_closed==False:
-            slist = list(time_slots(b_open,b_close,interval))
+            slist = list(time_slots(b_open,b_close,interval, duration_hour, duration_minute, year, month, day, company))
+            # appslot = list(appointmentValid(slist, duration_hour, duration_minute, len(slist)))
         else:
             slist = []
         services = Services.objects.filter(id=s_id)
@@ -102,7 +120,6 @@ class createAppointment(View):
         starttime = datetime.datetime.strptime(time,'%I:%M %p').time()
         start = datetime.datetime.combine(startdate, starttime)
         end = start + datetime.timedelta(hours=service.duration_hour,minutes=service.duration_minute)
-        print(end)
         if user.is_authenticated:
             email = user.email
             first_name = user.first_name

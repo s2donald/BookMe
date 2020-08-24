@@ -116,11 +116,11 @@
     const bookingtimes = document.querySelector(".appoints");
     var bookingdate = ""
     var bookedtime = ""
-    var authen = ""
     var count = 0
     var booktime
     var bookdate
     var serv_id
+    var authen
     dates.addEventListener('change', (e) =>{
         const date = document.querySelector("#datepicker")._flatpickr.selectedDates[0];
         const month = date.getMonth();
@@ -129,8 +129,9 @@
         const weekday = date.getDay();
         const newdate = date.toJSON().substring(0,10)
         const service_id = '{{ service.id }}'
+        console.log(newdate)
         fetch("/bookingtime/", {
-            body: JSON.stringify({month: month, day: day, year: year, id: service_id, weekday:weekday}),
+            body: JSON.stringify({month: month, day: day, year: year, id: service_id, weekday:weekday, date:newdate}),
             method: 'POST',
             headers:{
                 'Content-type':'application/json',
@@ -162,7 +163,7 @@
 
         $("body").on("click", ".bookingbutton .show", function(){
             const timev = $(this).text();
-                if(!(true)){
+                if(!(authen)){
                     firform.innerHTML=""
                     authenticateform.classList.remove("d-none");
                 }

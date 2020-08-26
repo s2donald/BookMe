@@ -22,33 +22,17 @@
     <link rel="stylesheet" href="{% static "css/bases.css" %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.2.3/flatpickr.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.2.3/themes/dark.css">
-    <title>{{ company.business_name }} - Booking with Gibele</title>
+    <title>Business - Booking with Gibele</title>
   </head>
-  <body class="bg-booking" style="background-image:url({% static 'img/background-booking.jpg' %});background-color:black;">
-        <div class="bg-dark inline-block container-fluid ">
-            <div class="row justify-content-between ">
-                <a class="mb-1 pr-2 mt-1 ml-1" href="{% host_url 'business:homepage' host 'www' %}"><img width="50px" height="50px" style="background: white;" src="{% static "/img/favicon/logo/GibeleLogo.svg" %}"></a>
-                <p class="font-weight-bold text-white pr-2 mt-1 ml-1">Powered by Gibele</p>
-                
-            </div>
-        </div>
-        <div class="container align-items-center text-center text-white mt-2">
-
-            <h4>Select Your Service</h4>
-            <div class="d-flex align-items-center justify-content-center">
-            <button style="height:40px;" href="{% host_url 'bookingurls' host 'bookingurl' slug=company.slug %}" class="btn btn-outline-primary align-items-center d-none" id="backbtn"><i class="fas fa-long-arrow-alt-left"></i></button>
-            <h1>{{ company.business_name }}</h1>
-            </div>
-            <div class="row justify-content-around">
-                <p>Rating:</p>
-            </div>
+  <body>
             <script type="text/javascript" src="https://kit.fontawesome.com/a07c5b9658.js" crossorigin="anonymous"></script>
             {% comment %} <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script> {% endcomment %}
             <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
             <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
             <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
             <script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.2.3/flatpickr.js"></script>
-            {% block booking %}
+            <div><h1>Hello World</h1></div>
+            {% block businesscontent %}
             {% endblock %}
         </div>
     <!-- Optional JavaScript -->

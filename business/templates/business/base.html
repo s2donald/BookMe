@@ -1,4 +1,5 @@
 {% load business_tags %}
+{% load hosts %}
 {% load static %}
 <!DOCTYPE html>
 <html>
@@ -65,7 +66,7 @@
                     </li>
                 {% endif %}
                 <div class="my-auto mx-1">
-                    <a href="" class="btn btn-outline-primary inline-block">Add a business</a>
+                    <a href="{% host_url 'bizadminmain' host 'bizadmin' %}" class="btn btn-outline-primary inline-block">Add a business</a>
                 </div>
                 {% if request.user.is_authenticated %}
                     <div class="my-auto mx-1">

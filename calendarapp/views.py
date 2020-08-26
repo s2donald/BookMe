@@ -1,4 +1,5 @@
 from django.shortcuts import render, get_object_or_404
+from account.models import Account
 from business.models import Company, Services, OpeningHours
 from consumer.models import Bookings
 from django.http import JsonResponse
@@ -7,6 +8,7 @@ import json
 from django.core import serializers
 import datetime, pytz
 from account.forms import UpdatePersonalForm, AccountAuthenticationForm
+from django.contrib.auth import authenticate, login
 # from account.models import Account
 # Create your views here.
 
@@ -27,10 +29,6 @@ def bookingServiceView(request, pk):
     personal_form = UpdatePersonalForm()
     gibele_form = AccountAuthenticationForm()
     return render(request, 'bookingpage/indservice.html', {'user': user, 'company':company, 'service':service, 'personal_form':personal_form, 'gibele_form':gibele_form})
-
-def bizadmin(request):
-    user = request.user
-    return render(request, 'businessadmin/bizadmin.html', {'user': user})
 
 def time_slots(start_time, end_time, interval, duration_hour, duration_minute, year, month, day, company):
     t = start_time
@@ -145,7 +143,7 @@ class createAppointment(View):
             user = get_object_or_404(Account,email=email)
             first_name = data['first_name']
             last_name = data['last_name']
-            phone = data['phone']
+            phone = data['phoneGuest']
             address = data['address']
             postal = data['postal']
             province = data['province']
@@ -153,6 +151,20 @@ class createAppointment(View):
         return JsonResponse({'time':time, 's_id':s_id,'start':start,'date':date,'time':time, 'good':good})
 
 class LoginView(View):
+    def post(self, request):
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        user = authenticate(email=email, password=password)
+        if user is not None:
+            if user.is_active:
+                login(request, user)
+                return JsonResponse({'result':True})
+            else:
+                print('hello')
+                return JsonResponse({'result':False})
+        else:
+            return JsonResponse({'result':False})
+        
     def get(self, request):
         return JsonResponse({})
 

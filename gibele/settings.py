@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'bootstrap_modal_forms',
     'account.apps.AccountConfig',
     'business.apps.BusinessConfig',
+    'businessadmin.apps.BusinessadminConfig',
     'consumer.apps.ConsumerConfig',
     'calendarapp.apps.CalendarappConfig',
     'crispy_forms',

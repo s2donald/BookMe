@@ -179,8 +179,8 @@ pre_save.connect(slug_generator, sender=Company)
 class OpeningHours(models.Model):
     company = models.ForeignKey(Company, on_delete=models.CASCADE)
     weekday = models.IntegerField(choices=WEEKDAYS)
-    from_hour = models.TimeField()
-    to_hour = models.TimeField()
+    from_hour = models.TimeField(default='9:00:00')
+    to_hour = models.TimeField(default='17:00:00')
     is_closed = models.BooleanField(default=False)
     class Meta:
         ordering = ('weekday', 'from_hour')

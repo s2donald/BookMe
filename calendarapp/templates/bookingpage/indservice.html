@@ -1,5 +1,6 @@
 {% extends 'bookingpage/bookingpage.html'%}
 {% load hosts %}
+{% load crispy_forms_tags %}
 {% block booking %}
 <div class="text-block dark-overlay justify-content-center align-items-center">
     {% if service %}
@@ -31,29 +32,63 @@
                 <form action="post" class="justify-content-center" >
                     {% csrf_token %}
                     <div class="authver justify-content-center container d-none" id="authform">
-                        <div class="row">
-                            <h3>Enter Your Details or Sign into Gibele</h3>
-                            <div class="col-md-6 d-flex">
-                                <p><label for="id_first_name">First Name</label>
-                                <input type="text" id="id_first_name" name="first_name" maxlength="30"></p>
+                        <div class="row justify-content-center">
+                            <div class="col-md-12">
+                                <h3>Submit Your Info</h3>
                             </div>
-                            <div class="col-md-6 d-flex">
-                                <p><label for="id_last_name">Last Name</label>
-                                <input type="text" id="id_last_name" name="last_name" maxlength="30"></p>
+                           <div class="col-md-6" id="fname">
+                                {{ personal_form.first_name|as_crispy_field }}
                             </div>
-                            <div class="col-md-12 d-flex">
-                                <p><label for="id_phone">Phone Number</label>
-                                <input type="text" id="id_phone" name="phone" maxlength="200"></p>
+                            <div class="col-md-6" id="lname">
+                                {{ personal_form.last_name|as_crispy_field }}
+                            </div>
+                            <div class="col-md-6" id="pemail">
+                                {{ personal_form.email|as_crispy_field}}
+                                <div class="invalid_feedback m-0 p-0" style="display:none"></div>
+                            </div>
+                            <div class="col-md-6" id="pphone">
+                                {{ personal_form.phone|as_crispy_field}}
                                 <div class="invalid_phone m-0 p-0" style="display:none; color:red;"></div>
                             </div>
-                            <div class="col-md-12 d-flex">
-                                <p><label for="id_address">Address</label>
-                                <input type="text" id="id_address" name="address" maxlength="200"></p>
+                            <div class="col-md-12" id="subbtndiv">
+                                <a id="submitGuestForm" class="btn btn-outline-primary mb-1 subbtn">Submit</a>
                             </div>
                         </div>
-                        <a class="btn btn-outline-primary mb-1 person">Submit</a>
+                        <div class="col-md-12" id="pphone">
+                            <a id="loginGibeleForm" type="submit" class="btn btn-outline-primary mb-1">Log into your Gibele Account</a>
+                        </div>
+                        <div class="col-md-12" id="pphone">
+                            <a class="btn btn-primary mb-1 fb">Sign in using Facebook</a>
+                        </div>
+                        
                     </div>
                 </form>
+
+                <form action="post" class="justify-content-center" >
+                    {% csrf_token %}
+                    <div class="authver justify-content-center container d-none" id="authformGibele">
+                        <div class="row justify-content-center">
+                            <div class="col-sm-12">
+                                <h3>Login using your Gibele Account</h3>
+                            </div>
+                            <div class="col-sm-6 justify-content-center">
+                                {{ gibele_form|crispy }}
+                            </div>
+                           
+                        </div>
+                        <div class="col-md-12" id="pphone">
+                            <a id="signInGibeleForm" type="submit" class="btn btn-outline-primary mb-1">Login</a>
+                        </div>
+                        <div class="col-md-12" id="pphone">
+                            <a id="toguestForm" type="submit" class="btn btn-outline-primary mb-1">Book your appointment as a guest</a>
+                        </div>
+                        <div class="col-md-12" id="pphone">
+                            <a class="btn btn-primary mb-1 fb">Sign in using Facebook</a>
+                        </div>
+                        
+                    </div>
+                </form>
+
                 <form action="post" class="justify-content-center" id="confirmForm">
                     {% csrf_token %}
                     <div class="sform d-none container">
@@ -62,7 +97,7 @@
                         <a class="btn btn-outline-primary mb-3 confbtn">Confirm and Secure Spot</a>
                     </div>
                     <div class="conffeedback d-none">
-                        <h3>Appointment Confirmed!</h3>
+                        <h3 class="confheader3">Appointment Confirmed!</h3>
                         <div class="text-block appoints"></div>
                     </div>
                     
@@ -131,7 +166,7 @@
         const service_id = '{{ service.id }}'
         console.log(newdate)
         fetch("/bookingtime/", {
-            body: JSON.stringify({month: month, day: day, year: year, id: service_id, weekday:weekday, date:newdate}),
+            body: JSON.stringify({month: month, day: day, year: year, id: service_id, weekday:weekday,date}),
             method: 'POST',
             headers:{
                 'Content-type':'application/json',
@@ -163,24 +198,17 @@
 
         $("body").on("click", ".bookingbutton .show", function(){
             const timev = $(this).text();
-                if(!(authen)){
-                    firform.innerHTML=""
-                    authenticateform.classList.remove("d-none");
-                }
-                else{
-                    firform.innerHTML=""
-                    authenticateform.innerHTML=""
-                    bookingtime.innerHTML = `<p style="font-size:25px;">You are booking an appointment with <strong>{{ company.business_name }}</strong> at <strong>`+timev+`</strong> on <strong>`+ date.toDateString()+`</strong> for a <strong>{{ service.name }}</strong>.</p><p style="font-size:25px;">Please confirm your appointment by clicking the confirm button below.</p>`
-                    secform.classList.remove("d-none");
+
+            firform.innerHTML=""
+            
+            bookingtime.innerHTML = `<p style="font-size:25px;">You are booking an appointment with <strong>{{ company.business_name }}</strong> at <strong>`+timev+`</strong> on <strong>`+ date.toDateString()+`</strong> for a <strong>{{ service.name }}</strong>.</p><p style="font-size:25px;">Please confirm your appointment by clicking the confirm button below.</p>`
+            secform.classList.remove("d-none");
                         
-                    booktime = timev
-                    bookdate = bookingdate
-                    serv_id = service_id
-    
-                }
-                    
-                    
-            });
+            booktime = timev
+            bookdate = bookingdate
+            serv_id = service_id
+            
+        });
         const lconf = document.querySelector(".confbtn")
         lconf.addEventListener('click', addBooking, {once:true});
             
@@ -189,26 +217,54 @@
                 
             if(count==1){
                 console.log("hello")
-                fetch("{% host_url 'creatingBooking' host 'bookingurl' slug=company.slug %}", {
-                    body: JSON.stringify({time:booktime, date:bookdate.toDateString(), month:bookdate.getMonth(),day:bookdate.getDate(),year:date.getFullYear(), s_id:serv_id}),
-                    method: 'POST',
-                    headers:{
-                        'Content-type':'application/json',
-                        'X-CSRFToken':csrftoken,
-                    },
-                })
-                .then((res) => res.json())
-                .then((data) => {
-                    console.log(data.time, '', data.start)
-                    if (data.time){
-                        secform.classList.add("d-none");
-                        feedbackConf.classList.remove("d-none");
-                        bookingtimes.innerHTML = `<p style="font-size:25px;">Thank you for setting an appointment with us! Your appointment with <strong>{{ company.business_name }}</strong> will take place on <strong>`+ data.date +`</strong> at <strong>`+data.time+`</strong> for a <strong>{{ service.name }}</strong>.</p><p style="font-size:25px;">We have sent the additional details of your service to your email.</p>`
-                    }
-                });
-                count = count + 1
+                secform.classList.add("d-none");
+                const loginGibele = document.querySelector('#loginGibeleForm')
+                const guestFormGib = document.querySelector('#toguestForm')
+                const authGibeleForm = document.querySelector('#authformGibele')
+                if(!(authen)){
+                    authenticateform.classList.remove("d-none");
+                    loginGibele.addEventListener('click',function(e){
+                        authenticateform.classList.add("d-none")
+                        authGibeleForm.classList.remove("d-none")
+                        console.log(count)
+                    });
+                    guestFormGib.addEventListener('click',function(e){
+                        authenticateform.classList.remove("d-none")
+                        authGibeleForm.classList.add("d-none")
+                        console.log(count)
+                    });
+                }
+                else{
+                    fetch("{% host_url 'creatingBooking' host 'bookingurl' slug=company.slug %}", {
+                        body: JSON.stringify({time:booktime, date:bookdate.toDateString(), month:bookdate.getMonth(),day:bookdate.getDate(),year:date.getFullYear(), s_id:serv_id}),
+                        method: 'POST',
+                        headers:{
+                            'Content-type':'application/json',
+                            'X-CSRFToken':csrftoken,
+                        },
+                    })
+                    .then((res) => res.json())
+                    .then((data) => {
+                        console.log(data.time, '', data.start)
+                        const confheader3 = document.querySelector(".confheader3")
+                        if (data.good){
+                            feedbackConf.classList.remove("d-none");
+                            confheader3.innerHTML = 'Confirmed Booking!'
+                            bookingtimes.innerHTML = `<p style="font-size:25px;">Thank you for setting an appointment with us! Your appointment with <strong>{{ company.business_name }}</strong> will take place on <strong>`+ data.date +`</strong> at <strong>`+data.time+`</strong> for a <strong>{{ service.name }}</strong>.</p><p style="font-size:25px;">We have sent the additional details of your service to your email.</p>`
+                        }
+                        else{
+                            feedbackConf.classList.remove("d-none");
+                            confheader3.innerHTML = 'Timeslot has been fully booked out'
+                            bookingtimes.innerHTML = `<p style="font-size:25px;">Unfortunately we were unable to secure this spot for you. This timeslot has been fully booked out. Please try another time.</p>`
+                        }
+                    });
+                    count = count + 1
+                }
             }
-        }                   
+        }
+        function authenticateguest(){
+
+        }                 
     });
     
     

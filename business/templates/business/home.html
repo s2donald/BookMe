@@ -21,7 +21,7 @@
                         {{ search.Location }}
                     </div>
                     <div class="col-lg-3 d-flex align-items-center form-group no-divider">
-                        <select class="selectcolor selectpicker show-tick form-control" data-size="5" title="Categories">
+                        <select class="selectcolor selectpicker show-tick form-control" data-size="5" data-dropdown-align-right="true" title="Categories">
                             <option class="selectcolor" value="small">All Services</option>
                             {% for c in categories %}
                                 <optgroup label="{{ c.name }}">

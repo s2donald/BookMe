@@ -6,7 +6,7 @@ from django.views import View
 import json
 from django.core import serializers
 import datetime, pytz
-from account.forms import UpdatePersonalForm
+from account.forms import UpdatePersonalForm, AccountAuthenticationForm
 # from account.models import Account
 # Create your views here.
 
@@ -18,14 +18,15 @@ def bookingurl(request):
     user = request.user
     company = request.viewing_company
     services = Services.objects.filter(business=company)
-    form = UpdatePersonalForm()
-    return render(request, 'bookingpage/home.html', {'user': user, 'company':company, 'services':services, 'personal_form':form})
+    return render(request, 'bookingpage/home.html', {'user': user, 'company':company, 'services':services})
 
 def bookingServiceView(request, pk):
     user = request.user
     company = request.viewing_company
     service = get_object_or_404(Services, id=pk)
-    return render(request, 'bookingpage/indservice.html', {'user': user, 'company':company, 'service':service})
+    personal_form = UpdatePersonalForm()
+    gibele_form = AccountAuthenticationForm()
+    return render(request, 'bookingpage/indservice.html', {'user': user, 'company':company, 'service':service, 'personal_form':personal_form, 'gibele_form':gibele_form})
 
 def bizadmin(request):
     user = request.user
@@ -129,11 +130,16 @@ class createAppointment(View):
             postal = user.postal
             province = user.province
             city = user.city
-            booking = Bookings.objects.create(user=user,first_name=first_name,last_name=last_name,
+            if Bookings.objects.filter(company=company, start=start, end=end).count()<1:
+                booking = Bookings.objects.create(user=user,first_name=first_name,last_name=last_name,
                                                 phone=phone,address=address,postal=postal,
                                                 province=province,city=city,service=service, company=company,
                                                 start=start, end=end)
-            booking.save()
+                booking.save()
+                good = True
+            else:
+                good = False
+            
         else:
             email = 'guest@gibele.com'
             user = get_object_or_404(Account,email=email)
@@ -144,5 +150,9 @@ class createAppointment(View):
             postal = data['postal']
             province = data['province']
             city = data['city']
-        return JsonResponse({'time':time, 's_id':s_id,'start':start,'date':date,'time':time})
+        return JsonResponse({'time':time, 's_id':s_id,'start':start,'date':date,'time':time, 'good':good})
+
+class LoginView(View):
+    def get(self, request):
+        return JsonResponse({})
 

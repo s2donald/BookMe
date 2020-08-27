@@ -1,0 +1,95 @@
+{% extends 'welcome/main.html' %}
+{% block businesscontent %}
+<div class="container text-center">
+    <h1>Subscription Plans</h1>
+    <p>Change or cancel your plan at anytime. No hidden fees or surprises.</p>
+    <hr>
+</div>
+
+<section class="py-6">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-4">
+            <!-- pricing card-->
+            <div class="card mb-5 mb-lg-0 b-0 shadow">
+              <div class="card-topcol bg-purple"></div>
+              <div class="card-body">
+                <h2 class="text-pt subtitle text-center licolor py-3">Basic Tier</h2>
+                <p class="text-muted text-center"><span class="h3 text-dark">FREE</p>
+                <hr>
+                <ul class="fa-ul my-4">
+                  <li class="mb-3"><span class="fa-li licolor"><i class="fas fa-check"></i></span>Individual Staff Member</li>
+                  <li class="mb-3"><span class="fa-li licolor"><i class="fas fa-check"></i></span>Unlimited Bookings</li>
+                  <li class="mb-3"><span class="fa-li licolor"><i class="fas fa-check"></i></span>Notify clients with automated email reminders</li>
+                  <li class="mb-3"><span class="fa-li licolor"><i class="fas fa-check"></i></span>Unique booking URL</li>
+                  <li class="mb-3"><span class="fa-li licolor"><i class="fas fa-check"></i></span>Listed on Gibele Marketplace</li>
+                  <li class="mb-3 text-muted"><span class="fa-li"><i class="fas fa-times"></i></span>Text message reminders for customers</li>
+                  <li class="mb-3 text-muted"><span class="fa-li"><i class="fas fa-times"></i></span>Remove Gibele branding from your booking page</li>
+                </ul>
+                <div class="text-center"><a class="btn btn-primary" href="#">Select</a></div>
+              </div>
+            </div>
+            <!-- /pricing card -->
+          </div>
+          <div class="col-lg-4">
+            <!-- pricing card-->
+            <div class="card mb-5 mb-lg-0 b-0 card-highlight shadow-lg">
+              <div class="card-topcol bg-orange"></div>
+              <div class="card-body">
+                <h2 class="text-pt subtitle text-center licolororange py-3">Mid Tier</h2>
+                <p class="text-muted text-center"><span class="h3 text-dark">$20</span><span class="ml-2">/ month</span></p>
+                <hr>
+                <ul class="fa-ul my-4">
+                  <li class="mb-3"><span class="fa-li licolororange"><i class="fas fa-check"></i></span>Includes everything in basic tier</li>
+                  <li class="mb-3"><span class="fa-li licolororange"><i class="fas fa-check"></i></span>Up to 5 company staff members</li>
+                  <li class="mb-3"><span class="fa-li licolororange"><i class="fas fa-check"></i></span>1000 Text message reminders for customers per month</li>
+                  <li class="mb-3"><span class="fa-li licolororange"><i class="fas fa-check"></i></span>Take security deposits and enforce cancellation fees using Stripe, Gibele service fees will be applied. <p>See FAQ for more information.</p></li>
+                  <li class="mb-3"><span class="fa-li licolororange"><i class="fas fa-check"></i></span>No ads on your booking page</li>
+                  <li class="mb-3 text-muted"><span class="fa-li"><i class="fas fa-times"></i></span>Remove Gibele branding from your booking page</li>
+                </ul>
+                <div class="text-center"><a class="btn btn-warning" href="#">Select</a></div>
+              </div>
+            </div>
+            <!-- /pricing card -->
+          </div>
+          <div class="col-lg-4">
+            <!-- pricing card-->
+            <div class="card mb-5 mb-lg-0 b-0 shadow">
+              <div class="card-topcol bg-pink"></div>
+              <div class="card-body">
+                <h2 class="text-pt subtitle text-center licolorpink py-3">Premium Tier</h2>
+                <p class="text-muted text-center"><span class="h3 text-dark">$50</span><span class="ml-2">/ month</span></p>
+                <hr>
+                <ul class="fa-ul my-4">
+                  <li class="mb-3"><span class="fa-li licolorpink"><i class="fas fa-check"></i></span>Includes everything in basic and mid tier</li>
+                  <li class="mb-3"><span class="fa-li licolorpink"><i class="fas fa-check"></i></span>Unlimited Text message reminders for clients</li>
+                  <li class="mb-3"><span class="fa-li licolorpink"><i class="fas fa-check"></i></span>No Gibele service fees charged when taking payments from clients</li>
+                  <li class="mb-3"><span class="fa-li licolorpink"><i class="fas fa-check"></i></span>No external ads on your business page in the Gibele marketplace</li>
+                  <li class="mb-3"><span class="fa-li licolorpink"><i class="fas fa-check"></i></span>Premium banner shown on your business page</li>
+                  <li class="mb-3"><span class="fa-li licolorpink"><i class="fas fa-check"></i></span>Remove Gibele branding from your booking page</li>
+                </ul>
+                <div class="text-center"><a class="btn btn-info" href="#">Select</a></div>
+              </div>
+            </div>
+            <!-- /pricing card -->
+          </div>
+
+          <div class="col-lg-12">
+            <!-- pricing card-->
+            <div class="card mb-5 mb-lg-0 b-0 shadow">
+              <div class="card-topcol bg-pink"></div>
+              <div class="card-body">
+                <h2 class="text-pt subtitle text-center licolorpink py-3">Enterprise Solutions</h2>
+                <p>If you have a team of more than 20 staff members or have any additional service requests, please contact our sales department.</p>
+                <hr>
+                <div class="text-center"><a class="btn btn-info" href="#">Contact Sales</a></div>
+              </div>
+            </div>
+            <!-- /pricing card -->
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+{% endblock  %}

@@ -138,7 +138,6 @@ a:link{
 
 .bg-purple{
     background-color: #854fee;
-    
 }
 
 
@@ -148,7 +147,7 @@ a:link{
 }
 a.licolor:hover, a.licolor:focus {
     color: #d52ecd !important;
-  }
+}
 .liblack {
     color: black;
 }
@@ -397,6 +396,7 @@ footer {
     margin-left: auto;
     margin-right: auto;
   }
+
   .subtitle {
     margin-bottom: 0;
     text-transform: uppercase;
@@ -1303,3 +1303,127 @@ figure {
     background-color: #fff;
     border-color: #fff;
   }
+
+
+
+  /*
+     Business Admin Views CSS Styles
+    ------------------------
+*/
+
+
+  .card-topcol {
+    position: absolute;
+    top: -1px;
+    right: -1px;
+    left: -1px;
+    height: 5px;
+    background: rgba(163, 0, 204, 0.733);
+    border-radius: calc(0.4rem - 1px) calc(0.4rem - 1px) 0 0;
+  }
+
+  .bg-pink{
+    background-color: #ff69b4;
+  }
+  .licolorpink {
+    color: #ff69b4;
+    font-weight: bold;
+  }
+
+  .bg-orange{
+    background-color: #ff9900;
+  }
+  .licolororange {
+    color: #ff9900;
+    font-weight: bold;
+  }
+
+  .btn.btn-primary{
+    border-radius: 10px;
+    background: var(--gradient-color);
+    background-clip: padding-box;
+    color: whitesmoke;
+    transition: background .6 ease;
+    box-shadow: var(--box-shadow);
+    border-color: linear-gradient(90deg, #4458dc 0%, #854fee 100%);
+    
+}
+.btn.btn.btn-primary:hover{
+    background: whitesmoke;
+    background-clip: padding-box;
+    color: black;
+    border-color: #854fee;
+}
+.btn.btn-primary::after{
+    position:absolute;
+    top:-2px; left:-2px;
+    bottom: -2px; right: -2px;
+    background: var(--gradient-color);
+    content:'';
+    z-index:-1;
+    border-radius: 10px;
+}
+
+.btn.btn-info{
+  border-radius: 10px;
+  background: linear-gradient(90deg, #D37EEA 0%, #ff69b4 100%);
+  background-clip: padding-box;
+  color: whitesmoke;
+  transition: background .6 ease;
+  box-shadow: var(--box-shadow);
+  border-color: linear-gradient(90deg, #D37EEA 0%, #ff69b4 100%);
+  
+}
+.btn.btn.btn-info:hover{
+  background: whitesmoke;
+  background-clip: padding-box;
+  color: black;
+  border-color: #ff69b4;
+}
+.btn.btn-info::after{
+  position:absolute;
+  top:-2px; left:-2px;
+  bottom: -2px; right: -2px;
+  background: linear-gradient(90deg, #D37EEA 0%, #ff69b4 100%);
+  content:'';
+  z-index:-1;
+  border-radius: 10px;
+}
+
+
+.btn.btn-warning{
+  border-radius: 10px;
+  background: linear-gradient(90deg, #ff1a00 0%, #ff9900 100%);
+  background-clip: padding-box;
+  color: whitesmoke;
+  transition: background .6 ease;
+  box-shadow: var(--box-shadow);
+  border-color: linear-gradient(90deg, #ff1a00 0%, #ff9900 100%);
+  
+}
+.btn.btn.btn-warning:hover{
+  background: whitesmoke;
+  background-clip: padding-box;
+  color: black;
+  border-color: #ff9900;
+}
+.btn.btn-warning::after{
+  position:absolute;
+  top:-2px; left:-2px;
+  bottom: -2px; right: -2px;
+  background: linear-gradient(90deg, #ff1a00 0%, #ff9900 100%);
+  content:'';
+  z-index:-1;
+  border-radius: 10px;
+}
+
+.text-pt{
+  font-size: 1rem;
+}
+
+.b-0{
+  border:0 !important;
+}
+.fontarvo{
+  font-family: 'Arvo', serif;
+}

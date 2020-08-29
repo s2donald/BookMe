@@ -1,11 +1,78 @@
 {% extends 'welcome/main.html' %}
+{% load static %}
+{% block 'index_features' %}active{% endblock %}
 {% block businesscontent %}
     <div class="container text-center">
         <h1>Welcome!</h1>
         <p>Our booking software provides you with the best way to stay connected with your clients, reduce no shows and allows you to focus on providing the best services possible for your clients.</p>
-        <p>We have a free tier which fits most needs. Try it out today!</p>
+        <p>Get started for free!</p>
         <a href="" class="btn btn-outline-primary">Get Started</a>
         <hr>
-
     </div>
+
+    <section class="py-5">
+      <div class="container">
+        <h1 class="hero-heading mb-0">How can Gibele help your business thrive</h1>
+        <div class="row">
+          <div class="col-12 col-md-6 col-lg-4 mb-30px">
+            <div class="card h-100 border-0 shadow hover-animate">
+              <img src="{% static 'img/businessFeaturepage/marketplace.jpg'%}" alt="MarketPlace Card" class="card-img-top">
+              <div class="card-body">
+                <h5 class="card-title mb-3">Showcase your business on the Gibele marketplace</h5>
+                <p class="text-muted card-text text-sm">List your business on the Gibele marketplace for free and increase your exposure to new clients! You can also share your calendars on Facebook, Instagram, email or on your own website</p>
+              </div>
+            </div>
+          </div>
+         
+          <div class="col-12 col-md-6 col-lg-4 mb-30px">
+            <div class="card h-100 border-0 shadow hover-animate">
+              <div class="card-body">
+                <h5 class="card-title mb-3">Spend less time on schedules and more time on quality services</h5>
+                <p class="text-muted card-text text-sm">Give your new and returning clients the flexibility to choose when to book an appointment with you for any service that you offer without them having to contact you directly</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-12 col-md-6 col-lg-4 mb-30px">
+            <div class="card h-100 border-0 shadow hover-animate">
+              <div class="card-body">
+                <h5 class="card-title mb-3">Communicate with your clients</h5>
+                <p class="text-muted card-text text-sm">Remind your clients of their appointments by sending automated reminder messages using text and email</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-12 col-md-6 col-lg-4 mb-30px">
+            <div class="card h-100 border-0 shadow hover-animate">
+              <img src="{% static 'img/businessFeaturepage/payment.jpg'%}" alt="MarketPlace Card" class="card-img-top">
+              <div class="card-body">
+                <h5 class="card-title mb-3">Process your payments</h5>
+                <p class="text-muted card-text text-sm">Protect your business against no shows by taking deposits on services and enforcing cancellation fees using Stripe or PayPal</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-12 col-md-6 col-lg-4 mb-30px">
+            <div class="card h-100 border-0 shadow hover-animate">
+              <img src="{% static 'img/businessFeaturepage/schedules.jpg'%}" alt="MarketPlace Card" class="card-img-top">
+              <div class="card-body">
+                <h5 class="card-title mb-3">Manage your schedule</h5>
+                <p class="text-muted card-text text-sm">Change your availability anytime and reschedule appointments easily. Automatically notify clients of changes to appointments. </p>
+              </div>
+            </div>
+          </div>
+          <div class="col-12 col-md-6 col-lg-4 mb-30px">
+            <div class="card h-100 border-0 shadow hover-animate">
+              <div class="card-body">
+                <div class="icon-rounded bg-secondary-light mb-3">
+                  <svg class="svg-icon text-secondary w-2rem h-2rem">
+                    <use xlink:href="#identity-1"> </use>
+                  </svg>
+                </div>
+                <h5 class="card-title mb-3">Track Your Customers</h5>
+                <p class="text-muted card-text text-sm">View all of your customers past and future appointments. Take notes on their preferences, save appointment slots for individual customers or book them in yourself, send them legal forms to sign and allow them to write reviews on your business after a service is complete. </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
 {% endblock %}

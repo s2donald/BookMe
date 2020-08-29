@@ -10,3 +10,10 @@ def pricingViews(request):
 
 def faqBusinessViews(request):
     return render(request, 'welcome/faq.html')
+
+
+def signupViews(request):
+    return render(request, 'account/bussignup.html')
+
+def loginViews(request):
+    return render(request, 'account/buslogin.html')

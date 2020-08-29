@@ -1,4 +1,5 @@
 {% extends 'welcome/main.html' %}
+{% block 'index_pricing' %}active{% endblock %}
 {% block businesscontent %}
 <div class="container text-center">
     <h1>Subscription Plans</h1>
@@ -15,7 +16,7 @@
               <div class="card-topcol bg-purple"></div>
               <div class="card-body">
                 <h2 class="text-pt subtitle text-center licolor py-3">Basic Tier</h2>
-                <p class="text-muted text-center"><span class="h3 text-dark">FREE</p>
+                <p class="text-muted text-center"><span class="h3 text-dark font-weight-bold">FREE</p>
                 <hr>
                 <ul class="fa-ul my-4">
                   <li class="mb-3"><span class="fa-li licolor"><i class="fas fa-check"></i></span>Individual Staff Member</li>
@@ -37,7 +38,7 @@
               <div class="card-topcol bg-orange"></div>
               <div class="card-body">
                 <h2 class="text-pt subtitle text-center licolororange py-3">Mid Tier</h2>
-                <p class="text-muted text-center"><span class="h3 text-dark">$20</span><span class="ml-2">/ month</span></p>
+                <p class="text-muted text-center"><span class="h3 text-dark font-weight-bold">$20</span><span class="ml-2">/ month</span></p>
                 <hr>
                 <ul class="fa-ul my-4">
                   <li class="mb-3"><span class="fa-li licolororange"><i class="fas fa-check"></i></span>Includes everything in basic tier</li>
@@ -58,7 +59,7 @@
               <div class="card-topcol bg-pink"></div>
               <div class="card-body">
                 <h2 class="text-pt subtitle text-center licolorpink py-3">Premium Tier</h2>
-                <p class="text-muted text-center"><span class="h3 text-dark">$50</span><span class="ml-2">/ month</span></p>
+                <p class="text-muted text-center"><span class="h3 text-dark font-weight-bold">$50</span><span class="ml-2">/ month</span></p>
                 <hr>
                 <ul class="fa-ul my-4">
                   <li class="mb-3"><span class="fa-li licolorpink"><i class="fas fa-check"></i></span>Includes everything in basic and mid tier</li>
@@ -77,12 +78,12 @@
           <div class="col-lg-12">
             <!-- pricing card-->
             <div class="card mb-5 mb-lg-0 b-0 shadow">
-              <div class="card-topcol bg-pink"></div>
+              <div class="card-topcol bg-purple"></div>
               <div class="card-body">
-                <h2 class="text-pt subtitle text-center licolorpink py-3">Enterprise Solutions</h2>
+                <h2 class="text-pt subtitle text-center licolor py-3">Enterprise Solutions</h2>
                 <p>If you have a team of more than 20 staff members or have any additional service requests, please contact our sales department.</p>
                 <hr>
-                <div class="text-center"><a class="btn btn-info" href="#">Contact Sales</a></div>
+                <div class="text-center"><a class="btn btn-primary" href="#">Contact Sales</a></div>
               </div>
             </div>
             <!-- /pricing card -->

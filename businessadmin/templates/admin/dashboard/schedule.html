@@ -1,0 +1,71 @@
+{% extends 'admin/index.html' %}
+{% load static %}
+{% load hosts %}
+{% block businessadmin %}
+<div id="layoutSidenav_content">
+    <main>
+        <header class="page-header page-header-compact page-header-light border-bottom bg-white mb-4">
+            <div class="container-fluid">
+                <div class="page-header-content">
+                    <div class="row align-items-center justify-content-between pt-3">
+                        <div class="col-auto mb-3">
+                            <h1 class="page-header-title">
+                                <div class="page-header-icon"><i class="fas fa-calendar-alt"></i></div>
+                                Schedule
+                            </h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <!-- Main page content-->
+        <div class="container my-4">
+            <div id="calendar"></div>
+        </div>
+    </main>
+</div>
+{% endblock %}
+
+{% block calendarscript %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function(){
+            if (window.innerWidth >= 768 ) {
+                var leftitems = 'prev,next today'
+                var rightitems = 'dayGridMonth,timeGridWeek,timeGridDay'
+                var initviewcal = 'timeGridWeek'
+                var asprat =2
+            } else {
+                var leftitems = 'prev,next'
+                var rightitems = ''
+                var initviewcal = 'listDay'
+                var asprat = 1/2
+                console.log(window.innerWidth)
+            }
+            var calendarEl = document.getElementById('calendar');
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                aspectRatio: asprat,
+                events:[
+                {% for booking in bookings %}
+                    {
+                        title: '{{ booking.service.name }}',
+                        start: '{{ booking.start|date:"Y-m-d" }}'+'T'+'{{ booking.start|date:"H:i:s" }}',
+                        end: '{{ booking.end|date:"Y-m-d" }}'+'T'+'{{ booking.end|date:"H:i:s" }}',
+                    },
+                {% endfor %}
+                ],
+
+                initialView: initviewcal,
+                headerToolbar: {
+                    left: leftitems,
+                    center: 'title',
+                    right: rightitems
+                },
+                businessHours: {
+                    startTime: '10:00',
+                    endTime: '18:00',
+                }
+            });
+            calendar.render()
+        });
+    </script>
+{% endblock %}

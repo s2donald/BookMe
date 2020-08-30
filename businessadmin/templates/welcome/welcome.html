@@ -1,12 +1,12 @@
 {% extends 'welcome/main.html' %}
 {% load static %}
+{% load hosts %}
 {% block 'index_features' %}active{% endblock %}
 {% block businesscontent %}
     <div class="container text-center">
-        <h1>Welcome!</h1>
+        <h1>Welcome to Gibele</h1>
         <p>Our booking software provides you with the best way to stay connected with your clients, reduce no shows and allows you to focus on providing the best services possible for your clients.</p>
-        <p>Get started for free!</p>
-        <a href="" class="btn btn-outline-primary">Get Started</a>
+        <a href="{% host_url 'bizadminsignup' host 'bizadmin' %}" class="btn btn-outline-primary">Get Started For Free!</a>
         <hr>
     </div>
 

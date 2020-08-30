@@ -57,36 +57,6 @@ def ConsumerRegistrationView(request):
     return render(request, 'account/signup.html', {'user_form':user_form, 'category':category, 'categories':categories ,'companies':results, 'form':form})
 
 
-# def BusinessRegistrationView(request):
-#     context = {}
-#     category = None
-#     categories = Category.objects.all()
-#     form = SearchForm()
-#     Search = None
-#     results = []
-#     if 'Search' in request.GET:
-#         form = SearchForm(request.GET)
-#         if form.is_valid():
-#             Search = form.cleaned_data['Search']
-#             results = Company.objects.annotate(search=SearchVector('user','description'),).filter(search=Search)
-#             return render(request,'business/company/list.html',{'category':category, 'categories':categories ,'companies':results, 'form':form})
-
-#     if request.method == 'POST':
-#         user_form = BusinessRegistrationForm(request.POST)
-#         if user_form.is_valid():
-#             user_form.save()
-#             email = user_form.cleaned_data.get('email')
-#             raw_pass = user_form.cleaned_data.get('password1')
-#             account = authenticate(email=email, password=raw_pass)
-#             login(request, account)
-#             return redirect('account:registered')
-#         else:
-#             context['business_registration_form'] = user_form
-            
-#     else:
-#         user_form = BusinessRegistrationForm()
-#         context['business_registration_form'] = user_form
-#     return render(request, 'account//business/registration.html', {'user_form':user_form, 'category':category, 'categories':categories ,'companies':results, 'form':form})
 @login_required
 def AccountSummaryView(request):
     acct = get_object_or_404(Account, email=request.user.email)

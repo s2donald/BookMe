@@ -1,7 +1,65 @@
 {% extends 'welcome/main.html' %}
 {% block 'index_signup' %}active{% endblock %}
+{% load static %}
+{% load hosts %}
 {% block businesscontent %}
-<div class="container text-center">
-<h1>Sign up for a business account</h1>
+<div class="container">
+<div class="row justify-content-center">
+    <div class="col-lg-7">
+        <!-- Basic registration form-->
+            <div class="card shadow-lg border-0 rounded-lg">
+                <div class="card-header justify-content-center licolor"><h3 class="font-weight-bold my-4">Create Gibele Business Account</h3></div>
+                <div class="card-body">
+                    <!-- Registration form-->
+                    <form>
+                        <!-- Form Row-->
+                        <div class="form-row">
+                            <div class="col-md-6">
+                                <!-- Form Group (first name)-->
+                                <div class="form-group">
+                                    <label class="small mb-1" for="inputFirstName">First Name</label>
+                                    <input class="form-control py-4" id="inputFirstName" type="text" placeholder="Enter first name" />
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <!-- Form Group (last name)-->
+                                <div class="form-group">
+                                    <label class="small mb-1" for="inputLastName">Last Name</label>
+                                    <input class="form-control py-4" id="inputLastName" type="text" placeholder="Enter last name" />
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Form Group (email address)            -->
+                            <div class="form-group">
+                                <label class="small mb-1" for="inputEmailAddress">Email</label>
+                                <input class="form-control py-4" id="inputEmailAddress" type="email" aria-describedby="emailHelp" placeholder="Enter email address" />
+                            </div>
+                            <!-- Form Row    -->
+                            <div class="form-row">
+                                <div class="col-md-6">
+                                    <!-- Form Group (password)-->
+                                    <div class="form-group">
+                                        <label class="small mb-1" for="inputPassword">Password</label>
+                                        <input class="form-control py-4" id="inputPassword" type="password" placeholder="Enter password" />
+                                    </div>
+                                </div>
+                            <div class="col-md-6">
+                                <!-- Form Group (confirm password)-->
+                                <div class="form-group">
+                                    <label class="small mb-1" for="inputConfirmPassword">Confirm Password</label>
+                                    <input class="form-control py-4" id="inputConfirmPassword" type="password" placeholder="Confirm password" />
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Form Group (create account submit)-->
+                        <div class="form-group mt-4 mb-0"><a class="btn btn-primary btn-block" href="auth-login-basic.html">Create Account</a></div>
+                    </form>
+                </div>
+                <div class="card-footer text-center">
+                    <div class="small"><a class="licolor" href="{% host_url 'bizadminlogin' host 'bizadmin' %}">Have an account? Go to login</a></div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}

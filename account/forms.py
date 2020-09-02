@@ -1,7 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate
-from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from .models import Account
 from business.models import Company
@@ -14,7 +13,7 @@ class ConsumerRegistrationForm(UserCreationForm):
     first_name = forms.CharField(max_length=30, required=True)
     last_name = forms.CharField(max_length=30, required=True)
     phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$', message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
-    phone = forms.CharField(label='Phone Number', validators=[phone_regex], required=True, max_length=30,)
+    phone = forms.CharField(label='Phone Number',required=False, validators=[phone_regex], max_length=30,)
     email = forms.EmailField(label='Email')
 
     class Meta:
@@ -28,6 +27,7 @@ class ConsumerRegistrationForm(UserCreationForm):
 
     def clean_email(self):
         email = self.cleaned_data['email']
+        current_email = self.instance.email
         acct = Account.objects.filter(email=email)
         if acct:
             raise forms.ValidationError("Email address is already in use.")
@@ -52,22 +52,23 @@ class AccountAuthenticationForm(forms.ModelForm):
         if not authenticate(email=email, password=password):
             raise forms.ValidationError("Please enter a valid Email and Password. Fields are case-sensitive.")
 
-class UpdatePersonalForm(forms.Form):
+class UpdatePersonalForm(forms.ModelForm):
     first_name = forms.CharField(label='First Name',max_length=30)
     last_name = forms.CharField(label='Last Name',max_length=30)
     email = forms.EmailField(label='Email')
     phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$', message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
-    phone = forms.CharField(label='Phone Number', validators=[phone_regex], required=True, max_length=30)
+    phone = forms.CharField(label='Phone Number', validators=[phone_regex], required=False, max_length=30)
     class Meta:
         model = Account
         fields = ('first_name','last_name','email','phone')
 
     def clean_email(self):
         email = self.cleaned_data['email']
-        acct = Account.objects.filter(email=email)
+        acct = Account.objects.filter(email=email).exclude(email=self.instance.email)
         if acct:
             raise forms.ValidationError("Email address is already in use.")
-        return email
+        else:
+            return email
 
 
 

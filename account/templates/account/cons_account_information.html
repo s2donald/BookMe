@@ -16,7 +16,7 @@
                   <button class="btn btn-link pl-0 licolor collapsed" type="button" data-toggle="collapse" data-target="#personalDetails" aria-expanded="false" aria-controls="personalDetails">Update</button>
                 </div>
               </div>
-              <p class="text-sm text-muted"><i class="fa fa-id-card fa-fw mr-2 licolor"></i>{{ user.first_name }} {{user.last_name }}<br><i class="fa fa-envelope-open fa-fw mr-2 licolor"></i>{{ user.email }} <br> <i class="fa fa-phone fa-fw mr-2 licolor"></i>{{ user.phone }}</p>
+              <p class="text-sm text-muted"><i class="fa fa-id-card fa-fw mr-2 licolor"></i>{{ user.first_name }} {{user.last_name }}<br><i class="fa fa-envelope-open fa-fw mr-2 licolor"></i>{{ user.email }} {% if user.phone %}<br> <i class="fa fa-phone fa-fw mr-2 licolor"></i> {{ user.phone }}{% endif %}</p>
               <div class="collapse" id="personalDetails">
                 <form method="POST" id="personalForm" data-url="{% url 'account:account'%}">
                     {% csrf_token %}
@@ -48,12 +48,14 @@
                   <h5>Address</h5>
                 </div>
                 <div class="col-sm-3 text-right">
-                  <button class="btn btn-link pl-0 licolor collapsed" type="button" data-toggle="collapse" data-target="#address" aria-expanded="false" aria-controls="address">Change</button>
+                  <button class="btn btn-link pl-0 licolor collapsed" type="button" data-toggle="collapse" data-target="#address" aria-expanded="false" aria-controls="address"> {% if user.address %}Change{% else %}Add Address{% endif %} </button>
                 </div>
               </div>
-              <div class="media text-sm text-muted"> <i class="fa fa-address-book fa-fw mr-2 licolor"></i>
-                <div class="media-body mt-n1" id="user_information_addy">{{ user.address }}<br>{{ user.city }}, {{ user.province }}, {{user.postal}}</div>
-              </div>
+              {% if user.address %}
+                <div class="media text-sm text-muted"> <i class="fa fa-address-book fa-fw mr-2 licolor"></i>
+                  <div class="media-body mt-n1" id="user_information_addy">{{ user.address }}<br>{{ user.city }}, {{ user.province }}, {{user.postal}}</div>
+                </div>
+              {% endif %}
               <div class="collapse" id="address">
                 <form method="post">
                   {% csrf_token %}

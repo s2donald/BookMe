@@ -128,7 +128,7 @@ class Company(models.Model):
         ('draft','Draft'),
         ('published','Published'),
     )
-    user = models.ForeignKey(Account, on_delete=models.CASCADE, related_name='company_page')
+    user = models.OneToOneField(Account, on_delete=models.CASCADE, related_name='company_page')
     business_name = models.CharField(max_length=30, db_index=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='companies', null=True, blank=True)
     subcategory = models.ManyToManyField(SubCategory)

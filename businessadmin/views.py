@@ -29,19 +29,36 @@ def signupViews(request):
     else:
         user_form = BusinessRegistrationForm()
         context['business_registration_form'] = user_form
-    return render(request, 'account/bussignup.html')
+    return render(request, 'account/bussignup.html', {'user_form':user_form})
 
 def loginViews(request):
-    return render(request, 'account/buslogin.html')
+    context = {}
+
+    if request.method == 'POST':
+        user_form = BusinessRegistrationForm(request.POST)
+        if user_form.is_valid():
+            user_form.save()
+            email = user_form.cleaned_data.get('email')
+            raw_pass = user_form.cleaned_data.get('password1')
+            account = authenticate(email=email, password=raw_pass)
+            login(request, account)
+            return redirect('account:registered')
+        else:
+            context['business_registration_form'] = user_form
+            
+    else:
+        user_form = BusinessRegistrationForm()
+        context['business_registration_form'] = user_form
+    return render(request, 'account/buslogin.html', {'user_form':user_form})
 
 def profileViews(request):
-    return render(request, 'admin/dashboard/account/profile.html')
+    return render(request, 'bizadmin/dashboard/account/profile.html')
 
 def profileBillingViews(request):
-    return render(request,'admin/dashboard/account/billing.html')
+    return render(request,'bizadmin/dashboard/account/billing.html')
 
 def profileSecurityViews(request):
-    return render(request,'admin/dashboard/account/security.html')
+    return render(request,'bizadmin/dashboard/account/security.html')
 
 def scheduleView(request):
-    return render(request, 'admin/dashboard/schedule.html')
+    return render(request, 'bizadmin/dashboard/schedule.html')

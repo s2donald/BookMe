@@ -80,6 +80,48 @@ a:focus {
   .icon-circle i {
     vertical-align: middle;
   }
+  .position-relative {
+    position: relative !important;
+  }
+  svg {
+    overflow: hidden;
+    vertical-align: middle;
+  }
+  .svg-icon {
+    width: 18px;
+    height: 18px;
+    vertical-align: text-bottom;
+    stroke: currentColor;
+    stroke-width: 3;
+    --layer1: currentColor;
+    --layer2: currentColor;
+  }
+
+  .card-fav-icon {
+    display: inline-block;
+    width: 2.5rem;
+    height: 2.5rem;
+    text-align: center;
+    opacity: 0.5;
+    color: #fff;
+    border-radius: 50%;
+    background: #343a40;
+    line-height: 2.5rem;
+  }
+  
+  .card-fav-icon:hover {
+    opacity: .7;
+  }
+  
+  .card-fav-icon svg {
+    vertical-align: middle;
+    opacity: 1;
+    stroke-width: 5;
+  }
+  .z-40{
+    z-index: 40;
+  }
+
 .hover-animate {
     transition: all 0.2s ease-in-out;
   }

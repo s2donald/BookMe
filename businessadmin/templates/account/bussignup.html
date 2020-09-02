@@ -1,6 +1,7 @@
 {% extends 'welcome/main.html' %}
 {% block 'index_signup' %}active{% endblock %}
 {% load static %}
+{% load crispy_forms_tags %}
 {% load hosts %}
 {% block businesscontent %}
 <div class="container">
@@ -14,41 +15,25 @@
                     <form>
                         <!-- Form Row-->
                         <div class="form-row">
+                            
                             <div class="col-md-6">
-                                <!-- Form Group (first name)-->
-                                <div class="form-group">
-                                    <label class="small mb-1" for="inputFirstName">First Name</label>
-                                    <input class="form-control py-4" id="inputFirstName" type="text" placeholder="Enter first name" />
-                                </div>
+                                {{ user_form.email|as_crispy_field }}
                             </div>
                             <div class="col-md-6">
                                 <!-- Form Group (last name)-->
                                 <div class="form-group">
-                                    <label class="small mb-1" for="inputLastName">Last Name</label>
-                                    <input class="form-control py-4" id="inputLastName" type="text" placeholder="Enter last name" />
-                                    </div>
+                                    {{ user_form.phone|as_crispy_field }}
                                 </div>
                             </div>
-                            <!-- Form Group (email address)            -->
-                            <div class="form-group">
-                                <label class="small mb-1" for="inputEmailAddress">Email</label>
-                                <input class="form-control py-4" id="inputEmailAddress" type="email" aria-describedby="emailHelp" placeholder="Enter email address" />
-                            </div>
+                        </div>
                             <!-- Form Row    -->
                             <div class="form-row">
                                 <div class="col-md-6">
-                                    <!-- Form Group (password)-->
-                                    <div class="form-group">
-                                        <label class="small mb-1" for="inputPassword">Password</label>
-                                        <input class="form-control py-4" id="inputPassword" type="password" placeholder="Enter password" />
-                                    </div>
+                                    {{ user_form.password1|as_crispy_field }}
                                 </div>
                             <div class="col-md-6">
                                 <!-- Form Group (confirm password)-->
-                                <div class="form-group">
-                                    <label class="small mb-1" for="inputConfirmPassword">Confirm Password</label>
-                                    <input class="form-control py-4" id="inputConfirmPassword" type="password" placeholder="Confirm password" />
-                                </div>
+                                {{ user_form.password2|as_crispy_field }}
                             </div>
                         </div>
                         <!-- Form Group (create account submit)-->

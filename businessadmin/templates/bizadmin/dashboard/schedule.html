@@ -1,16 +1,20 @@
-{% extends 'admin/index.html' %}
+{% extends 'bizadmin/index.html' %}
 {% load static %}
 {% load hosts %}
+{% block activecal%}active{%endblock%}
 {% block businessadmin %}
 <div id="layoutSidenav_content">
     <main>
-        <header class="page-header page-header-compact page-header-light border-bottom bg-white mb-4">
-            <div class="container-fluid">
+        <!-- Main page content-->
+        <div class="content">
+        <div class="row">
+          <div class="col-md-10 ml-auto mr-auto">
+            <header class="page-header page-header-compact page-header-light">
+            <div class="container">
                 <div class="page-header-content">
                     <div class="row align-items-center justify-content-between pt-3">
                         <div class="col-auto mb-3">
-                            <h1 class="page-header-title">
-                                <div class="page-header-icon"><i class="fas fa-calendar-alt"></i></div>
+                            <h1 class="page-header-title d-flex">
                                 Schedule
                             </h1>
                         </div>
@@ -18,10 +22,14 @@
                 </div>
             </div>
         </header>
-        <!-- Main page content-->
-        <div class="container my-4">
-            <div id="calendar"></div>
+            <div class="card card-calendar">
+              <div class="card-body">
+                <div id="calendar"></div>
+              </div>
+            </div>
+          </div>
         </div>
+      </div>
     </main>
 </div>
 {% endblock %}
@@ -29,20 +37,21 @@
 {% block calendarscript %}
     <script>
         document.addEventListener('DOMContentLoaded', function(){
-            if (window.innerWidth >= 768 ) {
+            if (window.innerWidth >= 500 ) {
                 var leftitems = 'prev,next today'
-                var rightitems = 'dayGridMonth,timeGridWeek,timeGridDay'
-                var initviewcal = 'timeGridWeek'
-                var asprat =2
+                var rightitems = 'dayGridMonth,dayGridWeek,dayGridDay'
+                var initviewcal = 'dayGridWeek'
+                var asprat = 1
             } else {
                 var leftitems = 'prev,next'
                 var rightitems = ''
-                var initviewcal = 'listDay'
+                var initviewcal = 'dayGridDay'
                 var asprat = 1/2
                 console.log(window.innerWidth)
             }
             var calendarEl = document.getElementById('calendar');
             var calendar = new FullCalendar.Calendar(calendarEl, {
+                selectable:true,
                 aspectRatio: asprat,
                 events:[
                 {% for booking in bookings %}
@@ -59,10 +68,6 @@
                     left: leftitems,
                     center: 'title',
                     right: rightitems
-                },
-                businessHours: {
-                    startTime: '10:00',
-                    endTime: '18:00',
                 }
             });
             calendar.render()

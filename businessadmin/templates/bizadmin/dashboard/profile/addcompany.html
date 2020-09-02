@@ -1,0 +1,61 @@
+{% extends 'bizadmin/index.html' %}
+{% load static %}
+{% load hosts %}
+{% block businessadmin %}
+
+<div class="content">
+    <div class="col-md-10 mr-auto ml-auto">
+        <div class="card">
+            <div id="smartwizard">
+                <ul class="nav">
+                <li>
+                    <a class="nav-link" href="#step-1">
+                        Step 1
+                    </a>
+                </li>
+                <li>
+                    <a class="nav-link" href="#step-2">
+                        Step 2
+                    </a>
+                </li>
+                <li>
+                    <a class="nav-link" href="#step-3">
+                        Step 3
+                    </a>
+                </li>
+                <li>
+                    <a class="nav-link" href="#step-4">
+                        Step 4
+                    </a>
+                </li>
+                </ul>
+            
+                <div class="tab-content">
+                <div id="step-1" class="tab-pane" role="tabpanel">
+                    Step content
+                </div>
+                <div id="step-2" class="tab-pane" role="tabpanel">
+                    Step content
+                </div>
+                <div id="step-3" class="tab-pane" role="tabpanel">
+                    Step content
+                </div>
+                <div id="step-4" class="tab-pane" role="tabpanel">
+                    Step content
+                </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/smartwizard@5/dist/js/jquery.smartWizard.min.js" type="text/javascript"></script>
+<script>
+    $(document).ready(function(){
+ 
+        // SmartWizard initialize
+        $('#smartwizard').smartWizard();
+        
+    });
+</script>
+{% endblock %}

@@ -74,9 +74,10 @@ def homepage(request, category_slug=None):
     subcategories = SubCategory.objects.all()
     form = SearchForm()
     search = homeSearchForm()
+    user = request.user
     if category_slug:
         category = get_object_or_404(Category, slug=category_slug)
-    return render(request, 'business/home.html', {'search':search, 'category':category, 'categories':categories, 'subcategories':subcategories,'form':form})
+    return render(request, 'business/home.html', {'user':user,'search':search, 'category':category, 'categories':categories, 'subcategories':subcategories,'form':form})
 
 def company_list(request, category_slug=None, company_slug=None, tag_slug=None):
     category = None

@@ -1,16 +1,19 @@
-{% extends 'admin/index.html' %}
+{% extends 'bizadmin/index.html' %}
 {% load static %}
 {% load hosts %}
 {% block businessadmin %}
 <div id="layoutSidenav_content">
                 <main>
-                    <header class="page-header page-header-compact page-header-light border-bottom bg-white mb-4">
-                        <div class="container-fluid">
+                    <!-- Main page content-->
+                    <div class="content">
+                    <div class="row">
+                    <div class="col-md-10 ml-auto mr-auto">
+                    <header class="page-header page-header-compact page-header-light mb-4">
+                        <div class="container">
                             <div class="page-header-content">
                                 <div class="row align-items-center justify-content-between pt-3">
                                     <div class="col-auto mb-3">
                                         <h1 class="page-header-title">
-                                            <div class="page-header-icon"><i data-feather="user"></i></div>
                                             Account Settings - Billing
                                         </h1>
                                     </div>
@@ -18,12 +21,10 @@
                             </div>
                         </div>
                     </header>
-                    <!-- Main page content-->
-                    <div class="container mt-4">
                         <!-- Account page navigation-->
                         <nav class="nav nav-borders">
                             <a class="nav-link ml-0" href="{% host_url 'profile' host 'bizadmin'%}">Profile</a>
-                            <a class="nav-link active" href="{% host_url 'billing' host 'bizadmin'%}">Billing</a>
+                            <a class="nav-link activate" href="{% host_url 'billing' host 'bizadmin'%}">Billing</a>
                             <a class="nav-link" href="{% host_url 'security' host 'bizadmin'%}">Security</a>
                             <a class="nav-link" href="{% host_url 'profile' host 'bizadmin'%}">Notifications</a>
                         </nav>
@@ -167,6 +168,8 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
+                    </div>
                     </div>
                 </main>
                 <footer class="footer mt-auto footer-light">

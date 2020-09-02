@@ -53,10 +53,10 @@
 
         <div class="navbar-collapse collapse flex-shrink-1 flex-grow-0 order-last inline-block" id="navbarResponsive">
             <ul class="navbar-nav mr-auto mt-lg-0 inline-block">
-                {% if request.user.is_authenticated %}
+                {% if user.is_authenticated %}
                     <li class="d-lg-none d-xl-inline-block">
                     <p class="mx-1">Welcome 
-                        <a class="licolor" href="{% if request.user %}{% url 'account:account' %}{% else %}{% url 'business:manage_service_list' %}{% endif %}">
+                        <a class="licolor" href="{% if user %}{% url 'account:account' %}{% else %}{% url 'business:manage_service_list' %}{% endif %}">
                             {% if user.first_name == None %}
                                 {{ user.username }}
                             {% else %}
@@ -67,9 +67,13 @@
                     </li>
                 {% endif %}
                 <div class="my-auto mx-1">
-                    <a href="{% host_url 'bizadminmain' host 'bizadmin' %}" class="btn btn-outline-primary inline-block">Add a business</a>
+                    {% if user.is_business %}
+                        <a href="{% host_url 'schedule' host 'bizadmin'%}" class="btn btn-outline-primary inline-block">Business Dashboard</a>
+                    {% else %}
+                        <a href="{% host_url 'bizadminmain' host 'bizadmin' %}" class="btn btn-outline-primary inline-block">List a business</a>
+                    {% endif %}
                 </div>
-                {% if request.user.is_authenticated %}
+                {% if user.is_authenticated %}
                     <div class="my-auto mx-1">
                         <a class="btn btn-outline-primary mt-1" href="{% url 'account:account' %}" ><i class="fas fa-user-circle"></i> Account</a>
                     </div>

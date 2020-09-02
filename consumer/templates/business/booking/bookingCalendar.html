@@ -9,10 +9,10 @@
 {% block calendarscript %}
     <script>
         document.addEventListener('DOMContentLoaded', function(){
-            if (window.innerWidth >= 768 ) {
+            if (window.innerWidth >= 400 ) {
                 var leftitems = 'prev,next today'
-                var rightitems = 'dayGridMonth,timeGridWeek,timeGridDay'
-                var initviewcal = 'timeGridWeek'
+                var rightitems = 'dayGridMonth,dayGridWeek,dayGridDay'
+                var initviewcal = 'dayGridWeek'
                 var asprat =2
             } else {
                 var leftitems = 'prev,next'
@@ -45,7 +45,9 @@
                     daysOfWeek: [1,2,3,4,5],
                     startTime: '10:00',
                     endTime: '18:00',
-                }
+                },
+                startTime: '10:00',
+                endTime: '18:00',
             });
             calendar.render()
         });

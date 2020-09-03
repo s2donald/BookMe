@@ -128,9 +128,9 @@ class Company(models.Model):
         ('draft','Draft'),
         ('published','Published'),
     )
-    user = models.OneToOneField(Account, on_delete=models.CASCADE, related_name='company_page')
+    user = models.OneToOneField(Account, on_delete=models.CASCADE, related_name='user')
     business_name = models.CharField(max_length=30, db_index=True)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='companies', null=True, blank=True)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='category', null=True, blank=True)
     subcategory = models.ManyToManyField(SubCategory)
     description = models.TextField(max_length=200, db_index=True, blank=True)
     address = models.CharField(max_length=200)
@@ -177,7 +177,7 @@ def slug_generator(sender, instance, *args, **kwargs):
 pre_save.connect(slug_generator, sender=Company)
 
 class OpeningHours(models.Model):
-    company = models.ForeignKey(Company, on_delete=models.CASCADE)
+    company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name='hours')
     weekday = models.IntegerField(choices=WEEKDAYS)
     from_hour = models.TimeField(default='9:00:00')
     to_hour = models.TimeField(default='17:00:00')
@@ -189,6 +189,10 @@ class OpeningHours(models.Model):
     def __unicode__(self):
         return u'%s: %s - %s' % (self.get_weekday_display(),
                                  self.from_hour, self.to_hour)
+
+class Gallary(models.Model):
+    company = models.ForeignKey(Company, on_delete=models.CASCADE,related_name='gallary')
+    photos = models.ImageField(upload_to='companies/gallary/photos', height_field=None, width_field=None, max_length=None)
 
 
 class Services(models.Model):

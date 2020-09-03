@@ -4,9 +4,9 @@
 {% block content %}
     <div class="container">
         {% if category %}
-            <h1 class="text-center">{{ category.name }}</h1>
+            <h1 class="text-center">{{ category.name }}({{companies|length}})</h1>
         {% else %}
-            <h1 class="text-center">{% if name %}Results for {{ name }}{% else %}No Results Found{% endif %}</h1>
+            <h1 class="text-center">{% if name %}Results for {{ name }}({{companies|length}}){% else %}No Results Found{% endif %}</h1>
         {% endif %}
         <div class="row">
             {% for company in companies %}

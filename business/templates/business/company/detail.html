@@ -75,18 +75,10 @@
                 <div class="swiper-container gallery-slider">
                 <!-- Additional required wrapper-->
                 <div class="swiper-wrapper">
-                    <div class="swiper-slide"><a href="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/no_image.png" %}{% endif %}"><img class="img-fluid" src="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/no_image.png" %}{% endif %}" alt="..."></a></div>
-                    <div class="swiper-slide"><a href="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/no_image.png" %}{% endif %}"><img class="img-fluid" src="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/no_image.png" %}{% endif %}" alt="..."></a></div>
-                    <div class="swiper-slide"><a href="{% static "/img/no_image.png" %}"><img class="img-fluid" src="{% static "/img/no_image.png" %}" alt="..."></a></div>
-                    <div class="swiper-slide"><a href="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/no_image.png" %}{% endif %}"><img class="img-fluid" src="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/no_image.png" %}{% endif %}" alt="..."></a></div>
-                    <div class="swiper-slide"><a href="{% static "/img/no_image.png" %}"><img class="img-fluid" src="{% static "/img/no_image.png" %}" alt="..."></a></div>
-                    <div class="swiper-slide"><a href="{% static "/img/no_image.png" %}"><img class="img-fluid" src="{% static "/img/no_image.png" %}" alt="..."></a></div>
-                    <div class="swiper-slide"><a href="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/no_image.png" %}{% endif %}"><img class="img-fluid" src="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/no_image.png" %}{% endif %}" alt="..."></a></div>
-                    <div class="swiper-slide"><a href="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/no_image.png" %}{% endif %}"><img class="img-fluid" src="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/no_image.png" %}{% endif %}" alt="..."></a></div>
-                    <div class="swiper-slide"><a href="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/no_image.png" %}{% endif %}"><img class="img-fluid" src="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/no_image.png" %}{% endif %}" alt="..."></a></div>
-                    <div class="swiper-slide"><a href="{% static "/img/no_image.png" %}"><img class="img-fluid" src="{% static "/img/no_image.png" %}" alt="..."></a></div>
+                  {% for p in photos %}<div class="swiper-slide"><a href="{{ p.photos.url }}"><img style="height:300px; width:500px;" class="img-fluid" src="{{ p.photos.url }}" alt="..."></a></div>{% endfor %}
                 </div>
                     <div class="swiper-pagination swiper-pagination-white"></div>
+                    {% if photos|length  > 7 %}Hello{% endif %}
                     <div class="swiper-button-prev swiper-button-white circle-slide"></div>
                     <div class="swiper-button-next swiper-button-white circle-slide"></div>
                 </div>
@@ -149,7 +141,7 @@
                       {% if sun_hour.is_closed %}
                         <td class="pr-0 text-right border-0">Closed</td>
                       {% else %}
-                        <td class="pr-0 text-right border-0">{{ sun_hour.from_hour|date:"%I:%M %p"}} - {{ sun_hour.to_hour }}</td>
+                        <td class="pr-0 text-right border-0">{{ sun_hour.from_hour}} - {{ sun_hour.to_hour }}</td>
                       {% endif %}
                     </tr>
                     <tr>

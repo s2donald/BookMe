@@ -8,6 +8,7 @@ urlpatterns = [
     url(r'dashboard/profile/billing/$',views.profileBillingViews, name='billing'),
     url(r'dashboard/profile/$',views.profileViews, name='profile'),
     url(r'dashboard/complete/$', views.completeViews, name='completeprofile'),
+    url(r'file-upload/$', views.fileUploadView, name='upload'),
     url(r'signup/$', views.signupViews, name='bizadminsignup'),
     url(r'login/$', views.loginViews, name='bizadminlogin'),
     url(r'^faq/$', views.faqBusinessViews, name='faqbusiness'),

@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Category, Company, Services, SubCategory, Amenities, OpeningHours
+from .models import Category, Company, Services, SubCategory, Amenities, OpeningHours, Gallary
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.postgres.search import SearchVector
 from .forms import SearchForm, AddServiceForm, UpdateServiceForm, homeSearchForm
@@ -129,7 +129,8 @@ def company_detail(request, id, slug):
     thur_hour = OpeningHours.objects.get(company=company, weekday=4)
     fri_hour = OpeningHours.objects.get(company=company, weekday=5)
     sat_hour = OpeningHours.objects.get(company=company, weekday=6)
-    return render(request, 'business/company/detail.html', {'sun_hour':sun_hour,'mon_hour':mon_hour,'tues_hour':tues_hour,'wed_hour':wed_hour,'thur_hour':thur_hour,'fri_hour':fri_hour,'sat_hour':sat_hour,'subcategories':subcategories,'comp_categ':comp_categ,'amenities':amenities,'address':address,'company':company,'category':category,'categories':categories, 'services':services, 'form':form, 'reviews':reviews})
+    galPhotos = Gallary.objects.filter(company=company)
+    return render(request, 'business/company/detail.html', {'photos':galPhotos,'sun_hour':sun_hour,'mon_hour':mon_hour,'tues_hour':tues_hour,'wed_hour':wed_hour,'thur_hour':thur_hour,'fri_hour':fri_hour,'sat_hour':sat_hour,'subcategories':subcategories,'comp_categ':comp_categ,'amenities':amenities,'address':address,'company':company,'category':category,'categories':categories, 'services':services, 'form':form, 'reviews':reviews})
 
 @login_required
 def ManageServiceListView(request, id, slug):

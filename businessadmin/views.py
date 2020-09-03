@@ -6,6 +6,7 @@ from consumer.models import Bookings
 from account.forms import AccountAuthenticationForm
 from django.contrib.auth import authenticate, login, logout
 from django_hosts.resolvers import reverse
+from django.http import JsonResponse
 # Create your views here.
 
 def businessadmin(request):
@@ -72,9 +73,15 @@ def profileSecurityViews(request):
 def scheduleView(request):
     user = request.user
     if user.is_authenticated and user.is_business:
-        company = get_object_or_404(Company, user=user)
+        company = Company.objects.get(user=user)
         bookings = Bookings.objects.filter(company=company)
         return render(request, 'bizadmin/dashboard/schedule.html', {'company':company, 'bookings':bookings})
     else:
         loginViews()
+
+def fileUploadView(request):
+    if request.POST:
+        return JsonResponse({'works':'works'})
+
+
     

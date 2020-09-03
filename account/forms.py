@@ -42,6 +42,7 @@ class ConsumerRegistrationForm(UserCreationForm):
 class AccountAuthenticationForm(forms.ModelForm):
     password = forms.CharField(label='Password', widget=forms.PasswordInput)
     email = forms.EmailField(label='Email', widget=forms.TextInput(attrs={'id':'emails'}))
+    
     class Meta:
         model = Account
         fields = ('email', 'password')

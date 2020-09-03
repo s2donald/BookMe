@@ -21,6 +21,7 @@ class GallaryInline(admin.TabularInline):
 
 class OpeningHoursInline(admin.TabularInline):
     model = OpeningHours
+    extra = 0
 
 @admin.register(Company)
 class CompanyAdmin(admin.ModelAdmin):

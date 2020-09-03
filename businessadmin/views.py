@@ -1,12 +1,13 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from .forms import BusinessRegistrationForm
 from django.contrib.auth.decorators import login_required
-from business.models import Company
+from business.models import Company, SubCategory
 from consumer.models import Bookings
 from account.forms import AccountAuthenticationForm
 from django.contrib.auth import authenticate, login, logout
 from django_hosts.resolvers import reverse
 from django.http import JsonResponse
+from business.forms import AddCompanyForm, AddServiceForm
 # Create your views here.
 
 def businessadmin(request):
@@ -19,7 +20,10 @@ def faqBusinessViews(request):
     return render(request, 'welcome/faq.html')
 
 def completeViews(request):
-    return render(request, 'bizadmin/dashboard/profile/addcompany.html')
+    biz_form = AddCompanyForm()
+    service_form = AddServiceForm()
+    subcategories = SubCategory.objects.all()
+    return render(request, 'bizadmin/dashboard/profile/addcompany.html', {'biz_form':biz_form, 'service_form':service_form,'subcategories':subcategories})
 
 def signupViews(request):
     context = {}
@@ -42,7 +46,6 @@ def signupViews(request):
 
 def loginViews(request):
     context = {}
-
     if request.method == 'POST':
         user_form = AccountAuthenticationForm(request.POST)
         if user_form.is_valid():
@@ -51,7 +54,11 @@ def loginViews(request):
             account = authenticate(email=email, password=password)
             if account:
                 login(request, account)
-                return redirect(reverse('schedule', host='bizadmin'))
+                company = Company.objects.filter(user=account)
+                if company:
+                    return redirect(reverse('schedule', host='bizadmin'))
+                else:
+                    return redirect(reverse('completeprofile', host='bizadmin'))
         else:
             context['business_registration_form'] = user_form
             

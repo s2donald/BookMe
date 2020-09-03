@@ -1,5 +1,5 @@
 from django import forms
-from .models import Category, Services, Company
+from .models import Category, Services, Company, SubCategory
 from django.core.validators import RegexValidator
 from bootstrap_modal_forms.forms import BSModalModelForm
 
@@ -102,15 +102,16 @@ class UpdateServiceForm(forms.ModelForm):
         'checkintime','padding','paddingtime_hour','paddingtime_minute')
 
 class AddCompanyForm(forms.ModelForm):
-    business_name = forms.CharField(max_length=30, label='Business Name')
-    category = forms.ModelChoiceField(queryset=Category.objects.all(), label='Category')
-    description = forms.CharField(label='Brief Business Description', max_length=30, widget=forms.Textarea(attrs={'rows':3,'cols':20}))
-    address = forms.CharField(label='Business Address', max_length=200)
-    status = forms.ChoiceField(label='Status',choices=STATUS_CHOICES)
+    business_name = forms.CharField(max_length=30, label='Business Name', widget=forms.TextInput(attrs={'class':'form-control', 'style':'height:50px !important;'}))
+    category = forms.ModelChoiceField(queryset=Category.objects.all(),label='Category', widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control', 'style':'height:50px !important;'}))
+    subcategory = forms.ModelChoiceField(queryset=SubCategory.objects.all(), empty_label=None,label='Choose Subcategories', widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control','multiple':'', 'data-size':'5', 'data-dropdown-align-right':'true', 'title':'Subcategories'}))
+    description = forms.CharField(label='Brief Business Description', max_length=500, widget=forms.Textarea(attrs={'rows':3,'cols':20}))
+    address = forms.CharField(label='Business Address', max_length=200, widget=forms.TextInput(attrs={'class':'form-control', 'style':'height:50px !important;'}))
+    status = forms.ChoiceField(label='Status',choices=STATUS_CHOICES, widget=forms.Select(attrs={'class':'form-control', 'style':'height:50px !important;'}))
     postal_regex = RegexValidator(regex=r"^[ABCEGHJKLMNPRSTVXY]{1}\d{1}[A-Z]{1} *\d{1}[A-Z]{1}\d{1}$")
-    postal = forms.CharField(max_length=10, validators=[postal_regex], label='Postal Code/ZIP Code', error_messages={'invalid': 'Enter a valid Postal Code or ZIP Code.'})
-    state = forms.CharField(max_length=2, label='Province/State')
-    city = forms.CharField(max_length=30,label='City')
+    postal = forms.CharField(max_length=10, validators=[postal_regex], label='Postal Code', error_messages={'invalid': 'Enter a valid Postal Code or ZIP Code.'}, widget=forms.TextInput(attrs={'class':'form-control', 'style':'height:50px !important;'}))
+    state = forms.CharField(max_length=2, label='Province/State', widget=forms.TextInput(attrs={'class':'form-control', 'style':'height:50px !important;'}))
+    city = forms.CharField(max_length=30,label='City', widget=forms.TextInput(attrs={'class':'form-control', 'style':'height:50px !important;'}))
 
     class Meta:
         model = Company

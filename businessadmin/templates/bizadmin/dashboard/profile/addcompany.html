@@ -1,10 +1,12 @@
 {% extends 'bizadmin/index.html' %}
 {% load static %}
 {% load hosts %}
+{% load crispy_forms_tags %}
 {% block businessadmin %}
 
 <div class="content">
     <div class="col-md-10 mr-auto ml-auto">
+        <h1 class="text-center">Add your company information</h1>
         <div class="card">
             <div id="smartwizard">
                 <ul class="nav">
@@ -40,9 +42,38 @@
                 <div id="info" class="tab-pane" role="tabpanel">
                     <div class="card mb-4">
                         <h1 class="card-header">Company Information</h1>
-                        <div class="card-body">
-                            <form>
-                                    
+                        <div class="card-body" style="font-size:25px;">
+                            <form method="POST" id="companyinform">
+                                {% csrf_token %}
+                                <div class="row">
+                                <div class="col-md-12">
+                                    {{ biz_form.business_name|as_crispy_field }}
+                                </div>
+                                <div class="col-md-6">
+                                    {{ biz_form.category|as_crispy_field }}
+                                </div>
+                                <div class="col-md-6">
+                                    {{ biz_form.subcategory|as_crispy_field }}
+                                </div>
+                                <div class="col-md-12">
+                                    {{ biz_form.description|as_crispy_field }}
+                                </div>
+                                <div class="col-md-12">
+                                    {{ biz_form.address|as_crispy_field }}
+                                </div>
+                                <div class="col-md-4">
+                                    {{ biz_form.postal|as_crispy_field }}
+                                </div>
+                                <div class="col-md-4">
+                                    {{ biz_form.state|as_crispy_field }}
+                                </div>
+                                <div class="col-md-4">
+                                    {{ biz_form.city|as_crispy_field }}
+                                </div>
+                                <div class="col-md-12">
+                                    {{ biz_form.status|as_crispy_field }}
+                                </div>
+                                </div>
                             </form>
                         </div>
                     </div>
@@ -51,7 +82,37 @@
                     <div class="card mb-4">
                         <h1 class="card-header">Add Services</h1>
                         <div class="card-body">
-                            <form>
+                            <form method="POST" id="serviceform">
+                                {{ service_form.name|as_crispy_field }}
+                                {{ service_form.description|as_crispy_field }}
+                                <div class="form-row">
+                                    <div class="form-group col mb-0">
+                                        {{ service_form.price_type|as_crispy_field }}
+                                    </div>
+                                    <div class="form-group col mb-0">
+                                        {{ service_form.price|as_crispy_field }}
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col mb-0">
+                                        {{ service_form.duration_hour|as_crispy_field }}
+                                    </div>
+                                    <div class="form-group col mb-0"> 
+                                        {{ service_form.duration_minute|as_crispy_field }}
+                                    </div>
+                                </div>
+                                    {{ service_form.checkintime|as_crispy_field }}
+                                    <div id="padd">
+                                        {{ service_form.padding|as_crispy_field }}
+                                    </div>
+                                    <div id="show-padding" class="form-row">
+                                        <div class="form-group col mb-0"> 
+                                            {{ service_form.paddingtime_hour|as_crispy_field }}
+                                        </div>
+                                        <div class="form-group col mb-0"> 
+                                            {{ service_form.paddingtime_minute|as_crispy_field }}
+                                        </div>
+                                    </div>
                                 
                             </form>
                         </div>
@@ -99,7 +160,7 @@
     const sidebars = document.querySelector(".sidebar");
     sidebars.classList.add("d-none");
 
-    const sidebartoggle = document.querySelector(".sidetoggle");
+    const sidebartoggle = document.querySelector(".navbar-wrapper");
     sidebartoggle.classList.add("d-none");
     $(document).ready(function(){
         // SmartWizard initialize

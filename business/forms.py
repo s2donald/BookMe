@@ -15,30 +15,30 @@ price_choices = (
         ('free','Free')
     )
 hours_choices = (
-        ('zero','0 hours'),
-        ('one', '1 hour'),
-        ('two', '2 hours'),
-        ('three', '3 hours'),
-        ('four', '4 hours'),
-        ('five', '5 hours'),
-        ('six', '6 hours'),
-        ('seven', '7 hours'),
-        ('eight', '8 hours'),
-        ('nine', '9 hours'),
-        ('ten', '10 hours'),
-        ('eleven', '11 hours'),
-        ('twelve', '12 hours'),
-        ('thirteen', '13 hours'),
-        ('fourteen', '14 hours'),
-        ('fifteen', '15 hours'),
-        ('sixteen', '16 hours'),
-        ('seventeen', '17 hours'),
-        ('eighteen', '18 hours'),
-        ('nineteen', '19 hours'),
-        ('twenty', '20 hours'),
-        ('twentyone', '21 hours'),
-        ('twentytwo', '22 hours'),
-        ('twentythree', '23 hours')
+        ('0','0 hours'),
+        ('1', '1 hour'),
+        ('2', '2 hours'),
+        ('3', '3 hours'),
+        ('4', '4 hours'),
+        ('5', '5 hours'),
+        ('6', '6 hours'),
+        ('7', '7 hours'),
+        ('8', '8 hours'),
+        ('9', '9 hours'),
+        ('10', '10 hours'),
+        ('11', '11 hours'),
+        ('12', '12 hours'),
+        ('13', '13 hours'),
+        ('14', '14 hours'),
+        ('15', '15 hours'),
+        ('16', '16 hours'),
+        ('17', '17 hours'),
+        ('18', '18 hours'),
+        ('19', '19 hours'),
+        ('20', '20 hours'),
+        ('21', '21 hours'),
+        ('22', '22 hours'),
+        ('23', '23 hours')
     )
 beforeafter = (
         ('none', '-'),
@@ -48,18 +48,18 @@ beforeafter = (
     )
 
 minute_choices = (
-        ('zero', '0 minutes'),
-        ('five', '5 minutes'),
-        ('ten', '10 minutes'),
-        ('fifteen', '15 minutes'),
-        ('twenty', '20 minutes'),
-        ('twentyfive', '25 minutes'),
-        ('thirty', '30 minutes'),
-        ('thirtyfive', '35 minutes'),
-        ('fourty', '40 minutes'),
-        ('fourtyfive', '45 minutes'),
-        ('fifty', '50 minutes'),
-        ('fiftyfive', '55 minutes')
+        ('0', '0 minutes'),
+        ('5', '5 minutes'),
+        ('10', '10 minutes'),
+        ('15', '15 minutes'),
+        ('20', '20 minutes'),
+        ('25', '25 minutes'),
+        ('30', '30 minutes'),
+        ('35', '35 minutes'),
+        ('40', '40 minutes'),
+        ('45', '45 minutes'),
+        ('50', '50 minutes'),
+        ('55', '55 minutes')
     )
 
 class SearchForm(forms.Form):
@@ -72,11 +72,11 @@ class homeSearchForm(forms.Form):
 class AddServiceForm(forms.ModelForm):
     name = forms.CharField(label='Service Name')
     description = forms.CharField(label='Details Of Service',max_length=30, required=True, widget=forms.Textarea(attrs={'rows':2, 'cols':20}))
-    price_type = forms.ChoiceField(label='Price Type',choices=price_choices)
+    price_type = forms.ChoiceField(label='Price Type',choices=price_choices, widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control'}))
     price = forms.DecimalField(label='Price ($)',max_digits=10, required=True)
-    duration_hour = forms.ChoiceField(label='Duration Hour',choices=hours_choices)
-    duration_minute = forms.ChoiceField(label='Duration Minute',choices=minute_choices)
-    checkintime = forms.ChoiceField(label='Check In Time',choices=minute_choices)
+    duration_hour = forms.ChoiceField(label='Duration Hour',choices=hours_choices, widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control'}))
+    duration_minute = forms.ChoiceField(label='Duration Minute',choices=minute_choices,initial= '5', widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control'}))
+    checkintime = forms.ChoiceField(label='Check In Time',choices=minute_choices, widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control'}))
     padding = forms.ChoiceField(label='Padding',choices=beforeafter)
     paddingtime_hour = forms.ChoiceField(label='Padding Hour',choices=hours_choices)
     paddingtime_minute = forms.ChoiceField(label='Padding Minute',choices=minute_choices)
@@ -103,11 +103,10 @@ class UpdateServiceForm(forms.ModelForm):
 
 class AddCompanyForm(forms.ModelForm):
     business_name = forms.CharField(max_length=30, label='Business Name', widget=forms.TextInput(attrs={'class':'form-control', 'style':'height:50px !important;'}))
-    category = forms.ModelChoiceField(queryset=Category.objects.all(),label='Category', widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control', 'style':'height:50px !important;'}))
+    category = forms.ModelChoiceField(queryset=Category.objects.all(),label='Category', widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control'}))
     subcategory = forms.ModelChoiceField(queryset=SubCategory.objects.all(), empty_label=None,label='Choose Subcategories', widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control','multiple':'', 'data-size':'5', 'data-dropdown-align-right':'true', 'title':'Subcategories'}))
     description = forms.CharField(label='Brief Business Description', max_length=500, widget=forms.Textarea(attrs={'rows':3,'cols':20}))
     address = forms.CharField(label='Business Address', max_length=200, widget=forms.TextInput(attrs={'class':'form-control', 'style':'height:50px !important;'}))
-    status = forms.ChoiceField(label='Status',choices=STATUS_CHOICES, widget=forms.Select(attrs={'class':'form-control', 'style':'height:50px !important;'}))
     postal_regex = RegexValidator(regex=r"^[ABCEGHJKLMNPRSTVXY]{1}\d{1}[A-Z]{1} *\d{1}[A-Z]{1}\d{1}$")
     postal = forms.CharField(max_length=10, validators=[postal_regex], label='Postal Code', error_messages={'invalid': 'Enter a valid Postal Code or ZIP Code.'}, widget=forms.TextInput(attrs={'class':'form-control', 'style':'height:50px !important;'}))
     state = forms.CharField(max_length=2, label='Province/State', widget=forms.TextInput(attrs={'class':'form-control', 'style':'height:50px !important;'}))
@@ -115,7 +114,13 @@ class AddCompanyForm(forms.ModelForm):
 
     class Meta:
         model = Company
-        fields = ('business_name', 'category', 'description', 'address', 'status', 'postal', 'state', 'city')
+        fields = ('business_name', 'category', 'description', 'address', 'postal', 'state', 'city')
+
+class AddHoursForm(forms.ModelForm):
+    sundayto = forms.TimeField(label='To', required=True)
+    sundayfrom = forms.TimeField(label='From', required=True)
+    sundayclosed = forms.BooleanField(label='Closed', required=False)
+
 
     
         

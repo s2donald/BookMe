@@ -277,6 +277,20 @@ $(document).ready(function (){
         slidesPerView: 3,
         slidesPerColumn: 2,
         spaceBetween: 0,
+        breakpoints: {
+            1200: {
+                slidesPerView: 3,
+                spaceBetween: 0
+            },
+            991: {
+                slidesPerView: 2,
+                spaceBetween: 0,
+                slidesPerColumn: 1,
+            },
+            565: {
+                slidesPerView: 1
+            }
+        },
         
         // If we need pagination
         pagination: {

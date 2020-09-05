@@ -11,7 +11,7 @@
             <!-- MultiStep Form -->
 <div class="row">
     <div class="col-md-12 col-md-offset-3">
-        <form id="msform" enctype="multipart/form-data">
+        <form method="post" action="{% host_url 'completeprofile' host 'bizadmin' %}" id="msform" enctype="multipart/form-data" novalidate>
             {% csrf_token %}
             <!-- progressbar -->
             <ul id="progressbar">
@@ -198,9 +198,5 @@
             easing: 'easeInOutBack'
         });
     });
-
-    $(".submit").click(function(){
-        return false;
-    })
 </script>
 {% endblock %}

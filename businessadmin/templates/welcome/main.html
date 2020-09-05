@@ -46,14 +46,23 @@
                     <a class="nav-link d-md-inline-block" href="{% host_url 'faqbusiness' host 'bizadmin' %}">FAQ</a>
                 </li>
             </ul>
-            <ul class="navbar-nav ml-auto">
-                <li class="nav-item {% block 'index_login' %}{% endblock %}">
-                    <a class="nav-link d-md-inline-block" href="{% host_url 'bizadminlogin' host 'bizadmin' %}">Log In</a>
-                </li>
-                <li class="nav-item {% block 'index_signup' %}{% endblock %}">
-                    <a class="nav-link d-md-inline-block" href="{% host_url 'bizadminsignup' host 'bizadmin' %}">Sign Up</a>
-                </li>
-            </ul>
+            {% if business %}
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="btn btn-primary" href="{% host_url 'completeprofile' host 'bizadmin' %}">Go to your business page</a>
+                    </li>
+                </ul>
+            {% else %}
+
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item {% block 'index_login' %}{% endblock %}">
+                        <a class="nav-link d-md-inline-block" href="{% host_url 'bizadminlogin' host 'bizadmin' %}">Log In</a>
+                    </li>
+                    <li class="nav-item {% block 'index_signup' %}{% endblock %}">
+                        <a class="nav-link d-md-inline-block" href="{% host_url 'bizadminsignup' host 'bizadmin' %}">Sign Up</a>
+                    </li>
+                </ul>
+            {% endif %}
         </div>
     </div>
     </nav>

@@ -102,19 +102,22 @@ class UpdateServiceForm(forms.ModelForm):
         'checkintime','padding','paddingtime_hour','paddingtime_minute')
 
 class AddCompanyForm(forms.ModelForm):
-    business_name = forms.CharField(max_length=30, label='Business Name', widget=forms.TextInput(attrs={'class':'form-control', 'style':'height:50px !important;'}))
-    category = forms.ModelChoiceField(queryset=Category.objects.all(),label='Category', widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control'}))
-    subcategory = forms.ModelChoiceField(queryset=SubCategory.objects.all(), empty_label=None,label='Choose Subcategories', widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control','multiple':'', 'data-size':'5', 'data-dropdown-align-right':'true', 'title':'Subcategories'}))
+    business_name = forms.CharField(max_length=30, label='Business Name', widget=forms.TextInput(attrs={'class':'form-control'}))
+    category = forms.ModelChoiceField(queryset=Category.objects.all(),label='Main Category', empty_label=None, widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control','title':'Category'}))
+    subcategory = forms.ModelMultipleChoiceField(queryset=SubCategory.objects.all(),label='Business Categories', widget=forms.SelectMultiple(attrs={'class':'selectcolor selectpicker show-tick form-control','multiple':'', 'data-size':'5', 'data-dropdown-align-right':'true', 'title':'Subcategories'}))
     description = forms.CharField(label='Brief Business Description', max_length=500, widget=forms.Textarea(attrs={'rows':3,'cols':20}))
-    address = forms.CharField(label='Business Address', max_length=200, widget=forms.TextInput(attrs={'class':'form-control', 'style':'height:50px !important;'}))
+    address = forms.CharField(label='Business Address', max_length=200, widget=forms.TextInput(attrs={'class':'form-control'}))
     postal_regex = RegexValidator(regex=r"^[ABCEGHJKLMNPRSTVXY]{1}\d{1}[A-Z]{1} *\d{1}[A-Z]{1}\d{1}$")
     postal = forms.CharField(max_length=10, validators=[postal_regex], label='Postal Code', error_messages={'invalid': 'Enter a valid Postal Code or ZIP Code.'}, widget=forms.TextInput(attrs={'class':'form-control', 'style':'height:50px !important;'}))
-    state = forms.CharField(max_length=2, label='Province/State', widget=forms.TextInput(attrs={'class':'form-control', 'style':'height:50px !important;'}))
-    city = forms.CharField(max_length=30,label='City', widget=forms.TextInput(attrs={'class':'form-control', 'style':'height:50px !important;'}))
-
+    state = forms.CharField(max_length=2, label='Province/State', widget=forms.TextInput(attrs={'class':'form-control'}))
+    city = forms.CharField(max_length=30,label='City', widget=forms.TextInput(attrs={'class':'form-control'}))
+    prefix = 'addcompany'
     class Meta:
         model = Company
         fields = ('business_name', 'category', 'description', 'address', 'postal', 'state', 'city')
+    def save(self):
+        company = super().save(commit=False)
+        company.save()
 
 class AddHoursForm(forms.ModelForm):
     sundayto = forms.TimeField(label='To', required=True)

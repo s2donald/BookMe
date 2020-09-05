@@ -5,7 +5,7 @@
 {% block content %}
     <!-- Hero Section-->
     <section class="pt-7 pb-5 d-flex align-items-end dark-overlay bg-cover" 
-    style="width:100%; height:400px; background-image: url('{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/automotive-noimage1.jpg" %}{% endif %}');">
+    style="background-image: url('{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/automotive-noimage1.jpg" %}{% endif %}'); width:auto; height:400px;">
       {% comment %} <!-- Slider main container-->
       <div class="swiper-container detail-slider slider-gallery">
         <!-- Additional required wrapper-->
@@ -74,8 +74,7 @@
               <div class="row gallery ml-n1 mr-n1">
                 <div class="swiper-container gallery-slider">
                 <!-- Additional required wrapper-->
-                <div class="swiper-wrapper">
-                  {% for p in photos %}<div class="swiper-slide"><a href="{{ p.photos.url }}"><img style="height:300px; width:500px;" class="img-fluid" src="{{ p.photos.url }}" alt="..."></a></div>{% endfor %}
+                <div class="swiper-wrapper" id="photos">
                 </div>
                     <div class="swiper-pagination swiper-pagination-white"></div>
                     {% if photos|length  > 7 %}Hello{% endif %}
@@ -457,4 +456,19 @@
     </script>
     <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBaZM_O3d1-xDrecS_fbcbvoT5qDmLmje0&callback=initMap"
     type="text/javascript"></script>
+    <script>
+      function getRandomSize(min, max) {
+        return Math.round(Math.random() * (max - min) + min);
+      }
+
+      var allImages = "";
+      {% for p in photos %}
+        var width = getRandomSize(200, 400);
+        var height =  getRandomSize(200, 400);
+        allImages += '<div class="swiper-slide"><a href="{{ p.photos.url }}"><img loading="lazy" style="height:auto; width:200px;" src="{{ p.photos.url }}" alt="some gallary images"></a></div>'
+  
+      {% endfor %}
+
+      $('#photos').append(allImages);
+    </script>
 {% endblock extrascripts %}

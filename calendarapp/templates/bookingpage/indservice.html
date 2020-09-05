@@ -18,9 +18,9 @@
                         </div>
                         <div class="row d-flex justify-content-center mb-3">
                             <div class="pl-6" id="datepicker"></div>
-                            <div class="col-md-6 ">
-                                <div class="text-center" id="booking-header"><h4 class="text-center">Available Booking Times</h4></div>
-                                <div class="bookingbutton"></div>
+                            <div class="col-md-6">
+                                <div class="" id="booking-header"><h4 class="text-center">Available Booking Times</h4></div>
+                                <div class="bookingbutton justify-content-left"></div>
                             </div>
                         </div>
                     </div>
@@ -162,7 +162,6 @@
         const weekday = date.getDay();
         const newdate = date.toJSON().substring(0,10)
         const service_id = '{{ service.id }}'
-        console.log(newdate)
         fetch("{% host_url 'bookingtimeretrieval' host 'bookingurl' slug=company.slug %}", {
             body: JSON.stringify({month: month, day: day, year: year, id: service_id, weekday:weekday,date}),
             method: 'POST',
@@ -176,13 +175,16 @@
             var i = 0
             var j = 0
             h=``
-            astring = ``
+            astring = `<ul class="threecol">`
+            var afternoon = 0
+            var evening = 0
             for (d in data.appointment_slots){
                 j = i + 1
-                h = `<a class="btn btn-outline-primary mb-1 show" style="height:auto;" id="show`+j+`">${data.appointment_slots[i]}</a>`
+                h = `<li><a class="btn btn-outline-primary btn-sm mb-1 show" style="height:auto;" id="show`+j+`">${data.appointment_slots[i]}</a></li>`
                 astring = astring+h
                 i = i + 1
             }
+            astring = astring+'</ul>'
             if (j>0){
                 authen = data.auth
                 helper.innerHTML=astring

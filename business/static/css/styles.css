@@ -217,6 +217,8 @@ html {
   font-family: sans-serif;
   font-size: 18px;
   line-height: 1.15;
+  height: 100%;
+  width: 98.3vw;
   -webkit-text-size-adjust: 100%;
   -webkit-tap-highlight-color: rgba(34, 42, 66, 0); }
 @media only screen and (max-width: 700px) {
@@ -4933,6 +4935,7 @@ fieldset[disabled]
 
 .custom-control-label {
   margin-bottom: 0; }
+  
 
 .custom-control-input:active ~ .custom-control-label::before {
   border-color: #e14eca; }

@@ -1,0 +1,20 @@
+{% load static %}
+{% for service in services %}
+    <tr>
+        <td class="text-center" scope="row">{{ forloop.counter }}</td>
+        <td class="text-center">{{ service.name }}</td>
+        <td class="text-center">{{ service.price }}</td>
+        <td class="text-center">
+            <!-- Update Service buttons -->
+            <button type="button" class="update-service btn btn-sm btn-outline-primary" data-form-url="">
+                <span class="fa fa-pencil-alt"></span>
+            </button>
+            <!-- Delete Service buttons -->
+            <button type="button" class="bs-modal delete-service btn btn-sm btn-danger" data-form-url="">
+                <span class="fa fa-trash"></span>
+            </button>
+        </td>
+    </tr>
+{% empty %}
+    <td colspan="8" class="text-center">You do not have any services available</td>
+{% endfor %}

@@ -5,7 +5,7 @@ from django.contrib.auth.models import Group
 # Register your models here.
 
 class AccountAdmin(UserAdmin):
-    list_display = ('email','date_joined','last_login','is_admin','is_staff', 'is_business', 'is_consumer')
+    list_display = ('email','date_joined','last_login','is_admin','is_staff', 'is_business', 'is_consumer', 'on_board')
     search_fields = ('email',)
     readonly_fields = ('date_joined','last_login')
 
@@ -15,7 +15,7 @@ class AccountAdmin(UserAdmin):
     fieldsets = (
         (None, {'fields': ('email', )}),
         (('Personal info'), {'fields': ('first_name', 'last_name')}),
-        (('Permissions'), {'fields': ('is_admin','is_staff', 'is_business', 'is_consumer')}),
+        (('Permissions'), {'fields': ('is_admin','is_staff', 'is_business', 'is_consumer', 'on_board')}),
         (('Important dates'), {'fields': ('last_login', 'date_joined')}),
     )
     add_fieldsets = (

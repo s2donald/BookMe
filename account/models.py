@@ -47,6 +47,7 @@ class Account(AbstractBaseUser):
     province = models.CharField(max_length=35)
     city = models.CharField(max_length=35)
     is_business= models.BooleanField(default=False)
+    on_board= models.BooleanField(default=False)
     is_consumer= models.BooleanField(default=False)
     date_joined = models.DateTimeField(verbose_name='date joined', auto_now_add=True)
     last_login = models.DateTimeField(verbose_name='last login', auto_now=True)
@@ -54,7 +55,8 @@ class Account(AbstractBaseUser):
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     is_superuser = models.BooleanField(default=False)
-    
+
+
     USERNAME_FIELD = 'email'
     ordering = ('email',)
     REQUIRED_FIELDS = ['phone',]

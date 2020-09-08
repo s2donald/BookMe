@@ -71,17 +71,23 @@
 
               <!-- Gallery-->
               <h3 class="mb-4">Gallery</h3>
-              <div class="row gallery ml-n1 mr-n1">
-                <div class="swiper-container gallery-slider">
-                <!-- Additional required wrapper-->
-                <div class="swiper-wrapper" id="photos">
-                </div>
-                    <div class="swiper-pagination swiper-pagination-white"></div>
-                    {% if photos|length  > 7 %}Hello{% endif %}
-                    <div class="swiper-button-prev swiper-button-white circle-slide"></div>
-                    <div class="swiper-button-next swiper-button-white circle-slide"></div>
-                </div>
-                </div>
+              {% if photos %}
+                <div class="row gallery ml-n1 mr-n1">
+                  <div class="swiper-container gallery-slider">
+                    <!-- Additional required wrapper-->
+                    <div class="swiper-wrapper" id="photos">
+                  </div>
+                      <div class="swiper-pagination swiper-pagination-white"></div>
+                      <div class="swiper-button-prev swiper-button-white circle-slide"></div>
+                      <div class="swiper-button-next swiper-button-white circle-slide"></div>
+                  </div>
+                  </div>
+              
+              {% else %}
+
+              <h6>This business has not uploaded any gallary images yet.</h6>
+
+              {% endif %}
             </div>
             
             <!-- Amenities-->
@@ -116,7 +122,7 @@
                 </div>
               </div>
               {% empty %}
-                <h6>There are no reviews</h6>
+                <h6>Be the first to write a review on this business after you complete a service with them.</h6>
               {% endfor %}
             
               

@@ -25,10 +25,10 @@
                             <option class="selectcolor" value="small">All Services</option>
                             {% for c in categories %}
                                 <optgroup label="{{ c.name }}">
-                                    <option class="selectcolor" value="small">All {{c.name}}</option>
+                                    <option id="{{ c.slug }}" class="selectcolor" value="small">All {{c.name}}</option>
                                     {% for sc in subcategories %}
                                         {% if sc.category.name == c.name %}
-                                            <option data-subtext="{{c.name}}" class="selectcolor" value="small">{{sc.name}}</option>
+                                            <option id="{{ sc.slug }}" data-subtext="{{c.name}}" class="selectcolor" value="small">{{sc.name}}</option>
                                         {% endif %}
                                     {% endfor %}
                                 </optgroup>

@@ -21,14 +21,6 @@ def allsearch(request):
     form = SearchForm()
     Search = None
     results = []
-    if 'Search' in request.GET:
-        form = SearchForm(request.GET)
-        if form.is_valid():
-            Search = form.cleaned_data['Search']
-            
-            results = Company.objects.annotate(search=SearchVector('business_name','description'),).filter(search=Search)
-            return render(request, 'business/company/list.html',{'category':category, 'categories':categories ,'companies':results, 'name': Search,'form':form,'subcategories':subcategories})
-    
     paginator = Paginator(companies, 6)
     page = request.GET.get('page')
     try:
@@ -37,6 +29,16 @@ def allsearch(request):
         companiess = paginator.page(1)
     except EmptyPage:
         companiess = paginator.page(paginator.num_pages)
+
+    if 'Search' in request.GET:
+        form = SearchForm(request.GET)
+        if form.is_valid():
+            Search = form.cleaned_data['Search']
+            
+            results = Company.objects.annotate(search=SearchVector('business_name','description'),).filter(search=Search)
+            return render(request, 'business/company/list.html',{'page':page,'category':category, 'categories':categories ,'companies':results, 'name': Search,'form':form,'subcategories':subcategories})
+    
+    
     
     return render(request, 'business/home.html', {'page':page,'category':category, 'categories':categories, 'subcategories':subcategories,'form':form, 'companies':companiess})
 
@@ -48,13 +50,6 @@ def homesearch(request):
     form = homeSearchForm()
     Search = None
     results = []
-    if 'Search' in request.GET:
-        form = SearchForm(request.GET)
-        if form.is_valid():
-            Search = form.cleaned_data['Search']
-            results = Company.objects.annotate(search=SearchVector('business_name','description'),).filter(search=Search)
-            return render(request, 'business/company/list.html',{'category':category, 'categories':categories ,'companies':results, 'name': Search,'form':form})
-    
     paginator = Paginator(companies, 6)
     page = request.GET.get('page')
     try:
@@ -63,6 +58,12 @@ def homesearch(request):
         companiess = paginator.page(1)
     except EmptyPage:
         companiess = paginator.page(paginator.num_pages)
+    if 'Search' in request.GET:
+        form = SearchForm(request.GET)
+        if form.is_valid():
+            Search = form.cleaned_data['Search']
+            results = Company.objects.annotate(search=SearchVector('business_name','description'),).filter(search=Search)
+            return render(request, 'business/company/list.html',{'page':page,'category':category, 'categories':categories ,'companies':results, 'name': Search,'form':form})
     
     return render(request, 'business/home.html', {'page':page,'category':category, 'categories':categories, 'subcategories':subcategories,'form':form, 'companies':companiess})
 

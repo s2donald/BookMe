@@ -7,7 +7,7 @@ from django.utils.text import slugify
 from django.contrib.auth.models import AbstractBaseUser
 from django.utils import timezone
 from django.db.models.signals import pre_save
-from gibele.utils import unique_slug_generator
+from gibele.utils import unique_slug_generator, unique_slug_generator_services
 # This category holds our different types of services such as
 #   automotive services, health and wellness services, home services, etc
 #   These should not be modified by the user
@@ -217,6 +217,12 @@ class Services(models.Model):
         return self.name
     def get_absolute_url(self):
         return reverse("business:company_detail", args=[self.id, self.slug])
+
+def slug_generators(sender, instance, *args, **kwargs):
+    if not instance.slug:
+        instance.slug = unique_slug_generator_services(instance)
+
+pre_save.connect(slug_generators, sender=Services)
 
 class Amenities(models.Model):
     company=models.ForeignKey(Company, on_delete=models.CASCADE)

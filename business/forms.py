@@ -70,16 +70,16 @@ class homeSearchForm(forms.Form):
     Location = forms.CharField(required=False, label='Location',widget=forms.TextInput(attrs={'class':'form-control border','placeholder':'Location'}))
 
 class AddServiceForm(forms.ModelForm):
-    name = forms.CharField(label='Service Name')
-    description = forms.CharField(label='Details Of Service',max_length=30, required=True, widget=forms.Textarea(attrs={'rows':2, 'cols':20}))
+    name = forms.CharField(label='Service Name', widget=forms.Textarea(attrs={'style':'color:black;','rows':1, 'cols':20,}))
+    description = forms.CharField(label='Details Of Service',max_length=30, required=True, widget=forms.Textarea(attrs={'rows':4, 'cols':20, 'style':'color:black;'}))
     price_type = forms.ChoiceField(label='Price Type',choices=price_choices, widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control'}))
-    price = forms.DecimalField(label='Price ($)',max_digits=10, required=True)
+    price = forms.DecimalField(label='Price ($)',max_digits=10, required=True, widget=forms.Textarea(attrs={'style':'color:black;', 'rows':1, 'cols':20,}))
     duration_hour = forms.ChoiceField(label='Duration Hour',choices=hours_choices, widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control'}))
     duration_minute = forms.ChoiceField(label='Duration Minute',choices=minute_choices,initial= '5', widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control'}))
     checkintime = forms.ChoiceField(label='Check In Time',choices=minute_choices, widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control'}))
-    padding = forms.ChoiceField(label='Padding',choices=beforeafter)
-    paddingtime_hour = forms.ChoiceField(label='Padding Hour',choices=hours_choices)
-    paddingtime_minute = forms.ChoiceField(label='Padding Minute',choices=minute_choices)
+    padding = forms.ChoiceField(label='Padding',choices=beforeafter, widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control'}))
+    paddingtime_hour = forms.ChoiceField(label='Padding Hour',choices=hours_choices, widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control'}))
+    paddingtime_minute = forms.ChoiceField(label='Padding Minute',choices=minute_choices, widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control'}))
     class Meta:
         model = Services
         fields = ('name','description','price_type','price','available','duration_hour',
@@ -108,7 +108,7 @@ class AddCompanyForm(forms.ModelForm):
     description = forms.CharField(label='Brief Business Description', max_length=500, widget=forms.Textarea(attrs={'rows':3,'cols':20}))
     address = forms.CharField(label='Business Address', max_length=200, widget=forms.TextInput(attrs={'class':'form-control'}))
     postal_regex = RegexValidator(regex=r"^[ABCEGHJKLMNPRSTVXY]{1}\d{1}[A-Z]{1} *\d{1}[A-Z]{1}\d{1}$")
-    postal = forms.CharField(max_length=10, validators=[postal_regex], label='Postal Code', error_messages={'invalid': 'Enter a valid Postal Code or ZIP Code.'}, widget=forms.TextInput(attrs={'class':'form-control', 'style':'height:50px !important;'}))
+    postal = forms.CharField(max_length=10, validators=[postal_regex], label='Postal Code', error_messages={'invalid': 'Enter a valid Postal Code or ZIP Code.'}, widget=forms.TextInput(attrs={'class':'form-control', 'style':'height:50px !important; '}))
     state = forms.CharField(max_length=2, label='Province/State', widget=forms.TextInput(attrs={'class':'form-control'}))
     city = forms.CharField(max_length=30,label='City', widget=forms.TextInput(attrs={'class':'form-control'}))
     prefix = 'addcompany'

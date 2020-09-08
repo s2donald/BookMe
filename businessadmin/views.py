@@ -10,6 +10,7 @@ from django.contrib.auth import authenticate, login, logout
 from django_hosts.resolvers import reverse
 from django.http import JsonResponse
 from business.forms import AddCompanyForm, AddServiceForm
+from django.forms import inlineformset_factory
 # Create your views here.
 def businessadmin(request):
     user = request.user
@@ -34,6 +35,7 @@ def faqBusinessViews(request):
     return render(request, 'welcome/faq.html', {'business':business,'none':'d-none'})
 
 def completeViews(request):
+    HoursFormSet = inlineformset_factory(Company, OpeningHours, fields=('from_hour','to_hour','is_closed',))
     if not request.user.is_authenticated:
         context={}
         user_form = BusinessRegistrationForm()
@@ -81,7 +83,17 @@ def completeViews(request):
     subcategories = SubCategory.objects.all()
     company = Company.objects.get(user=user)
     services = Services.objects.filter(business=company)
-    return render(request, 'bizadmin/dashboard/profile/addcompany.html', {'biz_form':biz_form, 'service_form':service_form,'subcategories':subcategories,'company':company,'services':services})
+    hours = OpeningHours.objects.filter()
+    hourFormset = HoursFormSet(instance=company)
+    sunday = OpeningHours.objects.get(company=company, weekday=0)
+    monday = OpeningHours.objects.get(company=company, weekday=1)
+    tuesday = OpeningHours.objects.get(company=company, weekday=2)
+    wednesday = OpeningHours.objects.get(company=company, weekday=3)
+    thursday = OpeningHours.objects.get(company=company, weekday=4)
+    friday = OpeningHours.objects.get(company=company, weekday=5)
+    saturday = OpeningHours.objects.get(company=company, weekday=6)
+
+    return render(request, 'bizadmin/dashboard/profile/addcompany.html', {'sunday':sunday,'biz_form':biz_form, 'service_form':service_form,'subcategories':subcategories,'company':company,'services':services, 'hourFormset':hourFormset})
 
 def signupViews(request):
     context = {}

@@ -8,11 +8,39 @@ $(document).ready(function(){
       type: 'get',
       dataType: 'json',
       beforeSend: function () {
-        $("#modal-service .modal-content").html("");
         $("#modal-service").modal("show");
       },
       success: function (data) {
         $("#modal-service .modal-content").html(data.html_form);
+      }
+    });
+  };
+  var loadDelForm = function () { 
+    var btn = $(this);
+    $.ajax({
+      url: btn.attr("data-url"),
+      type: 'get',
+      dataType: 'json',
+      beforeSend: function () {
+        $("#modal-delete").modal("show");
+      },
+      success: function (data) {
+        $("#modal-delete .modal-content").html(data.html_form);
+      }
+    });
+  };
+
+  var loadUpdForm = function () { 
+    var btn = $(this);
+    $.ajax({
+      url: btn.attr("data-url"),
+      type: 'get',
+      dataType: 'json',
+      beforeSend: function () {
+        $("#modal-update").modal("show");
+      },
+      success: function (data) {
+        $("#modal-update .modal-content").html(data.html_form);
       }
     });
   };
@@ -26,7 +54,6 @@ $(document).ready(function(){
       dataType: 'json',
       success: function (data) {
         if (data.form_is_valid) {
-          console.log('hey')
           $("#service-table tbody").html(data.html_service_list);
           $("#modal-service").modal("hide");
         }
@@ -44,12 +71,12 @@ $(document).ready(function(){
     $("#modal-service").on("submit", ".js-product-create-form", saveForm);
 
     // Update product
-    $("#service-table").on("click", ".js-update-product", loadForm);
-    $("#modal-service").on("submit", ".js-product-update-form", saveForm);
+    $("#service-table").on("click", ".js-update-product", loadUpdForm);
+    $("#modal-update").on("submit", ".js-product-update-form", saveForm);
 
     // Delete product
-    $("#service-table").on("click", ".js-delete-product", loadForm);
-    $("#modal-service").on("submit", ".js-product-delete-form", saveForm);
+    $("#service-table").on("click", ".js-delete-product", loadDelForm);
+    $("#modal-delete").on("submit", ".js-product-delete-form", saveForm);
 
 });
 

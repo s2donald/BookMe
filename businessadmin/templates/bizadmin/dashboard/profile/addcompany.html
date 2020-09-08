@@ -4,7 +4,51 @@
 {% load crispy_forms_tags %}
 {% block businessadmin %}
 
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="modal-delete" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Are you sure you want to delete?</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form method="GET" action="" class="js-product-delete-form">
+
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-danger">Delete Service</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modal-update" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Make some changed to this service</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form method="GET" action="" class="js-product-update-form">
+
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-danger">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modal-service" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -34,7 +78,6 @@
                         {{ service_form.duration_minute|as_crispy_field }}
                     </div>
                 </div>
-                {{ service_form.checkintime|as_crispy_field }}
                 <a class="licolor" href="#simpleCollapse" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="simpleCollapse">Advanced Options</a>
                 <div class="collapse" id="simpleCollapse">
                     {{ service_form.checkintime|as_crispy_field }}
@@ -59,6 +102,11 @@
     </div>
   </div>
 </div>
+
+
+
+
+
 
 <div class="container-fluid justify-content-center">
     <div class="col-md-12 mr-auto ml-auto">
@@ -113,9 +161,41 @@
                 <h2 class="fs-title">Add Services</h2>
                 <h3 class="fs-subtitle">Add services which which you offer to customers</h3>
                 <div class="row justify-content-center">
-                    <button id="createservice" class="btn btn-primary mb-3 js-create-product justify-content-center" type="button" data-toggle="modal" data-target="#exampleModal">Add Service</button>
+                    <button id="createservice" class="btn btn-primary mb-3 js-create-product justify-content-center" type="button" data-toggle="modal" data-target="#modal-service">Add Service</button>
                 </div>
-                {% include 'bizadmin/dashboard/profile/services/manage_service_list.html' %}
+                <div class="table-responsive">
+                    <table id="service-table" class="table table-dark table-hover">
+                        <thead>
+                            <tr>
+                            <th class="text-center" scope="col">#</th>
+                            <th class="text-center" scope="col">Service</th>
+                            <th class="text-center" scope="col">Price ($)</th>
+                            <th class="text-center">Update/Delete</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for service in services %}
+                                <tr>
+                                    <td class="text-center" scope="row">{{ forloop.counter }}</td>
+                                    <td class="text-center">{{ service.name }}</td>
+                                    <td class="text-center">{{ service.price }}</td>
+                                    <td class="text-center">
+                                        <!-- Update Service buttons -->
+                                        <button type="button" class="js-update-product btn btn-sm btn-outline-primary" data-toggle="modal" data-target="#modal-update">
+                                            <span class="fa fa-pencil-alt"></span>
+                                        </button>
+                                        <!-- Delete Service buttons -->
+                                        <button type="button" class="js-delete-product btn btn-sm btn-danger" data-toggle="modal" data-target="#modal-delete">
+                                            <span class="fa fa-trash"></span>
+                                        </button>
+                                    </td>
+                                </tr>
+                            {% empty %}
+                                <td colspan="8" class="text-center">You do not have any services available</td>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
                 <input type="button" name="previous" class="previous action-button-previous" value="Previous"/>
                 <input type="button" name="next" class="next action-button" value="Next"/>
             </fieldset>

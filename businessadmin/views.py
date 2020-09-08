@@ -214,11 +214,11 @@ def save_service_form(request, form, template_name):
                                                 price_type=price_type,duration_hour=duration_hour,duration_minute=duration_minute,checkintime=checkintime,
                                                 padding=padding,paddingtime_hour=paddingtime_hour,paddingtime_minute=paddingtime_minute)
             service.save()
-            data['form_valid'] = True
+            data['form_is_valid'] = True
             services = Services.objects.filter(business=company)
             data['html_service_list'] = render_to_string('bizadmin/dashboard/profile/services/partial_service_list.html', {'services':services})
         else:
-            data['form_valid'] = False
+            data['form_is_valid'] = False
         return JsonResponse(data)
     context = {'service_form':form}
     data['html_form'] = render_to_string(template_name, context, request=request)

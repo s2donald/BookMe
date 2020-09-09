@@ -5,9 +5,5 @@
     <h1>Welcome, {% if user.first_name != None %}{{ user.first_name }}{% else %}{{user.username}}{% endif %}</h1>
     <p>Your account has been successfully created!</p>
     <hr>
-    {% if user.first_name == None %}
-        <h2>Before getting your services listed on the Gibele marketplace, you must subscribe to our services.</h2>
-        <p><a href="#">Click here</a> to navigate to the list of packages available that best fits your needs.</p>
-    {% endif %}
 </div>
 {% endblock %}

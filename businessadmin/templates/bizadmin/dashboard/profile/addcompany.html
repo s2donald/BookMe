@@ -8,20 +8,20 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Are you sure you want to delete?</h5>
+        <h5 class="modal-title" id="exampleModalLabel">Are you sure you want to?</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
         <form method="GET" action="" class="js-product-delete-form">
-
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-danger">Delete Service</button>
+            </div>
         </form>
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-danger">Delete Service</button>
-      </div>
+      
     </div>
   </div>
 </div>
@@ -30,20 +30,22 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Make some changed to this service</h5>
+        <h5 class="modal-title" id="exampleModalLabel">Make some changes to this service</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
         <form method="GET" action="" class="js-product-update-form">
+            
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary">Save changes</button>
+        </div>
 
         </form>
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-danger">Save changes</button>
-      </div>
+      
     </div>
   </div>
 </div>
@@ -58,7 +60,7 @@
         </button>
       </div>
       <div class="modal-body">
-      <form method="POST" action="{% host_url 'creatingservice' host 'bizadmin' %}" class="js-product-create-form">
+      <form method="POST" action="{% host_url 'service_create' host 'bizadmin' %}" class="js-product-create-form">
         {% csrf_token %}
         {{ service_form.name|as_crispy_field }}
         {{ service_form.description|as_crispy_field }}
@@ -93,11 +95,11 @@
                         </div>
                     </div>
                 </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="submit" class="btn btn-primary">Add Service</button>
-      </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Add Service</button>
+        </div>
       </form>
     </div>
   </div>
@@ -157,11 +159,11 @@
                 </div>
                 <input type="button" name="next" class="next action-button" value="Next"/>
             </fieldset>
-            <fieldset>
+            <fieldset class="no-padding">
                 <h2 class="fs-title">Add Services</h2>
                 <h3 class="fs-subtitle">Add services which which you offer to customers</h3>
                 <div class="row justify-content-center">
-                    <button id="createservice" class="btn btn-primary mb-3 js-create-product justify-content-center" type="button" data-toggle="modal" data-target="#modal-service">Add Service</button>
+                    <button id="createservice" class="btn btn-primary mb-3 js-create-product justify-content-center" type="button" data-toggle="modal" data-target="#modal-service" >Add Service</button>
                 </div>
                 <div class="table-responsive">
                     <table id="service-table" class="table table-dark table-hover">
@@ -181,11 +183,11 @@
                                     <td class="text-center">{{ service.price }}</td>
                                     <td class="text-center">
                                         <!-- Update Service buttons -->
-                                        <button type="button" class="js-update-product btn btn-sm btn-outline-primary" data-toggle="modal" data-target="#modal-update">
+                                        <button type="button" class="js-update-product btn btn-sm btn-outline-primary" data-toggle="modal" data-target="#modal-update" data-url="{% host_url 'service_update' service.id host 'bizadmin' %}">
                                             <span class="fa fa-pencil-alt"></span>
                                         </button>
                                         <!-- Delete Service buttons -->
-                                        <button type="button" class="js-delete-product btn btn-sm btn-danger" data-toggle="modal" data-target="#modal-delete">
+                                        <button type="button" class="js-delete-product btn btn-sm btn-danger" data-toggle="modal" data-target="#modal-delete" data-url="{% host_url 'service_delete' service.id host 'bizadmin' %}">
                                             <span class="fa fa-trash"></span>
                                         </button>
                                     </td>
@@ -204,25 +206,26 @@
                 <h3 class="fs-subtitle">Add your business hours and any breaks in your schedule</h3>
                 <div class="row">
                     <div class="col-md-12">
-                        <label for="">Sunday</label>
+                        <strong for="">Sunday</strong>
+                    </div>
+                    <hr style="color:black">
+                    <div class="col-md-12">
+                        <strong for="">Monday</strong>
                     </div>
                     <div class="col-md-12">
-                        <label for="">Monday</label>
+                        <strong for="">Tuesday</strong>
                     </div>
                     <div class="col-md-12">
-                        <label for="">Tuesday</label>
+                        <strong for="">Wednesday</strong>
                     </div>
                     <div class="col-md-12">
-                        <label for="">Wednesday</label>
+                        <strong for="">Thursday</strong>
                     </div>
                     <div class="col-md-12">
-                        <label for="">Thursday</label>
+                        <strong for="">Friday</strong>
                     </div>
                     <div class="col-md-12">
-                        <label for="">Friday</label>
-                    </div>
-                    <div class="col-md-12">
-                        <label for="">Saturday</label>
+                        <strong for="">Saturday</strong>
                     </div>
                 </div>
                 <input type="button" name="previous" class="previous action-button-previous" value="Previous"/>

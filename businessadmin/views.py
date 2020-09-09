@@ -9,7 +9,7 @@ from account.forms import AccountAuthenticationForm
 from django.contrib.auth import authenticate, login, logout
 from django_hosts.resolvers import reverse
 from django.http import JsonResponse
-from business.forms import AddCompanyForm, AddServiceForm
+from business.forms import AddCompanyForm, AddServiceForm, UpdateServiceForm
 from django.forms import inlineformset_factory
 # Create your views here.
 def businessadmin(request):
@@ -220,6 +220,7 @@ def save_service_form(request, form, template_name):
         else:
             data['form_is_valid'] = False
         return JsonResponse(data)
+    
     context = {'service_form':form}
     data['html_form'] = render_to_string(template_name, context, request=request)
     return JsonResponse(data)
@@ -230,6 +231,56 @@ def createserviceViews(request):
     else:
         service_form = AddServiceForm()
     return save_service_form(request, service_form, 'bizadmin/dashboard/profile/services/partial_service_create.html')
+
+def deleteserviceViews(request, pk):
+
+    company = Company.objects.get(user=request.user)
+    service = get_object_or_404(Services, pk=pk, business=company)
+    data = dict()
+    if request.method=='POST':
+        service.delete()
+        data['form_is_valid']=True
+        services = Services.objects.filter(business=company)
+        data['html_service_list'] = render_to_string('bizadmin/dashboard/profile/services/partial_service_list.html', {'services':services})
+    else:
+        context = {'service':service}
+        data['html_form'] = render_to_string('bizadmin/dashboard/profile/services/partial_service_delete.html', context, request=request)
+    return JsonResponse(data)
+
+def updateserviceViews(request, pk):
+    service = get_object_or_404(Services, pk=pk)
+    company = Company.objects.get(user=request.user)
+    dat = {'name': service.name, 'description': service.description, 'price_type':service.price_type, 'price':service.price, 'available':service.available, 'duration_hour':service.duration_hour, 'duration_minute':service.duration_minute}
+    data=dict()
+    if request.method=='POST':
+        form = UpdateServiceForm(request.POST)
+        print(form)
+        if form.is_valid():
+            
+            service.name = form.cleaned_data.get('name')
+            service.description = form.cleaned_data.get('description')
+            service.price_type = form.cleaned_data.get('price_type')
+            service.price = form.cleaned_data.get('price')
+            service.duration_hour = form.cleaned_data.get('duration_hour')
+            service.duration_minute = form.cleaned_data.get('duration_minute')
+            service.checkintime=form.cleaned_data.get('checkintime')
+            service.padding=form.cleaned_data.get('padding')
+            service.paddingtime_hour=form.cleaned_data.get('paddingtime_hour')
+            service.paddingtime_minute=form.cleaned_data.get('paddingtime_minute')
+            service.avail = True
+            company = Company.objects.get(user=request.user)
+            service.save()
+            data['form_is_valid'] = True
+            services = Services.objects.filter(business=company)
+            data['html_service_list'] = render_to_string('bizadmin/dashboard/profile/services/partial_service_list.html', {'services':services})
+        else:
+            data['form_is_valid'] = False
+        return JsonResponse(data)
+    else:
+        form = UpdateServiceForm(initial=dat)
+    context = {'service_form':form, 'service':service}
+    data['html_form'] = render_to_string('bizadmin/dashboard/profile/services/partial_service_update.html', context, request=request)
+    return JsonResponse(data)
 
 
     

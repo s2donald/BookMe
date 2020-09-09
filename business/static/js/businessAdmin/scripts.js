@@ -17,12 +17,14 @@ $(document).ready(function(){
   };
   var loadDelForm = function () { 
     var btn = $(this);
+    console.log(btn.attr("data-url"))
     $.ajax({
       url: btn.attr("data-url"),
       type: 'get',
       dataType: 'json',
       beforeSend: function () {
         $("#modal-delete").modal("show");
+        
       },
       success: function (data) {
         $("#modal-delete .modal-content").html(data.html_form);
@@ -56,9 +58,33 @@ $(document).ready(function(){
         if (data.form_is_valid) {
           $("#service-table tbody").html(data.html_service_list);
           $("#modal-service").modal("hide");
+          $("#modal-delete").modal("hide");
+          $("#modal-update").modal("hide");
         }
         else {
           $("#modal-service .modal-content").html(data.html_form);
+        }
+      }
+    });
+    return false;
+  };
+
+  var saveFormUpd = function () {
+    var form = $(this);
+    $.ajax({
+      url: form.attr("action"),
+      data: form.serialize(),
+      type: form.attr("method"),
+      dataType: 'json',
+      success: function (data) {
+        if (data.form_is_valid) {
+          $("#service-table tbody").html(data.html_service_list);
+          $("#modal-service").modal("hide");
+          $("#modal-delete").modal("hide");
+          $("#modal-update").modal("hide");
+        }
+        else {
+          $("#modal-update .modal-content").html(data.html_form);
         }
       }
     });
@@ -72,7 +98,7 @@ $(document).ready(function(){
 
     // Update product
     $("#service-table").on("click", ".js-update-product", loadUpdForm);
-    $("#modal-update").on("submit", ".js-product-update-form", saveForm);
+    $("#modal-update").on("submit", ".js-product-update-form", saveFormUpd);
 
     // Delete product
     $("#service-table").on("click", ".js-delete-product", loadDelForm);

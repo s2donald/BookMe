@@ -73,7 +73,7 @@ class AddServiceForm(forms.ModelForm):
     name = forms.CharField(label='Service Name', widget=forms.Textarea(attrs={'style':'color:black;','rows':1, 'cols':20,}))
     description = forms.CharField(label='Details Of Service',max_length=30, required=True, widget=forms.Textarea(attrs={'rows':4, 'cols':20, 'style':'color:black;'}))
     price_type = forms.ChoiceField(label='Price Type',choices=price_choices, widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control'}))
-    price = forms.DecimalField(label='Price ($)',max_digits=10, required=True, widget=forms.Textarea(attrs={'style':'color:black;', 'rows':1, 'cols':20,}))
+    price = forms.DecimalField(label='Price ($)',max_digits=10, required=True, widget=forms.TextInput(attrs={'type':'number','style':'color:black;', 'rows':1, 'cols':20,}))
     duration_hour = forms.ChoiceField(label='Duration Hour',choices=hours_choices, widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control'}))
     duration_minute = forms.ChoiceField(label='Duration Minute',choices=minute_choices,initial= '5', widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control'}))
     checkintime = forms.ChoiceField(label='Check In Time',choices=minute_choices, widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control'}))
@@ -86,16 +86,16 @@ class AddServiceForm(forms.ModelForm):
         'checkintime','padding','paddingtime_hour','paddingtime_minute')
 
 class UpdateServiceForm(forms.ModelForm):
-    name = forms.CharField(label='Service Name')
-    description = forms.CharField(label='Details Of Service',max_length=30, required=True, widget=forms.Textarea(attrs={'rows':2, 'cols':20}))
-    price_type = forms.ChoiceField(label='Price Type',choices=price_choices)
-    price = forms.DecimalField(label='Price ($)',max_digits=10, required=True)
-    duration_hour = forms.ChoiceField(label='Duration Hour',choices=hours_choices)
-    duration_minute = forms.ChoiceField(label='Duration Minute',choices=minute_choices)
-    checkintime = forms.ChoiceField(label='Check In Time',choices=minute_choices)
-    padding = forms.ChoiceField(label='Padding',choices=beforeafter)
-    paddingtime_hour = forms.ChoiceField(label='Padding Hour',choices=hours_choices)
-    paddingtime_minute = forms.ChoiceField(label='Padding Minute',choices=minute_choices)
+    name = forms.CharField(label='Service Name', widget=forms.Textarea(attrs={'style':'color:black;','rows':1, 'cols':20,}))
+    description = forms.CharField(label='Details Of Service',max_length=30, required=True, widget=forms.Textarea(attrs={'rows':4, 'cols':20, 'style':'color:black;'}))
+    price_type = forms.ChoiceField(label='Price Type',choices=price_choices, widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control'}))
+    price = forms.DecimalField(label='Price ($)',max_digits=10, required=True, widget=forms.TextInput(attrs={'type':'number','style':'color:black;', 'rows':1, 'cols':20,}))
+    duration_hour = forms.ChoiceField(label='Duration Hour',choices=hours_choices, widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control'}))
+    duration_minute = forms.ChoiceField(label='Duration Minute',choices=minute_choices,initial= '5', widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control'}))
+    checkintime = forms.ChoiceField(label='Check In Time',choices=minute_choices, widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control'}))
+    padding = forms.ChoiceField(label='Padding',choices=beforeafter, widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control'}))
+    paddingtime_hour = forms.ChoiceField(label='Padding Hour',choices=hours_choices, widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control'}))
+    paddingtime_minute = forms.ChoiceField(label='Padding Minute',choices=minute_choices, widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control'}))
     class Meta:
         model = Services
         fields = ('name','description','price_type','price','available','duration_hour','duration_minute',

@@ -35,7 +35,6 @@ def faqBusinessViews(request):
     return render(request, 'welcome/faq.html', {'business':business,'none':'d-none'})
 
 def completeViews(request):
-    HoursFormSet = inlineformset_factory(Company, OpeningHours, fields=('from_hour','to_hour','is_closed',))
     if not request.user.is_authenticated:
         context={}
         user_form = BusinessRegistrationForm()
@@ -56,6 +55,28 @@ def completeViews(request):
             postal = biz_form.cleaned_data.get('postal')
             state = biz_form.cleaned_data.get('state')
             city = biz_form.cleaned_data.get('city')
+            sun_from = request.POST['sunOpenHour']
+            sun_to = request.POST['sunCloseHour']
+            sun_closed = not request.POST.get('sunOpen', False)
+            mon_from = request.POST['monOpenHour']
+            mon_to = request.POST['monCloseHour']
+            mon_closed = not request.POST.get('monOpen', False)
+            tues_from = request.POST['tuesCloseHour']
+            tues_to = request.POST['tuesOpenHour']
+            tues_closed = not request.POST.get('tuesOpen', False)
+            wed_from = request.POST['wedOpenHour']
+            wed_to = request.POST['wedCloseHour']
+            wed_closed = not request.POST.get('wedOpen', False)
+            thurs_from = request.POST['thursOpenHour']
+            thurs_to = request.POST['thursCloseHour']
+            thurs_closed = not request.POST.get('thursOpen', False)
+            fri_from = request.POST['friOpenHour']
+            fri_to = request.POST['friCloseHour']
+            fri_closed = not request.POST.get('friOpen', False)
+            sat_from = request.POST['satOpenHour']
+            sat_to = request.POST['satCloseHour']
+            sat_closed = not request.POST.get('satOpen', False)
+
             status = 'published'
             company = Company.objects.get(user=user)
             company.business_name = business_name
@@ -69,6 +90,40 @@ def completeViews(request):
             company.save()
             user.on_board = True
             user.save()
+            objs = [
+                OpeningHours.objects.get(company=company, weekday=0),
+                OpeningHours.objects.get(company=company, weekday=1),
+                OpeningHours.objects.get(company=company, weekday=2),
+                OpeningHours.objects.get(company=company, weekday=3),
+                OpeningHours.objects.get(company=company, weekday=4),
+                OpeningHours.objects.get(company=company, weekday=5),
+                OpeningHours.objects.get(company=company, weekday=6),
+            ]
+            objs[0].is_closed = sun_closed
+            objs[1].is_closed = mon_closed
+            objs[2].is_closed = tues_closed
+            objs[3].is_closed = wed_closed
+            objs[4].is_closed = thurs_closed
+            objs[5].is_closed = fri_closed
+            objs[6].is_closed = sat_closed
+
+            objs[0].from_hour = sun_from
+            objs[1].from_hour = mon_from
+            objs[2].from_hour = tues_from
+            objs[3].from_hour = wed_from
+            objs[4].from_hour = thurs_from
+            objs[5].from_hour = fri_from
+            objs[6].from_hour = sat_from
+
+            objs[0].to_hour = sun_to
+            objs[1].to_hour = mon_to
+            objs[2].to_hour = tues_to
+            objs[3].to_hour = wed_to
+            objs[4].to_hour = thurs_to
+            objs[5].to_hour = fri_to
+            objs[6].to_hour = sat_to
+
+            OpeningHours.objects.bulk_update(objs,['is_closed','from_hour','to_hour'])
             for s in subcategory:
                 company.subcategory.add(s)
             bookings = Bookings.objects.filter(company=company)
@@ -83,8 +138,6 @@ def completeViews(request):
     subcategories = SubCategory.objects.all()
     company = Company.objects.get(user=user)
     services = Services.objects.filter(business=company)
-    hours = OpeningHours.objects.filter()
-    hourFormset = HoursFormSet(instance=company)
     sunday = OpeningHours.objects.get(company=company, weekday=0)
     monday = OpeningHours.objects.get(company=company, weekday=1)
     tuesday = OpeningHours.objects.get(company=company, weekday=2)
@@ -93,7 +146,9 @@ def completeViews(request):
     friday = OpeningHours.objects.get(company=company, weekday=5)
     saturday = OpeningHours.objects.get(company=company, weekday=6)
 
-    return render(request, 'bizadmin/dashboard/profile/addcompany.html', {'sunday':sunday,'biz_form':biz_form, 'service_form':service_form,'subcategories':subcategories,'company':company,'services':services, 'hourFormset':hourFormset})
+    return render(request, 'bizadmin/dashboard/profile/addcompany.html', {'sunday':sunday,'monday':monday,'tuesday':tuesday,'wednesday':wednesday,'thursday':thursday,'friday':friday,'saturday':saturday,
+                                                                                'biz_form':biz_form, 'service_form':service_form,'subcategories':subcategories,'company':company,
+                                                                                'services':services})
 
 def signupViews(request):
     context = {}
@@ -111,11 +166,11 @@ def signupViews(request):
                                                 state='',city='',status='draft', avgrating=0)
             biz_hours = OpeningHours.objects.bulk_create([
                 OpeningHours(company=company, weekday=0,is_closed=True),
-                OpeningHours(company=company, weekday=1,is_closed=True),
-                OpeningHours(company=company, weekday=2,is_closed=True),
-                OpeningHours(company=company, weekday=3,is_closed=True),
-                OpeningHours(company=company, weekday=4,is_closed=True),
-                OpeningHours(company=company, weekday=5,is_closed=True),
+                OpeningHours(company=company, weekday=1,is_closed=False),
+                OpeningHours(company=company, weekday=2,is_closed=False),
+                OpeningHours(company=company, weekday=3,is_closed=False),
+                OpeningHours(company=company, weekday=4,is_closed=False),
+                OpeningHours(company=company, weekday=5,is_closed=False),
                 OpeningHours(company=company, weekday=6,is_closed=True),
             ])
             return redirect(reverse('completeprofile', host='bizadmin'))
@@ -250,7 +305,7 @@ def deleteserviceViews(request, pk):
 def updateserviceViews(request, pk):
     service = get_object_or_404(Services, pk=pk)
     company = Company.objects.get(user=request.user)
-    dat = {'name': service.name, 'description': service.description, 'price_type':service.price_type, 'price':service.price, 'available':service.available, 'duration_hour':service.duration_hour, 'duration_minute':service.duration_minute}
+    dat = {'name': service.name, 'description': service.description, 'price_type':service.price_type, 'price':service.price, 'available':service.available, 'duration_hour':service.duration_hour, 'duration_minute':service.duration_minute, 'checkintime':service.checkintime, 'padding':service.padding, 'paddingtime_hour':service.paddingtime_hour, 'paddingtime_minute':service.paddingtime_minute}
     data=dict()
     if request.method=='POST':
         form = UpdateServiceForm(request.POST)
@@ -263,10 +318,10 @@ def updateserviceViews(request, pk):
             service.price = form.cleaned_data.get('price')
             service.duration_hour = form.cleaned_data.get('duration_hour')
             service.duration_minute = form.cleaned_data.get('duration_minute')
-            service.checkintime=form.cleaned_data.get('checkintime')
-            service.padding=form.cleaned_data.get('padding')
-            service.paddingtime_hour=form.cleaned_data.get('paddingtime_hour')
-            service.paddingtime_minute=form.cleaned_data.get('paddingtime_minute')
+            service.checkintime = form.cleaned_data.get('checkintime')
+            service.padding = form.cleaned_data.get('padding')
+            service.paddingtime_hour = form.cleaned_data.get('paddingtime_hour')
+            service.paddingtime_minute = form.cleaned_data.get('paddingtime_minute')
             service.avail = True
             company = Company.objects.get(user=request.user)
             service.save()

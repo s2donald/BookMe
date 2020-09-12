@@ -324,24 +324,31 @@
             <fieldset>
                 <h2 class="fs-title">Booking Settings</h2>
                 <h3 class="fs-subtitle">Configure some settings to make your booking experience unique</h3>
-                <div class="row">
+                <div class="row text-center">
+                    
                     <div class="col-md-12">
-                        <label for="">Booking Intervals</label>
+                        <label for="" class="font-weight-bold d-flex justify-content-center pr-1">Booking Link URL <a type="button" data-toggle="tooltip" data-placement="top" title="Choose a custom subdomain for your booking link which you can send to your clients or share to social media"> <i class="fas fa-question-circle licolor"></i></a></label>
+                        
+                        <div id="my-slug-container">
+                            <input type="text" id="my-slug" name="my-slug" maxlength="18" value="{{ company.slug }}">
+                            <span id="my-suffix"> <small>.gibele.com</small></span>
+                        </div>
+                        
                     </div>
                     <div class="col-md-12">
-                        <label for="">Booking Page Subdomain</label>
+                        <label for="" class="font-weight-bold d-flex justify-content-center pr-1">Booking Interval <a type="button" data-toggle="tooltip" data-placement="top" title="Set the duration for appointment slots"> <i class="fas fa-question-circle licolor"></i></a></label>
                     </div>
                     <div class="col-md-12">
-                        <label for="">Booking Buffer</label>
+                        <label for="" class="font-weight-bold d-flex justify-content-center pr-1">Booking Buffer <a type="button" data-toggle="tooltip" data-placement="top" title="Set the time after an appointment which is left unbookable"> <i class="fas fa-question-circle licolor"></i></a></label>
                     </div>
                     <div class="col-md-12">
-                        <label for="">Returning Clients Only</label>
+                        <label for="" class="font-weight-bold d-flex justify-content-center pr-1">Returning Clients Only <a type="button" data-toggle="tooltip" data-placement="top" title="Only accept clients who are on your client list"> <i class="fas fa-question-circle licolor"></i></a></label>
                     </div>
                     <div class="col-md-12">
-                        <label for="">Cancellation Policy</label>
+                        <label for="" class="font-weight-bold d-flex justify-content-center pr-1">Cancellation Policy <a type="button" data-toggle="tooltip" data-placement="top" title="The length of time before an appointment which a customer can cancel"> <i class="fas fa-question-circle licolor"></i></a></label>
                     </div>
                     <div class="col-md-12">
-                        <label for="">Customer Notes</label>
+                        <label for="" class="font-weight-bold d-flex justify-content-center pr-1">Notes for customers <a type="button" data-toggle="tooltip" data-placement="top" title="Display a popup message when clients first enter your booking link."> <i class="fas fa-question-circle licolor"></i></a></label>
                     </div>
                 </div>
                 <input type="button" name="previous" class="previous action-button-previous" value="Previous"/>
@@ -464,5 +471,35 @@
         close: 'fa fa-remove'
         }
     });
+    const inputElement = document.getElementById('my-slug');
+const suffixElement = document.getElementById('my-suffix');
+
+
+inputElement.addEventListener('input', updateSuffix);
+
+updateSuffix();
+
+function updateSuffix() {
+  const width = getTextWidth(inputElement.value +9 , '16px arial');
+  suffixElement.style.left = width + 'px';
+}
+
+
+/**
+ * Uses canvas.measureText to compute and return the width of the given text of given font in pixels.
+ * 
+ * @param {String} text The text to be rendered.
+ * @param {String} font The css font descriptor that text is to be rendered with (e.g. "bold 14px verdana").
+ * 
+ * @see https://stackoverflow.com/questions/118241/calculate-text-width-with-javascript/21015393#21015393
+ */
+function getTextWidth(text, font) {
+    // re-use canvas object for better performance
+    var canvas = getTextWidth.canvas || (getTextWidth.canvas = document.createElement("canvas"));
+    var context = canvas.getContext("2d");
+    context.font = font;
+    var metrics = context.measureText(text);
+    return metrics.width;
+}
   </script>
 {% endblock %}

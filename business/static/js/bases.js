@@ -50,12 +50,17 @@ $(document).ready(function (){
         spaceBetween: 0,
         centeredSlides: true,
         loop: true,
+        // Navigation arrows
+        navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+        },
         breakpoints: {
             991: {
-                slidesPerView: 4
+                slidesPerView: 3
             },
             565: {
-                slidesPerView: 3
+                slidesPerView: 1,
             }
         },
 
@@ -64,12 +69,6 @@ $(document).ready(function (){
             el: '.swiper-pagination',
             clickable: true,
             dynamicBullets: true
-        },
-
-        // Navigation arrows
-        navigation: {
-            nextEl: '.swiper-button-next',
-            prevEl: '.swiper-button-prev',
         },
     });
 

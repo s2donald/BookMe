@@ -4,18 +4,18 @@
 {% block title %}{{ company.business_name }} - Gibele.com{% endblock %}
 {% block content %}
     <!-- Hero Section-->
-    <section class="pt-7 pb-5 d-flex align-items-end dark-overlay bg-cover" 
-    style="background-image: url('{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/automotive-noimage1.jpg" %}{% endif %}'); width:auto; height:400px;">
-      {% comment %} <!-- Slider main container-->
+    <section class="pt-7 pb-5 d-flex align-items-end dark-overlay bg-cover">
+      <!-- Slider main container-->
+      {% comment %} style="background-image: url('{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/automotive-noimage1.jpg" %}{% endif %}'); width:auto; height:400px;" {% endcomment %}
       <div class="swiper-container detail-slider slider-gallery">
         <!-- Additional required wrapper-->
         <div class="swiper-wrapper">
           <!-- Slides-->
           {% if comp_categ.name == 'Automotive Services' %}
-                <div class="swiper-slide"><a href="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/automotive-noimage1.jpg" %}{% endif %}" data-toggle="gallery-top" title="Stock Image"><img class="img-fluid" style="width:500px;length:700px;" src="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/automotive-noimage1.jpg" %}{% endif %}" alt="Stock Image"></a></div>
+                <div class="swiper-slide"><a href="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/automotive-noimage1.jpg" %}{% endif %}" data-toggle="gallery-top" title="Header Image"><img class="img-fluid" style="width:500px;max-height:700px;" src="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/automotive-noimage1.jpg" %}{% endif %}" alt="Header Image"></a></div>
           {% endif %}
           {% if comp_categ.name == 'Personal Care' %}
-                <div class="swiper-slide"><a href="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/beautynoimage1.jpg" %}{% endif %}" data-toggle="gallery-top" title="Stock Image"><img class="img-fluid" style="width:500px;length:700px;" src="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/beautynoimage1.jpg" %}{% endif %}" alt="Stock Image"></a></div>
+                <div class="swiper-slide"><a href="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/beautynoimage1.jpg" %}{% endif %}" data-toggle="gallery-top" title="Header Image"><img class="img-fluid" style="width:500px;max-height:700px;" src="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/beautynoimage1.jpg" %}{% endif %}" alt="Header Image"></a></div>
           {% endif %}
           <div class="swiper-slide"><a href="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/no_image.png" %}{% endif %}" data-toggle="gallery-top" title="Outside"><img class="img-fluid" src="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/no_image.png" %}{% endif %}" alt="{{ comp_categ.name }}"></a></div>
           <div class="swiper-slide"><a href="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/no_image.png" %}{% endif %}" data-toggle="gallery-top" title="Rear entrance"><img class="img-fluid" src="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/no_image.png" %}{% endif %}" alt="Rear entrance"></a></div>
@@ -23,7 +23,7 @@
         <div class="swiper-pagination swiper-pagination-white"></div>
         <div class="swiper-button-prev swiper-button-white circle-slide"></div>
         <div class="swiper-button-next swiper-button-white circle-slide"></div>
-      </div> {% endcomment %}
+      </div>
     </section>
 
     <section class="py-0">
@@ -476,5 +476,22 @@
       {% endfor %}
 
       $('#photos').append(allImages);
+    </script>
+    <script>
+      $(document).ready(function(){
+        function checkWidth(){
+          var windowWidth = $(window).width();
+          if (windowWidth <= 560){
+            $('.swiper-button-next').hide()
+            $('.swiper-button-prev').hide()
+          }
+          else{
+            $('.swiper-button-next').show()
+            $('.swiper-button-prev').show()
+          }
+        }
+        checkWidth();
+        $(window).resize(checkWidth);
+      })
     </script>
 {% endblock extrascripts %}

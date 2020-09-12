@@ -77,9 +77,9 @@ class AddServiceForm(forms.ModelForm):
     duration_hour = forms.ChoiceField(label='Duration Hour',choices=hours_choices, widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control'}))
     duration_minute = forms.ChoiceField(label='Duration Minute',choices=minute_choices,initial= '5', widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control'}))
     checkintime = forms.ChoiceField(label='Check In Time',choices=minute_choices, widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control'}))
-    padding = forms.ChoiceField(label='Padding',choices=beforeafter, widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control'}))
-    paddingtime_hour = forms.ChoiceField(label='Padding Hour',choices=hours_choices, widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control'}))
-    paddingtime_minute = forms.ChoiceField(label='Padding Minute',choices=minute_choices, widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control'}))
+    padding = forms.ChoiceField(label='Buffer',choices=beforeafter, widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control'}))
+    paddingtime_hour = forms.ChoiceField(label='Buffer Hour',choices=hours_choices, widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control'}))
+    paddingtime_minute = forms.ChoiceField(label='Buffer Minute',choices=minute_choices, widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control'}))
     class Meta:
         model = Services
         fields = ('name','description','price_type','price','available','duration_hour',
@@ -93,16 +93,16 @@ class UpdateServiceForm(forms.ModelForm):
     duration_hour = forms.ChoiceField(label='Duration Hour',choices=hours_choices, widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control'}))
     duration_minute = forms.ChoiceField(label='Duration Minute',choices=minute_choices,initial= '5', widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control'}))
     checkintime = forms.ChoiceField(label='Check In Time',choices=minute_choices, widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control'}))
-    padding = forms.ChoiceField(label='Padding',choices=beforeafter, widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control'}))
-    paddingtime_hour = forms.ChoiceField(label='Padding Hour',choices=hours_choices, widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control'}))
-    paddingtime_minute = forms.ChoiceField(label='Padding Minute',choices=minute_choices, widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control'}))
+    padding = forms.ChoiceField(label='Buffer',choices=beforeafter, widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control'}))
+    paddingtime_hour = forms.ChoiceField(label='Buffer Hour',choices=hours_choices, widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control'}))
+    paddingtime_minute = forms.ChoiceField(label='Buffer Minute',choices=minute_choices, widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control'}))
     class Meta:
         model = Services
         fields = ('name','description','price_type','price','available','duration_hour','duration_minute',
         'checkintime','padding','paddingtime_hour','paddingtime_minute')
 
 class AddCompanyForm(forms.ModelForm):
-    business_name = forms.CharField(max_length=30, label='Business Name', widget=forms.TextInput(attrs={'class':'form-control'}))
+    business_name = forms.CharField(max_length=30, label='Business Name', widget=forms.TextInput(attrs={'class':'form-control form-control-success'}))
     category = forms.ModelChoiceField(queryset=Category.objects.all(),label='Main Category', empty_label=None, widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control','title':'Category'}))
     subcategory = forms.ModelMultipleChoiceField(queryset=SubCategory.objects.all(),label='Business Categories', widget=forms.SelectMultiple(attrs={'class':'selectcolor selectpicker show-tick form-control','multiple':'', 'data-size':'5', 'data-dropdown-align-right':'true', 'title':'Subcategories'}))
     description = forms.CharField(label='Brief Business Description', max_length=500, widget=forms.Textarea(attrs={'rows':3,'cols':20}))

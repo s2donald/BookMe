@@ -9,7 +9,7 @@
             <div class="row text-center underlay mb-3">
                 <form method="POST" class="justify-content-center fform" enctype="multipart/form-data">
                     {% csrf_token %}
-                    <div class="container">
+                    <div class="container-fluid">
                         <div class="col-md-12 d-flex justify-content-center">
                             <h3 class="mb-3">Select The Staff Member</h3>
                         </div>
@@ -27,7 +27,7 @@
                 </form>
                 <form method="post" class="justify-content-center d-none" id="authform" enctype="multipart/form-data">
                     {% csrf_token %}
-                    <div class="authver justify-content-center container">
+                    <div class="authver justify-content-center container-fluid">
                         <div class="row justify-content-center">
                             <div class="col-md-12">
                                 <h3>Submit Your Info</h3>
@@ -175,16 +175,16 @@
             var i = 0
             var j = 0
             h=``
-            astring = `<ul class="threecol">`
+            astring = ``
             var afternoon = 0
             var evening = 0
             for (d in data.appointment_slots){
                 j = i + 1
-                h = `<li><a class="btn btn-outline-primary btn-sm mb-1 show" style="height:auto;" id="show`+j+`">${data.appointment_slots[i]}</a></li>`
+                h = `<a class="btn btn-outline-primary btn-sm mb-1 show" style="height:auto;" id="show`+j+`">${data.appointment_slots[i]}</a>`
                 astring = astring+h
                 i = i + 1
             }
-            astring = astring+'</ul>'
+            astring = astring+''
             if (j>0){
                 authen = data.auth
                 helper.innerHTML=astring

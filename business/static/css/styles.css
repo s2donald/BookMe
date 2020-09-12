@@ -24,8 +24,34 @@
 
 
 body {
-    font-family: montserrat, arial, verdana;
+    font-family: 'montserrat', arial, verdana;
     background: transparent;
+}
+.licolor {
+  color: #854fee;
+  font-weight: bold;
+}
+a.licolor:hover, a.licolor:focus {
+  color: #d52ecd !important;
+}
+#my-slug-container {
+  display: inline-block;
+  position: relative;
+  font: 15px arial;
+}
+
+#my-slug {
+  font: inherit;
+}
+
+#my-suffix {
+  position: absolute;
+  left: 0;
+  top: 15px;
+  color: rgb(63, 63, 63);
+  padding-left: 5px;
+  font: inherit;
+  font-family: arial;
 }
 
 /*form styles*/
@@ -62,7 +88,7 @@ body {
     margin-bottom: 10px;
     width: 100%;
     box-sizing: border-box;
-    font-family: montserrat;
+    font-family: 'montserrat', arial, verdana;
     color: #2C3E50;
     font-size: 13px;
 }
@@ -214,7 +240,7 @@ body {
   box-sizing: border-box; }
 
 html {
-  font-family: sans-serif;
+  font-family: 'montserrat', arial, verdana;
   font-size: 18px;
   line-height: 1.15;
   height: 100%;
@@ -223,7 +249,7 @@ html {
   -webkit-tap-highlight-color: rgba(34, 42, 66, 0); }
 @media only screen and (max-width: 700px) {
   html {
-    font-family: sans-serif;
+    font-family: 'montserrat', arial, verdana;
     font-size: 10px;
     line-height: 1.15;
     -webkit-text-size-adjust: 100%;
@@ -235,7 +261,7 @@ article, aside, figcaption, figure, footer, header, hgroup, main, nav, section {
 
 body {
   margin: 0;
-  font-family: "Poppins", sans-serif;
+  font-family: 'montserrat', arial, verdana;
   font-size: 1.2rem;
   font-weight: 400;
   line-height: 1.5;
@@ -7714,7 +7740,7 @@ input,
 optgroup,
 select,
 textarea {
-  font-family: "Poppins", sans-serif; }
+  font: 15px arial !important; }
 
 .card h1, .card h2, .card h3, .card h4, .card h5, .card h6, .card p {
   color: rgba(255, 255, 255, 0.8); }
@@ -8060,7 +8086,7 @@ table.tablesorter thead tr .headerSortDown {
   background-color: #e14eca; }
 
 .form-check .form-check-sign::after {
-  font-family: 'nucleo';
+  font-family: 'montserrat', arial, verdana;
   content: "\ea1b";
   top: 0px;
   text-align: center;

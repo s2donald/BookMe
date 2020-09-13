@@ -28,7 +28,7 @@ class SubCategory(models.Model):
     slug = models.SlugField(max_length=200, unique=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     class Meta:
-        ordering = ('name',)
+        ordering = ('category',)
         verbose_name = 'sub-category'
         verbose_name_plural = 'sub-categories'
     def __str__(self):
@@ -121,6 +121,21 @@ beforeafter = (
     ('bf','Before & After')
  )
 
+cancellationtime = (
+    ('0','Anytime'),
+    ('1', '1 hour'),
+    ('3', '3 hours'),
+    ('6', '6 hours'),
+    ('8', '8 hours'),
+    ('12', '12 hours'),
+    ('24', '1 day'),
+    ('48', '2 days'),
+    ('72', '3 days'),
+    ('96', '4 days'),
+    ('168', '1 week'),
+    ('10000', 'never'),
+)
+
 
 #This is the model for the information we need from each company that is listed on the website
 class Company(models.Model):
@@ -141,6 +156,9 @@ class Company(models.Model):
     state = models.CharField(max_length=2)
     city = models.CharField(max_length=30)
     slug = models.SlugField(max_length=200, db_index=True, blank=True, unique=True)
+    notes = models.CharField(max_length=250, blank=True, null=True)
+    returning = models.BooleanField(default=False)
+    cancellation = models.IntegerField(choices=cancellationtime,default='0')
     interval = models.IntegerField(choices=INTERVAL, default=1)
     image = models.ImageField(upload_to='companies/%Y/%m/%d', blank=True)
     available = models.BooleanField(default=True)

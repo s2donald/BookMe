@@ -4,66 +4,103 @@
 {% block linkscript %}
     <link rel="stylesheet" href="{% static "css/calendarmain.css"%}">
     <script src="{% static "js/calendarmain.js" %}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 {% endblock linkscript %}
 {% block activecal%}active{%endblock%}
 {% block businessadmin %}
+
 <script>
         document.addEventListener('DOMContentLoaded', function(){
-            if (window.innerWidth >= 500 ) {
+            
                 var leftitems = 'prev,next today'
                 var rightitems = 'dayGridMonth,dayGridWeek,dayGridDay'
                 var initviewcal = 'dayGridWeek'
                 var asprat = 1
-            } else {
-                var leftitems = 'prev,next'
-                var rightitems = ''
-                var initviewcal = 'dayGridDay'
-                var asprat = 1/2
-                console.log(window.innerWidth)
-            }
-            var calendarEl = document.getElementById('calendar');
-            var calendar = new FullCalendar.Calendar(calendarEl, {
-                selectable:true,
+                var calendarEl = document.getElementById('calendar');
+                var calendar = new FullCalendar.Calendar(calendarEl, {
+                    eventLimit: true, // for all non-TimeGrid views
+                    views: {
+                        timeGrid: {
+                        eventLimit: 2 // adjust to 6 only for timeGridWeek/timeGridDay
+                        },
+                    },
+                    selectable: true,
+                    select: function(info) {
+                    // on select we show the Sweet Alert modal with an input
+                    Swal.fire({
+                        title: 'Create an Event',
+                        html: '<div class="form-group">' +
+                        '<input class="form-control text-default" placeholder="Event Title" id="input-field">' +
+                        '</div>',
+                        showCancelButton: true,
+                        confirmButtonClass: 'btn btn-primary',
+                        cancelButtonClass: 'btn btn-danger',
+                        buttonsStyling: false
+                    }).then(function(result) {
+
+                        var eventData;
+                        event_title = $('#input-field').val();
+
+                        if (event_title) {
+                        eventData = {
+                            title: event_title,
+                            start: info.startStr,
+                            end: info.endStr,
+                            className: 'event-azure',
+                        };
+                        calendar.addEvent(eventData);
+                        }
+                    });
+                },
                 aspectRatio: asprat,
+                eventLimit: true,
                 events:[
                 {% for booking in bookings %}
                     {
                         title: '{{ booking.service.name }}',
+                        desc: '{{ booking.slug }}',
                         start: '{{ booking.start|date:"Y-m-d" }}'+'T'+'{{ booking.start|date:"H:i:s" }}',
                         end: '{{ booking.end|date:"Y-m-d" }}'+'T'+'{{ booking.end|date:"H:i:s" }}',
+                        {% if forloop.counter|divisibleby:"2" %}
+                            className: 'event-green',
+                        {% elif forloop.counter|divisibleby:"3" %}
+                            className: 'event-orange',
+                        {% else %}
+                            className:'event-red',
+                        {% endif %}
+                        
                     },
                 {% endfor %}
                 ],
+                eventClick: function(info) {
+                    alert('Event: ' + info.event.title);
+                    alert(info.jsEvent.desc);
+                    Swal.fire({
+                        title: info.event.title,
+                        html: '<div class="form-group">' +
+                        '<input class="form-control text-default" placeholder="Event Title" id="input-field">' +
+                        '</div>',
+                        showCancelButton: true,
+                        confirmButtonClass: 'btn btn-primary',
+                        cancelButtonClass: 'btn btn-danger',
+                        buttonsStyling: false
+                    })
+                },
 
                 initialView: initviewcal,
                 headerToolbar: {
-                    left: leftitems,
-                    center: 'title',
+                    center: leftitems,
+                    left: 'title',
                     right: rightitems
                 }
             });
             calendar.render()
         });
     </script>
-<div id="layoutSidenav_content">
-    <main>
         <!-- Main page content-->
         <div class="content">
         <div class="row">
           <div class="col-md-10 ml-auto mr-auto">
-            <header class="page-header page-header-compact page-header-light">
-            <div class="container">
-                <div class="page-header-content">
-                    <div class="row align-items-center justify-content-between pt-3">
-                        <div class="col-auto mb-3">
-                            <h1 class="page-header-title d-flex">
-                                Schedule
-                            </h1>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </header>
             <div class="card card-calendar">
               <div class="card-body">
                 <div id="calendar"></div>
@@ -72,6 +109,4 @@
           </div>
         </div>
       </div>
-    </main>
-</div>
 {% endblock %}

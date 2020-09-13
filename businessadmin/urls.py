@@ -10,6 +10,7 @@ urlpatterns = [
     url(r'creating/$', views.createserviceViews, name='service_create'),
     url(r'delete/(?P<pk>\d+)/$', views.deleteserviceViews, name='service_delete'),
     url(r'update/(?P<pk>\d+)/$', views.updateserviceViews, name='service_update'),
+    url(r'onboarding/check/subdomain/$', views.subdomainCheck.as_view(), name='subdomain'),
     url(r'onboarding/$', views.completeViews, name='completeprofile'),
     url(r'file-upload/$', views.fileUploadView, name='upload'),
     url(r'signup/$', views.signupViews, name='bizadminsignup'),

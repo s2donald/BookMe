@@ -9,8 +9,12 @@ from account.forms import AccountAuthenticationForm
 from django.contrib.auth import authenticate, login, logout
 from django_hosts.resolvers import reverse
 from django.http import JsonResponse
-from business.forms import AddCompanyForm, AddServiceForm, UpdateServiceForm
+import json
+from business.forms import AddCompanyForm, AddServiceForm, UpdateServiceForm, BookingSettingForm
 from django.forms import inlineformset_factory
+from django.views import View
+from slugify import slugify
+
 # Create your views here.
 def businessadmin(request):
     user = request.user
@@ -42,12 +46,16 @@ def completeViews(request):
         return render(request, 'account/bussignup.html', {'user_form':user_form})
     email = request.user.email
     user = get_object_or_404(Account, email=email)
+    
     if user.on_board:
         return redirect(reverse('schedule', host='bizadmin')) 
+    print('hellofromtype')
     if request.method == 'POST':
         biz_form = AddCompanyForm(request.POST)
-        if biz_form.is_valid():
-            business_name = biz_form.cleaned_data.get('business_name')
+        booking_form = BookingSettingForm(request.POST)
+        print(biz_form)
+        if biz_form.is_valid() and booking_form.is_valid():
+            company = Company.objects.get(user=user)
             category = biz_form.cleaned_data.get('category')
             subcategory = biz_form.cleaned_data.get('subcategory')
             description = biz_form.cleaned_data.get('description')
@@ -55,6 +63,10 @@ def completeViews(request):
             postal = biz_form.cleaned_data.get('postal')
             state = biz_form.cleaned_data.get('state')
             city = biz_form.cleaned_data.get('city')
+            interval = booking_form.cleaned_data.get('interval')
+            notes = booking_form.cleaned_data.get('notes')
+            cancellation = booking_form.cleaned_data.get('cancellation')
+            subdomain = request.POST.get('subdomain',company.slug)
             sun_from = request.POST['sunOpenHour']
             sun_to = request.POST['sunCloseHour']
             sun_closed = not request.POST.get('sunOpen', False)
@@ -78,8 +90,6 @@ def completeViews(request):
             sat_closed = not request.POST.get('satOpen', False)
 
             status = 'published'
-            company = Company.objects.get(user=user)
-            company.business_name = business_name
             company.category = category
             company.description = description
             company.address = address
@@ -87,6 +97,11 @@ def completeViews(request):
             company.state = state
             company.city = city
             company.status = status
+            company.interval = interval
+            company.notes = notes
+            company.cancellation = cancellation
+            if subdomain != company.slug:
+                company.slug = slugify(subdomain)
             company.save()
             user.on_board = True
             user.save()
@@ -135,6 +150,7 @@ def completeViews(request):
 
     biz_form = AddCompanyForm()
     service_form = AddServiceForm()
+    booking_form = BookingSettingForm()
     subcategories = SubCategory.objects.all()
     company = Company.objects.get(user=user)
     services = Services.objects.filter(business=company)
@@ -146,9 +162,23 @@ def completeViews(request):
     friday = OpeningHours.objects.get(company=company, weekday=5)
     saturday = OpeningHours.objects.get(company=company, weekday=6)
 
-    return render(request, 'bizadmin/dashboard/profile/addcompany.html', {'sunday':sunday,'monday':monday,'tuesday':tuesday,'wednesday':wednesday,'thursday':thursday,'friday':friday,'saturday':saturday,
+    return render(request, 'bizadmin/dashboard/profile/addcompany.html', {'booking_form':booking_form,'sunday':sunday,'monday':monday,'tuesday':tuesday,'wednesday':wednesday,'thursday':thursday,'friday':friday,'saturday':saturday,
                                                                                 'biz_form':biz_form, 'service_form':service_form,'subcategories':subcategories,'company':company,
                                                                                 'services':services})
+
+class subdomainCheck(View):
+    def post(self, request):
+        data=json.loads(request.body)
+        subdomain = data['subdomain']
+        company = Company.objects.get(user=request.user)
+        if not subdomain:
+            return JsonResponse({'email_error':'You must choose a subdomain or else a random one will be chosen.','email_valid':True})
+        if (company.slug!=str(subdomain)) and (Company.objects.filter(slug=subdomain).exists()):
+            return JsonResponse({'email_error':'This subdomain already exists! Please try another.','email_valid':True})
+
+        if subdomain != slugify(subdomain):
+            return JsonResponse({'email_error':'Subdomains must only contain lowercase letters, numbers and hyphens.','email_valid':True})
+        return JsonResponse({'email_valid':False})
 
 def signupViews(request):
     context = {}
@@ -159,9 +189,10 @@ def signupViews(request):
             user_form.save()
             email = user_form.cleaned_data.get('email')
             raw_pass = user_form.cleaned_data.get('password1')
+            bname = request.POST.get('bname', '')
             account = authenticate(email=email, password=raw_pass)
             login(request, account)
-            company = Company.objects.create(user=account,business_name='',
+            company = Company.objects.create(user=account,business_name=bname,
                                                 description='',address='',postal='',
                                                 state='',city='',status='draft', avgrating=0)
             biz_hours = OpeningHours.objects.bulk_create([

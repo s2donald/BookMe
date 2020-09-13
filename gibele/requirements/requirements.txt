@@ -8,3 +8,4 @@ django-bootstrap-modal-forms
 django_taggit==1.2.0
 psycopg2-binary==2.8.4
 django-hosts==4.0.0
+python-slugify

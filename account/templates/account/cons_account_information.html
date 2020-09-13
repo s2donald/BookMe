@@ -116,14 +116,13 @@
         return cookieValue;
     }
     const csrftoken = getCookie('csrftoken');
-
+    
     const emailField = document.querySelector("#id_email");
     const phoneField = document.querySelector("#id_phone");
     const feedBackArea = document.querySelector(".invalid_feedback")
     const feedBackreaPhone = document.querySelector(".invalid_phone")
 
     emailField.addEventListener('keyup', (e) =>{
-        console.log('It works wonderfully');
         const emailVal = e.target.value;
         const phoneVal = '';
         emailField.classList.remove("is-invalid");

@@ -130,34 +130,38 @@
             <!-- fieldsets -->
             <fieldset>
                 <h2 class="fs-title">Company Details</h2>
-                <h3 class="fs-subtitle">Tell us about your company</h3>
+                <h3 class="fs-subtitle">Tell us about {{ company.business_name }}</h3>
                 <div class="row">
-                    <div class="col-md-12">
-                        {{ biz_form.business_name|as_crispy_field }}
-                    </div>
                     <div class="col-md-6">
+                        <label for="" class="font-weight-bold d-flex justify-content-center pr-1">Main Category <a type="button" data-toggle="tooltip" data-placement="top" title="Select the main category of your business"> <i class="fas fa-question-circle licolor"></i></a></label>
                         {{ biz_form.category|as_crispy_field }}
                     </div>
                     <div class="col-md-6">
+                        <label for="" class="font-weight-bold d-flex justify-content-center pr-1">Business Categories <a type="button" data-toggle="tooltip" data-placement="top" title="Select as many subcategories your business offers services in"> <i class="fas fa-question-circle licolor"></i></a></label>
                         {{ biz_form.subcategory|as_crispy_field }}
                     </div>
                     <div class="col-md-12">
+                        <label for="" class="font-weight-bold d-flex justify-content-center pr-1">Brief Business Description <a type="button" data-toggle="tooltip" data-placement="top" title="This brief company description will appear in the about section on your business page."> <i class="fas fa-question-circle licolor"></i></a></label>
                         {{ biz_form.description|as_crispy_field }}
                     </div>
                     <div class="col-md-12">
+                        <label for="" class="font-weight-bold d-flex justify-content-center pr-1">Business Address <a type="button" data-toggle="tooltip" data-placement="top" title="The address of your business"> <i class="fas fa-question-circle licolor"></i></a></label>
                         {{ biz_form.address|as_crispy_field }}
                     </div>
                     <div class="col-md-4">
+                        <label for="" class="font-weight-bold d-flex justify-content-center pr-1">Postal Code <a type="button" data-toggle="tooltip" data-placement="top" title="Postal Code or Zip Code"> <i class="fas fa-question-circle licolor"></i></a></label>
                         {{ biz_form.postal|as_crispy_field }}
                     </div>
                     <div class="col-md-4">
+                        <label for="" class="font-weight-bold d-flex justify-content-center pr-1">Province/State <a type="button" data-toggle="tooltip" data-placement="top" title="Province or State"> <i class="fas fa-question-circle licolor"></i></a></label>
                         {{ biz_form.state|as_crispy_field }}
                     </div>
                     <div class="col-md-4">
+                        <label for="" class="font-weight-bold d-flex justify-content-center pr-1">City <a type="button" data-toggle="tooltip" data-placement="top" title="The main category of your business"> <i class="fas fa-question-circle licolor"></i></a></label>
                         {{ biz_form.city|as_crispy_field }}
                     </div>
                 </div>
-                <input type="button" name="next" class="next action-button" value="Next"/>
+                <input type="button" name="next" class="next btn btn-primary text-white" value="Next"/>
             </fieldset>
             <fieldset class="no-padding">
                 <h2 class="fs-title">Add Services</h2>
@@ -198,170 +202,232 @@
                         </tbody>
                     </table>
                 </div>
-                <input type="button" name="previous" class="previous action-button-previous" value="Previous"/>
-                <input type="button" name="next" class="next action-button" value="Next"/>
+                <input type="button" name="previous" class="previous btn btn-secondary text-white" value="Previous"/>
+                <input type="button" name="next" class="next btn btn-primary text-white" value="Next"/>
             </fieldset>
             <fieldset>
                 <h2 class="fs-title">Business Hours</h2>
-                <h3 class="fs-subtitle">Add your business hours and any breaks in your schedule</h3>
+                <h3 class="fs-subtitle">Add your business hours</h3>
                 <div class="row">
-                    <div class="col-md-12">
+                    <div class="col-md-12 mt-1">
                         <div class="justify-content-center my-auto align-items-center">
                             <strong for="">Sunday Business Hours</strong>
-                            <input name="sunOpen" {% if sunday.is_closed %}{% else %}checked{% endif %} type="checkbox" class="bootstrap-switch bootstrap-switch-red my-0" data-on-label="OPEN" data-off-label=""/>
+                            <input type="checkbox" name="sunOpen" {% if sunday.is_closed %}{% else %}checked{% endif %} class="bootstrap-switch bootstrap-switch-red my-0" id="sunOpen" data-on-label="OPEN" data-off-label=""/>
                         </div>
-                            <div class="row justify-content-center">
+                            <div class="row justify-content-center" id="sundaytimes">
                                 <div class="col-sm-6 col-lg-4 col-lg-2">
-                                    <label class="">Open Time</label>
-                                    <input type="text" class="datetimepicker text-center" name="sunOpenHour" id="sunOpenHour" value="{{ sunday.from_hour }}"/>
+                                <div class="input-group justify-content-center mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">Open Time</span>
+                                    </div>
+                                    <input type="text" class="datetimepicker form-control text-center" name="sunOpenHour" id="sunOpenHour" value="{{ sunday.from_hour }}"/>
+                                </div>
                                 </div>
                                 <div class="col-sm-6 col-lg-4 col-lg-2">
-                                    <label class="">Close Time</label>
-                                    <input type="text" class="datetimepicker text-center" name="sunCloseHour" id="sunCloseHour" value="{{ sunday.to_hour }}"/>
+                                <div class="input-group justify-content-center mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">Close Time</span>
+                                    </div>
+                                    <input type="text" class="datetimepicker form-control text-center" name="sunCloseHour" id="sunCloseHour" value="{{ sunday.to_hour }}"/>
+                                </div>
                                 </div>
                             </div>
                     </div>
-                    <div class="col-md-12">
+                    <div class="col-md-12 mt-1">
                         <div class="justify-content-center my-auto align-items-center">
                             <strong for="">Monday Business Hours</strong>
                             <input name="monOpen" {% if monday.is_closed %}{% else %}checked{% endif %} type="checkbox" class="bootstrap-switch bootstrap-switch-red my-0" data-on-label="OPEN" data-off-label=""/>
                         </div>
                             <div class="row justify-content-center">
                                 <div class="col-sm-6 col-lg-4 col-lg-2">
-                                    <label class="">Open Time</label>
-                                    <input type="text" class="datetimepicker text-center" name="monOpenHour" id="monOpenHour" value="{{ monday.from_hour }}"/>
+                                <div class="input-group justify-content-center mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">Open Time</span>
+                                    </div>
+                                    <input type="text" class="datetimepicker form-control text-center" name="monOpenHour" id="monOpenHour" value="{{ monday.from_hour }}"/>
+                                </div>
                                 </div>
                                 <div class="col-sm-6 col-lg-4 col-lg-2">
-                                    <label class="">Close Time</label>
-                                    <input type="text" class="datetimepicker text-center" name="monCloseHour" id="monCloseHour" value="{{ monday.to_hour }}"/>
+                                <div class="input-group justify-content-center mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">Close Time</span>
+                                    </div>
+                                    <input type="text" class="datetimepicker form-control text-center" name="monCloseHour" id="monCloseHour" value="{{ monday.to_hour }}"/>
+                                </div>
                                 </div>
                             </div>
                     </div>
-                    <div class="col-md-12">
+                    <div class="col-md-12 mt-1">
                         <div class="justify-content-center my-auto align-items-center">
                             <strong for="">Tuesday Business Hours</strong>
                             <input name="tuesOpen" {% if tuesday.is_closed %}{% else %}checked{% endif %} type="checkbox" class="bootstrap-switch bootstrap-switch-red my-0" data-on-label="OPEN" data-off-label=""/>
                         </div>
                             <div class="row justify-content-center">
                                 <div class="col-sm-6 col-lg-4 col-lg-2">
-                                    <label class="">Open Time</label>
-                                    <input type="text" class="datetimepicker text-center" name="tuesOpenHour" id="tuesOpenHour" value="{{ tuesday.from_hour }}"/>
+                                <div class="input-group justify-content-center mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">Open Time</span>
+                                    </div>
+                                    <input type="text" class="datetimepicker form-control text-center" name="tuesOpenHour" id="tuesOpenHour" value="{{ tuesday.from_hour }}"/>
+                                </div>
                                 </div>
                                 <div class="col-sm-6 col-lg-4 col-lg-2">
-                                    <label class="">Close Time</label>
-                                    <input type="text" class="datetimepicker text-center" name="tuesCloseHour" id="tuesCloseHour" value="{{ tuesday.to_hour }}"/>
+                                <div class="input-group justify-content-center mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">Close Time</span>
+                                    </div>
+                                    <input type="text" class="datetimepicker form-control text-center" name="tuesCloseHour" id="tuesCloseHour" value="{{ tuesday.to_hour }}"/>
+                                </div>
                                 </div>
                             </div>
                     </div>
-                    <div class="col-md-12">
+                    <div class="col-md-12 mt-1">
                         <div class="justify-content-center my-auto align-items-center">
                             <strong for="">Wednesday Business Hours</strong>
                             <input name="wedOpen" {% if wednesday.is_closed %}{% else %}checked{% endif %} type="checkbox" class="bootstrap-switch bootstrap-switch-red my-0" data-on-label="OPEN" data-off-label=""/>
                         </div>
                             <div class="row justify-content-center">
                                 <div class="col-sm-6 col-lg-4 col-lg-2">
-                                    <label class="">Open Time</label>
-                                    <input type="text" class="datetimepicker text-center" name="wedOpenHour" id="wedOpenHour" value="{{ wednesday.from_hour }}"/>
+                                <div class="input-group justify-content-center mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">Open Time</span>
+                                    </div>
+                                    <input type="text" class="datetimepicker form-control text-center" name="wedOpenHour" id="wedOpenHour" value="{{ wednesday.from_hour }}"/>
+                                </div>
                                 </div>
                                 <div class="col-sm-6 col-lg-4 col-lg-2">
-                                    <label class="">Close Time</label>
-                                    <input type="text" class="datetimepicker text-center" name="wedCloseHour" id="wedCloseHour" value="{{ wednesday.to_hour }}"/>
+                                <div class="input-group justify-content-center mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">Close Time</span>
+                                    </div>
+                                    <input type="text" class="datetimepicker form-control text-center" name="wedCloseHour" id="wedCloseHour" value="{{ wednesday.to_hour }}"/>
+                                </div>
                                 </div>
                             </div>
                     </div>
-                    <div class="col-md-12">
+                    <div class="col-md-12 mt-1">
                         <div class="justify-content-center my-auto align-items-center">
                             <strong for="">Thursday Business Hours</strong>
                             <input name="thursOpen" {% if thursday.is_closed %}{% else %}checked{% endif %} type="checkbox" class="bootstrap-switch bootstrap-switch-red my-0" data-on-label="OPEN" data-off-label=""/>
                         </div>
                             <div class="row justify-content-center">
                                 <div class="col-sm-6 col-lg-4 col-lg-2">
-                                    <label class="">Open Time</label>
-                                    <input type="text" class="datetimepicker text-center" name="thursOpenHour" id="thursOpenHour" value="{{ thursday.from_hour }}"/>
+                                <div class="input-group justify-content-center mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">Open Time</span>
+                                    </div>
+                                    <input type="text" class="datetimepicker form-control text-center" name="thursOpenHour" id="thursOpenHour" value="{{ thursday.from_hour }}"/>
+                                </div>
                                 </div>
                                 <div class="col-sm-6 col-lg-4 col-lg-2">
-                                    <label class="">Close Time</label>
-                                    <input type="text" class="datetimepicker text-center" name="thursCloseHour" id="thursCloseHour" value="{{ thursday.to_hour }}"/>
+                                <div class="input-group justify-content-center mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">Close Time</span>
+                                    </div>
+                                    <input type="text" class="datetimepicker form-control text-center" name="thursCloseHour" id="thursCloseHour" value="{{ thursday.to_hour }}"/>
+                                </div>
                                 </div>
                             </div>
                     </div>
-                    <div class="col-md-12">
+                    <div class="col-md-12 mt-1">
                         <div class="justify-content-center my-auto align-items-center">
                             <strong for="">Friday Business Hours</strong>
                             <input name="friOpen" {% if friday.is_closed %}{% else %}checked{% endif %} type="checkbox" class="bootstrap-switch bootstrap-switch-red my-0" data-on-label="OPEN" data-off-label=""/>
                         </div>
                             <div class="row justify-content-center">
                                 <div class="col-sm-6 col-lg-4 col-lg-2">
-                                    <label class="">Open Time</label>
-                                    <input type="text" class="datetimepicker text-center" name="friOpenHour" id="friOpenHour" value="{{ friday.from_hour }}"/>
+                                <div class="input-group justify-content-center mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">Open Time</span>
+                                    </div>
+                                    <input type="text" class="datetimepicker form-control text-center" name="friOpenHour" id="friOpenHour" value="{{ friday.from_hour }}"/>
+                                </div>
                                 </div>
                                 <div class="col-sm-6 col-lg-4 col-lg-2">
-                                    <label class="">Close Time</label>
-                                    <input type="text" class="datetimepicker text-center" name="friCloseHour" id="friCloseHour" value="{{ friday.to_hour }}"/>
+                                <div class="input-group justify-content-center mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">Close Time</span>
+                                    </div>
+                                    <input type="text" class="datetimepicker form-control text-center" name="friCloseHour" id="friCloseHour" value="{{ friday.to_hour }}"/>
+                                </div>
                                 </div>
                             </div>
                     </div>
-                    <div class="col-md-12">
+                    <div class="col-md-12 mt-1">
                         <div class="justify-content-center my-auto align-items-center">
                             <strong for="">Saturday Business Hours</strong>
                             <input name="satOpen" {% if saturday.is_closed %}{% else %}checked{% endif %} type="checkbox" class="bootstrap-switch bootstrap-switch-red my-0" data-on-label="OPEN" data-off-label=""/>
                         </div>
                             <div class="row justify-content-center">
                                 <div class="col-sm-6 col-lg-4 col-lg-2">
-                                    <label class="">Open Time</label>
-                                    <input type="text" class="datetimepicker text-center" name="satOpenHour" id="satOpenHour" value="{{ saturday.from_hour }}"/>
+                                <div class="input-group justify-content-center mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">Open Time</span>
+                                    </div>
+                                    <input type="text" class="datetimepicker form-control text-center" name="satOpenHour" id="satOpenHour" value="{{ saturday.from_hour }}"/>
+                                </div>
                                 </div>
                                 <div class="col-sm-6 col-lg-4 col-lg-2">
-                                    <label class="">Close Time</label>
-                                    <input type="text" class="datetimepicker text-center" name="satCloseHour" id="satCloseHour" value="{{ saturday.to_hour }}"/>
+                                <div class="input-group justify-content-center mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">Close Time</span>
+                                    </div>
+                                    <input type="text" class="datetimepicker form-control text-center" name="satCloseHour" id="satCloseHour" value="{{ saturday.to_hour }}"/>
+                                </div>
                                 </div>
                             </div>
                     </div>
                 </div>
-                <input type="button" name="previous" class="previous action-button-previous" value="Previous"/>
-                <input type="button" name="next" class="next action-button" value="Next"/>
+                <input type="button" name="previous" class="previous btn btn-secondary text-white" value="Previous"/>
+                <input type="button" name="next" class="next btn btn-primary text-white" value="Next"/>
             </fieldset>
             <fieldset>
                 <h2 class="fs-title">Booking Settings</h2>
                 <h3 class="fs-subtitle">Configure some settings to make your booking experience unique</h3>
                 <div class="row text-center">
                     
-                    <div class="col-md-12">
+                    <div class="col-md-12 col-lg-6 mx-auto justify-content-center">
                         <label for="" class="font-weight-bold d-flex justify-content-center pr-1">Booking Link URL <a type="button" data-toggle="tooltip" data-placement="top" title="Choose a custom subdomain for your booking link which you can send to your clients or share to social media"> <i class="fas fa-question-circle licolor"></i></a></label>
-                        
-                        <div id="my-slug-container">
-                            <input type="text" id="my-slug" name="my-slug" maxlength="18" value="{{ company.slug }}">
-                            <span id="my-suffix"> <small>.gibele.com</small></span>
+                        <div class="col-md-12 justify-content-center">
+                            <div class="input-group justify-content-center mb-3" id="id_subdomain">
+                                <input type="text" class="form-control" id="subdomain" placeholder="Enter a Subdomain, must only contain letters, numbers and hyphens. No spaces are allowed." aria-label="Users's subdomain" aria-describedby="basic-addon2" value="{{ company.slug }}">
+                                <div class="input-group-append">
+                                    <span class="input-group-text" id="basic-addon2">.gibele.com</span>
+                                </div>
+                            </div>
+                            <div class="invalid_subdomain m-0 p-0" style="display:none; color:red!important;"></div>
                         </div>
-                        
                     </div>
-                    <div class="col-md-12">
+                    <div class="col-md-12 input-group justify-content-center">
+                    <div class="col-md-4">
                         <label for="" class="font-weight-bold d-flex justify-content-center pr-1">Booking Interval <a type="button" data-toggle="tooltip" data-placement="top" title="Set the duration for appointment slots"> <i class="fas fa-question-circle licolor"></i></a></label>
+                        {{ booking_form.interval|as_crispy_field }}
                     </div>
-                    <div class="col-md-12">
-                        <label for="" class="font-weight-bold d-flex justify-content-center pr-1">Booking Buffer <a type="button" data-toggle="tooltip" data-placement="top" title="Set the time after an appointment which is left unbookable"> <i class="fas fa-question-circle licolor"></i></a></label>
-                    </div>
-                    <div class="col-md-12">
-                        <label for="" class="font-weight-bold d-flex justify-content-center pr-1">Returning Clients Only <a type="button" data-toggle="tooltip" data-placement="top" title="Only accept clients who are on your client list"> <i class="fas fa-question-circle licolor"></i></a></label>
-                    </div>
-                    <div class="col-md-12">
+                    <div class="col-md-4">
                         <label for="" class="font-weight-bold d-flex justify-content-center pr-1">Cancellation Policy <a type="button" data-toggle="tooltip" data-placement="top" title="The length of time before an appointment which a customer can cancel"> <i class="fas fa-question-circle licolor"></i></a></label>
+                        {{ booking_form.cancellation|as_crispy_field }}
+                    </div>
                     </div>
                     <div class="col-md-12">
-                        <label for="" class="font-weight-bold d-flex justify-content-center pr-1">Notes for customers <a type="button" data-toggle="tooltip" data-placement="top" title="Display a popup message when clients first enter your booking link."> <i class="fas fa-question-circle licolor"></i></a></label>
+                        <label for="" class="font-weight-bold d-flex justify-content-center pr-1">Returning Clients Only<a type="button" data-toggle="tooltip" data-placement="top" title="Only accept clients who are on your client list"> <i class="fas fa-question-circle licolor"></i></a></label>
+                        <input name="returning" type="checkbox" class="bootstrap-switch bootstrap-switch-red my-0" data-on-label="True" data-off-label="False"/>
+                    </div>
+                    <div class="col-md-12">
+                        <label for="" class="font-weight-bold d-flex justify-content-center pr-1">Notes for customers(Optional) <a type="button" data-toggle="tooltip" data-placement="top" title="Display a popup message when clients first enter your booking link."> <i class="fas fa-question-circle licolor"></i></a></label>
+                        {{ booking_form.notes|as_crispy_field }}
                     </div>
                 </div>
-                <input type="button" name="previous" class="previous action-button-previous" value="Previous"/>
-                <input type="button" name="next" class="next action-button" value="Next"/>
+                <input type="button" name="previous" class="previous btn btn-secondary text-white" value="Previous"/>
+                <input type="button" name="next" class="next btn btn-primary text-white" value="Next"/>
             </fieldset>
             <fieldset>
-                <h2 class="fs-title">Confirm and Submit</h2>
+                <h2 class="fs-title">Next steps and confirm</h2>
                 <h3 class="fs-subtitle">Confirm everything that you have filled out then lets get booking!</h3>
-                <input type="text" name="email" placeholder="Email"/>
-                <input type="password" name="pass" placeholder="Password"/>
-                <input type="password" name="cpass" placeholder="Confirm Password"/>
-                <input type="button" name="previous" class="previous action-button-previous" value="Previous"/>
-                <input type="submit" name="submit" class="submit action-button" value="Submit"/>
+                <p class="text-black">Company Name: {{ company.business_name }}</p>
+                <p>Company Description: <small>kkjlkjljlkjlkjjjkljlj</small> </p>
+                <p>Company Address: <small>Addy, Postal, Province, State</small></p>
+                <input type="button" name="previous" class="previous btn btn-secondary text-white" value="Previous"/>
+                <input type="submit" name="submit" class="submit btn btn-primary text-white" value="Submit"/>
             </fieldset>
         </form>
         <!-- /.link to designify.me code snippets -->
@@ -456,8 +522,61 @@
             easing: 'easeInOutBack'
         });
     });
+
 </script>
 <script type="text/javascript">
+    function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+        return cookieValue;
+    }
+    const csrftoken = getCookie('csrftoken');
+
+    const feedBackreasubdomain = document.querySelector(".invalid_subdomain")
+    const subdomainField = document.querySelector("#id_subdomain");
+
+    subdomainField.addEventListener('keyup', (e) =>{
+        const subdomainVal = e.target.value;
+        subdomainField.classList.remove("has-danger");
+        subdomainField.classList.add("has-success");
+        feedBackreasubdomain.style.display="none";
+            $.ajax({
+                url: "{% host_url 'subdomain' host 'bizadmin' %}",
+                data: JSON.stringify({subdomain: subdomainVal}),
+                type: "POST",
+                dataType: 'json',
+                headers:{
+                    "X-CSRFToken": csrftoken
+                },
+                success: function (data) {
+                    console.log(data.email_error)
+                    if (data.email_error) {
+                        subdomainField.classList.remove("has-success");
+                        subdomainField.classList.add("has-danger");
+                        feedBackreasubdomain.style.display="block";
+                        feedBackreasubdomain.innerHTML=`<p style="color:red!">${data.email_error}</p>`
+                    }
+                    else {
+                        subdomainField.classList.remove("has-danger");
+                        feedBackreasubdomain.style.display="none";
+                    }
+
+                },
+            });
+        
+    });
+
+
     $('.datetimepicker').datetimepicker({
         format: 'LT',
         icons: {
@@ -471,35 +590,6 @@
         close: 'fa fa-remove'
         }
     });
-    const inputElement = document.getElementById('my-slug');
-const suffixElement = document.getElementById('my-suffix');
 
-
-inputElement.addEventListener('input', updateSuffix);
-
-updateSuffix();
-
-function updateSuffix() {
-  const width = getTextWidth(inputElement.value +9 , '16px arial');
-  suffixElement.style.left = width + 'px';
-}
-
-
-/**
- * Uses canvas.measureText to compute and return the width of the given text of given font in pixels.
- * 
- * @param {String} text The text to be rendered.
- * @param {String} font The css font descriptor that text is to be rendered with (e.g. "bold 14px verdana").
- * 
- * @see https://stackoverflow.com/questions/118241/calculate-text-width-with-javascript/21015393#21015393
- */
-function getTextWidth(text, font) {
-    // re-use canvas object for better performance
-    var canvas = getTextWidth.canvas || (getTextWidth.canvas = document.createElement("canvas"));
-    var context = canvas.getContext("2d");
-    context.font = font;
-    var metrics = context.measureText(text);
-    return metrics.width;
-}
   </script>
 {% endblock %}

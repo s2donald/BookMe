@@ -17,7 +17,6 @@ $(document).ready(function(){
   };
   var loadDelForm = function () { 
     var btn = $(this);
-    console.log(btn.attr("data-url"))
     $.ajax({
       url: btn.attr("data-url"),
       type: 'get',

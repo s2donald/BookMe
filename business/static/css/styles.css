@@ -60,9 +60,13 @@ a.licolor:hover, a.licolor:focus {
     position: relative;
     margin-top: 30px;
 }
+#msform p {
+  color: black!important;
+}
 
 #msform fieldset {
     background: white;
+    color: black;
     border: 0 none;
     border-radius: 0px;
     box-shadow: 0 0 15px 1px rgba(0, 0, 0, 0.4);
@@ -82,31 +86,25 @@ a.licolor:hover, a.licolor:focus {
 
 /*inputs*/
 #msform input, #msform textarea {
-    padding: 15px;
-    border: 1px solid #ccc;
-    border-radius: 0px;
-    margin-bottom: 10px;
-    width: 100%;
-    box-sizing: border-box;
+  justify-content: center;
     font-family: 'montserrat', arial, verdana;
     color: #2C3E50;
-    font-size: 13px;
 }
 
 #msform input:focus, #msform textarea:focus {
-    -moz-box-shadow: none !important;
-    -webkit-box-shadow: none !important;
-    box-shadow: none !important;
+    -moz-box-shadow: none;
+    -webkit-box-shadow: none;
+    box-shadow: none;
     border: 1px solid #ee0979;
     outline-width: 0;
     transition: All 0.5s ease-in;
     -webkit-transition: All 0.5s ease-in;
     -moz-transition: All 0.5s ease-in;
     -o-transition: All 0.5s ease-in;
-}
+} 
 
 /*buttons*/
-#msform .action-button {
+/* #msform .action-button {
     width: 100px;
     background: #ee0979;
     font-weight: bold;
@@ -136,7 +134,7 @@ a.licolor:hover, a.licolor:focus {
 
 #msform .action-button-previous:hover, #msform .action-button-previous:focus {
     box-shadow: 0 0 0 2px white, 0 0 0 3px #C5C5F1;
-}
+} */
 
 /*headings*/
 .fs-title {

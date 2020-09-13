@@ -13,6 +13,9 @@ from django.http import JsonResponse
 from django.template.loader import render_to_string
 from consumer.models import Reviews
 
+def privacyViews(request):
+    return render(request, 'legal/privacypolicy.html')
+
 def allsearch(request):
     category = None
     categories = Category.objects.all()

@@ -175,55 +175,12 @@ def SignUpView(request):
     return render(request, 'account/signup.html')
 
 @login_required
-def addBusinessView(request):
-    if not request.user.is_authenticated:
-        return redirect("login")
-    context={}
-    email = request.user.email
-    user = get_object_or_404(Account, email=email)
-    if request.method == 'POST':
-        user_form = AddCompanyForm(request.POST)
-        if user_form.is_valid():
-            business_name = user_form.cleaned_data.get('business_name')
-            category = user_form.cleaned_data.get('category')
-            description = user_form.cleaned_data.get('description')
-            address = user_form.cleaned_data.get('address')
-            postal = user_form.cleaned_data.get('postal')
-            state = user_form.cleaned_data.get('state')
-            city = user_form.cleaned_data.get('city')
-            status = user_form.cleaned_data.get('status')
-            company = Company.objects.create(user=user,business_name=business_name,category=category,
-                                                description=description,address=address,postal=postal,
-                                                state=state,city=city,status=status)
-            company.save()
-            user_id = user.id
-            bizaddedEmailSent.delay(user_id)
-            return redirect('account:account')
-        else:
-            context['user_form'] = user_form
-    else:
-        user_form = AddCompanyForm()
-        context['user_form'] = user_form
-    
-    return render(request,'account/add_page.html', {'biz_form':user_form})
-
-@login_required
 def BusinessListViews(request):
     if not request.user.is_authenticated:
         return redirect("login")
     companies = Company.objects.all()
     companies = companies.filter(user=request.user)
     return render(request, 'account/company_page_list.html', {'my_companies':companies})
-
-@login_required
-def BusinessAccountsView(request, id, slug):
-    if not request.user.is_authenticated:
-        return redirect("login")
-    companies = Company.objects.filter(user=request.user)
-    company = get_object_or_404(Company, id=id, slug=slug, available=True)
-    services = Services.objects.filter(business=company)
-    return render(request, 'business/company/manage/service/manage_service_list.html', {'services':services,'company':company, 'companies':companies})
-
 
 @login_required
 def homeAddressChangeView(request):

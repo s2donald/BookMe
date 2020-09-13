@@ -3,8 +3,6 @@
 {% load hosts %}
 {% block activedetails%}active{%endblock%}
 {% block businessadmin %}
-    <div id="layoutSidenav_content">
-                <main>
                     
                     <!-- Main page content-->
                     <div class="content">
@@ -38,7 +36,7 @@
                                     <div class="card-header">Main Photo</div>
                                     <div class="card-body text-center">
                                         <!-- Profile picture image-->
-                                        <img class="img-account-profile rounded-circle mb-2" src="{% static 'img/automotive-noimage1.jpg' %}" alt="300x300" />
+                                        <img class="img-account-profile rounded-circle mb-2" src="{{ company.image.url }}" alt="300x300" />
                                         <!-- Profile picture help block-->
                                         <div class="small font-italic text-muted mb-4">JPG or PNG no larger than 5 MB</div>
                                         <!-- Profile picture upload button-->
@@ -98,18 +96,4 @@
                                 </div>
                             </div>
                         </div>
-                </main>
-                <footer class="footer mt-auto footer-light">
-                    <div class="container-fluid">
-                        <div class="row">
-                            <div class="col-md-6 small">Copyright &copy; Gibele Inc. 2020</div>
-                            <div class="col-md-6 text-md-right small">
-                                <a href="#!">Privacy Policy</a>
-                                &middot;
-                                <a href="#!">Terms &amp; Conditions</a>
-                            </div>
-                        </div>
-                    </div>
-                </footer>
-            </div>
 {% endblock %}

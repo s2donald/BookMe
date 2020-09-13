@@ -26,7 +26,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.2.3/flatpickr.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.2.3/themes/dark.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/4.0.0/css/jasny-bootstrap.min.css" integrity="sha512-VUj0sZbQFPixq7NJ6ioBRK/scakfsdlKl647mLmZaZHWPgpnrWvIfy80/QF3q1l+kozBc8IHrTEoiZY25PSUTw==" crossorigin="anonymous" />
-    <link rel="stylesheet" href"{% static "scss/navbar.scss"%}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.css" integrity="sha512-/zs32ZEJh+/EO2N1b0PEdoA10JkdC3zJ8L5FTiQu82LR9S/rOQNfQN7U59U9BC12swNeRAz3HSzIL2vpp4fv3w==" crossorigin="anonymous" />
     
     {% block linkscript %}
     {% endblock linkscript %}
@@ -51,6 +51,12 @@
           </a>
         </div>
         <ul class="nav">
+          <li class="{% block activehome %}{%endblock%}">
+            <a href="{% host_url 'home' host 'bizadmin'%}">
+              <i class="fas fa-home"></i>
+              <p>Homepage</p>
+            </a>
+          </li>
           <li class="{% block activecal%}{%endblock%}">
             <a href="{% host_url 'schedule' host 'bizadmin'%}">
               <i class="fas fa-calendar-alt"></i>
@@ -238,7 +244,14 @@
               </li>
               <li class="dropdown nav-item">
                 <a href="{% host_url 'bizadminlogout' host 'bizadmin' %}" class="dropdown-toggle nav-link" data-toggle="dropdown">
-                  <i class="fas fa-user-circle"></i>
+                  {% if company.image %}
+                        <div class="photo">
+                            <img src="{{ company.image.url }}" alt="{{company.business_name}} Profile Photo">
+                        </div>
+                  {% else %}
+                    <i class="fas fa-user-circle"></i>
+                  {% endif %}
+                  
                   <b class="caret d-none d-lg-block d-xl-block"></b>
                   <p class="d-lg-none">
                     Log out
@@ -293,6 +306,19 @@
       </div>
         {% block calendarscript %}
         {% endblock %}
+
+        <footer class="footer mt-auto footer-light">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-6 small">Copyright &copy; Gibele Systems Inc. 2020</div>
+                            <div class="col-md-6 text-md-right small">
+                                <a href="#!">Privacy Policy</a>
+                                &middot;
+                                <a href="#!">Terms &amp; Conditions</a>
+                            </div>
+                        </div>
+                    </div>
+                </footer>
         
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->

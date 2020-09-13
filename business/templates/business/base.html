@@ -54,7 +54,7 @@
                 {% if user.is_authenticated %}
                     <li class="d-lg-none d-xl-inline-block">
                     <p class="mx-1">Welcome 
-                        <a class="licolor" href="{% if user %}{% url 'account:account' %}{% else %}{% url 'business:manage_service_list' %}{% endif %}">
+                        <a class="licolor" href="{% if user.is_business %}{% host_url 'home' host 'bizadmin' %}{% else %}{% url 'account:account' %}{% endif %}">
                             {% if user.first_name == None %}
                                 {{ user.username }}
                             {% else %}

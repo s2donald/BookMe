@@ -12,6 +12,7 @@ urlpatterns = [
     url(r'update/(?P<pk>\d+)/$', views.updateserviceViews, name='service_update'),
     url(r'onboarding/check/subdomain/$', views.subdomainCheck.as_view(), name='subdomain'),
     url(r'onboarding/$', views.completeViews, name='completeprofile'),
+    url(r'home/$', views.homepageViews, name='home'),
     url(r'file-upload/$', views.fileUploadView, name='upload'),
     url(r'signup/$', views.signupViews, name='bizadminsignup'),
     url(r'logout/$', views.LogoutView, name='bizadminlogout'),
@@ -20,3 +21,7 @@ urlpatterns = [
     url(r'^pricing/$', views.pricingViews, name='pricingBusiness'),
     url(r'^$', views.businessadmin, name='bizadminmain'),
 ]
+from django.conf import settings
+from django.conf.urls.static import static
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

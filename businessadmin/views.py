@@ -141,8 +141,8 @@ def completeViews(request):
             OpeningHours.objects.bulk_update(objs,['is_closed','from_hour','to_hour'])
             for s in subcategory:
                 company.subcategory.add(s)
-            bookings = Bookings.objects.filter(company=company)
-            return render(request, 'bizadmin/dashboard/schedule.html', {'company':company, 'bookings':bookings})
+
+            return render(request, 'bizadmin/home/home.html', {'company':company})
 
         
             # user_id = user.id
@@ -225,7 +225,7 @@ def loginViews(request):
                 login(request, account)
                 if account.is_business:
                     if account.on_board:
-                        return redirect(reverse('schedule', host='bizadmin'))
+                        return redirect(reverse('home', host='bizadmin'))
                     else:
                         return redirect(reverse('completeprofile', host='bizadmin'))
                         
@@ -277,7 +277,6 @@ def fileUploadView(request):
 def LogoutView(request):
     logout(request)
     return render(request, 'welcome/welcome.html', {'business':False})
-
 
 from django.template.loader import render_to_string
 def save_service_form(request, form, template_name):
@@ -368,5 +367,22 @@ def updateserviceViews(request, pk):
     data['html_form'] = render_to_string('bizadmin/dashboard/profile/services/partial_service_update.html', context, request=request)
     return JsonResponse(data)
 
+
+
+## Adding the homepage views and all stuff required for the homepage
+
+@login_required
+def homepageViews(request):
+    user = request.user
+    if user.is_authenticated and user.is_business:
+        if user.on_board:
+            company = Company.objects.get(user=user)
+            bookings = Bookings.objects.filter(company=company)
+            return render(request,'bizadmin/home/home.html', {'company':company})
+        else:
+            return redirect(reverse('completeprofile', host='bizadmin'))
+    else:
+        loginViews(request)
+    
 
     

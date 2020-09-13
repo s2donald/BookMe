@@ -10,6 +10,19 @@
 {% block businessadmin %}
 
 <script>
+    $('.datetimepicker').datetimepicker({
+        format: 'LT',
+        icons: {
+        time: "fas fa-clock",
+        up: "fa fa-chevron-up",
+        down: "fa fa-chevron-down",
+        previous: 'tim-icons icon-minimal-left',
+        next: 'tim-icons icon-minimal-right',
+        today: 'fa fa-screenshot',
+        clear: 'fa fa-trash',
+        close: 'fa fa-remove'
+        }
+    });
         document.addEventListener('DOMContentLoaded', function(){
             
                 var leftitems = 'prev,next today'
@@ -28,7 +41,7 @@
                     select: function(info) {
                     // on select we show the Sweet Alert modal with an input
                     Swal.fire({
-                        title: 'Create an Event',
+                        title: 'Add a booking',
                         html: '<div class="form-group">' +
                         '<input class="form-control text-default" placeholder="Event Title" id="input-field">' +
                         '</div>',
@@ -48,7 +61,7 @@
                             end: info.endStr,
                             className: 'event-azure',
                         };
-                        calendar.addEvent(eventData);
+                            calendar.addEvent(eventData);
                         }
                     });
                 },

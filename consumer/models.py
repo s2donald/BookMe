@@ -19,17 +19,18 @@ class Bookings(models.Model):
     city = models.CharField(max_length=35, null=True, blank=True)
     slug = models.SlugField(max_length=200, db_index=True, blank=True, unique=True)
     #The service booked (also contains the company the service is with)
-    service = models.ForeignKey(Services, on_delete=models.CASCADE)
+    service = models.ForeignKey(Services, on_delete=models.CASCADE, related_name='bookings', related_query_name="bookings")
     #The company which is offering this service
     company = models.ForeignKey(Company, on_delete=models.CASCADE)
     #We must add a timeslot for the booking
-    #Has the booking been paid for
-    has_paid = models.BooleanField(default=False)
+    #The amount the booking has been paid for
+    price_paid = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    #The price of the booking
+    price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    is_cancelled = models.BooleanField(default=False)
     #We must also create a receipt model to handle the reciepts and link to the booking
     start = models.DateTimeField(default=timezone.now)
     end = models.DateTimeField(default=timezone.now)
-    #is the service available at this time
-    is_avail = models.BooleanField(default=False)
     class Meta:
         ordering = ('start',)
         verbose_name = 'booking'

@@ -13,6 +13,7 @@ urlpatterns = [
     url(r'onboarding/check/subdomain/$', views.subdomainCheck.as_view(), name='subdomain'),
     url(r'onboarding/$', views.completeViews, name='completeprofile'),
     url(r'home/$', views.homepageViews, name='home'),
+    url(r'imageupload/$', views.headerImageUpload, name='imageupload'),
     url(r'file-upload/$', views.fileUploadView, name='upload'),
     url(r'signup/$', views.signupViews, name='bizadminsignup'),
     url(r'logout/$', views.LogoutView, name='bizadminlogout'),

@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from .forms import BusinessRegistrationForm
 from django.contrib.auth.decorators import login_required
-from business.models import Company, SubCategory, OpeningHours, Services
+from business.models import Company, SubCategory, OpeningHours, Services, Gallary
 from account.models import Account
 from account.tasks import bizaddedEmailSent
 from consumer.models import Bookings
@@ -14,6 +14,8 @@ from business.forms import AddCompanyForm, AddServiceForm, UpdateServiceForm, Bo
 from django.forms import inlineformset_factory
 from django.views import View
 from slugify import slugify
+
+from .forms import MainPhoto
 
 # Create your views here.
 def businessadmin(request):
@@ -67,6 +69,7 @@ def completeViews(request):
             notes = booking_form.cleaned_data.get('notes')
             cancellation = booking_form.cleaned_data.get('cancellation')
             subdomain = request.POST.get('subdomain',company.slug)
+            returning = request.POST.get('returning', False)
             sun_from = request.POST['sunOpenHour']
             sun_to = request.POST['sunCloseHour']
             sun_closed = not request.POST.get('sunOpen', False)
@@ -98,6 +101,7 @@ def completeViews(request):
             company.city = city
             company.status = status
             company.interval = interval
+            company.returning = returning
             company.notes = notes
             company.cancellation = cancellation
             if subdomain != company.slug:
@@ -244,7 +248,8 @@ def profileViews(request):
     if user.is_authenticated and user.is_business:
         if user.on_board:
             company = Company.objects.get(user=user)
-            return render(request, 'bizadmin/dashboard/account/profile.html',{'company':company})
+            image_form = MainPhoto()
+            return render(request, 'bizadmin/dashboard/account/profile.html',{'company':company, 'image_form':image_form})
         else:
             return redirect(reverse('completeprofile', host='bizadmin'))
     else:
@@ -370,19 +375,172 @@ def updateserviceViews(request, pk):
 
 
 ## Adding the homepage views and all stuff required for the homepage
-
+from django.utils import timezone
+import pytz
+from datetime import timedelta
+from django.db.models import Sum
+from decimal import Decimal
 @login_required
 def homepageViews(request):
     user = request.user
     if user.is_authenticated and user.is_business:
         if user.on_board:
             company = Company.objects.get(user=user)
-            bookings = Bookings.objects.filter(company=company)
-            return render(request,'bizadmin/home/home.html', {'company':company})
+            #bbusiness page profile percent complete
+            bpp = 0
+            if company.image:
+                bpp = bpp + 25
+            gallary = Gallary.objects.filter(company=company)
+            if gallary:
+                count = gallary.count()
+                if count==1:
+                    bpp = bpp +25
+                elif count == 2:
+                    bpp = bpp +50
+                else:
+                    bpp =100
+                
+            week = timezone.now() - timedelta(days=7)
+            twoweek = week - timedelta(days=7)
+            threeweek = twoweek - timedelta(days=7)
+            fourweek = threeweek - timedelta(days=7)
+            week1 = Bookings.objects.filter(company=company, end__gte=week, end__lte=timezone.now()).aggregate(Sum('price')).get('price__sum',0)
+            if not week1:
+                week1 = 0
+            start1 = (week - timedelta(days=week.weekday())).strftime("%b-%d-%Y")
+            
+            week2 = Bookings.objects.filter(company=company, end__gte=twoweek, end__lte=week).aggregate(Sum('price')).get('price__sum',0)
+            if not week2:
+                week2 = 0
+            start2 = (twoweek - timedelta(days=twoweek.weekday())).strftime("%b-%d-%Y")
+
+            week3 = Bookings.objects.filter(company=company, end__gte=threeweek, end__lte=twoweek).aggregate(Sum('price')).get('price__sum',0)
+            if not week3:
+                week3 = 0
+            start3 = (threeweek - timedelta(days=threeweek.weekday())).strftime("%b-%d-%Y")
+
+            week4 = Bookings.objects.filter(company=company, end__gte=fourweek, end__lte=threeweek).aggregate(Sum('price')).get('price__sum',0)
+            if not week4:
+                week4 = 0
+            start4 = (fourweek - timedelta(days=fourweek.weekday())).strftime("%b-%d-%Y")
+            week = [int(week4), int(week2), int(week3), int(week1)]
+            weeklabel = [start4, start3, start2, start1]
+
+            month = timezone.now() - timedelta(days=30)
+            month1 = Bookings.objects.filter(company=company, end__gte=month, end__lte=timezone.now()).aggregate(Sum('price')).get('price__sum',0)
+            if not month1:
+                month1 = 0
+            labelM0 = timezone.now().strftime("%b-%Y")
+            labelM1 = month.strftime("%b-%Y")
+            print(labelM1)
+
+
+            twomonth = month - timedelta(days=30)
+            month2 = Bookings.objects.filter(company=company, end__gte=twomonth, end__lte=month).aggregate(Sum('price')).get('price__sum',0)
+            if not month2:
+                month2 = 0
+            labelM2 = twomonth.strftime("%b-%Y")
+
+            threemonth = twomonth - timedelta(days=30)
+            month3 = Bookings.objects.filter(company=company, end__gte=threemonth, end__lte=twomonth).aggregate(Sum('price')).get('price__sum',0)
+            if not month3:
+                month3 = 0
+            labelM3 = threemonth.strftime("%b-%Y")
+
+            fourmonth = threemonth - timedelta(days=30)
+            month4 = Bookings.objects.filter(company=company, end__gte=fourmonth, end__lte=threemonth).aggregate(Sum('price')).get('price__sum',0)
+            if not month4:
+                month4 = 0
+            labelM4 = fourmonth.strftime("%b-%Y")
+
+            fivemonth = fourmonth - timedelta(days=30)
+            month5 = Bookings.objects.filter(company=company, end__gte=fivemonth, end__lte=fourmonth).aggregate(Sum('price')).get('price__sum',0)
+            if not month5:
+                month5 = 0
+            labelM5 = fivemonth.strftime("%b-%Y")
+
+            sixmonth = fivemonth - timedelta(days=30)
+            month6 = Bookings.objects.filter(company=company, end__gte=sixmonth, end__lte=fivemonth).aggregate(Sum('price')).get('price__sum',0)
+            if not month6:
+                month6 = 0
+            labelM6 = sixmonth.strftime("%b-%Y")
+
+            sevenmonth = sixmonth - timedelta(days=30)
+            month7 = Bookings.objects.filter(company=company, end__gte=sevenmonth, end__lte=sixmonth).aggregate(Sum('price')).get('price__sum',0)
+            if not month7:
+                month7 = 0
+            labelM7 = sevenmonth.strftime("%b-%Y")
+
+            eightmonth = sevenmonth - timedelta(days=30)
+            month8 = Bookings.objects.filter(company=company, end__gte=eightmonth, end__lte=sevenmonth).aggregate(Sum('price')).get('price__sum',0)
+            if not month8:
+                month8 = 0
+            labelM8 = eightmonth.strftime("%b-%Y")
+
+            ninemonth = eightmonth - timedelta(days=30)
+            month9 = Bookings.objects.filter(company=company, end__gte=ninemonth, end__lte=eightmonth).aggregate(Sum('price')).get('price__sum',0)
+            if not month9:
+                month9 = 0
+            labelM9 = ninemonth.strftime("%b-%Y")
+
+            tenmonth = ninemonth - timedelta(days=30)
+            month10 = Bookings.objects.filter(company=company, end__gte=tenmonth, end__lte=ninemonth).aggregate(Sum('price')).get('price__sum',0)
+            if not month10:
+                month10 = 0
+            labelM10 = tenmonth.strftime("%b-%Y")
+
+            elevenmonth = tenmonth - timedelta(days=30)
+            month11 = Bookings.objects.filter(company=company, end__gte=elevenmonth, end__lte=tenmonth).aggregate(Sum('price')).get('price__sum',0)
+            if not month11:
+                month11 = 0
+            labelM11 = elevenmonth.strftime("%b-%Y")
+
+            twelvemonth = elevenmonth - timedelta(days=30)
+            month12 = Bookings.objects.filter(company=company, end__gte=twelvemonth, end__lte=elevenmonth).aggregate(Sum('price')).get('price__sum',0)
+            if not month12:
+                month12 = 0
+            labelM12 = twelvemonth.strftime("%b-%Y")
+
+            month = [int(month12),int(month11),int(month10),int(month9),int(month8),int(month7),int(month6),int(month5),int(month4),int(month3),int(month2),int(month1),]
+            monthlabel = [labelM11,labelM10,labelM9,labelM8,labelM7,labelM6,labelM5,labelM4,labelM3,labelM2,labelM1,labelM0]
+            return render(request,'bizadmin/home/home.html', {'company':company, 'week':week, 'weeklabel':weeklabel, 'month':month, 'monthlabel':monthlabel, 'bpp':bpp})
         else:
             return redirect(reverse('completeprofile', host='bizadmin'))
     else:
         loginViews(request)
+
+from PIL import Image
+from django.core.files import File
+from io import BytesIO
+from django.core.files.base import ContentFile
+
+@login_required
+def headerImageUpload(request):
+    if request.POST:
+        company = Company.objects.get(user=request.user)
+        img = request.FILES.get('imageFile')
+        x = Decimal(request.POST.get('x'))
+        y = Decimal(request.POST.get('y'))
+        w = Decimal(request.POST.get('width'))
+        h = Decimal(request.POST.get('height'))
+        print(Decimal(x))
+        if img:
+            image = Image.open(img)
+            box = (x, y, w+x, h+y)
+            cropped_image = image.crop(box)
+            resized_image = cropped_image.resize((500,500),Image.ANTIALIAS)
+            thumb_io = BytesIO()
+            resized_image.save(thumb_io, image.format)
+            company.image.save(image.filename, ContentFile(thumb_io.getvalue()), save=False)
+            company.save()
+           
+            
+        else:
+            print('nice try big boi')
+    
+    return redirect(reverse('profile', host='bizadmin'))
+        
+
     
 
     

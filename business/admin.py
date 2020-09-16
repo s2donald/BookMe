@@ -18,9 +18,14 @@ class ServicesAdmin(admin.ModelAdmin):
 
 class GallaryInline(admin.TabularInline):
     model = Gallary
+    extra = 0
 
 class OpeningHoursInline(admin.TabularInline):
     model = OpeningHours
+    extra = 0
+
+class AmenitiesInline(admin.TabularInline):
+    model = Amenities
     extra = 0
 
 @admin.register(Company)
@@ -28,8 +33,6 @@ class CompanyAdmin(admin.ModelAdmin):
     list_display = ['user','business_name','slug','available','created','updated']
     list_filter = ['available', 'created', 'updated']
     list_editable = ['available']
-    inlines = [ GallaryInline, OpeningHoursInline]
+    inlines = [ GallaryInline, OpeningHoursInline, AmenitiesInline]
 
-@admin.register(Amenities)
-class AmenitiesAdmin(admin.ModelAdmin):
-    list_display = ['company','amenity']
+

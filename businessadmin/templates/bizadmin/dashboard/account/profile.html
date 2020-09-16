@@ -1,7 +1,66 @@
 {% extends 'bizadmin/index.html' %}
 {% load static %}
 {% load hosts %}
+{% block linescript %}
+{% endblock linescript %}
 {% block activedetails%}active{%endblock%}
+{% block java %}
+
+<script>
+    $(function () {
+                                $("#inputimage").change(function () {
+                                  if (this.files && this.files[0]) {
+                                      var reader = new FileReader();
+                                      reader.onload = function (e) {
+                                      $("#image").attr("src", e.target.result);
+                                      $("#modalCrop").modal("show");
+                                      }
+                                      reader.readAsDataURL(this.files[0]);
+                                  }
+                                });
+
+                                /* SCRIPTS TO HANDLE THE CROPPER BOX */
+                                var $image = $("#image");
+                                var cropBoxData;
+                                var canvasData;
+                                $("#modalCrop").on("shown.bs.modal", function () {
+                                    $image.cropper("destroy");
+                                    $image.cropper({
+                                        viewMode: 1,
+                                        aspectRatio: 1/1,
+                                        minCropBoxWidth: 200,
+                                        minCropBoxHeight: 200,
+                                        ready: function () {
+                                            $image.cropper("setCanvasData", canvasData);
+                                            $image.cropper("setCropBoxData", cropBoxData);
+                                        }
+                                    });
+                                }).on("hidden.bs.modal", function () {
+                                    cropBoxData = $image.cropper("getCropBoxData");
+                                    canvasData = $image.cropper("getCanvasData");
+                                    $image.cropper("destroy");
+                                });
+
+                                $(".js-zoom-in").click(function () {
+                                    $image.cropper("zoom", 0.1);
+                                });
+
+                                $(".js-zoom-out").click(function () {
+                                    $image.cropper("zoom", -0.1);
+                                });
+
+                                /* SCRIPT TO COLLECT THE DATA AND POST TO THE SERVER */
+                                $(".js-crop-and-upload").click(function () {
+                                    var cropData = $image.cropper("getData");
+                                    $("#id_x").val(cropData["x"]);
+                                    $("#id_y").val(cropData["y"]);
+                                    $("#id_height").val(cropData["height"]);
+                                    $("#id_width").val(cropData["width"]);
+                                    $("#formUpload").submit();
+                                });
+                            });
+</script>
+{% endblock java %}
 {% block businessadmin %}
                     
                     <!-- Main page content-->
@@ -33,14 +92,20 @@
                             <div class="col-xl-4">
                                 <!-- Profile picture card-->
                                 <div class="card">
-                                    <div class="card-header">Main Photo</div>
+                                    <div class="card-header">Main Profile Photo</div>
                                     <div class="card-body text-center">
                                         <!-- Profile picture image-->
-                                        <img class="img-account-profile rounded-circle mb-2" src="{{ company.image.url }}" alt="300x300" />
+                                        <img class="img-account-profile rounded-circle mb-2" src="{% if company.image %}{{ company.image.url }}{% else %}https://epicattorneymarketing.com/wp-content/uploads/2016/07/Headshot-Placeholder-1.png{% endif %}" alt="300x300" />
                                         <!-- Profile picture help block-->
                                         <div class="small font-italic text-muted mb-4">JPG or PNG no larger than 5 MB</div>
-                                        <!-- Profile picture upload button-->
-                                        <button class="btn btn-primary" type="button">Upload new image</button>
+                                        <!-- Profile picture upload button -->
+                                        <form action="{% host_url 'imageupload' host 'bizadmin' %}" method="POST" enctype="multipart/form-data" id="formUpload">
+                                        {% csrf_token %}
+                                            <input type="hidden" name="x" id="id_x"><input type="hidden" name="y" id="id_y"><input type="hidden" name="width" id="id_width"><input type="hidden" name="height" id="id_height">
+                                            <input type="file" id="inputimage" name="imageFile" class="btn btn-primary" accept="image/*" hidden >
+                                            <button type="button" id="btnimage" name="imageFile" class="btn btn-primary">Upload new image</button>
+                                            
+                                        </form>
                                     </div>
                                 </div>
                             </div>
@@ -96,4 +161,39 @@
                                 </div>
                             </div>
                         </div>
+                        <!-- MODAL TO CROP THE IMAGE -->
+                        <div class="modal fade" id="modalCrop">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                        </button>
+                                        <h4 class="modal-title">Crop the photo</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <img src="" id="image" style="max-width: 100%;">
+                                    </div>
+                                    <div class="modal-footer">
+                                        <div class="btn-group pull-left" role="group">
+                                        <button type="button" class="btn btn-default js-zoom-in">
+                                            <span class="fas fa-search-plus"></span>
+                                        </button>
+                                        <button type="button" class="btn btn-default js-zoom-out">
+                                            <span class="fas fa-search-minus"></span>
+                                        </button>
+                                        </div>
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Nevermind</button>
+                                        <button type="button" class="btn btn-primary js-crop-and-upload">Crop and upload</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <script>
+                            document.getElementById('btnimage').addEventListener('click', openDialog);
+
+                            function openDialog() {
+                                document.getElementById('inputimage').click();
+                            }
+                        </script>
 {% endblock %}

@@ -51,7 +51,6 @@ WEEKDAYS = [
 ]
 
 INTERVAL = [
-    (0, '0 Minutes'),
     (5, '5 Minutes'),
     (10, '10 Minutes'),
     (15, '15 Minutes'),
@@ -122,20 +121,22 @@ beforeafter = (
  )
 
 cancellationtime = (
-    ('0','Anytime'),
-    ('1', '1 hour'),
-    ('3', '3 hours'),
-    ('6', '6 hours'),
-    ('8', '8 hours'),
-    ('12', '12 hours'),
-    ('24', '1 day'),
-    ('48', '2 days'),
-    ('72', '3 days'),
-    ('96', '4 days'),
-    ('168', '1 week'),
-    ('10000', 'never'),
+    (0,'Anytime'),
+    (1, '1 hour'),
+    (3, '3 hours'),
+    (6, '6 hours'),
+    (8, '8 hours'),
+    (12, '12 hours'),
+    (24, '1 day'),
+    (48, '2 days'),
+    (72, '3 days'),
+    (96, '4 days'),
+    (168, '1 week'),
+    (10000, 'never'),
 )
 
+def get_user_image_folder(instance, filename):
+    return "company/images/%s/%s" %(filename, instance.user)
 
 #This is the model for the information we need from each company that is listed on the website
 class Company(models.Model):
@@ -160,7 +161,7 @@ class Company(models.Model):
     returning = models.BooleanField(default=False)
     cancellation = models.IntegerField(choices=cancellationtime,default='0')
     interval = models.IntegerField(choices=INTERVAL, default=1)
-    image = models.ImageField(upload_to='companies/%Y/%m/%d', blank=True)
+    image = models.ImageField(upload_to=get_user_image_folder, blank=True)
     available = models.BooleanField(default=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
@@ -185,6 +186,7 @@ class Company(models.Model):
 
     def get_booking_url(self):
         return reverse("calendarapp:bookingurls", args=[self.slug])
+
 
 
 

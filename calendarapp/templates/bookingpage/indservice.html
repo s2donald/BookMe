@@ -20,6 +20,12 @@
                             <div class="pl-6" id="datepicker"></div>
                             <div class="col-md-6">
                                 <div class="" id="booking-header"><h4 class="text-center">Available Booking Times</h4></div>
+                                <div class="sk-folding-cube d-none">
+                                    <div class="sk-cube1 sk-cube"></div>
+                                    <div class="sk-cube2 sk-cube"></div>
+                                    <div class="sk-cube4 sk-cube"></div>
+                                    <div class="sk-cube3 sk-cube"></div>
+                                </div>
                                 <div class="bookingbutton justify-content-left"></div>
                             </div>
                         </div>
@@ -121,8 +127,6 @@
         return cookieValue;
     }
     const csrftoken = getCookie('csrftoken');
-    const bkbtn = document.querySelector("#backbtn");
-    bkbtn.classList.remove("d-none");
 
 
     jQuery( "#datepicker" ).flatpickr({
@@ -155,6 +159,7 @@
     var emailGuest = ""
     var phoneGuest = ""
     dates.addEventListener('change', (e) =>{
+        const loader = document.querySelector(".sk-folding-cube").classList.remove("d-none")
         const date = document.querySelector("#datepicker")._flatpickr.selectedDates[0];
         const month = date.getMonth();
         const day = date.getDate();
@@ -193,7 +198,7 @@
             else{
                 helper.innerHTML=`<p>No slots available</p>`
             }
-            
+            const loader = document.querySelector(".sk-folding-cube").classList.add("d-none")
         });
 
         $("body").on("click", ".bookingbutton .show", function(){

@@ -231,7 +231,12 @@ a.licolor:hover, a.licolor:focus {
     background: #C5C5F1;
     text-decoration: none;
 }
-
+.ml-auto,
+.mx-auto {
+  margin-left: auto !important; }
+  .mr-auto,
+.mx-auto {
+  margin-right: auto !important; }
 *,
 *::before,
 *::after {
@@ -11169,7 +11174,7 @@ Lots taken from Flatly (MIT): https://bootswatch.com/4/flatly/bootstrap.css
   text-align: right !important; }
 
 .card-calendar .fc .fc-day-header:last-child {
-  padding-right: 15px; }
+  padding-right: 20px; }
 
 tbody.fc-body tr > .fc-widget-content {
   border-left: 0 !important;

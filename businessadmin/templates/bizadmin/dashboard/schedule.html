@@ -24,14 +24,13 @@
         }
     });
         document.addEventListener('DOMContentLoaded', function(){
-            
+                
                 var leftitems = 'prev,next today'
                 var rightitems = 'dayGridMonth,dayGridWeek,dayGridDay'
                 var initviewcal = 'dayGridWeek'
-                var asprat = 1
+                var asprat = 2
                 var calendarEl = document.getElementById('calendar');
                 var calendar = new FullCalendar.Calendar(calendarEl, {
-                    eventLimit: true, // for all non-TimeGrid views
                     views: {
                         timeGrid: {
                         eventLimit: 2 // adjust to 6 only for timeGridWeek/timeGridDay
@@ -66,7 +65,6 @@
                     });
                 },
                 aspectRatio: asprat,
-                eventLimit: true,
                 events:[
                 {% for booking in bookings %}
                     {
@@ -87,7 +85,6 @@
                 ],
                 eventClick: function(info) {
                     alert('Event: ' + info.event.title);
-                    alert(info.jsEvent.desc);
                     Swal.fire({
                         title: info.event.title,
                         html: '<div class="form-group">' +
@@ -102,9 +99,9 @@
 
                 initialView: initviewcal,
                 headerToolbar: {
-                    center: leftitems,
+                    center: rightitems,
                     left: 'title',
-                    right: rightitems
+                    right: leftitems
                 }
             });
             calendar.render()

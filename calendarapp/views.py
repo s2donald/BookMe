@@ -115,6 +115,7 @@ class createAppointment(View):
         company = request.viewing_company
         user = request.user
         service = get_object_or_404(Services, id=s_id)
+        price = service.price
         startdate = datetime.datetime(year,month,day)
         starttime = datetime.datetime.strptime(time,'%I:%M %p').time()
         start = datetime.datetime.combine(startdate, starttime)
@@ -132,7 +133,7 @@ class createAppointment(View):
                 booking = Bookings.objects.create(user=user,first_name=first_name,last_name=last_name,
                                                 phone=phone,address=address,postal=postal,
                                                 province=province,city=city,service=service, company=company,
-                                                start=start, end=end)
+                                                start=start, end=end, price=price)
                 booking.save()
                 good = True
             else:

@@ -36,11 +36,10 @@
 
             <h4>Select Your Service</h4>
             <div class="d-flex align-items-center justify-content-center">
-            <button style="height:40px;" href="{% host_url 'bookingurls' host 'bookingurl' slug=company.slug %}" class="btn btn-outline-primary align-items-center d-none" id="backbtn"><i class="fas fa-long-arrow-alt-left"></i></button>
             <h1>{{ company.business_name }}</h1>
             </div>
             <div class="row justify-content-around">
-                <p>Rating:</p>
+                <p>Rating: {% if company.avgrating == 0 %}No reviews yet.{% else %}{{ company.avgrating }} <i class="fas fa-star"></i>{% endif %}</p>
             </div>
             <script type="text/javascript" src="https://kit.fontawesome.com/a07c5b9658.js" crossorigin="anonymous"></script>
             {% comment %} <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script> {% endcomment %}

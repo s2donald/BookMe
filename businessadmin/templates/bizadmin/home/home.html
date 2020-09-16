@@ -15,7 +15,7 @@
                             <div class="col-xl-8 col-xxl-12">
                                 <div class="text-center px-4 mb-4 mb-xl-0 mb-xxl-4">
                                     <h1 class="text-primary">Welcome Back!</h1>
-                                    <p class="text-gray-700 mb-0">View your <a href="{% host_url 'schedule' host 'bizadmin' %}" >schedule</a> or update your <a href="{% host_url 'profile' host 'bizadmin'%}">account</a>.</p>
+                                    <p class="text-gray-700 mb-0">View your <a href="{% host_url 'schedule' host 'bizadmin' %}" >schedule</a> or update your <a href="{% host_url 'profile' host 'bizadmin'%}">account</a> settings.</p>
                                 </div>
                             </div>
                         </div>
@@ -32,14 +32,14 @@
                                 <div class="card-body">
                                     <h4 class="small">
                                         <a href="#">Business Page Photos</a>
-                                        <span class="float-right font-weight-bold">0%</span>
+                                        <span class="float-right font-weight-bold">{{ bpp }}%</span>
                                     </h4>  
-                                    <div class="progress mb-4"><div class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div></div>                               
+                                    <div class="progress mb-4"><div class="progress-bar" role="progressbar" style="width: {{ bpp }}%;" aria-valuenow="{{ bpp }}" aria-valuemin="0" aria-valuemax="100"></div></div>                               
                                     <h4 class="small">
                                         <a href="#">Client Database</a>
                                         <span class="float-right font-weight-bold">60%</span>
                                     </h4>
-                                    <div class="progress mb-4"><div class="progress-bar" role="progressbar" style="width: 60%;" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div></div>
+                                    <div class="progress mb-4"><div class="progress-bar bg-warning" role="progressbar" style="width: 60%;" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div></div>
                                     <h4 class="small">
                                         <a href="#">Payout Details</a>
                                         <span class="float-right font-weight-bold">80%</span>
@@ -62,29 +62,22 @@
                 <div class="row">
                   <div class="col-sm-6 text-left">
                     <h5 class="card-category">Total Sales</h5>
-                    <h2 class="card-title">Performance</h2>
+                    <h2 class="card-title">Sales($)</h2>
                   </div>
                   <div class="col-sm-6">
                     <div class="btn-group btn-group-toggle float-right" data-toggle="buttons">
                       <label class="btn btn-sm btn-primary btn-simple active" id="0">
                         <input type="radio" name="options" checked>
-                        <span class="d-none d-md-block d-lg-block d-xl-block">Todays Sales</span>
+                        <span class="d-none d-md-block d-lg-block d-xl-block">Sales Per Week</span>
                         <span class="d-block d-md-none">
                           <i class="fas fa-dollar-sign"></i>
                         </span>
                       </label>
                       <label class="btn btn-sm btn-primary btn-simple" id="1">
                         <input type="radio" class="d-none d-sm-none" name="options">
-                        <span class="d-none d-md-block d-lg-block d-xl-block">Month Sales</span>
+                        <span class="d-none d-md-block d-lg-block d-xl-block">Sales per month</span>
                         <span class="d-block d-md-none">
                           <i class="fas fa-chart-line"></i>
-                        </span>
-                      </label>
-                      <label class="btn btn-sm btn-primary btn-simple" id="2">
-                        <input type="radio" class="d-none" name="options">
-                        <span class="d-none d-md-block d-lg-block d-xl-block">Year Sales</span>
-                        <span class="d-block d-md-none">
-                          <i class="fas fa-chart-bar"></i>
                         </span>
                       </label>
                     </div>
@@ -127,6 +120,10 @@ gradientChartOptionsConfigurationWithTooltipPurple = {
             color: 'rgba(29,140,248,0.0)',
             zeroLineColor: "transparent",
           },
+          scaleLabel: {
+                    display: true,
+                    labelString: 'Sales in ($)'
+                },
           ticks: {
             suggestedMin: 60,
             suggestedMax: 125,
@@ -142,6 +139,10 @@ gradientChartOptionsConfigurationWithTooltipPurple = {
             color: 'rgba(225,78,202,0.1)',
             zeroLineColor: "transparent",
           },
+          scaleLabel: {
+                display: true,
+                labelString: 'Starting From Week Of'
+            },
           ticks: {
             padding: 20,
             fontColor: "#9a9a9a"
@@ -150,9 +151,8 @@ gradientChartOptionsConfigurationWithTooltipPurple = {
       }
     };
 
-var chart_labels = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
-    var chart_data = [100, 70, 90, 70, 85, 60, 75, 60, 90, 80, 110, 100];
-
+    var chart_labels = {{ weeklabel|safe }};
+    var chart_data = {{ week|safe }};
 
     var ctx = document.getElementById("myChart").getContext('2d');
 
@@ -166,7 +166,7 @@ var chart_labels = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP
       data: {
         labels: chart_labels,
         datasets: [{
-          label: "Sales",
+          label: "Earned",
           fill: true,
           backgroundColor: gradientStroke,
           borderColor: '#d346b1',
@@ -181,30 +181,25 @@ var chart_labels = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP
           pointHoverBorderWidth: 15,
           pointRadius: 4,
           data: chart_data,
-        }]
+        }],
       },
       options: gradientChartOptionsConfigurationWithTooltipPurple
     };
     var myChartData = new Chart(ctx, config);
     $("#0").click(function() {
       var data = myChartData.config.data;
+      var label = myChartData.config.options.scales;
+      label.xAxes[0].scaleLabel.labelString = 'Starting From Week Of'
       data.datasets[0].data = chart_data;
       data.labels = chart_labels;
       myChartData.update();
     });
     $("#1").click(function() {
-      var chart_labels = ['WEEK1', 'WEEK2', 'WEEK3', 'WEEK4'];
-      var chart_data = [190, 105, 110, 95];
+      var chart_labels = {{ monthlabel|safe }};
+      var chart_data = {{ month|safe }};
       var data = myChartData.config.data;
-      data.datasets[0].data = chart_data;
-      data.labels = chart_labels;
-      myChartData.update();
-    });
-
-    $("#2").click(function() {
-      var chart_labels = ['JAN','FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
-      var chart_data = [60, 80, 65, 130, 80, 105, 90, 130, 70, 115, 60, 130];
-      var data = myChartData.config.data;
+      var label = myChartData.config.options.scales;
+      label.xAxes[0].scaleLabel.labelString = 'Starting From Month Of'
       data.datasets[0].data = chart_data;
       data.labels = chart_labels;
       myChartData.update();

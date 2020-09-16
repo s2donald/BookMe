@@ -12,17 +12,26 @@
         <div class="swiper-wrapper">
           <!-- Slides-->
           {% if comp_categ.name == 'Automotive Services' %}
-                <div class="swiper-slide"><a href="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/automotive-noimage1.jpg" %}{% endif %}" data-toggle="gallery-top" title="Header Image"><img class="img-fluid" style="width:500px;max-height:700px;" src="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/automotive-noimage1.jpg" %}{% endif %}" alt="Header Image"></a></div>
+                <div class="swiper-slide"><a href="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/automotive-noimage1.jpg" %}{% endif %}" data-toggle="gallery-top" title="Header Image"><img class="img-fluid" src="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/automotive-noimage1.jpg" %}{% endif %}" alt="Header Image"></a></div>
           {% endif %}
           {% if comp_categ.name == 'Personal Care' %}
-                <div class="swiper-slide"><a href="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/beautynoimage1.jpg" %}{% endif %}" data-toggle="gallery-top" title="Header Image"><img class="img-fluid" style="width:500px;max-height:700px;" src="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/beautynoimage1.jpg" %}{% endif %}" alt="Header Image"></a></div>
+                <div class="swiper-slide"><a href="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/beautynoimage1.jpg" %}{% endif %}" data-toggle="gallery-top" title="Header Image"><img class="img-fluid" style="width:500px;max-height:500px;" src="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/beautynoimage1.jpg" %}{% endif %}" alt="Header Image"></a></div>
           {% endif %}
-          <div class="swiper-slide"><a href="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/no_image.png" %}{% endif %}" data-toggle="gallery-top" title="Outside"><img class="img-fluid" src="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/no_image.png" %}{% endif %}" alt="{{ comp_categ.name }}"></a></div>
-          <div class="swiper-slide"><a href="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/no_image.png" %}{% endif %}" data-toggle="gallery-top" title="Rear entrance"><img class="img-fluid" src="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/no_image.png" %}{% endif %}" alt="Rear entrance"></a></div>
+          {% if photos %}
+            {% for p in photos %}
+              <div class="swiper-slide"><a href="{{ p.photos.url }}"><img loading="lazy" style="height:500px; width:500px;" src="{{ p.photos.url }}" alt="Images"></a></div>
+            {% endfor %}
+
+          {% else %}
+
+          <div class="swiper-slide"><img class="img-fluid" src="{% static "/img/white-background-500x500.jpg" %}" alt="No Image"></div>
+          <div class="swiper-slide"><img class="img-fluid" src="{% static "/img/white-background-500x500.jpg" %}" alt="No Image"></div>          {% endif %}
         </div>
-        <div class="swiper-pagination swiper-pagination-white"></div>
-        <div class="swiper-button-prev swiper-button-white circle-slide"></div>
-        <div class="swiper-button-next swiper-button-white circle-slide"></div>
+        {% if photos %}
+          <div class="swiper-pagination swiper-pagination-white"></div>
+          <div class="swiper-button-prev swiper-button-white circle-slide"></div>
+          <div class="swiper-button-next swiper-button-white circle-slide"></div>
+        {% endif %}
       </div>
     </section>
 

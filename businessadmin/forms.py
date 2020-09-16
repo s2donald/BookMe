@@ -4,7 +4,7 @@ from account.tasks import bizaddedEmailSent
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
 from django.core.validators import RegexValidator
-
+from django.db import models
 
 class BusinessRegistrationForm(UserCreationForm):
     first_name = forms.CharField(label='First Name', required=True, max_length=30)
@@ -38,7 +38,34 @@ class BusinessRegistrationForm(UserCreationForm):
             raise forms.ValidationError('Passwords don\'t match.')
         return cd['password2']
 
-# class BookingSettingForm(forms.Form):
+from PIL import Image
+from django import forms
+from django.core.files import File
+
+class MainPhoto(forms.ModelForm):
+    x = forms.FloatField(widget=forms.HiddenInput())
+    y = forms.FloatField(widget=forms.HiddenInput())
+    width = forms.FloatField(widget=forms.HiddenInput())
+    height = forms.FloatField(widget=forms.HiddenInput())
+
+    class Meta:
+        model = Company
+        fields = ('image', 'x', 'y', 'width', 'height', )
+
+    def save(self):
+        photo = super(MainPhoto, self).save()
+
+        x = self.cleaned_data.get('x')
+        y = self.cleaned_data.get('y')
+        w = self.cleaned_data.get('width')
+        h = self.cleaned_data.get('height')
+
+        images = Image.open(photo.image)
+        cropped_image = images.crop((x, y, w+x, h+y))
+        resized_image = cropped_image.resize((200, 200), Image.ANTIALIAS)
+        resized_image.save(photo.image.path)
+
+        return photo
 
 
 

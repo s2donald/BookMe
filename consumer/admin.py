@@ -4,7 +4,7 @@ from .models import Bookings, Reviews
 
 @admin.register(Bookings)
 class BookingAdmin(admin.ModelAdmin):
-    list_display = ['company','service','user', 'start', 'end', 'has_paid']
+    list_display = ['company','service','user', 'start', 'end', 'price', 'price_paid']
 
 @admin.register(Reviews)
 class ReviewAdmin(admin.ModelAdmin):

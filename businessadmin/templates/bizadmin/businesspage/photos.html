@@ -1,172 +1,248 @@
 {% extends 'bizadmin/index.html' %}
 {% load static %}
 {% load hosts %}
+{% block java %}
+
+<script>
+                            $(function () {
+                                $("#inputimage").change(function () {
+                                  if (this.files && this.files[0]) {
+                                      var reader = new FileReader();
+                                      reader.onload = function (e) {
+                                      $("#image").attr("src", e.target.result);
+                                      $("#modalCrop").modal("show");
+                                      }
+                                      reader.readAsDataURL(this.files[0]);
+                                  }
+                                });
+                                $("#inputtimage").change(function () {
+                                  if (this.files && this.files[0]) {
+                                      var reader = new FileReader();
+                                      reader.onload = function (e) {
+                                      $("#images").attr("src", e.target.result);
+                                      $("#modalCropp").modal("show");
+                                      }
+                                      reader.readAsDataURL(this.files[0]);
+                                  }
+                                });
+
+                                /* SCRIPTS TO HANDLE THE CROPPER BOX */
+                                var $image = $("#image");
+                                var $images = $("#images");
+                                var cropBoxData;
+                                var canvasData;
+                                $("#modalCrop").on("shown.bs.modal", function () {
+                                    $image.cropper("destroy");
+                                    $image.cropper({
+                                        viewMode: 1,
+                                        aspectRatio: 1/1,
+                                        minCropBoxWidth: 200,
+                                        minCropBoxHeight: 200,
+                                        ready: function () {
+                                            $image.cropper("setCanvasData", canvasData);
+                                            $image.cropper("setCropBoxData", cropBoxData);
+                                        }
+                                    });
+                                }).on("hidden.bs.modal", function () {
+                                    cropBoxData = $image.cropper("getCropBoxData");
+                                    canvasData = $image.cropper("getCanvasData");
+                                    $image.cropper("destroy");
+                                });
+
+                                $("#modalCropp").on("shown.bs.modal", function () {
+                                    $images.cropper("destroy");
+                                    $images.cropper({
+                                        viewMode: 1,
+                                        aspectRatio: 1/1,
+                                        minCropBoxWidth: 200,
+                                        minCropBoxHeight: 200,
+                                        ready: function () {
+                                            $images.cropper("setCanvasData", canvasData);
+                                            $images.cropper("setCropBoxData", cropBoxData);
+                                        }
+                                    });
+                                }).on("hidden.bs.modal", function () {
+                                    cropBoxData = $images.cropper("getCropBoxData");
+                                    canvasData = $images.cropper("getCanvasData");
+                                    $images.cropper("destroy");
+                                });
+
+                                $(".js-zoom-in").click(function () {
+                                    $image.cropper("zoom", 0.1);
+                                });
+
+                                $(".js-zoom-out").click(function () {
+                                    $image.cropper("zoom", -0.1);
+                                });
+
+                                $(".js-zoom-ins").click(function () {
+                                    $images.cropper("zoom", 0.1);
+                                });
+
+                                $(".js-zoom-outs").click(function () {
+                                    $images.cropper("zoom", -0.1);
+                                });
+
+                                /* SCRIPT TO COLLECT THE DATA AND POST TO THE SERVER */
+                                $(".js-crop-and-upload").click(function () {
+                                    var cropData = $image.cropper("getData");
+                                    $("#id_x").val(cropData["x"]);
+                                    $("#id_y").val(cropData["y"]);
+                                    $("#id_height").val(cropData["height"]);
+                                    $("#id_width").val(cropData["width"]);
+                                    $("#formUpload").submit();
+                                });
+
+                                /* SCRIPT TO COLLECT THE DATA AND POST TO THE SERVER */
+                                $(".js-crop-and-uploads").click(function () {
+                                    var cropDatas = $images.cropper("getData");
+                                    console.log(cropDatas)
+                                    $("#idd_x").val(cropDatas["x"]);
+                                    $("#idd_y").val(cropDatas["y"]);
+                                    $("#idd_height").val(cropDatas["height"]);
+                                    $("#idd_width").val(cropDatas["width"]);
+                                    $("#galUpload").submit();
+                                });
+                            });
+</script>
+{% endblock java %}
 {% block businessadmin %}
-                    <!-- Main page content-->
-                    <div class="content">
-                    <div class="row">
-                    <div class="col-md-10 ml-auto mr-auto">
-                    <header class="page-header page-header-compact page-header-light mb-4">
-                        <div class="container">
-                            <div class="page-header-content">
-                                <div class="row align-items-center justify-content-between pt-3">
-                                    <div class="col-auto mb-3">
-                                        <h1 class="page-header-title">
-                                            Account Settings - Billing
-                                        </h1>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </header>
-                        <!-- Account page navigation-->
-                        <nav class="nav nav-borders">
-                            <a class="nav-link ml-0" href="{% host_url 'profile' host 'bizadmin'%}">Profile</a>
-                            <a class="nav-link activate" href="{% host_url 'billing' host 'bizadmin'%}">Billing</a>
-                            <a class="nav-link" href="{% host_url 'security' host 'bizadmin'%}">Security</a>
-                            <a class="nav-link" href="{% host_url 'profile' host 'bizadmin'%}">Notifications</a>
-                        </nav>
-                        <hr class="mt-0 mb-4" />
-                        <div class="row">
-                            <div class="col-lg-4 mb-4">
-                                <!-- Billing card 1-->
-                                <div class="card h-100 border-left-lg border-left-primary">
-                                    <div class="card-body">
-                                        <div class="small text-muted">Current monthly bill</div>
-                                        <div class="h3">$20.00</div>
-                                        <a class="text-arrow-icon small" href="#!">
-                                            Switch to yearly billing
-                                            <i data-feather="arrow-right"></i>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-4 mb-4">
-                                <!-- Billing card 2-->
-                                <div class="card h-100 border-left-lg border-left-secondary">
-                                    <div class="card-body">
-                                        <div class="small text-muted">Next payment due</div>
-                                        <div class="h3">Sept 15</div>
-                                        <a class="text-arrow-icon small text-secondary" href="#!">
-                                            View payment history
-                                            <i data-feather="arrow-right"></i>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-4 mb-4">
-                                <!-- Billing card 3-->
-                                <div class="card h-100 border-left-lg border-left-success">
-                                    <div class="card-body">
-                                        <div class="small text-muted">Current plan</div>
-                                        <div class="h3 d-flex align-items-center">Mid Tier</div>
-                                        <a class="text-arrow-icon small text-success" href="#!">
-                                            Upgrade plan
-                                            <i data-feather="arrow-right"></i>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- Payment methods card-->
-                        <div class="card card-header-actions mb-4">
-                            <div class="card-header">
-                                Payment Methods
-                                <button class="btn btn-sm btn-primary" type="button">Add Payment Method</button>
-                            </div>
-                            <div class="card-body">
-                                <!-- Payment method 1-->
-                                <div class="d-flex align-items-center justify-content-between">
-                                    <div class="d-flex align-items-center">
-                                        <i class="fab fa-cc-visa fa-2x cc-color-visa"></i>
-                                        <div class="ml-4">
-                                            <div class="small">Visa ending in 1234</div>
-                                            <div class="text-xs text-muted">Expires 04/2024</div>
-                                        </div>
-                                    </div>
-                                    <div class="ml-4 small">
-                                        <div class="badge badge-light mr-3">Default</div>
-                                        <a href="#!">Edit</a>
-                                    </div>
-                                </div>
-                                <hr />
-                                <!-- Payment method 2-->
-                                <div class="d-flex align-items-center justify-content-between">
-                                    <div class="d-flex align-items-center">
-                                        <i class="fab fa-cc-mastercard fa-2x cc-color-mastercard"></i>
-                                        <div class="ml-4">
-                                            <div class="small">Mastercard ending in 5678</div>
-                                            <div class="text-xs text-muted">Expires 05/2022</div>
-                                        </div>
-                                    </div>
-                                    <div class="ml-4 small">
-                                        <a class="text-muted mr-3" href="#!">Make Default</a>
-                                        <a href="#!">Edit</a>
-                                    </div>
-                                </div>
-                                <hr />
-                                <!-- Payment method 3-->
-                                <div class="d-flex align-items-center justify-content-between">
-                                    <div class="d-flex align-items-center">
-                                        <i class="fab fa-cc-amex fa-2x cc-color-amex"></i>
-                                        <div class="ml-4">
-                                            <div class="small">American Express ending in 9012</div>
-                                            <div class="text-xs text-muted">Expires 01/2026</div>
-                                        </div>
-                                    </div>
-                                    <div class="ml-4 small">
-                                        <a class="text-muted mr-3" href="#!">Make Default</a>
-                                        <a href="#!">Edit</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- Billing history card-->
-                        <div class="card mb-4">
-                            <div class="card-header">Billing History</div>
-                            <div class="card-body p-0">
-                                <!-- Billing history table-->
-                                <div class="table-responsive table-billing-history">
-                                    <table class="table mb-0">
-                                        <thead>
-                                            <tr>
-                                                <th scope="col">Transaction ID</th>
-                                                <th scope="col">Date</th>
-                                                <th scope="col">Amount</th>
-                                                <th scope="col">Status</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>#39201</td>
-                                                <td>08/15/2020</td>
-                                                <td>$20.00</td>
-                                                <td><span class="badge badge-light">Pending</span></td>
-                                            </tr>
-                                            <tr>
-                                                <td>#38594</td>
-                                                <td>07/15/2020</td>
-                                                <td>$20.00</td>
-                                                <td><span class="badge badge-success">Paid</span></td>
-                                            </tr>
-                                            <tr>
-                                                <td>#38223</td>
-                                                <td>06/15/2020</td>
-                                                <td>$20.00</td>
-                                                <td><span class="badge badge-success">Paid</span></td>
-                                            </tr>
-                                            <tr>
-                                                <td>#38125</td>
-                                                <td>05/15/2020</td>
-                                                <td>$20.00</td>
-                                                <td><span class="badge badge-success">Paid</span></td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
+<!-- Main page content-->
+    <div class="content">
+        <div class="row">
+            <div class="col-md-10 ml-auto mr-auto">
+                <header class="page-header page-header-compact page-header-light mb-4">
+                    <div class="container">
+                        <div class="page-header-content">
+                            <div class="row align-items-center justify-content-between pt-3">
+                                <div class="col-auto mb-3">
+                                    <h1 class="page-header-title">
+                                        Business Page - Photos and Gallery
+                                    </h1>
                                 </div>
                             </div>
                         </div>
                     </div>
+                </header>
+                <!-- Account page navigation-->
+                <nav class="nav nav-borders">
+                    <a class="nav-link activate ml-0" href="{% host_url 'photos' host 'bizadmin'%}">Photo and Gallery</a>
+                    <a class="nav-link " href="{% host_url 'photos' host 'bizadmin'%}">Amenities and Tags</a>
+                </nav>
+                <hr class="mt-0 mb-4" />
+                <div class="row">
+                    <div class="col-lg-4 mb-4">
+                        <div class="card h-100 border-left-lg border-left-secondary">
+                            <div class="card-header">Main Profile Photo</div>
+                            <div class="card-body text-center">
+                                <!-- Profile picture image-->
+                                <img class="img-account-profile rounded-circle mb-2" src="{% if company.image %}{{ company.image.url }}{% else %}https://epicattorneymarketing.com/wp-content/uploads/2016/07/Headshot-Placeholder-1.png{% endif %}" alt="300x300" />
+                                <!-- Profile picture help block-->
+                                <div class="small font-italic text-muted mb-4">JPG or PNG no larger than 5 MB</div>
+                                <!-- Profile picture upload button -->
+                                <form action="{% host_url 'imageuploads' host 'bizadmin' %}" method="POST" enctype="multipart/form-data" id="formUpload">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="x" id="id_x"><input type="hidden" name="y" id="id_y"><input type="hidden" name="width" id="id_width"><input type="hidden" name="height" id="id_height">
+                                    <input type="file" id="inputimage" name="imageFile" class="btn btn-primary" accept="image/*" hidden >
+                                    <button type="button" id="btnimage" name="imageFile" class="btn btn-primary">Upload new image</button>        
+                                </form>
+                            </div>
+                        </div>
                     </div>
+                    <div class="col-lg-8 mb-4">
+                        <div class="card h-100 border-left-lg border-left-secondary">
+                            <div class="card-header">Gallery Photos</div>
+                            <div class="card-body text-center">
+                                <!-- Gallary upload button -->
+                                <form action="{% host_url 'galleryupload' host 'bizadmin' %}" method="POST" enctype="multipart/form-data" id="galUpload">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="xs" id="idd_x"><input type="hidden" name="ys" id="idd_y"><input type="hidden" name="widths" id="idd_width"><input type="hidden" name="heights" id="idd_height">
+                                    <input type="file" id="inputtimage" name="gallaryFile" class="btn btn-primary" accept="image/*" hidden >
+                                    <button type="button" id="btnnimage" name="gallaryFile" class="btn btn-primary">Add a photo to your gallery</button>        
+                                </form>
+                                <div class="row">
+                                {% for p in photos %}
+                                    <div class="col-sm-12 col-md-6 col-lg-4 mt-2">
+                                        <div class="card hover-animate">
+                                            <img src="{{ p.photos.url }}" alt="">
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                                </div>
+                            </div>
+                        </div>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- MODAL TO CROP THE IMAGE -->
+                        <div class="modal fade" id="modalCrop" data-backdrop="static" data-keyboard="false">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                        </button>
+                                        <h4 class="modal-title">Crop the photo</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <img src="" id="image" style="max-width: 100%;">
+                                    </div>
+                                    <div class="modal-footer">
+                                        <div class="btn-group pull-left" role="group">
+                                        <button type="button" class="btn btn-default js-zoom-in">
+                                            <span class="fas fa-search-plus"></span>
+                                        </button>
+                                        <button type="button" class="btn btn-default js-zoom-out">
+                                            <span class="fas fa-search-minus"></span>
+                                        </button>
+                                        </div>
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Nevermind</button>
+                                        <button type="button" class="btn btn-primary js-crop-and-upload">Crop and upload</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal fade" id="modalCropp" data-backdrop="static" data-keyboard="false">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                        </button>
+                                        <h4 class="modal-title">Crop the photo</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <img src="" id="images" style="max-width: 100%;">
+                                    </div>
+                                    <div class="modal-footer">
+                                        <div class="btn-group pull-left" role="group">
+                                        <button type="button" class="btn btn-default js-zoom-ins">
+                                            <span class="fas fa-search-plus"></span>
+                                        </button>
+                                        <button type="button" class="btn btn-default js-zoom-outs">
+                                            <span class="fas fa-search-minus"></span>
+                                        </button>
+                                        </div>
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Nevermind</button>
+                                        <button type="button" class="btn btn-primary js-crop-and-uploads">Crop and upload</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <script>
+                            document.getElementById('btnimage').addEventListener('click', openDialog);
+
+                            function openDialog() {
+                                document.getElementById('inputimage').click();
+                            }
+                        </script>
+                        <script>
+                            document.getElementById('btnnimage').addEventListener('click', openDialog);
+
+                            function openDialog() {
+                                document.getElementById('inputtimage').click();
+                            }
+                        </script>
 {% endblock %}

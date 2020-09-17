@@ -12,14 +12,14 @@
         <div class="swiper-wrapper">
           <!-- Slides-->
           {% if comp_categ.name == 'Automotive Services' %}
-                <div class="swiper-slide"><a href="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/automotive-noimage1.jpg" %}{% endif %}" data-toggle="gallery-top" title="Header Image"><img class="img-fluid" src="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/automotive-noimage1.jpg" %}{% endif %}" alt="Header Image"></a></div>
+                <div class="swiper-slide"><a href="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/automotive-noimage1.jpg" %}{% endif %}" data-toggle="gallery-top" title="Header Image"><img class="img-fluid center" style="width:350px;max-height:350px;" src="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/automotive-noimage1.jpg" %}{% endif %}" alt="Header Image"></a></div>
           {% endif %}
           {% if comp_categ.name == 'Personal Care' %}
-                <div class="swiper-slide"><a href="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/beautynoimage1.jpg" %}{% endif %}" data-toggle="gallery-top" title="Header Image"><img class="img-fluid" style="width:500px;max-height:500px;" src="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/beautynoimage1.jpg" %}{% endif %}" alt="Header Image"></a></div>
+                <div class="swiper-slide"><a href="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/beautynoimage1.jpg" %}{% endif %}" data-toggle="gallery-top" title="Header Image"><img class="img-fluid center" style="width:300px;max-height:300px; position: center;" src="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/beautynoimage1.jpg" %}{% endif %}" alt="Header Image"></a></div>
           {% endif %}
           {% if photos %}
             {% for p in photos %}
-              <div class="swiper-slide"><a href="{{ p.photos.url }}"><img loading="lazy" style="height:500px; width:500px;" src="{{ p.photos.url }}" alt="Images"></a></div>
+              <div class="swiper-slide"><a href="{{ p.photos.url }}"><img loading="lazy" class="img-fluid center" style="width:350px;max-height:350px;" src="{{ p.photos.url }}" alt="Images"></a></div>
             {% endfor %}
 
           {% else %}

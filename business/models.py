@@ -136,7 +136,7 @@ cancellationtime = (
 )
 
 def get_user_image_folder(instance, filename):
-    return "company/images/%s/%s" %(filename, instance.user)
+    return "company/images/user_{0}/{1}/".format(instance.user.id, filename)
 
 #This is the model for the information we need from each company that is listed on the website
 class Company(models.Model):
@@ -212,7 +212,7 @@ class OpeningHours(models.Model):
 
 class Gallary(models.Model):
     company = models.ForeignKey(Company, on_delete=models.CASCADE,related_name='gallary')
-    photos = models.ImageField(upload_to='companies/gallary/photos', height_field=None, width_field=None, max_length=None)
+    photos = models.ImageField(upload_to='companies/gallary/photos')
 
 
 class Services(models.Model):

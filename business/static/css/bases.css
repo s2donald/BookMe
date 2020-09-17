@@ -907,7 +907,16 @@ a[data-toggle="collapse"] {
 }
 .img-fluid {
     max-width: 100%;
+    position: center;
     height: auto;
+  }
+  .center{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: auto;
+    margin-bottom: auto;
+    width: 50%;
   }
 
 ul ul a {

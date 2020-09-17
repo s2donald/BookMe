@@ -386,7 +386,6 @@ def homepageViews(request):
     if user.is_authenticated and user.is_business:
         if user.on_board:
             company = Company.objects.get(user=user)
-            #bbusiness page profile percent complete
             bpp = 0
             if company.image:
                 bpp = bpp + 25
@@ -432,8 +431,6 @@ def homepageViews(request):
                 month1 = 0
             labelM0 = timezone.now().strftime("%b-%Y")
             labelM1 = month.strftime("%b-%Y")
-            print(labelM1)
-
 
             twomonth = month - timedelta(days=30)
             month2 = Bookings.objects.filter(company=company, end__gte=twomonth, end__lte=month).aggregate(Sum('price')).get('price__sum',0)
@@ -523,7 +520,6 @@ def headerImageUpload(request):
         y = Decimal(request.POST.get('y'))
         w = Decimal(request.POST.get('width'))
         h = Decimal(request.POST.get('height'))
-        print(Decimal(x))
         if img:
             image = Image.open(img)
             box = (x, y, w+x, h+y)
@@ -533,13 +529,58 @@ def headerImageUpload(request):
             resized_image.save(thumb_io, image.format)
             company.image.save(image.filename, ContentFile(thumb_io.getvalue()), save=False)
             company.save()
-           
-            
-        else:
-            print('nice try big boi')
     
     return redirect(reverse('profile', host='bizadmin'))
+
+@login_required
+def headerImageUploads(request):
+    if request.POST:
+        company = Company.objects.get(user=request.user)
+        img = request.FILES.get('imageFile')
+        x = Decimal(request.POST.get('x'))
+        y = Decimal(request.POST.get('y'))
+        w = Decimal(request.POST.get('width'))
+        h = Decimal(request.POST.get('height'))
+        if img:
+            image = Image.open(img)
+            box = (x, y, w+x, h+y)
+            cropped_image = image.crop(box)
+            resized_image = cropped_image.resize((500,500),Image.ANTIALIAS)
+            thumb_io = BytesIO()
+            resized_image.save(thumb_io, image.format)
+            company.image.save(image.filename, ContentFile(thumb_io.getvalue()), save=False)
+            company.save()
+    
+    return redirect(reverse('photos', host='bizadmin'))
         
+def galImageUpload(request):
+    if request.POST:
+        company = Company.objects.get(user=request.user)
+        img = request.FILES.get('gallaryFile')
+        x = Decimal(request.POST.get('xs'))
+        y = Decimal(request.POST.get('ys'))
+        w = Decimal(request.POST.get('widths'))
+        h = Decimal(request.POST.get('heights'))
+        if img:
+            image = Image.open(img)
+            box = (x, y, w+x, h+y)
+            cropped_image = image.crop(box)
+            resized_image = cropped_image.resize((500,500),Image.ANTIALIAS)
+            thumb_io = BytesIO()
+            resized_image.save(thumb_io, image.format)
+            gallary = Gallary.objects.create(company=company)
+            gallary.photos.save(image.filename, ContentFile(thumb_io.getvalue()), save=False)
+            gallary.save()
+    
+    return redirect(reverse('photos', host='bizadmin'))
+
+##Business Page Views
+@login_required
+def businessPhotoView(request):
+    company = Company.objects.get(user=request.user)
+    photos = Gallary.objects.filter(company=company)
+    return render(request,'bizadmin/businesspage/photos.html',{'company':company, 'photos':photos})
+
 
     
 

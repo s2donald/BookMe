@@ -166,6 +166,7 @@ class Company(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     publish = models.DateTimeField(default=timezone.now)
+    tags = TaggableManager()
     class Meta:
         ordering = ('-publish',)
         verbose_name = 'company'

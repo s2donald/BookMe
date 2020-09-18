@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from .forms import BusinessRegistrationForm
 from django.contrib.auth.decorators import login_required
-from business.models import Company, SubCategory, OpeningHours, Services, Gallary
+from business.models import Company, SubCategory, OpeningHours, Services, Gallary, Amenities
 from account.models import Account
 from account.tasks import bizaddedEmailSent
 from consumer.models import Bookings
@@ -580,6 +580,33 @@ def businessPhotoView(request):
     company = Company.objects.get(user=request.user)
     photos = Gallary.objects.filter(company=company)
     return render(request,'bizadmin/businesspage/photos.html',{'company':company, 'photos':photos})
+
+def businessAmenitiesView(request):
+    company = Company.objects.get(user=request.user)
+    amenities = Amenities.objects.filter(company=company)
+
+    return render(request,'bizadmin/businesspage/amenities.html',{'company':company, 'amenities':amenities})
+
+class addTagAPI(View):
+    def post(self, request):
+        data=json.loads(request.body)
+        tag = data['addedTag']
+        company = Company.objects.get(user=request.user)
+        company.tags.add(tag)
+        if not tag:
+            return JsonResponse({'email_error':'You must choose a subdomain or else a random one will be chosen.','email_valid':True})
+        return JsonResponse({'tags':'works'})
+
+class removeTagAPI(View):
+    def post(self, request):
+        data=json.loads(request.body)
+        tag = data['removedTag']
+        company = Company.objects.get(user=request.user)
+        company.tags.remove(tag)
+        if not tag:
+            return JsonResponse({'email_error':'You must choose a subdomain or else a random one will be chosen.','email_valid':True})
+        return JsonResponse({'tags':'works'})
+
 
 
     

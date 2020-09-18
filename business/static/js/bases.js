@@ -49,6 +49,7 @@ $(document).ready(function (){
         slidesPerView: 3,
         spaceBetween: 0,
         centeredSlides: true,
+        zoom:true,
         loop: true,
         // Navigation arrows
         navigation: {
@@ -133,9 +134,9 @@ $(document).ready(function (){
     // =====================================================
 
     var itemsSlider = new Swiper('.items-slider', {
-        slidesPerView: 4,
+        slidesPerView: 3,
         spaceBetween: 20,
-        loop: true,
+        loop: false,
         roundLengths: true,
         breakpoints: { 
             1200: {
@@ -162,7 +163,7 @@ $(document).ready(function (){
     var itemsSliderFull = new Swiper('.items-slider-full', {
         slidesPerView: 6,
         spaceBetween: 20,
-        loop: true,
+        loop: false,
         roundLengths: true,
         breakpoints: {
             1600: {

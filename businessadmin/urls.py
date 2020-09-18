@@ -4,6 +4,7 @@ from . import views
 app_name = 'businessadmin'
 urlpatterns = [
     url(r'bpage/photo/$', views.businessPhotoView, name='photos'),
+    url(r'bpage/amentities/$', views.businessAmenitiesView, name='amenities'),
     url(r'dashboard/schedule/$', views.scheduleView, name='schedule'),
     url(r'dashboard/profile/security/$',views.profileSecurityViews, name='security'),
     url(r'dashboard/profile/billing/$',views.profileBillingViews, name='billing'),
@@ -22,6 +23,8 @@ urlpatterns = [
     url(r'logout/$', views.LogoutView, name='bizadminlogout'),
     url(r'login/$', views.loginViews, name='bizadminlogin'),
     url(r'^faq/$', views.faqBusinessViews, name='faqbusiness'),
+    url(r'^addtag/$', views.addTagAPI.as_view(), name='addtag'),
+    url(r'^removetag/$', views.removeTagAPI.as_view(), name='removetag'),
     url(r'^pricing/$', views.pricingViews, name='pricingBusiness'),
     url(r'^$', views.businessadmin, name='bizadminmain'),
 ]

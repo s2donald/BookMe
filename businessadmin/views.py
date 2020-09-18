@@ -607,6 +607,27 @@ class removeTagAPI(View):
             return JsonResponse({'email_error':'You must choose a subdomain or else a random one will be chosen.','email_valid':True})
         return JsonResponse({'tags':'works'})
 
+class addAmenityAPI(View):
+    def post(self, request):
+        data=json.loads(request.body)
+        tag = data['addedAmenity']
+        company = Company.objects.get(user=request.user)
+        Amenities.objects.create(amenity=tag, company=company)
+        if not tag:
+            return JsonResponse({'email_error':'You must choose a subdomain or else a random one will be chosen.','email_valid':True})
+        return JsonResponse({'tags':'works'})
+
+class removeAmenityAPI(View):
+    def post(self, request):
+        data=json.loads(request.body)
+        tag = data['removedAmenity']
+        company = Company.objects.get(user=request.user)
+        amen = Amenities.objects.get(amenity=tag, company=company)
+        amen.delete()
+
+        if not tag:
+            return JsonResponse({'email_error':'You must choose a subdomain or else a random one will be chosen.','email_valid':True})
+        return JsonResponse({'tags':'works'})
 
 
     

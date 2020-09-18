@@ -28,36 +28,25 @@
                 <div class="row">
                     <div class="col-lg-6 mb-4">
                         <div class="card h-100 border-left-lg border-left-secondary">
-                            <div class="card-header">Amenities</div>
+                            <div class="card-header"><p>Add The Amenities You Offer</p> <small>Add some of the amenities you offer to your clients. Type up to 10 amenities in the input section then enter. (Each amenity can be up to 25 characters long)</small> </div>
                             <div class="card-body text-center">
-                                <!-- Profile picture help block-->
-                                <div class="small font-italic text-muted mb-4">JPG or PNG no larger than 5 MB</div>
-                                <!-- Profile picture upload button -->
-                                <form action="{% host_url 'imageuploads' host 'bizadmin' %}" method="POST" enctype="multipart/form-data" id="formUpload">
+                                <!-- Gallary upload button -->
+                                <form method="POST" enctype="multipart/form-data" id="galUpload">
                                     {% csrf_token %}
-                                    <button type="button" id="btnimage" name="imageFile" class="btn btn-primary">Upload new image</button>        
+                                    <input id="amenitiestag" type="text" value="{% for amenity in amenities %}{{ amenity.amenity }},{% endfor %}" class="tagsinput" data-role="tagsinput" data-color="danger">                                
                                 </form>
                             </div>
                         </div>
                     </div>
                     <div class="col-lg-6 mb-4">
                         <div class="card h-100 border-left-lg border-left-secondary">
-                            <div class="card-header"><p>Add Your Tags</p> <small>This helps expand your reach so include upto 20 tags</small> </div>
+                            <div class="card-header"><p>Add Your Tags</p> <small>This helps expand your reach so include up to 20 key words related to your business.</small> </div>
                             <div class="card-body text-center">
                                 <!-- Gallary upload button -->
-                                <form action="{% host_url 'galleryupload' host 'bizadmin' %}" method="POST" enctype="multipart/form-data" id="galUpload">
+                                <form method="POST" enctype="multipart/form-data" id="galUpload">
                                     {% csrf_token %}
                                     <input id="taggerinput" type="text" value="{% for tags in company.tags.all %}{{ tags }},{% endfor %}" class="tagsinput" data-role="tagsinput" data-color="danger">                                
                                 </form>
-                                <div class="row">
-                                {% for p in photos %}
-                                    <div class="col-sm-12 col-md-6 col-lg-4 mt-2">
-                                        <div class="card hover-animate">
-                                            <p> {% for a in amenities %}<p>{{a}}</p>{% endfor %}</p>
-                                        </div>
-                                    </div>
-                                {% endfor %}
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -85,7 +74,8 @@
 
         $('#taggerinput').tagsinput({
             maxTags: 25,
-            maxChars: 15
+            maxChars: 15,
+            confirmKeys: [13, 188, 32],
         });
         $('#taggerinput').on('itemAdded', function(event){
             var tag = event.item;
@@ -112,7 +102,38 @@
                 },
                 cache: false,
             });
+        });
 
+        $('#amenitiestag').tagsinput({
+            maxTags: 10,
+            maxChars: 25,
+            confirmKeys: [13, 188],
+        });
+        $('#amenitiestag').on('itemAdded', function(event){
+            var tag = event.item;
+            $.ajax({
+                type:'POST',
+                dataType: 'json',
+                url: "{% host_url 'addamenity' host 'bizadmin' %}",
+                data: JSON.stringify({addedAmenity: tag}),
+                headers:{
+                    "X-CSRFToken": csrftoken
+                },
+                cache: false,
+            });
+        });
+        $('#amenitiestag').on('itemRemoved', function(event){
+            var tag = event.item;
+            $.ajax({
+                type:'POST',
+                dataType: 'json',
+                url: "{% host_url 'removeamenity' host 'bizadmin' %}",
+                data: JSON.stringify({removedAmenity: tag}),
+                headers:{
+                    "X-CSRFToken": csrftoken
+                },
+                cache: false,
+            });
         });
     </script>
 {% endblock %}

@@ -220,15 +220,22 @@
                 </div>
                 <div class="card-body">
                   <ul class="list-unstyled mb-4">
-                    <li class="mb-2"> <a class="licolor text-sm text-decoration-none" href="#"><i class="fa fa-phone mr-3"></i><span class="text-muted">(020) 123 456 789</span></a></li>
-                    <li class="mb-2"> <a class="licolor text-sm text-decoration-none" href="#"><i class="fa fa-envelope mr-3"></i><span class="text-muted">info@example.com</span></a></li>
-                    <li class="mb-2"> <a class="licolor text-sm text-decoration-none" href="#"><i class="fa fa-globe mr-3"></i><span class="text-muted">www.example.com</span></a></li>
-                    <li class="mb-2"> <a class="licolor text-blue text-sm text-decoration-none" href="#"><i class="fab fa-facebook mr-3"></i><span class="text-muted">Facebook</span></a></li>
-                    <li class="mb-2"> <a class="licolor text-sm text-decoration-none" href="#"><i class="fab fa-twitter mr-3"></i><span class="text-muted">Twitter</span></a></li>
-                    <li class="mb-2"> <a class="licolor text-sm text-decoration-none" href="#"><i class="fab fa-instagram mr-3"></i><span class="text-muted">Instagram</span></a></li>
-                    <li class="mb-2"> <a class="licolor text-sm text-decoration-none" href="#"><i class="fab fa-google-plus mr-3"></i><span class="text-muted">Google+</span></a></li>
+
+                    <li class="mb-2"> <a class="licolor text-sm text-decoration-none" href="tel:{{ company.phone }}"><i class="fa fa-phone mr-3"></i><span class="text-muted">{{ company.phone }}</span></a></li>
+                    <li class="mb-2"> <a class="licolor text-sm text-decoration-none" href="mailto:{{ company.email }}"><i class="fa fa-envelope mr-3"></i><span class="text-muted">{{ company.email }}</span></a></li>
+                    {% if company.website_link %}
+                      <li class="mb-2"> <a class="licolor text-sm text-decoration-none" href="{{ company.website_link }}"><i class="fa fa-globe mr-3"></i><span class="text-muted">{{ company.website_link }}</span></a></li>
+                    {% endif %}
+                    {% if company.fb_link %}
+                      <li class="mb-2"> <a class="licolor text-blue text-sm text-decoration-none" href="{{ company.fb_link}}"><i class="fab fa-facebook mr-3"></i><span class="text-muted">Facebook</span></a></li>
+                    {% endif %}
+                    {% if company.twitter_link %}
+                      <li class="mb-2"> <a class="licolor text-sm text-decoration-none" href="{{ company.twitter_link}}"><i class="fab fa-twitter mr-3"></i><span class="text-muted">Twitter</span></a></li>
+                    {% endif %}
+                    {% if company.instagram_link %}
+                      <li class="mb-2"> <a class="licolor text-sm text-decoration-none" href="{{ company.instagram_link}}"><i class="fab fa-instagram mr-3"></i><span class="text-muted">Instagram</span></a></li>
+                    {% endif %}
                   </ul>
-                  <div class="text-center"><a class="btn btn-outline-primary btn-block" href="#"> <i class="far fa-paper-plane mr-2"></i>Send a Message</a></div>
                 </div>
               </div>
               <div class="text-center">

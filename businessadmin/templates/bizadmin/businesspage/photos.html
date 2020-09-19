@@ -160,11 +160,12 @@
                                     <input type="file" id="inputtimage" name="gallaryFile" class="btn btn-primary" accept="image/*" hidden >
                                     <button type="button" id="btnnimage" name="gallaryFile" class="btn btn-primary">Add a photo to your gallery</button>        
                                 </form>
-                                <div class="row">
+                                <div class="row" id="galphotos">
                                 {% for p in photos %}
                                     <div class="col-sm-12 col-md-6 col-lg-4 mt-2">
-                                        <div class="card hover-animate">
+                                        <div class="card hover-animate justify-content-center align-self-center show-image" id="{{ p.id }}">
                                             <img src="{{ p.photos.url }}" alt="">
+                                            <a class="btn btn-danger d-none trashcan{{ p.id }} delete"><i class="fas fa-trash"></i></a>
                                         </div>
                                     </div>
                                 {% endfor %}
@@ -231,18 +232,84 @@
                                 </div>
                             </div>
                         </div>
-                        <script>
-                            document.getElementById('btnimage').addEventListener('click', openDialog);
 
-                            function openDialog() {
-                                document.getElementById('inputimage').click();
-                            }
-                        </script>
                         <script>
                             document.getElementById('btnnimage').addEventListener('click', openDialog);
 
                             function openDialog() {
                                 document.getElementById('inputtimage').click();
                             }
+                        </script>
+
+                        <script>
+                            function getCookie(name) {
+                            let cookieValue = null;
+                            if (document.cookie && document.cookie !== '') {
+                                const cookies = document.cookie.split(';');
+                                for (let i = 0; i < cookies.length; i++) {
+                                    const cookie = cookies[i].trim();
+                                    // Does this cookie string begin with the name we want?
+                                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                                        break;
+                                    }
+                                }
+                            }
+                                return cookieValue;
+                            }
+                            const csrftoken = getCookie('csrftoken');
+            
+                            document.getElementById('btnimage').addEventListener('click', openDialog);
+
+                            function openDialog() {
+                                document.getElementById('inputimage').click();
+                            }
+                            photo = document.querySelector("#galphotos");
+                            {% for p in photos %}
+                                $('#{{ p.id }}').hover(function(){
+                                    $('.trashcan{{ p.id }}').toggleClass('d-none') 
+                                });
+
+                                $('.trashcan{{ p.id }}').click(function(){
+                                    const swalStyles = Swal.mixin({
+                                        customClass:{
+                                            confirmButton: 'btn btn-primary',
+                                            cancelButton: 'btn btn-danger',
+                                        },
+                                        buttonsStyling: false
+
+                                    });
+                                    swalStyles.fire({
+                                        title: 'Are you sure you want to delete this picture from your gallery?',
+                                        imageUrl: '{{ p.photos.url }}',
+                                        showCancelButton: true,
+                                        reverseButtons: true
+                                    }).then((result) => {
+                                        if (result.isConfirmed) {
+                                            $.ajax({
+                                                type:'POST',
+                                                dataType: 'json',
+                                                url: "{% host_url 'deletegalpic' host 'bizadmin' %}",
+                                                data: JSON.stringify({pics_id: '{{ p.id }}'}),
+                                                headers:{
+                                                    "X-CSRFToken": csrftoken
+                                                },
+                                                cache: false,
+                                            });
+                                            
+                                            swalStyles.fire({title: 'Gallery Picture Deleted!', text: 'Your file has been deleted.', icon: 'success' }).then(function(){ location.reload(); })
+                                        } else if (
+                                            /* Read more about handling dismissals below */
+                                            result.dismiss === Swal.DismissReason.cancel
+                                        ) {
+                                            swalStyles.fire(
+                                            'Cancelled',
+                                            'Your gallery picture is safe! 😊',
+                                            'error'
+                                            )
+                                        }
+                                    });
+                                });
+                            {% endfor %}
                         </script>
 {% endblock %}

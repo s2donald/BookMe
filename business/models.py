@@ -152,6 +152,9 @@ class Company(models.Model):
     address = models.CharField(max_length=200)
     avgrating = models.DecimalField(max_digits=5, decimal_places=2)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='published')
+    email = models.EmailField(verbose_name='Business Email', max_length=60)
+    phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$', message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
+    phone = models.CharField("Business Phone Number",validators=[phone_regex], max_length=17)
     postal_regex = RegexValidator(regex=r"^[ABCEGHJKLMNPRSTVXY]{1}\d{1}[A-Z]{1} *\d{1}[A-Z]{1}\d{1}$", message="A valid postal code/ZIP Code must be entered")
     postal = models.CharField(max_length=10, validators=[postal_regex])
     state = models.CharField(max_length=2)
@@ -166,7 +169,11 @@ class Company(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     publish = models.DateTimeField(default=timezone.now)
-    tags = TaggableManager()
+    fb_link = models.URLField(max_length=200, blank=True, null=True)
+    instagram_link = models.URLField(max_length=200, blank=True, null=True)
+    twitter_link = models.URLField(max_length=200, blank=True, null=True)
+    website_link = models.URLField(max_length=200, blank=True, null=True)
+    tags = TaggableManager(blank=True)
     class Meta:
         ordering = ('-publish',)
         verbose_name = 'company'

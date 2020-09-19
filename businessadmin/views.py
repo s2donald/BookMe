@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .forms import BusinessRegistrationForm
+from .forms import BusinessRegistrationForm, UpdateCompanyForm
 from django.contrib.auth.decorators import login_required
 from business.models import Company, SubCategory, OpeningHours, Services, Gallary, Amenities
 from account.models import Account
@@ -51,11 +51,9 @@ def completeViews(request):
     
     if user.on_board:
         return redirect(reverse('schedule', host='bizadmin')) 
-    print('hellofromtype')
     if request.method == 'POST':
         biz_form = AddCompanyForm(request.POST)
         booking_form = BookingSettingForm(request.POST)
-        print(biz_form)
         if biz_form.is_valid() and booking_form.is_valid():
             company = Company.objects.get(user=user)
             category = biz_form.cleaned_data.get('category')
@@ -147,10 +145,6 @@ def completeViews(request):
                 company.subcategory.add(s)
 
             return render(request, 'bizadmin/home/home.html', {'company':company})
-
-        
-            # user_id = user.id
-            # bizaddedEmailSent.delay(user_id)
 
     biz_form = AddCompanyForm()
     service_form = AddServiceForm()
@@ -344,7 +338,6 @@ def updateserviceViews(request, pk):
     data=dict()
     if request.method=='POST':
         form = UpdateServiceForm(request.POST)
-        print(form)
         if form.is_valid():
             
             service.name = form.cleaned_data.get('name')
@@ -422,7 +415,7 @@ def homepageViews(request):
             if not week4:
                 week4 = 0
             start4 = (fourweek - timedelta(days=fourweek.weekday())).strftime("%b-%d-%Y")
-            week = [int(week4), int(week2), int(week3), int(week1)]
+            week = [int(week4), int(week3), int(week2), int(week1)]
             weeklabel = [start4, start3, start2, start1]
 
             month = timezone.now() - timedelta(days=30)
@@ -607,10 +600,12 @@ class removeTagAPI(View):
             return JsonResponse({'email_error':'You must choose a subdomain or else a random one will be chosen.','email_valid':True})
         return JsonResponse({'tags':'works'})
 
+import string
 class addAmenityAPI(View):
     def post(self, request):
         data=json.loads(request.body)
         tag = data['addedAmenity']
+        tag = string.capwords(tag)
         company = Company.objects.get(user=request.user)
         Amenities.objects.create(amenity=tag, company=company)
         if not tag:
@@ -629,6 +624,36 @@ class removeAmenityAPI(View):
             return JsonResponse({'email_error':'You must choose a subdomain or else a random one will be chosen.','email_valid':True})
         return JsonResponse({'tags':'works'})
 
+class deleteGalPic(View):
+    def post(self, request):
+        data = json.loads(request.body)
+        pic_id = data['pics_id']
+        company = Company.objects.get(user=request.user)
+        picture = Gallary.objects.get(company=company, id=pic_id)
+        picture.delete()
+
+        return JsonResponse({'pictures':'pictures'})
+
+def compinfoViews(request):
+    if not request.user.is_authenticated:
+        context={}
+        user_form = BusinessRegistrationForm()
+        context['business_registration_form'] = user_form
+        return render(request, 'account/bussignup.html', {'user_form':user_form})
+    
+    email = request.user.email
+    user = get_object_or_404(Account, email=email)
+    
+    if not user.on_board:
+        return redirect(reverse('completeprofile', host='bizadmin'))
+    company = Company.objects.get(user=user)
+    subcategory = company.subcategory.all()
+    s = [x.id for x in subcategory]
+    initialVal = {'business_name':company.business_name,'category':company.category, 
+                    'subcategory':s, 'address':company.address, 'postal':company.postal, 'city':company.city,
+                    'fb_link':company.fb_link,'twitter_link':company.twitter_link,'instagram_link':company.instagram_link,'website_link':company.website_link}
+    updateform = UpdateCompanyForm(initial=initialVal)
+    return render(request, 'bizadmin/companydetail/info/compinfo.html', {'company':company, 'updateform': updateform})
 
     
 

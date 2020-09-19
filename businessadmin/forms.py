@@ -6,6 +6,8 @@ from django import forms
 from django.core.validators import RegexValidator
 from django.db import models
 
+from business.models import Company, Category, SubCategory
+
 class BusinessRegistrationForm(UserCreationForm):
     first_name = forms.CharField(label='First Name', required=True, max_length=30)
     last_name = forms.CharField(label='Last Name', required=True, max_length=30)
@@ -67,5 +69,28 @@ class MainPhoto(forms.ModelForm):
 
         return photo
 
+
+class UpdateCompanyForm(forms.ModelForm):
+    business_name = forms.CharField(label='', max_length=30, widget=forms.TextInput(attrs={'class':'form-control'}))
+    email = forms.EmailField(label='', required=True)
+    category = forms.ModelChoiceField(queryset=Category.objects.all(),label='', empty_label=None, widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control','title':'Category'}))
+    subcategory = forms.ModelMultipleChoiceField(queryset=SubCategory.objects.all(),label='', widget=forms.SelectMultiple(attrs={'class':'selectcolor selectpicker show-tick form-control','multiple':'', 'data-size':'5', 'data-dropdown-align-right':'true', 'title':'Subcategories'}))
+    description = forms.CharField(label='', max_length=500, widget=forms.Textarea(attrs={'rows':4,'cols':20}))
+    address = forms.CharField(label='', max_length=200, widget=forms.TextInput(attrs={'class':'form-control'}))
+    postal_regex = RegexValidator(regex=r"^[ABCEGHJKLMNPRSTVXY]{1}\d{1}[A-Z]{1} *\d{1}[A-Z]{1}\d{1}$")
+    postal = forms.CharField(max_length=10, validators=[postal_regex], label='', error_messages={'invalid': 'Enter a valid Postal Code or ZIP Code.'}, widget=forms.TextInput(attrs={'class':'form-control'}))
+    state = forms.CharField(max_length=2, label='', widget=forms.TextInput(attrs={'class':'form-control'}))
+    city = forms.CharField(max_length=30,label='', widget=forms.TextInput(attrs={'class':'form-control'}))
+    website_link = forms.URLField(max_length=200, label='', required=False, widget=forms.TextInput(attrs={'class':'form-control'}))
+    instagram_link = forms.URLField(max_length=200, label='', required=False, widget=forms.TextInput(attrs={'class':'form-control'}))
+    fb_link = forms.URLField(max_length=200, label='', required=False, widget=forms.TextInput(attrs={'class':'form-control'}))
+    twitter_link = forms.URLField(max_length=200, label='', required=False, widget=forms.TextInput(attrs={'class':'form-control'}))
+    prefix = 'updatecompany'
+    class Meta:
+        model = Company
+        fields = ('business_name','category', 'description', 'address', 'postal', 'state', 'city', 'fb_link','twitter_link', 'instagram_link', 'website_link')
+    def save(self):
+        company = super().save(commit=False)
+        company.save()
 
 

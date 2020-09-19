@@ -34,7 +34,6 @@ DOMAIN_NAME='gibele.com'
 INSTALLED_APPS = [
     'django_hosts',
     'widget_tweaks',
-    'bootstrap_modal_forms',
     'account.apps.AccountConfig',
     'business.apps.BusinessConfig',
     'businessadmin.apps.BusinessadminConfig',

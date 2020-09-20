@@ -17,148 +17,54 @@
                                 <div class="row align-items-center justify-content-between pt-3">
                                     <div class="col-auto mb-3">
                                         <h1 class="page-header-title">
-                                            Company Details
+                                            Company Services
                                         </h1>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </header>
+                        </header>
                         <!-- Account page navigation-->
                         <nav class="nav nav-borders">
-                            <a class="nav-link activate ml-0" href="{% host_url 'profile' host 'bizadmin'%}">Company Info</a>
-                            <a class="nav-link" href="{% host_url 'billing' host 'bizadmin'%}">Services</a>
-                            <a class="nav-link" href="{% host_url 'security' host 'bizadmin'%}">Clients</a>
-                            <a class="nav-link" href="{% host_url 'profile' host 'bizadmin'%}">Staff Members</a>
+                            <a class="nav-link ml-0" href="{% host_url 'information' host 'bizadmin'%}">Company Info</a>
+                            <a class="nav-link activate" href="{% host_url 'service_detail' host 'bizadmin' %}">Services</a>
+                            <a class="nav-link" href="#">Clients</a>
+                            <a class="nav-link" href="#">Staff Members</a>
                         </nav>
                         <hr class="mt-0 mb-4" />
                         <div class="row">
-                            <div class="col-xl-4">
-                                <!-- Profile picture card-->
-                                <div class="card">
-                                    <div class="card-header">Main Profile Photo</div>
-                                    <div class="card-body text-center">
-                                        <!-- Profile picture image-->
-                                        <img class="img-account-profile rounded-circle mb-2" src="{% if company.image %}{{ company.image.url }}{% else %}https://epicattorneymarketing.com/wp-content/uploads/2016/07/Headshot-Placeholder-1.png{% endif %}" alt="300x300" />
-                                        <!-- Profile picture help block-->
-                                        <div class="small font-italic text-muted mb-4">JPG or PNG no larger than 5 MB</div>
-                                        <!-- Profile picture upload button -->
-                                        <form action="{% host_url 'imageupload' host 'bizadmin' %}" method="POST" enctype="multipart/form-data" id="formUpload">
-                                        {% csrf_token %}
-                                            <input type="hidden" name="x" id="id_x"><input type="hidden" name="y" id="id_y"><input type="hidden" name="width" id="id_width"><input type="hidden" name="height" id="id_height">
-                                            <input type="file" id="inputimage" name="imageFile" class="btn btn-primary" accept="image/*" hidden >
-                                            <button type="button" id="btnimage" name="imageFile" class="btn btn-primary">Upload new image</button>
-                                            
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-xl-8">
+                            <div class="col-xl-12">
                                 <!-- Account details card-->
                                 <div class="card mb-4">
-                                    <div class="card-header">Account Details</div>
+                                    <div class="col-md-12 text-center mt-2">
+                                        <button class="btn btn-primary" type="button">Add Service</button>
+                                    </div>
+                                    <div class="card-header">Offered Services</div>
                                     <div class="card-body">
-                                        <form>
-                                            <!-- Form Row-->
-                                            <div class="form-row">
-                                                <!-- Form Group (first name)-->
-                                                <div class="form-group col-md-12">
-                                                    <label class="small mb-1" for="businessName">Business Name</label>
-                                                    {{ updateform.business_name|as_crispy_field }}
+                                            {% for s in services %}
+                                                <div class="card">
+                                                    <div class="row">
+                                                        <div class="col-12">
+                                                            <div class="card-header">{{ s.name }}</div>
+                                                            <div class="card-body d-lg-flex justify-content-between text-center">
+                                                                <div>
+                                                                    <p class="subtitle text-left">${{s.price}}</p>
+                                                                    <p class="text-muted text-left">{{ s.description }}</p>
+                                                                </div>
+        
+                                                                <div>
+                                                                    <button class="btn btn-danger btn-sm" type="submit"><i class="fas fa-trash"></i></button>
+                                                                    <button class="btn btn-primary btn-sm" type="submit"><i class="fas fa-pencil-alt"></i></button>
+                                                                </div>
+                                                            </div>
+                                                            
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <!-- Form Row        -->
-                                            <div class="form-row">
-                                                <!-- Form Group (organization name)-->
-                                                <div class="form-group col-md-6">
-                                                    <label class="small mb-1" for="inputOrgName">Main Category</label>
-                                                    {{ updateform.category|as_crispy_field }}
-                                                </div>
-                                                <!-- Form Group (location)-->
-                                                <div class="form-group col-md-6">
-                                                    <label class="small mb-1" for="inputLocation">Business Categories</label>
-                                                    {{ updateform.subcategory|as_crispy_field }}
-                                                </div>
-                                            </div>
-                                            <!-- Form Group (email address)-->
-                                            <div class="form-row">
-                                                <div class="form-group col-md-6">
-                                                    <label class="small mb-1" for="inputEmailAddress">Business Email Address</label>
-                                                    <input class="form-control" id="inputEmailAddress" type="email" placeholder="Enter your email address" value="{{ request.user.email }}" />
-                                                </div>
-                                                <!-- Form Group (phone number)-->
-                                                <div class="form-group col-md-6">
-                                                    <label class="small mb-1" for="inputPhone">Business Phone number</label>
-                                                    <input class="form-control" id="inputPhone" type="tel" placeholder="Enter your phone number" value="{{ request.user.phone }}" />
-                                                </div>
-                                            </div>
-                                            <div class="form-row">
-                                                <div class="form-group col-md-4">
-                                                    <label for="">Business Address</label>
-                                                    {{ updateform.address|as_crispy_field }}
-                                                </div>
-                                                <div class="form-group col-md-4">
-                                                    <label for="">Postal Code</label>
-                                                    {{ updateform.postal|as_crispy_field }}
-                                                </div>
-                                                <div class="form-group col-md-4">
-                                                    <label for="">City</label>
-                                                    {{ updateform.city|as_crispy_field }}
-                                                </div>
-                                            </div>
-                                            <div class="form-row">
-                                                <div class="form-group col-md-12">
-                                                    <label for="">Business Website Link</label>
-                                                    {{ updateform.website_link|as_crispy_field }}
-                                                </div>
-                                            </div>
-                                            <div class="form-row">
-                                                <div class="form-group col-md-4">
-                                                    <label for="">Facebook Link</label>
-                                                    {{ updateform.fb_link|as_crispy_field }}
-                                                </div>
-                                                <div class="form-group col-md-4">
-                                                    <label for="">Twitter Link</label>
-                                                    {{ updateform.twitter_link|as_crispy_field }}
-                                                </div>
-                                                <div class="form-group col-md-4">
-                                                    <label for="">Instagram Link</label>
-                                                    {{ updateform.instagram_link|as_crispy_field }}
-                                                </div>
-                                            </div>
-                                            <!-- Save changes button-->
-                                            <button class="btn btn-primary" type="button">Save changes</button>
-                                        </form>
+                                            {% endfor %}
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <!-- MODAL TO CROP THE IMAGE -->
-                        <div class="modal fade" id="modalCrop" data-backdrop="static" data-keyboard="false">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                        </button>
-                                        <h4 class="modal-title">Crop the photo</h4>
-                                    </div>
-                                    <div class="modal-body">
-                                        <img src="" id="image" style="max-width: 100%;">
-                                    </div>
-                                    <div class="modal-footer">
-                                        <div class="btn-group pull-left" role="group">
-                                        <button type="button" class="btn btn-default js-zoom-in">
-                                            <span class="fas fa-search-plus"></span>
-                                        </button>
-                                        <button type="button" class="btn btn-default js-zoom-out">
-                                            <span class="fas fa-search-minus"></span>
-                                        </button>
-                                        </div>
-                                        <button type="button" class="btn btn-default" data-dismiss="modal">Nevermind</button>
-                                        <button type="button" class="btn btn-primary js-crop-and-upload">Crop and upload</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                    </div>
 {% endblock %}

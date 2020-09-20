@@ -648,10 +648,11 @@ def compinfoViews(request):
     
     if not user.on_board:
         return redirect(reverse('completeprofile', host='bizadmin'))
+
     company = Company.objects.get(user=user)
     subcategory = company.subcategory.all()
     s = [x.id for x in subcategory]
-    initialVal = {'business_name':company.business_name,'email':company.email,'category':company.category, 
+    initialVal = {'business_name':company.business_name,'email':company.email,'category':company.category, 'description':company.description,
                     'subcategory':s, 'address':company.address, 'postal':company.postal, 'city':company.city, 'state':company.state,
                     'fb_link':company.fb_link,'twitter_link':company.twitter_link,'instagram_link':company.instagram_link,'website_link':company.website_link,'phone':company.phone}
     updateform = UpdateCompanyForm(initial=initialVal)
@@ -678,14 +679,14 @@ class saveCompanyDetail(View):
             company.business_name = form.cleaned_data.get('business_name')
             company.category = form.cleaned_data.get('category')
             subcategory = form.cleaned_data.get('subcategory')
-            for s in subcategory:
-                company.subcategory.add(s)
+            print(subcategory)
             email = form.cleaned_data.get('email')
             if not email==company.email:
                 company.email = email
             phone = form.cleaned_data.get('phone')
             if not phone == company.phone:
                 company.phone = phone
+            company.description = form.cleaned_data.get('description')
             company.address = form.cleaned_data.get('address')
             company.postal = form.cleaned_data.get('postal')
             company.city = form.cleaned_data.get('city')
@@ -695,9 +696,31 @@ class saveCompanyDetail(View):
             company.twitter_link = form.cleaned_data.get('twitter_link')
             company.instagram_link = form.cleaned_data.get('instagram_link')
             company.save()
+            subcat = company.subcategory.all()
+            for s in subcat:
+                company.subcategory.remove(s)
+            for s in subcategory:
+                company.subcategory.add(s)
             return JsonResponse({'good':'We have saved your company information!'})
         else:
             return JsonResponse({'errors':'Please double check your form. There may be errors.'})
+
+def servicesDetailView(request):
+    if not request.user.is_authenticated:
+        context={}
+        user_form = BusinessRegistrationForm()
+        context['business_registration_form'] = user_form
+        return render(request, 'account/bussignup.html', {'user_form':user_form})
+    email = request.user.email
+    user = get_object_or_404(Account, email=email)
+    if not user.on_board:
+        return redirect(reverse('completeprofile', host='bizadmin'))
+
+    company = Company.objects.get(user=user)
+    services = Services.objects.filter(business=company)
+    return render(request,'bizadmin/companydetail/services/service.html', {'company':company, 'services':services})
+
+
 
 
 

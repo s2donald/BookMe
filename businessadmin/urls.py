@@ -10,9 +10,12 @@ urlpatterns = [
     url(r'dashboard/profile/billing/$',views.profileBillingViews, name='billing'),
     url(r'dashboard/profile/$',views.profileViews, name='profile'),
     url(r'detail/info/', views.compinfoViews, name='information'),
+
+    url(r'detail/service/', views.servicesDetailView, name='service_detail'),
     url(r'creating/$', views.createserviceViews, name='service_create'),
     url(r'delete/(?P<pk>\d+)/$', views.deleteserviceViews, name='service_delete'),
     url(r'update/(?P<pk>\d+)/$', views.updateserviceViews, name='service_update'),
+    
     url(r'onboarding/check/subdomain/$', views.subdomainCheck.as_view(), name='subdomain'),
     url(r'onboarding/$', views.completeViews, name='completeprofile'),
     url(r'^updatecompanyform/$',views.updateCompanyDetail.as_view(), name='updateform'),

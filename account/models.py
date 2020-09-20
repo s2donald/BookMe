@@ -46,6 +46,7 @@ class Account(AbstractBaseUser):
     postal = models.CharField(max_length=35)
     province = models.CharField(max_length=35)
     city = models.CharField(max_length=35)
+    avatar = models.ImageField(upload_to='users/profilepic/', blank=True)
     is_business= models.BooleanField(default=False)
     on_board= models.BooleanField(default=False)
     is_consumer= models.BooleanField(default=False)

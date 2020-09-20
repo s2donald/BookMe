@@ -83,8 +83,8 @@
                     </header>
                         <!-- Account page navigation-->
                         <nav class="nav nav-borders">
-                            <a class="nav-link activate ml-0" href="{% host_url 'profile' host 'bizadmin'%}">Company Info</a>
-                            <a class="nav-link" href="{% host_url 'billing' host 'bizadmin'%}">Services</a>
+                            <a class="nav-link activate ml-0" href="{% host_url 'information' host 'bizadmin'%}">Company Info</a>
+                            <a class="nav-link" href="{% host_url 'service_detail' host 'bizadmin' %}">Services</a>
                             <a class="nav-link" href="#">Clients</a>
                             <a class="nav-link" href="#">Staff Members</a>
                         </nav>
@@ -126,6 +126,13 @@
                                                     <div class="invalid_name m-0 p-0" style="display:none; color:red!important;"></div>
                                                 </div>
                                             </div>
+                                            <div class="form-row">
+                                                <!-- Form Group (first name)-->
+                                                <div class="form-group col-md-12">
+                                                    <label class="small mb-1" for="businessName">About Section</label>
+                                                    {{ updateform.description|as_crispy_field }}
+                                                </div>
+                                            </div>
                                             <!-- Form Row        -->
                                             <div class="form-row">
                                                 <!-- Form Group (organization name)-->
@@ -142,7 +149,7 @@
                                             <!-- Form Group (email address)-->
                                             <div class="form-row">
                                                 <div class="form-group col-md-6">
-                                                    <label class="small mb-1" for="inputEmailAddress">Business Contact Email Address</label>
+                                                    <label class="small mb-1" for="inputEmailAddress">Business Contact Email</label>
                                                     {{ updateform.email|as_crispy_field }}
                                                     <div class="invalid_email m-0 p-0" style="display:none; color:red!important;"></div>
                                                 </div>

@@ -235,3 +235,4 @@ def UpdateServiceView(request, pk, pks, slug):
         context['service_update_form'] = service_update_form
 
     return render(request, 'business/company/manage/service/update.html',{'service':service, 'update_form':service_update_form})
+

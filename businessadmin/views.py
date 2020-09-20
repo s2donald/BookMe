@@ -504,6 +504,7 @@ from django.core.files import File
 from io import BytesIO
 from django.core.files.base import ContentFile
 
+#For the main image on the company info
 @login_required
 def headerImageUpload(request):
     if request.POST:
@@ -523,8 +524,9 @@ def headerImageUpload(request):
             company.image.save(image.filename, ContentFile(thumb_io.getvalue()), save=False)
             company.save()
     
-    return redirect(reverse('profile', host='bizadmin'))
+    return redirect(reverse('information', host='bizadmin'))
 
+#For the gallery and photos main photo
 @login_required
 def headerImageUploads(request):
     if request.POST:
@@ -649,12 +651,54 @@ def compinfoViews(request):
     company = Company.objects.get(user=user)
     subcategory = company.subcategory.all()
     s = [x.id for x in subcategory]
-    initialVal = {'business_name':company.business_name,'category':company.category, 
-                    'subcategory':s, 'address':company.address, 'postal':company.postal, 'city':company.city,
-                    'fb_link':company.fb_link,'twitter_link':company.twitter_link,'instagram_link':company.instagram_link,'website_link':company.website_link}
+    initialVal = {'business_name':company.business_name,'email':company.email,'category':company.category, 
+                    'subcategory':s, 'address':company.address, 'postal':company.postal, 'city':company.city, 'state':company.state,
+                    'fb_link':company.fb_link,'twitter_link':company.twitter_link,'instagram_link':company.instagram_link,'website_link':company.website_link,'phone':company.phone}
     updateform = UpdateCompanyForm(initial=initialVal)
     return render(request, 'bizadmin/companydetail/info/compinfo.html', {'company':company, 'updateform': updateform})
 
-    
+#This update form updates the company detail info
+class updateCompanyDetail(View):
+    def post(self, request):
+        data = json.loads(request.body)
+        bname = data['name']
+        email = data['email']
+        if not bname:
+            return JsonResponse({'name_error':'You must include a business name'})
+        if (request.user.email!=str(email)) and (Account.objects.filter(email=email).exists()):
+            return JsonResponse({'email_error':'This email already exists!'})
+        return JsonResponse({'good':'we good'})
+
+class saveCompanyDetail(View):
+    def post(self, request):
+        form = UpdateCompanyForm(request.POST)
+        context = {}
+        if form.is_valid():
+            company = Company.objects.get(user=request.user)
+            company.business_name = form.cleaned_data.get('business_name')
+            company.category = form.cleaned_data.get('category')
+            subcategory = form.cleaned_data.get('subcategory')
+            for s in subcategory:
+                company.subcategory.add(s)
+            email = form.cleaned_data.get('email')
+            if not email==company.email:
+                company.email = email
+            phone = form.cleaned_data.get('phone')
+            if not phone == company.phone:
+                company.phone = phone
+            company.address = form.cleaned_data.get('address')
+            company.postal = form.cleaned_data.get('postal')
+            company.city = form.cleaned_data.get('city')
+            company.province = form.cleaned_data.get('province')
+            company.website_link = form.cleaned_data.get('website_link')
+            company.fb_link = form.cleaned_data.get('fb_link')
+            company.twitter_link = form.cleaned_data.get('twitter_link')
+            company.instagram_link = form.cleaned_data.get('instagram_link')
+            company.save()
+            return JsonResponse({'good':'We have saved your company information!'})
+        else:
+            return JsonResponse({'errors':'Please double check your form. There may be errors.'})
+
+
 
     

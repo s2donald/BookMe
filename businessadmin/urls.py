@@ -15,6 +15,8 @@ urlpatterns = [
     url(r'update/(?P<pk>\d+)/$', views.updateserviceViews, name='service_update'),
     url(r'onboarding/check/subdomain/$', views.subdomainCheck.as_view(), name='subdomain'),
     url(r'onboarding/$', views.completeViews, name='completeprofile'),
+    url(r'^updatecompanyform/$',views.updateCompanyDetail.as_view(), name='updateform'),
+    url(r'^companyformsave/$', views. saveCompanyDetail.as_view(), name='saveDetailForm'),
     url(r'home/$', views.homepageViews, name='home'),
     url(r'deletegal/$', views.deleteGalPic.as_view(), name='deletegalpic'),
     url(r'galupload/$', views.galImageUpload, name='galleryupload'),
@@ -31,6 +33,7 @@ urlpatterns = [
     url(r'^removetag/$', views.removeTagAPI.as_view(), name='removetag'),
     url(r'^pricing/$', views.pricingViews, name='pricingBusiness'),
     url(r'^$', views.businessadmin, name='bizadminmain'),
+
 ]
 from django.conf import settings
 from django.conf.urls.static import static

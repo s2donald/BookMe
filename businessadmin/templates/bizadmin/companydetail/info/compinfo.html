@@ -115,13 +115,15 @@
                                 <div class="card mb-4">
                                     <div class="card-header">Account Details</div>
                                     <div class="card-body">
-                                        <form>
+                                        <form id="updatedform">
+                                            {% csrf_token %}
                                             <!-- Form Row-->
                                             <div class="form-row">
                                                 <!-- Form Group (first name)-->
                                                 <div class="form-group col-md-12">
                                                     <label class="small mb-1" for="businessName">Business Name</label>
                                                     {{ updateform.business_name|as_crispy_field }}
+                                                    <div class="invalid_name m-0 p-0" style="display:none; color:red!important;"></div>
                                                 </div>
                                             </div>
                                             <!-- Form Row        -->
@@ -140,13 +142,15 @@
                                             <!-- Form Group (email address)-->
                                             <div class="form-row">
                                                 <div class="form-group col-md-6">
-                                                    <label class="small mb-1" for="inputEmailAddress">Business Email Address</label>
-                                                    <input class="form-control" id="inputEmailAddress" type="email" placeholder="Enter your email address" value="{{ request.user.email }}" />
+                                                    <label class="small mb-1" for="inputEmailAddress">Business Contact Email Address</label>
+                                                    {{ updateform.email|as_crispy_field }}
+                                                    <div class="invalid_email m-0 p-0" style="display:none; color:red!important;"></div>
                                                 </div>
                                                 <!-- Form Group (phone number)-->
                                                 <div class="form-group col-md-6">
-                                                    <label class="small mb-1" for="inputPhone">Business Phone number</label>
-                                                    <input class="form-control" id="inputPhone" type="tel" placeholder="Enter your phone number" value="{{ request.user.phone }}" />
+                                                    <label class="small mb-1" for="inputPhone">Business Phone Number</label>
+                                                    {{ updateform.phone|as_crispy_field }}
+                                                    <div class="invalid_phone m-0 p-0" style="display:none; color:red!important;"></div>
                                                 </div>
                                             </div>
                                             <div class="form-row">
@@ -158,33 +162,44 @@
                                                     <label for="">Postal Code</label>
                                                     {{ updateform.postal|as_crispy_field }}
                                                 </div>
-                                                <div class="form-group col-md-4">
+                                                <div class="form-group col-md-2">
                                                     <label for="">City</label>
                                                     {{ updateform.city|as_crispy_field }}
+                                                </div>
+                                                <div class="form-group col-md-2">
+                                                    <label for="">Province</label>
+                                                    {{ updateform.state|as_crispy_field }}
                                                 </div>
                                             </div>
                                             <div class="form-row">
                                                 <div class="form-group col-md-12">
                                                     <label for="">Business Website Link</label>
                                                     {{ updateform.website_link|as_crispy_field }}
+                                                    <div class="invalid_web m-0 p-0" style="display:none; color:red!important;"></div>
                                                 </div>
                                             </div>
                                             <div class="form-row">
                                                 <div class="form-group col-md-4">
                                                     <label for="">Facebook Link</label>
                                                     {{ updateform.fb_link|as_crispy_field }}
+                                                    <div class="invalid_fb m-0 p-0" style="display:none; color:red!important;"></div>
                                                 </div>
                                                 <div class="form-group col-md-4">
                                                     <label for="">Twitter Link</label>
                                                     {{ updateform.twitter_link|as_crispy_field }}
+                                                    <div class="invalid_twitter m-0 p-0" style="display:none; color:red!important;"></div>
                                                 </div>
                                                 <div class="form-group col-md-4">
                                                     <label for="">Instagram Link</label>
                                                     {{ updateform.instagram_link|as_crispy_field }}
+                                                    <div class="invalid_instagram m-0 p-0" style="display:none; color:red!important;"></div>
                                                 </div>
                                             </div>
+                                            <div class="form-row">
+                                                <label class="small mb-1" style="display:none;" id='error'></label>
+                                            </div>
                                             <!-- Save changes button-->
-                                            <button class="btn btn-primary" type="button">Save changes</button>
+                                            <button class="btn btn-primary" type="button" id="saveform">Save changes</button>
                                         </form>
                                     </div>
                                 </div>
@@ -219,10 +234,150 @@
                             </div>
                         </div>
                         <script>
-                            document.getElementById('btnimage').addEventListener('click', openDialog);
+    function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+        return cookieValue;
+    }
+    const csrftoken = getCookie('csrftoken');
 
-                            function openDialog() {
-                                document.getElementById('inputimage').click();
-                            }
+    document.getElementById('btnimage').addEventListener('click', openDialog);
+
+    function openDialog() {
+        document.getElementById('inputimage').click();
+    }
+
+    const businessname = document.querySelector("#id_updatecompany-business_name");
+    const businessemail = document.querySelector("#id_updatecompany-email");
+    const businessphone = document.querySelector("#id_updatecompany-phone");
+    const feedBackName = document.querySelector('.invalid_name');
+    const feedBackEmail = document.querySelector('.invalid_email');
+    const submitBtn = document.querySelector('#saveform');
+    const error = document.querySelector('#error');
+    businessname.addEventListener('keyup', (e) =>{
+        const businessnameVal = e.target.value;
+        businessname.classList.remove("has-danger");
+        businessname.classList.add("has-success");
+        feedBackName.style.display="none";
+            $.ajax({
+                url: "{% host_url 'updateform' host 'bizadmin' %}",
+                data: JSON.stringify({name: businessnameVal, email:'test'}),
+                type: "POST",
+                dataType: 'json',
+                headers:{
+                    "X-CSRFToken": csrftoken
+                },
+                success: function (data) {
+                    if (data.name_error) {
+                        businessname.classList.remove("has-success");
+                        businessname.classList.add("has-danger");
+                        feedBackName.style.display="block";
+                        feedBackName.innerHTML=`<p style="color:red!important;">${data.name_error}</p>`
+                    }
+                    else {
+                        businessname.classList.remove("has-danger");
+                        feedBackName.style.display="none";
+                    }
+
+                },
+            });
+        
+    });
+
+    businessemail.addEventListener('keyup', (e) =>{
+        const businessemailVal = e.target.value;
+        businessemail.classList.remove("has-danger");
+        businessemail.classList.add("has-success");
+        feedBackEmail.style.display="none";
+            $.ajax({
+                url: "{% host_url 'updateform' host 'bizadmin' %}",
+                data: JSON.stringify({email: businessemailVal, name:'test'}),
+                type: "POST",
+                dataType: 'json',
+                headers:{
+                    "X-CSRFToken": csrftoken
+                },
+                success: function (data) {
+
+                    console.log(data.email_error)
+                    if (data.email_error) {
+                        businessemail.classList.remove("has-success");
+                        businessemail.classList.add("has-danger");
+                        feedBackEmail.style.display="block";
+                        feedBackEmail.innerHTML=`<p style="color:red!important;">${data.email_error}</p>`
+                    }
+                    else {
+                        businessname.classList.remove("has-danger");
+                        feedBackEmail.style.display="none";
+                    }
+
+                },
+            });
+        
+    });
+
+    businessphone.addEventListener('keyup', (e) =>{
+        const businessphoneVal = e.target.value;
+        businessphone.classList.remove("has-danger");
+        businessphone.classList.add("has-success");
+        feedBackEmail.style.display="none";
+            $.ajax({
+                url: "{% host_url 'updateform' host 'bizadmin' %}",
+                data: JSON.stringify({email: businessemailVal, name:'test'}),
+                type: "POST",
+                dataType: 'json',
+                headers:{
+                    "X-CSRFToken": csrftoken
+                },
+                success: function (data) {
+                    if (data.email_error) {
+                        businessphone.classList.remove("has-success");
+                        businessphone.classList.add("has-danger");
+                        feedBackEmail.style.display="block";
+                        feedBackEmail.innerHTML=`<p style="color:red!important;">${data.email_error}</p>`
+                    }
+                    else {
+                        businessphone.classList.remove("has-danger");
+                        feedBackEmail.style.display="none";
+                    }
+
+                },
+            });
+        
+    });
+
+    category = document.querySelector('#id_updatecompany-category')
+    subcategory = document.querySelector('#id_updatecompany-subcategory')
+
+    submitBtn.addEventListener('click', (e)=>{
+        $.ajax({
+            data: $('#updatedform').serialize(),
+            type: "post",
+            url: "{% host_url 'saveDetailForm' host 'bizadmin' %}",
+            success: function(data){
+                if(data.errors){
+                    error.style.display= "block"
+                    error.innerHTML = `<p style="color:red!important;">${data.errors}</p>`
+                }
+                if(data.good){
+                    error.style.display= "block"
+                    error.innerHTML = `<p style="color:green!important;">${data.good}</p>`
+                }
+
+            }
+        });
+        return false;
+    });
+
                         </script>
 {% endblock %}

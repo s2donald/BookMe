@@ -148,7 +148,7 @@ class Company(models.Model):
     business_name = models.CharField(max_length=30, db_index=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='category', null=True, blank=True)
     subcategory = models.ManyToManyField(SubCategory)
-    description = models.TextField(max_length=500, db_index=True, blank=True)
+    description = models.TextField(max_length=500, db_index=True, blank=True, null=True)
     address = models.CharField(max_length=200)
     avgrating = models.DecimalField(max_digits=5, decimal_places=2)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='published')

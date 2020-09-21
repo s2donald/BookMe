@@ -301,6 +301,7 @@ def save_service_form(request, form, template_name):
             data['form_is_valid'] = True
             services = Services.objects.filter(business=company)
             data['html_service_list'] = render_to_string('bizadmin/dashboard/profile/services/partial_service_list.html', {'services':services})
+            data['view'] = 'Your service has been created!'
         else:
             data['form_is_valid'] = False
         return JsonResponse(data)
@@ -309,6 +310,7 @@ def save_service_form(request, form, template_name):
     data['html_form'] = render_to_string(template_name, context, request=request)
     return JsonResponse(data)
 
+#used in the onboarding page
 def createserviceViews(request):
     if request.method=='POST':
         service_form = AddServiceForm(request.POST)
@@ -316,6 +318,45 @@ def createserviceViews(request):
         service_form = AddServiceForm()
     return save_service_form(request, service_form, 'bizadmin/dashboard/profile/services/partial_service_create.html')
 
+#used in the bizadmin page
+class createserviceAPI(View):
+    def post(self,request):
+        form = AddServiceForm(request.POST)
+        data = dict()
+        if form.is_valid():
+            name = form.cleaned_data['name']
+            description = form.cleaned_data['description']
+            price_type = form.cleaned_data.get('price_type')
+            price = form.cleaned_data.get('price')
+            duration_hour = form.cleaned_data.get('duration_hour')
+            duration_minute = form.cleaned_data.get('duration_minute')
+            checkintime=form.cleaned_data.get('checkintime')
+            padding=form.cleaned_data.get('padding')
+            paddingtime_hour=form.cleaned_data.get('paddingtime_hour')
+            paddingtime_minute=form.cleaned_data.get('paddingtime_minute')
+            avail = True
+            company = Company.objects.get(user=request.user)
+            service = Services.objects.create(business=company,name=name,description=description,price=price, available=avail, 
+                                                price_type=price_type,duration_hour=duration_hour,duration_minute=duration_minute,checkintime=checkintime,
+                                                padding=padding,paddingtime_hour=paddingtime_hour,paddingtime_minute=paddingtime_minute)
+            service.save()
+            data['form_is_valid'] = True
+            data['view'] = 'Your service has been created!'
+            data['icon'] = 'success'
+        else:
+            data['form_is_valid'] = False
+            data['view'] = 'Your service was not created. There was an error.'
+            data['icon'] = 'error'
+        company = Company.objects.get(user=request.user)
+        services = Services.objects.filter(business=company)
+        data['html_service_list'] = render_to_string('bizadmin/companydetail/services/partial/partial_service_list.html', {'services':services})
+        return JsonResponse(data)
+
+
+
+
+
+#used in the onboarding page
 def deleteserviceViews(request, pk):
 
     company = Company.objects.get(user=request.user)
@@ -326,11 +367,27 @@ def deleteserviceViews(request, pk):
         data['form_is_valid']=True
         services = Services.objects.filter(business=company)
         data['html_service_list'] = render_to_string('bizadmin/dashboard/profile/services/partial_service_list.html', {'services':services})
+        data['view'] = 'Your service has been deleted'
     else:
         context = {'service':service}
         data['html_form'] = render_to_string('bizadmin/dashboard/profile/services/partial_service_delete.html', context, request=request)
     return JsonResponse(data)
 
+#used in the bizadmin page
+class deleteserviceAPI(View):
+    
+    def post(self, request):
+        data = dict()
+        dataa = json.loads(request.body)
+        s_id=dataa['serv_id']
+        company = Company.objects.get(user=request.user)
+        service = get_object_or_404(Services, pk=s_id, business=company)
+        service.delete()
+        services = Services.objects.filter(business=company)
+        data['html_service_list'] = render_to_string('bizadmin/companydetail/services/partial/partial_service_list.html', {'services':services})
+        return JsonResponse(data)
+
+#used in the onboarding page
 def updateserviceViews(request, pk):
     service = get_object_or_404(Services, pk=pk)
     company = Company.objects.get(user=request.user)
@@ -356,6 +413,7 @@ def updateserviceViews(request, pk):
             data['form_is_valid'] = True
             services = Services.objects.filter(business=company)
             data['html_service_list'] = render_to_string('bizadmin/dashboard/profile/services/partial_service_list.html', {'services':services})
+            data['view'] = 'Your service has been updated'
         else:
             data['form_is_valid'] = False
         return JsonResponse(data)
@@ -718,7 +776,8 @@ def servicesDetailView(request):
 
     company = Company.objects.get(user=user)
     services = Services.objects.filter(business=company)
-    return render(request,'bizadmin/companydetail/services/service.html', {'company':company, 'services':services})
+    service_form = AddServiceForm()
+    return render(request,'bizadmin/companydetail/services/service.html', {'company':company, 'services':services, 'service_form':service_form})
 
 
 

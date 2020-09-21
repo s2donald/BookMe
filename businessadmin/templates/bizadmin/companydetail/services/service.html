@@ -37,10 +37,10 @@
                                 <!-- Account details card-->
                                 <div class="card mb-4">
                                     <div class="col-md-12 text-center mt-2">
-                                        <button class="btn btn-primary" type="button">Add Service</button>
+                                        <button id="addserv" class="btn btn-primary mb-3 js-create-product justify-content-center" type="button" data-toggle="modal" data-target="#modal-service" >Add Service</button>
                                     </div>
                                     <div class="card-header">Offered Services</div>
-                                    <div class="card-body">
+                                    <div class="card-body" id="service-t">
                                             {% for s in services %}
                                                 <div class="card">
                                                     <div class="row">
@@ -53,13 +53,17 @@
                                                                 </div>
         
                                                                 <div>
-                                                                    <button class="btn btn-danger btn-sm" type="submit"><i class="fas fa-trash"></i></button>
-                                                                    <button class="btn btn-primary btn-sm" type="submit"><i class="fas fa-pencil-alt"></i></button>
+                                                                    <button class="btn btn-danger btn-sm" id="trashcan{{ s.id }}"><i class="fas fa-trash"></i></button>
+                                                                    <button class="btn btn-primary btn-sm"><i class="fas fa-pencil-alt"></i></button>
                                                                 </div>
                                                             </div>
                                                             
                                                         </div>
                                                     </div>
+                                                </div>
+                                            {% empty %}
+                                                <div class="card">
+                                                    <div class="card-header">No Services Added</div>
                                                 </div>
                                             {% endfor %}
                                     </div>
@@ -67,4 +71,161 @@
                             </div>
                         </div>
                     </div>
+
+
+<div class="modal fade" id="modal-service" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Add your services</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      <form method="POST" id="createserv">
+        {% csrf_token %}
+        {{ service_form.name|as_crispy_field }}
+        {{ service_form.description|as_crispy_field }}
+        <div class="form-row">
+            <div class="form-group col mb-0">
+                        {{ service_form.price_type|as_crispy_field }}
+                    </div>
+                    <div class="form-group col mb-0">
+                        {{ service_form.price|as_crispy_field }}
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col mb-0">
+                        {{ service_form.duration_hour|as_crispy_field }}
+                    </div>
+                    <div class="form-group col mb-0"> 
+                        {{ service_form.duration_minute|as_crispy_field }}
+                    </div>
+                </div>
+                <a class="licolor" href="#simpleCollapse" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="simpleCollapse">Advanced Options</a>
+                <div class="collapse" id="simpleCollapse">
+                    {{ service_form.checkintime|as_crispy_field }}
+                    <div id="padd">
+                        {{ service_form.padding|as_crispy_field }}
+                    </div>
+                    <div id="show-padding" class="form-row">
+                        <div class="form-group col mb-0"> 
+                            {{ service_form.paddingtime_hour|as_crispy_field }}
+                        </div>
+                        <div class="form-group col mb-0"> 
+                            {{ service_form.paddingtime_minute|as_crispy_field }}
+                        </div>
+                    </div>
+                </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary" id="addService">Add Service</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
 {% endblock %}
+
+{% block java %}
+    <script>
+        $( document ).ready(function() {
+            function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+        return cookieValue;
+    }
+    const csrftoken = getCookie('csrftoken');
+
+            {% for s in services %}
+                $(document).on('click','#trashcan{{ s.id }}',function(){
+                    const swalStyles = Swal.mixin({
+                        customClass:{
+                            confirmButton: 'btn btn-primary',
+                            cancelButton: 'btn btn-danger',
+                        },
+                        buttonsStyling: false
+                    });
+                    swalStyles.fire({
+                        title: 'Are you sure you want to delete the {{ s.name }} service?',
+                        text: 'You will not be able to change this',
+                        {% comment %} icon: 'warning', {% endcomment %}
+                        showCancelButton: true,
+                        reverseButtons: true
+                                    }).then((result) => {
+                                        if (result.isConfirmed) {
+                                            $.ajax({
+                                                type:'POST',
+                                                dataType: 'json',
+                                                url: "{% host_url 'deleteservice' host 'bizadmin' %}",
+                                                data: JSON.stringify({serv_id: '{{ s.id }}'}),
+                                                headers:{
+                                                    "X-CSRFToken": csrftoken
+                                                },
+                                                cache: false,
+                                                success: function(data){
+                                                    var htmlcontent = data.html_service_list
+                                                    var el = document.querySelector('#service-t');
+                                                    el.innerHTML = htmlcontent
+                                                    Swal.fire({
+                                                        title: '{{ s.name }} Service Deleted!', 
+                                                        text: 'Your service has been deleted.', 
+                                                        icon: 'success' 
+                                                    });
+                                                }
+                                            });
+                                        } else if (
+                                            /* Read more about handling dismissals below */
+                                            result.dismiss === Swal.DismissReason.cancel
+                                        ) {
+                                            swalStyles.fire(
+                                            'Cancelled',
+                                            'We still have your service saved! 😊',
+                                            'error'
+                                            )
+                                        }
+                                    });
+                                });
+            {% endfor %}
+
+            $('#createserv').submit(function(e){
+                e.preventDefault();
+                $.ajax({
+                    type:'POST',
+                    url: "{% host_url 'createservice' host 'bizadmin' %}",
+                    data: $('#createserv').serialize(),
+                    headers:{
+                        "X-CSRFToken": csrftoken
+                    },
+                    success:function(data){
+
+                        $('#modal-service').modal('hide');
+                        var htmlcontent = data.html_service_list
+                        var el = document.querySelector('#service-t');
+                        el.innerHTML = htmlcontent
+                        Swal.fire({
+                            title:data.view,
+                            icon:data.icon,
+                        });
+                    }
+                });
+            });
+
+
+
+            
+        });
+    </script>
+{% endblock java %}

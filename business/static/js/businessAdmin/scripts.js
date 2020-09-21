@@ -1,6 +1,7 @@
 "use strict";
 
 $(document).ready(function(){
+  
   var loadForm = function () { 
     var btn = $(this);
     $.ajax({
@@ -59,6 +60,10 @@ $(document).ready(function(){
           $("#modal-service").modal("hide");
           $("#modal-delete").modal("hide");
           $("#modal-update").modal("hide");
+          Swal.fire({
+            title:data.view,
+            icon:'success'
+          });
         }
         else {
           $("#modal-service .modal-content").html(data.html_form);
@@ -81,6 +86,10 @@ $(document).ready(function(){
           $("#modal-service").modal("hide");
           $("#modal-delete").modal("hide");
           $("#modal-update").modal("hide");
+          Swal.fire({
+            title:data.view,
+            icon:'success'
+          });
         }
         else {
           $("#modal-update .modal-content").html(data.html_form);

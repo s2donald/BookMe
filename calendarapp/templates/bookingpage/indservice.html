@@ -244,7 +244,6 @@
                                     csrfmiddlewaretoken: '{{ csrf_token }}'
                                 },
                                 success: function(data){
-                                    console.log(data.result)
                                     const confheader3 = document.querySelector(".confheader3")
                                     if(data.result){
                                         authGibeleForm.classList.add("d-none");

@@ -8,7 +8,7 @@
 {% block java %}
 
 <script>
-    $(function () {
+    $(document).ready(function() {
                                 $("#inputimage").change(function () {
                                   if (this.files && this.files[0]) {
                                       var reader = new FileReader();
@@ -202,11 +202,11 @@
                                                     <div class="invalid_instagram m-0 p-0" style="display:none; color:red!important;"></div>
                                                 </div>
                                             </div>
-                                            <div class="form-row">
+                                            <div class="form-row text-center">
                                                 <label class="small mb-1" style="display:none;" id='error'></label>
+                                                <button class="btn btn-primary justify-content-center" type="button" id="saveform">Save changes</button>
                                             </div>
                                             <!-- Save changes button-->
-                                            <button class="btn btn-primary" type="button" id="saveform">Save changes</button>
                                         </form>
                                     </div>
                                 </div>

@@ -4,7 +4,8 @@
 {% block java %}
 
 <script>
-                            $(function () {
+    $(document).ready(function() {
+
                                 $("#inputimage").change(function () {
                                   if (this.files && this.files[0]) {
                                       var reader = new FileReader();
@@ -282,6 +283,7 @@
                                     swalStyles.fire({
                                         title: 'Are you sure you want to delete this picture from your gallery?',
                                         imageUrl: '{{ p.photos.url }}',
+                                        icon: 'warning',
                                         showCancelButton: true,
                                         reverseButtons: true
                                     }).then((result) => {

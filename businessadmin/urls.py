@@ -15,7 +15,11 @@ urlpatterns = [
     url(r'creating/$', views.createserviceViews, name='service_create'),
     url(r'delete/(?P<pk>\d+)/$', views.deleteserviceViews, name='service_delete'),
     url(r'update/(?P<pk>\d+)/$', views.updateserviceViews, name='service_update'),
-    
+
+    url(r'creatings/$', views.createserviceAPI.as_view(), name='createservice'),
+    url(r'deletes/$', views.deleteserviceAPI.as_view(), name='deleteservice'),
+    # url(r'updates/(?P<pk>\d+)/$', views.updateserviceAPI, name='updateservice'),
+
     url(r'onboarding/check/subdomain/$', views.subdomainCheck.as_view(), name='subdomain'),
     url(r'onboarding/$', views.completeViews, name='completeprofile'),
     url(r'^updatecompanyform/$',views.updateCompanyDetail.as_view(), name='updateform'),

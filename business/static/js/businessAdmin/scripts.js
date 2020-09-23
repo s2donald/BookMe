@@ -72,7 +72,7 @@ $(document).ready(function(){
     });
     return false;
   };
-
+  
   var saveFormUpd = function () {
     var form = $(this);
     $.ajax({
@@ -83,6 +83,8 @@ $(document).ready(function(){
       success: function (data) {
         if (data.form_is_valid) {
           $("#service-table tbody").html(data.html_service_list);
+          console.log(data.html_service_list)
+          $('#service-t').html(data.html_service_list)
           $("#modal-service").modal("hide");
           $("#modal-delete").modal("hide");
           $("#modal-update").modal("hide");

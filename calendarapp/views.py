@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404
-from account.models import Account
+from account.models import Account, Guest
 from business.models import Company, Services, OpeningHours
 from consumer.models import Bookings
 from django.http import JsonResponse
@@ -121,34 +121,39 @@ class createAppointment(View):
         start = datetime.datetime.combine(startdate, starttime)
         end = start + datetime.timedelta(hours=service.duration_hour,minutes=service.duration_minute)
         if user.is_authenticated:
-            email = user.email
-            first_name = user.first_name
-            last_name = user.last_name
-            phone = user.phone
-            address = user.address
-            postal = user.postal
-            province = user.province
-            city = user.city
+            print(user)
+            # email = user.email
+            # first_name = user.first_name
+            # last_name = user.last_name
+            # phone = user.phone
+            # address = user.address
+            # postal = user.postal
+            # province = user.province
+            # city = user.city
             if Bookings.objects.filter(company=company, start=start, end=end).count()<1:
-                booking = Bookings.objects.create(user=user,first_name=first_name,last_name=last_name,
-                                                phone=phone,address=address,postal=postal,
-                                                province=province,city=city,service=service, company=company,
+                booking = Bookings.objects.create(user=user,service=service, company=company,
                                                 start=start, end=end, price=price)
                 booking.save()
                 good = True
             else:
                 good = False
-            
         else:
-            email = 'guest@gibele.com'
-            user = get_object_or_404(Account,email=email)
+            email = data['email']
             first_name = data['first_name']
             last_name = data['last_name']
-            phone = data['phoneGuest']
-            address = data['address']
-            postal = data['postal']
-            province = data['province']
-            city = data['city']
+            phone = data['phone']
+            guest = Guest.objects.create(first_name=first_name,last_name=last_name,phone=phone,email=email)
+            guest.save()
+            if Bookings.objects.filter(company=company, start=start, end=end).count()<1:
+                booking = Bookings.objects.create(guest=guest,service=service, company=company,
+                                                start=start, end=end, price=price)
+                booking.save()
+                company.guest_client.add(guest)
+                company.save()
+                good = True
+            else:
+                good = False
+
         return JsonResponse({'time':time, 's_id':s_id,'start':start,'date':date,'time':time, 'good':good})
 
 class LoginView(View):

@@ -36,7 +36,7 @@
 
             <h4>Select Your Service</h4>
             <div class="d-flex align-items-center justify-content-center">
-            <h1>{{ company.business_name }}</h1>
+            <h1><a href="{% host_url 'bookingurls' host 'bookingurl' slug=company.slug %}">{{ company.business_name }}</a></h1>
             </div>
             <div class="row justify-content-around">
                 <p>Rating: {% if company.avgrating == 0 %}No reviews yet.{% else %}{{ company.avgrating }} <i class="fas fa-star"></i>{% endif %}</p>

@@ -2,7 +2,7 @@ from django.db import models
 from django.urls import reverse
 from taggit.managers import TaggableManager
 from django.core.validators import RegexValidator
-from account.models import Account, MyAccountManager
+from account.models import Account, MyAccountManager, Guest
 from django.utils.text import slugify
 from django.contrib.auth.models import AbstractBaseUser
 from django.utils import timezone
@@ -168,6 +168,8 @@ class Company(models.Model):
     available = models.BooleanField(default=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
+    clients = models.ManyToManyField(Account, related_name='clients')
+    guest_client = models.ManyToManyField(Guest, related_name='guest_clients')
     publish = models.DateTimeField(default=timezone.now)
     fb_link = models.URLField(max_length=200, blank=True, null=True)
     instagram_link = models.URLField(max_length=200, blank=True, null=True)
@@ -225,7 +227,7 @@ class Gallary(models.Model):
 
 class Services(models.Model):
     name = models.CharField(max_length=200, db_index=True)
-    description = models.TextField(max_length=200, db_index=True)
+    description = models.TextField(max_length=250, db_index=True)
     business = models.ForeignKey(Company, related_name='services_offered', on_delete=models.CASCADE)
     slug = models.SlugField(max_length=200,db_index=True)
     price_type = models.CharField(max_length=10, choices=price_choices, default='fixed')

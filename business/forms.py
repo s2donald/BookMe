@@ -98,7 +98,7 @@ class homeSearchForm(forms.Form):
 
 class AddServiceForm(forms.ModelForm):
     name = forms.CharField(label='Service Name', widget=forms.Textarea(attrs={'style':'color:black;','rows':1, 'cols':20,}))
-    description = forms.CharField(label='Details Of Service',max_length=30, required=True, widget=forms.Textarea(attrs={'rows':4, 'cols':20, 'style':'color:black;'}))
+    description = forms.CharField(label='Details Of Service',max_length=250, required=True, widget=forms.Textarea(attrs={'rows':4, 'cols':20, 'style':'color:black;'}))
     price_type = forms.ChoiceField(label='Price Type',choices=price_choices, widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control'}))
     price = forms.DecimalField(label='Price ($)',max_digits=10, required=True, widget=forms.TextInput(attrs={'type':'number','style':'color:black;', 'rows':1, 'cols':20,}))
     duration_hour = forms.ChoiceField(label='Duration Hour',choices=hours_choices, widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control'}))
@@ -120,7 +120,7 @@ class BookingSettingForm(forms.Form):
 
 class UpdateServiceForm(forms.ModelForm):
     name = forms.CharField(label='Service Name', widget=forms.Textarea(attrs={'style':'color:black;','rows':1, 'cols':20,}))
-    description = forms.CharField(label='Details Of Service',max_length=30, required=True, widget=forms.Textarea(attrs={'rows':4, 'cols':20, 'style':'color:black;'}))
+    description = forms.CharField(label='Details Of Service',max_length=250, required=True, widget=forms.Textarea(attrs={'rows':4, 'cols':20, 'style':'color:black;'}))
     price_type = forms.ChoiceField(label='Price Type',choices=price_choices, widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control'}))
     price = forms.DecimalField(label='Price ($)',max_digits=10, required=True, widget=forms.TextInput(attrs={'type':'number','style':'color:black;', 'rows':1, 'cols':20,}))
     duration_hour = forms.ChoiceField(label='Duration Hour',choices=hours_choices, widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control'}))

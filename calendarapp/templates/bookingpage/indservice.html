@@ -11,9 +11,6 @@
                     {% csrf_token %}
                     <div class="container-fluid">
                         <div class="col-md-12 d-flex justify-content-center">
-                            <h3 class="mb-3">Select The Staff Member</h3>
-                        </div>
-                        <div class="col-md-12 d-flex justify-content-center">
                             <h3 class="mb-3">Select Your Preferred Date and Time</h3>
                         </div>
                         <div class="row d-flex justify-content-center mb-3">
@@ -53,7 +50,7 @@
                                 <div class="invalid_phone m-0 p-0" style="display:none; color:red;"></div>
                             </div>
                             <div class="col-md-12" id="subbtndiv">
-                                <button id="submitGuestForm" type="submit" class="btn btn-outline-primary mb-1 subbtn">Submit</button>
+                                <button id="submitGuestForm" type="submit" class="btn btn-outline-primary mb-1 subbtn">Book as a guest</button>
                             </div>
                         </div>
                         <div class="col-md-12" id="pphone">
@@ -102,6 +99,7 @@
                     <div class="conffeedback d-none">
                         <h3 class="confheader3">Appointment Confirmed!</h3>
                         <div class="text-block appoints"></div>
+                        <div class="text-block message"></div>
                     </div>
                     
                 </form>
@@ -146,18 +144,14 @@
     const bookingtime = document.querySelector(".appoint");
     const feedbackConf = document.querySelector(".conffeedback");
     const bookingtimes = document.querySelector(".appoints");
+    const msg = document.querySelector('.message');
     const authGibeleForm = document.querySelector('#authformGibele');
     var bookingdate = ""
     var bookedtime = ""
-    var count = 0
     var booktime
     var bookdate
     var serv_id
     var authen
-    var first_name = ""
-    var last_name = ""
-    var emailGuest = ""
-    var phoneGuest = ""
     dates.addEventListener('change', (e) =>{
         const loader = document.querySelector(".sk-folding-cube").classList.remove("d-none")
         const date = document.querySelector("#datepicker")._flatpickr.selectedDates[0];
@@ -199,85 +193,117 @@
                 helper.innerHTML=`<p>No slots available</p>`
             }
             const loader = document.querySelector(".sk-folding-cube").classList.add("d-none")
-        });
+        });              
+    });
 
-        $("body").on("click", ".bookingbutton .show", function(){
+    $(document).on("click", ".bookingbutton .show", function(){
             const timev = $(this).text();
 
             firform.innerHTML=""
             
-            bookingtime.innerHTML = `<p style="font-size:25px;">You are booking an appointment with <strong>{{ company.business_name }}</strong> at <strong>`+timev+`</strong> on <strong>`+ date.toDateString()+`</strong> for a <strong>{{ service.name }}</strong>.</p><p style="font-size:25px;">Please confirm your appointment by clicking the confirm button below.</p>`
+            bookingtime.innerHTML = `<p style="font-size:25px;">You are booking an appointment with <strong>{{ company.business_name }}</strong> at <strong>`+timev+`</strong> on <strong>`+ bookingdate.toDateString()+`</strong> for a <strong>{{ service.name }}</strong>.</p><p style="font-size:25px;">Please confirm your appointment by clicking the confirm button below.</p>`
             secform.classList.remove("d-none");
                         
             booktime = timev
             bookdate = bookingdate
-            serv_id = service_id
+            serv_id = '{{ service.id }}'
             
-        });
-        const lconf = document.querySelector(".confbtn")
-        lconf.addEventListener('click', addBooking, {once:true});
+    });
+    const lconf = document.querySelector(".confbtn")
+    lconf.addEventListener('click', addBooking, {once:true});
             
-        function addBooking(){
-            if(count==0){
-                console.log("hello")
-                secform.classList.add("d-none");
-                const loginGibele = document.querySelector('#loginGibeleForm')
-                const guestFormGib = document.querySelector('#toguestForm')
-                const signGibForm = document.querySelector("#signInGibeleForm")
-                const errGib = document.querySelector('.errorGib')
-                if(!(authen)){
-                    authenticateform.classList.remove("d-none");
-                    loginGibele.addEventListener('click',function(e){
-                        authenticateform.classList.add("d-none")
-                        authGibeleForm.classList.remove("d-none")
-                        authGibeleForm.reset()
-                        $(document).off('submit').on('submit', '#authformGibele', function(e){
-                            const id_email = document.querySelector('#emails')
-                            const pass = document.querySelector('#id_password')
-                            e.preventDefault();
-                            $.ajax({
-                                type:'POST',
-                                url: '{% host_url 'loginbooking' host 'bookingurl' slug=company.slug %}',
-                                data:{
-                                    email: id_email.value,
-                                    password: pass.value,
-                                    csrfmiddlewaretoken: '{{ csrf_token }}'
-                                },
-                                success: function(data){
-                                    const confheader3 = document.querySelector(".confheader3")
-                                    if(data.result){
-                                        authGibeleForm.classList.add("d-none");
-                                        bookingCreation()
-                                    }
-                                    else{
-                                        errGib.classList.remove("d-none")
-                                    }
-                                }
-                            });
-                        });
+    function addBooking(){
+        secform.classList.add("d-none");
+        const loginGibele = document.querySelector('#loginGibeleForm')
+        const guestFormGib = document.querySelector('#toguestForm')
+        const signGibForm = document.querySelector("#signInGibeleForm")
+        const errGib = document.querySelector('.errorGib')
+        if(!(authen)){
+            authenticateform.classList.remove("d-none");
+            loginGibele.addEventListener('click',function(e){
+            authenticateform.classList.add("d-none")
+            authGibeleForm.classList.remove("d-none")
+            authGibeleForm.reset()
+            $(document).off('submit').on('submit', '#authformGibele', function(e){
+                const id_email = document.querySelector('#emails')
+                const pass = document.querySelector('#id_password')
+                e.preventDefault();
+                $.ajax({
+                    type:'POST',
+                    url: '{% host_url 'loginbooking' host 'bookingurl' slug=company.slug %}',
+                    data:{
+                        email: id_email.value,
+                        password: pass.value,
+                        csrfmiddlewaretoken: '{{ csrf_token }}'
+                    },
+                    success: function(data){
+                        const confheader3 = document.querySelector(".confheader3")
+                            if(data.result){
+                                authGibeleForm.classList.add("d-none");
+                                bookingCreation()
+                            }
+                            else{
+                                errGib.classList.remove("d-none")
+                            }
+                            }
                     });
-
-                    guestFormGib.addEventListener('click',function(e){
-                        authenticateform.classList.remove("d-none")
-                        authGibeleForm.classList.add("d-none")
-                        console.log(count, bookdate)
-                        emailGuest
-                        phoneGuest
-                    });
-                }
-                else{
-                    bookingCreation()
-                }
-                count = count + 1
-            }
+                });
+            });
+                    
+            guestFormGib.addEventListener('click',function(e){
+                authenticateform.classList.remove("d-none")
+                authGibeleForm.classList.add("d-none")
+                authenticateform.reset()
+            });
         }
-        
+        else{
+            bookingCreation();
+        }
+    }
+    $(document).on('submit', '#authform', function(e){
+        e.preventDefault()
+        guestbookingCreation()
+    });
+    function guestbookingCreation(){
+        let csrftoken = getCookie('csrftoken');
 
+        const first_name = document.querySelector('#id_first_name')
+        const last_name = document.querySelector('#id_last_name')
+        const emailGuest = document.querySelector('#id_email')
+        const phoneGuest = document.querySelector('#id_phone')
+                        fetch("{% host_url 'creatingBooking' host 'bookingurl' slug=company.slug %}", {
+                            body: JSON.stringify({time:booktime, date:bookingdate.toDateString(), month:bookingdate.getMonth(),
+                                                    day:bookingdate.getDate(),year:bookingdate.getFullYear(), s_id:serv_id, first_name:first_name.value, 
+                                                    last_name:last_name.value, phone:phoneGuest.value, email:emailGuest.value }),
+                            method: 'POST',
+                            headers:{
+                                'Content-type':'application/json',
+                                'X-CSRFToken': csrftoken,
+                            },
+                        })
+                        .then((res) => res.json())
+                        .then((data) => {
+                            const confheader3 = document.querySelector(".confheader3")
+                            if (data.good){
+                                console.log('wewe')
+                                feedbackConf.classList.remove("d-none");
+                                confheader3.innerHTML = 'Confirmed Booking!'
+                                bookingtimes.innerHTML = `<p style="font-size:25px;">Thank you for setting an appointment with us! Your appointment with <strong>{{ company.business_name }}</strong> will take place on <strong>`+ data.date +`</strong> at <strong>`+data.time+`</strong> for a <strong>{{ service.name }}</strong>.</p><p style="font-size:25px;">We have sent the additional details of your service to your email.</p>`
+                                msg.innerHTML = `<a class="btn btn-outline-primary" href="{% host_url 'business:homepage' host 'www' %}">Book another service</a>`
+                            }
+                            else{
+                                feedbackConf.classList.remove("d-none");
+                                confheader3.innerHTML = 'Timeslot has been fully booked out'
+                                bookingtimes.innerHTML = `<p style="font-size:25px;">Unfortunately we were unable to secure this spot for you. This timeslot has been fully booked out. Please try another time.</p>`
+                                msg.innerHTML = `<a class="btn btn-outline-primary" href="{% host_url 'bookingserviceurls' pk=service.id host 'bookingurl' slug=company.slug %}">Select a different time.</a>`
+                            }
+                        });
+        }
         
         function bookingCreation(){
             let csrftoken = getCookie('csrftoken');
             fetch("{% host_url 'creatingBooking' host 'bookingurl' slug=company.slug %}", {
-                body: JSON.stringify({time:booktime, date:bookdate.toDateString(), month:bookdate.getMonth(),day:bookdate.getDate(),year:date.getFullYear(), s_id:serv_id, first_name:first_name,last_name:last_name,emailGuest:emailGuest,phoneGuest:phoneGuest }),
+                body: JSON.stringify({time:booktime, date:bookingdate.toDateString(), month:bookingdate.getMonth(),day:bookingdate.getDate(),year:bookingdate.getFullYear(), s_id:serv_id }),
                 method: 'POST',
                 headers:{
                     'Content-type':'application/json',
@@ -286,12 +312,12 @@
             })
             .then((res) => res.json())
             .then((data) => {
-                console.log(data.time, '', data.start)
                 const confheader3 = document.querySelector(".confheader3")
                 if (data.good){
                     feedbackConf.classList.remove("d-none");
                     confheader3.innerHTML = 'Confirmed Booking!'
                     bookingtimes.innerHTML = `<p style="font-size:25px;">Thank you for setting an appointment with us! Your appointment with <strong>{{ company.business_name }}</strong> will take place on <strong>`+ data.date +`</strong> at <strong>`+data.time+`</strong> for a <strong>{{ service.name }}</strong>.</p><p style="font-size:25px;">We have sent the additional details of your service to your email.</p>`
+                    msg.innerHTML = `<a class="btn btn-outline-primary" href="{% host_url 'business:homepage' host 'www' %}">Go to Gibele Website!</a>`
                 }
                 else{
                     feedbackConf.classList.remove("d-none");
@@ -299,8 +325,7 @@
                     bookingtimes.innerHTML = `<p style="font-size:25px;">Unfortunately we were unable to secure this spot for you. This timeslot has been fully booked out. Please try another time.</p>`
                 }
             });
-        }                 
-    });
+        }
     
     
 </script>

@@ -12,14 +12,14 @@
         <div class="swiper-wrapper">
           <!-- Slides-->
           {% if comp_categ.name == 'Automotive Services' %}
-                <div class="swiper-slide"><a href="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/automotive-noimage1.jpg" %}{% endif %}" data-toggle="gallery-top" title="Header Image"><img class="img-fluid center" style="width:350px;max-height:350px;" src="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/automotive-noimage1.jpg" %}{% endif %}" alt="Header Image"></a></div>
+                <div class="swiper-slide"><a href="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/automotive-noimage1.jpg" %}{% endif %}" data-toggle="gallery-top" title="Header Image"><img class="img-fluid center" style="width:500px;max-height:600px;" src="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/automotive-noimage1.jpg" %}{% endif %}" alt="Header Image"></a></div>
           {% endif %}
           {% if comp_categ.name == 'Personal Care' %}
-                <div class="swiper-slide"><a href="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/beautynoimage1.jpg" %}{% endif %}" data-toggle="gallery-top" title="Header Image"><img class="img-fluid center" style="width:300px;max-height:300px; position: center;" src="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/beautynoimage1.jpg" %}{% endif %}" alt="Header Image"></a></div>
+                <div class="swiper-slide"><a href="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/beautynoimage1.jpg" %}{% endif %}" data-toggle="gallery-top" title="Header Image"><img class="img-fluid center" style="width:500px;max-height:600px; position: center;" src="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/beautynoimage1.jpg" %}{% endif %}" alt="Header Image"></a></div>
           {% endif %}
           {% if photos %}
             {% for p in photos %}
-              <div class="swiper-slide"><a href="{{ p.photos.url }}"><img loading="lazy" class="img-fluid center" style="width:350px;max-height:350px;" src="{{ p.photos.url }}" alt="Images"></a></div>
+              <div class="swiper-slide"><a href="{{ p.photos.url }}"><img loading="lazy" class="img-fluid center" style="width:500px;max-height:600px;" src="{{ p.photos.url }}" alt="Images"></a></div>
             {% endfor %}
 
           {% else %}
@@ -51,6 +51,7 @@
             </div>
           </div>
         </div>
+        <hr>
             <div class="text-block">
                 {% if services %}
                     <h2>Services</h1>
@@ -77,7 +78,6 @@
             </div>
             
             <div class="text-block">
-
               <!-- Gallery-->
               <h3 class="mb-4">Gallery</h3>
               {% if photos %}
@@ -98,9 +98,9 @@
 
               {% endif %}
             </div>
-            
             <!-- Amenities-->
             {% if amenities %}
+            <hr>
             <div class="text-block">
               <h3 class="mb-4">Amenities</h3>
               <ul class="amenities-list list-inline">
@@ -114,7 +114,7 @@
               </ul>
             </div>
             {% endif %}
-            
+            <hr>
             <div class="text-block">
                 <div class="d-flex justify-content-between">
                     <h5 class="mb-4 licolor">Reviews </h5>
@@ -136,6 +136,7 @@
             
               
             </div>
+            <hr>
           </div>
           <div class="col-lg-5">
             <div class="pl-xl-4">
@@ -262,8 +263,8 @@
                 <!-- venue item-->
                 <div class="w-100 h-100">
                   <div class="card h-100 border-0 shadow">
-                    <div class="card-img-top overflow-hidden dark-overlay bg-cover" style="background-image: url({% if sim_comp.image %}{{ sim_comp.image.url }}{% else %}{% static "/img/no_image.png" %}{% endif %}); min-height: 200px;"><a class="tile-link" href="{{ sim_comp.get_absolute_url }}"></a>
-                      
+                    <div class="card-img-top overflow-hidden dark-overlay bg-cover"><a class="tile-link" href="{{ sim_comp.get_absolute_url }}"></a>
+                      <img style="width:100%; max-height:250px;" src="{% if sim_comp.image %}{{ sim_comp.image.url }}{% else %}{% static "img/no_image.png" %}{% endif %}" alt="">
                       <div class="card-img-overlay-top d-flex justify-content-between align-items-center">
                         <a class="card-fav-icon position-relative z-index-40" href="javascript: void();"> 
                           <svg class="svg-icon text-white">
@@ -280,7 +281,6 @@
                       <h4 class="text-shadow"><a href="{{ sim_comp.get_absolute_url }}">{{ sim_comp.business_name }}</a></h4>
                       <p class="text-sm text-muted mb-3">{{ sim_comp.description|slice:"0:40" }}{% if sim_comp.description > 40 %}...{% endif %}</p>
                       <p class="text-sm text-muted text-uppercase mb-1"> <a href="#" class="text-dark"></a></p>
-                      <p class="text-sm mb-0">Tags: {% for tag in sim_comp.tags.all %}{{tag.name}}, {% endfor %}
                       </p>
                     </div>
                   </div>
@@ -361,7 +361,7 @@
       {% for p in photos %}
         var width = getRandomSize(200, 400);
         var height =  getRandomSize(200, 400);
-        allImages += '<div class="swiper-slide"><a href="{{ p.photos.url }}"><img loading="lazy" style="height:auto; width:200px;" src="{{ p.photos.url }}" alt="some gallary images"></a></div>'
+        allImages += '<div class="swiper-slide"><a href="{{ p.photos.url }}"><img loading="lazy" style="height:auto; width:300px;" src="{{ p.photos.url }}" alt="some gallary images"></a></div>'
   
       {% endfor %}
 

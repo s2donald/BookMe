@@ -375,13 +375,10 @@ def deleteserviceViews(request, pk):
 
 #used in the bizadmin page
 class deleteserviceAPI(View):
-    
-    def post(self, request):
+    def get(self, request, pk):
         data = dict()
-        dataa = json.loads(request.body)
-        s_id=dataa['serv_id']
         company = Company.objects.get(user=request.user)
-        service = get_object_or_404(Services, pk=s_id, business=company)
+        service = get_object_or_404(Services, pk=pk, business=company)
         service.delete()
         services = Services.objects.filter(business=company)
         data['html_service_list'] = render_to_string('bizadmin/companydetail/services/partial/partial_service_list.html', {'services':services})
@@ -413,6 +410,7 @@ def updateserviceViews(request, pk):
             data['form_is_valid'] = True
             services = Services.objects.filter(business=company)
             data['html_service_list'] = render_to_string('bizadmin/dashboard/profile/services/partial_service_list.html', {'services':services})
+            data['html_service_list_bizadmin'] = render_to_string('bizadmin/companydetail/services/partial/partial_service_list.html', {'services':services})
             data['view'] = 'Your service has been updated'
         else:
             data['form_is_valid'] = False
@@ -422,6 +420,45 @@ def updateserviceViews(request, pk):
     context = {'service_form':form, 'service':service}
     data['html_form'] = render_to_string('bizadmin/dashboard/profile/services/partial_service_update.html', context, request=request)
     return JsonResponse(data)
+
+#Used in the bizadmin page
+class updateserviceAPI(View):
+    def get(self, request, pk):
+        service = get_object_or_404(Services, pk=pk)
+        company = Company.objects.get(user=request.user)
+        dat = {'name': service.name, 'description': service.description, 'price_type':service.price_type, 'price':service.price, 'available':service.available, 'duration_hour':service.duration_hour, 'duration_minute':service.duration_minute, 'checkintime':service.checkintime, 'padding':service.padding, 'paddingtime_hour':service.paddingtime_hour, 'paddingtime_minute':service.paddingtime_minute}
+        data=dict()
+        form = UpdateServiceForm(initial=dat)
+        context = {'service_form':form, 'service':service}
+        data['html_form'] = render_to_string('bizadmin/companydetail/services/partial/partial_service_update.html', context, request=request)
+        return JsonResponse(data)
+
+    def post(self, request, pk):
+        service = get_object_or_404(Services, pk=pk)
+        company = Company.objects.get(user=request.user)
+        form = UpdateServiceForm(request.POST)
+        data=dict()
+        if form.is_valid():
+            service.name = form.cleaned_data.get('name')
+            service.description = form.cleaned_data.get('description')
+            service.price_type = form.cleaned_data.get('price_type')
+            service.price = form.cleaned_data.get('price')
+            service.duration_hour = form.cleaned_data.get('duration_hour')
+            service.duration_minute = form.cleaned_data.get('duration_minute')
+            service.checkintime = form.cleaned_data.get('checkintime')
+            service.padding = form.cleaned_data.get('padding')
+            service.paddingtime_hour = form.cleaned_data.get('paddingtime_hour')
+            service.paddingtime_minute = form.cleaned_data.get('paddingtime_minute')
+            service.avail = True
+            company = Company.objects.get(user=request.user)
+            service.save()
+            data['form_is_valid'] = True
+            services = Services.objects.filter(business=company)
+            data['html_service_list'] = render_to_string('bizadmin/companydetail/services/partial/partial_service_list.html', {'services':services})
+            data['view'] = 'Your service has been updated'
+        else:
+            data['form_is_valid'] = False
+        return JsonResponse(data)
 
 
 
@@ -598,7 +635,7 @@ def headerImageUploads(request):
             image = Image.open(img)
             box = (x, y, w+x, h+y)
             cropped_image = image.crop(box)
-            resized_image = cropped_image.resize((500,500),Image.ANTIALIAS)
+            resized_image = cropped_image.resize((1600,900),Image.ANTIALIAS)
             thumb_io = BytesIO()
             resized_image.save(thumb_io, image.format)
             company.image.save(image.filename, ContentFile(thumb_io.getvalue()), save=False)
@@ -618,7 +655,7 @@ def galImageUpload(request):
             image = Image.open(img)
             box = (x, y, w+x, h+y)
             cropped_image = image.crop(box)
-            resized_image = cropped_image.resize((500,500),Image.ANTIALIAS)
+            resized_image = cropped_image.resize((1600,900),Image.ANTIALIAS)
             thumb_io = BytesIO()
             resized_image.save(thumb_io, image.format)
             gallary = Gallary.objects.create(company=company)
@@ -779,6 +816,20 @@ def servicesDetailView(request):
     service_form = AddServiceForm()
     return render(request,'bizadmin/companydetail/services/service.html', {'company':company, 'services':services, 'service_form':service_form})
 
+
+def clientListView(request):
+    if not request.user.is_authenticated:
+        context={}
+        user_form = BusinessRegistrationForm()
+        context['business_registration_form'] = user_form
+        return render(request, 'account/bussignup.html', {'user_form':user_form})
+    email = request.user.email
+    user = get_object_or_404(Account, email=email)
+    if not user.on_board:
+        return redirect(reverse('completeprofile', host='bizadmin'))
+    
+    company = Company.objects.get(user=user)
+    return render(request,'bizadmin/companydetail/client/clients.html', {'company':company})
 
 
 

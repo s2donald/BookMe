@@ -273,6 +273,28 @@ a:focus {
     opacity: 1;
     stroke-width: 5;
   }
+
+  .card-img,
+.card-img-top,
+.card-img-bottom {
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  width: 100%;
+  object-fit: contain;
+}
+
+.card-img,
+.card-img-top {
+  border-top-left-radius: calc(0.4rem - 1px);
+  border-top-right-radius: calc(0.4rem - 1px);
+}
+.card-img-overlay-top {
+  position: absolute;
+  top: 0.75rem;
+  right: 1.25rem;
+  left: 1.25rem;
+}
+
   .z-40{
     z-index: 40;
   }

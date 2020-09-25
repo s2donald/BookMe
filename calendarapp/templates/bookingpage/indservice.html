@@ -261,8 +261,9 @@
         }
     }
     $(document).on('submit', '#authform', function(e){
-        e.preventDefault()
-        guestbookingCreation()
+        e.preventDefault();
+        authenticateform.classList.add("d-none")
+        guestbookingCreation();
     });
     function guestbookingCreation(){
         let csrftoken = getCookie('csrftoken');
@@ -289,7 +290,7 @@
                                 feedbackConf.classList.remove("d-none");
                                 confheader3.innerHTML = 'Confirmed Booking!'
                                 bookingtimes.innerHTML = `<p style="font-size:25px;">Thank you for setting an appointment with us! Your appointment with <strong>{{ company.business_name }}</strong> will take place on <strong>`+ data.date +`</strong> at <strong>`+data.time+`</strong> for a <strong>{{ service.name }}</strong>.</p><p style="font-size:25px;">We have sent the additional details of your service to your email.</p>`
-                                msg.innerHTML = `<a class="btn btn-outline-primary" href="{% host_url 'business:homepage' host 'www' %}">Book another service</a>`
+                                msg.innerHTML = `<a class="btn btn-outline-primary" href="{% host_url 'bookingurls' host 'bookingurl' slug=company.slug %}">Book another service</a>`
                             }
                             else{
                                 feedbackConf.classList.remove("d-none");
@@ -298,9 +299,9 @@
                                 msg.innerHTML = `<a class="btn btn-outline-primary" href="{% host_url 'bookingserviceurls' pk=service.id host 'bookingurl' slug=company.slug %}">Select a different time.</a>`
                             }
                         });
-        }
+    }
         
-        function bookingCreation(){
+    function bookingCreation(){
             let csrftoken = getCookie('csrftoken');
             fetch("{% host_url 'creatingBooking' host 'bookingurl' slug=company.slug %}", {
                 body: JSON.stringify({time:booktime, date:bookingdate.toDateString(), month:bookingdate.getMonth(),day:bookingdate.getDate(),year:bookingdate.getFullYear(), s_id:serv_id }),
@@ -325,7 +326,7 @@
                     bookingtimes.innerHTML = `<p style="font-size:25px;">Unfortunately we were unable to secure this spot for you. This timeslot has been fully booked out. Please try another time.</p>`
                 }
             });
-        }
+    }
     
     
 </script>

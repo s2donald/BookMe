@@ -25,7 +25,7 @@ SECRET_KEY = 'b3+j2=q*i#mg^c!2ndq#00y5bobz6*xq&v#7^^7&+$73_#e=8e'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['gibele.com', '.gibele.com', '.gibele.com:8000', 'gibele.com:8000', 'www.192.168.2.19', '.192.168.2.19']
+ALLOWED_HOSTS = ['gibele.com', '.gibele.com', '.gibele.com:8000', 'gibele.com:8000', 'www.192.168.2.19', '.192.168.2.19', 'localhost', '127.0.0.1']
 SESSION_COOKIE_DOMAIN=".gibele.com"
 DOMAIN_NAME='gibele.com'
 
@@ -33,6 +33,8 @@ DOMAIN_NAME='gibele.com'
 
 INSTALLED_APPS = [
     'django_hosts',
+    'sslserver',
+    'social_django',
     'widget_tweaks',
     'account.apps.AccountConfig',
     'business.apps.BusinessConfig',
@@ -67,7 +69,7 @@ MIDDLEWARE = [
 ROOT_URLCONF = 'gibele.urls'
 ROOT_HOSTCONF = 'gibele.hosts'
 DEFAULT_HOST = 'www'
-DEFAULT_REDIRECT_URL = "http://www.tirr.com:8000"
+DEFAULT_REDIRECT_URL = "https://www.gibele.com:8000"
 
 TEMPLATES = [
     {
@@ -87,6 +89,14 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'gibele.wsgi.application'
 
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'social_core.backends.facebook.FacebookOAuth2',
+]
+
+SOCIAL_AUTH_FACEBOOK_KEY = '780700556106489'
+SOCIAL_AUTH_FACEBOOK_SECRET = '2b1e633621cc391cda8ad11afeed7bd6'
+SOCIAL_AUTH_FACEBOOK_SCOPE = ['email']
 
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases

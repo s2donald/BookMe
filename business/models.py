@@ -2,7 +2,7 @@ from django.db import models
 from django.urls import reverse
 from taggit.managers import TaggableManager
 from django.core.validators import RegexValidator
-from account.models import Account, MyAccountManager, Guest
+from account.models import Account, MyAccountManager, Clients
 from django.utils.text import slugify
 from django.contrib.auth.models import AbstractBaseUser
 from django.utils import timezone
@@ -168,8 +168,7 @@ class Company(models.Model):
     available = models.BooleanField(default=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
-    clients = models.ManyToManyField(Account, related_name='clients')
-    guest_client = models.ManyToManyField(Guest, related_name='guest_clients')
+    clients = models.ManyToManyField(Clients, related_name='clients')
     publish = models.DateTimeField(default=timezone.now)
     fb_link = models.URLField(max_length=200, blank=True, null=True)
     instagram_link = models.URLField(max_length=200, blank=True, null=True)

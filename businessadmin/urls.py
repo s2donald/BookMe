@@ -12,6 +12,7 @@ urlpatterns = [
     url(r'detail/info/', views.compinfoViews, name='information'),
 
     url(r'detail/service/', views.servicesDetailView, name='service_detail'),
+    url(r'detail/clients/', views.clientListView, name='client_list'),
     url(r'creating/$', views.createserviceViews, name='service_create'),
     url(r'delete/(?P<pk>\d+)/$', views.deleteserviceViews, name='service_delete'),
     url(r'update/(?P<pk>\d+)/$', views.updateserviceViews, name='service_update'),

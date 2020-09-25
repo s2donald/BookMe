@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404
-from account.models import Account, Guest
+from account.models import Account, Clients
 from business.models import Company, Services, OpeningHours
 from consumer.models import Bookings
 from django.http import JsonResponse
@@ -134,6 +134,8 @@ class createAppointment(View):
                 booking = Bookings.objects.create(user=user,service=service, company=company,
                                                 start=start, end=end, price=price)
                 booking.save()
+                company.clients.add(user)
+                company.save()
                 good = True
             else:
                 good = False
@@ -142,7 +144,7 @@ class createAppointment(View):
             first_name = data['first_name']
             last_name = data['last_name']
             phone = data['phone']
-            guest = Guest.objects.create(first_name=first_name,last_name=last_name,phone=phone,email=email)
+            guest = Clients.objects.create(first_name=first_name,last_name=last_name,phone=phone,email=email)
             guest.save()
             if Bookings.objects.filter(company=company, start=start, end=end).count()<1:
                 booking = Bookings.objects.create(guest=guest,service=service, company=company,

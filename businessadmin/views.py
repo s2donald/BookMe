@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from .forms import BusinessRegistrationForm, UpdateCompanyForm
 from django.contrib.auth.decorators import login_required
 from business.models import Company, SubCategory, OpeningHours, Services, Gallary, Amenities
-from account.models import Account
+from account.models import Account, Clients
 from account.tasks import bizaddedEmailSent
 from consumer.models import Bookings
 from account.forms import AccountAuthenticationForm
@@ -816,6 +816,7 @@ def servicesDetailView(request):
     service_form = AddServiceForm()
     return render(request,'bizadmin/companydetail/services/service.html', {'company':company, 'services':services, 'service_form':service_form})
 
+from itertools import chain
 
 def clientListView(request):
     if not request.user.is_authenticated:
@@ -829,7 +830,9 @@ def clientListView(request):
         return redirect(reverse('completeprofile', host='bizadmin'))
     
     company = Company.objects.get(user=user)
-    return render(request,'bizadmin/companydetail/client/clients.html', {'company':company})
+    auth_clients = company.clients.all()
+    clients = auth_clients
+    return render(request,'bizadmin/companydetail/client/clients.html', {'company':company, 'clients':clients})
 
 
 

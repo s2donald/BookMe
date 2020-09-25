@@ -16,6 +16,7 @@
         {% csrf_token %}
         {{ form|crispy }}
         <button class="btn btn-lg btn-outline-primary" type="submit">Log in</button>
+        <a class="btn btn-outline-primary" href="{% url 'social:begin' "facebook"%}">Sign in with Facebook</a>
       </form>
       <div class="text-center mt-3">
           <a class="licolor" href="{% url 'account:signup'%}">Sign Up</a>

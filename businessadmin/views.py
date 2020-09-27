@@ -1,8 +1,8 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from .forms import BusinessRegistrationForm, UpdateCompanyForm
 from django.contrib.auth.decorators import login_required
-from business.models import Company, SubCategory, OpeningHours, Services, Gallary, Amenities
-from account.models import Account, Clients
+from business.models import Company, SubCategory, OpeningHours, Services, Gallary, Amenities, Clients
+from account.models import Account
 from account.tasks import bizaddedEmailSent
 from consumer.models import Bookings
 from account.forms import AccountAuthenticationForm
@@ -830,8 +830,7 @@ def clientListView(request):
         return redirect(reverse('completeprofile', host='bizadmin'))
     
     company = Company.objects.get(user=user)
-    auth_clients = company.clients.all()
-    clients = auth_clients
+    clients = company.clients.all()
     return render(request,'bizadmin/companydetail/client/clients.html', {'company':company, 'clients':clients})
 
 

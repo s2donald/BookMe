@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404
-from account.models import Account, Clients
-from business.models import Company, Services, OpeningHours
+from account.models import Account
+from business.models import Company, Services, OpeningHours, Clients
 from consumer.models import Bookings
 from django.http import JsonResponse
 from django.views import View
@@ -134,7 +134,11 @@ class createAppointment(View):
                 booking = Bookings.objects.create(user=user,service=service, company=company,
                                                 start=start, end=end, price=price)
                 booking.save()
-                company.clients.add(user)
+                if not Clients.objects.filter(company=company,email=user.email, first_name=user.first_name,last_name=user.last_name,phone=user.phone).exists():
+                    guest = Clients.objects.create(first_name=user.first_name,last_name=user.last_name,phone=user.phone,email=user.email)
+                    guest.save()
+                    company.clients.add(guest)
+                    company.save()
                 company.save()
                 good = True
             else:
@@ -144,14 +148,17 @@ class createAppointment(View):
             first_name = data['first_name']
             last_name = data['last_name']
             phone = data['phone']
-            guest = Clients.objects.create(first_name=first_name,last_name=last_name,phone=phone,email=email)
-            guest.save()
             if Bookings.objects.filter(company=company, start=start, end=end).count()<1:
+                if not Clients.objects.filter(email=email, first_name=first_name,last_name=last_name,phone=phone, company=company).exists():
+                    guest = Clients.objects.create(company=company,first_name=first_name,last_name=last_name,phone=phone,email=email)
+                    guest.save()
+                    company.clients.add(guest)
+                    company.save()
+                else:
+                    guest = Clients.objects.get(email=email, first_name=first_name,last_name=last_name,phone=phone)
                 booking = Bookings.objects.create(guest=guest,service=service, company=company,
                                                 start=start, end=end, price=price)
                 booking.save()
-                company.guest_client.add(guest)
-                company.save()
                 good = True
             else:
                 good = False

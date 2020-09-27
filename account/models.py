@@ -3,6 +3,7 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, Abstra
 from django.core.validators import RegexValidator
 from django.utils.text import slugify
 from django.shortcuts import reverse
+# from business.models import Company
 # Create your models here.
 
 class MyAccountManager(BaseUserManager):
@@ -81,18 +82,3 @@ class Account(AbstractBaseUser):
     def has_module_perms(self, app_label):
         return True
 
-
-class Clients(models.Model):
-    user = models.ForeignKey(Account, on_delete=models.CASCADE, null=True)
-    first_name = models.CharField(verbose_name="First Name", max_length=30, unique=False)
-    last_name = models.CharField(verbose_name="Last Name", max_length=30, unique=False,null=True, blank=True)
-    email = models.EmailField(verbose_name='Email', max_length=60)
-    phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$', message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
-    phone = models.CharField(validators=[phone_regex], max_length=17,null=True, blank=True)
-    address = models.CharField(max_length=200,null=True, blank=True)
-    postal = models.CharField(max_length=35,null=True, blank=True)
-    province = models.CharField(max_length=35,null=True, blank=True)
-    city = models.CharField(max_length=35,null=True, blank=True)
-
-    def __str__(self):
-        return self.first_name + ' ' + self.last_name

@@ -9,8 +9,8 @@ from django.core.exceptions import ValidationError
 
 class Bookings(models.Model):
     #The user's information name who booked
-    user = models.ForeignKey(Account, on_delete=models.CASCADE, null=True)
-    guest = models.ForeignKey(Clients, on_delete=models.CASCADE, null=True)
+    user = models.ForeignKey(Account, on_delete=models.CASCADE, null=True, blank=True)
+    guest = models.ForeignKey(Clients, on_delete=models.CASCADE, null=True, blank=True)
     # first_name = models.CharField(verbose_name="First Name", max_length=30, unique=False,null=True, blank=True)
     # last_name = models.CharField(verbose_name="Last Name", max_length=30, unique=False, null=True, blank=True)
     # phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$', message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")

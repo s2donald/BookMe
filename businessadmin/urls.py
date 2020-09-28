@@ -21,6 +21,8 @@ urlpatterns = [
     url(r'deletes/(?P<pk>\d+)/$', views.deleteserviceAPI.as_view(), name='deleteservice'),
     url(r'updates/(?P<pk>\d+)/$', views.updateserviceAPI.as_view(), name='updateservice'),
 
+    url(r'reviews/$', views.reviewListView, name='reviewlist'),
+
     url(r'onboarding/check/subdomain/$', views.subdomainCheck.as_view(), name='subdomain'),
     url(r'onboarding/$', views.completeViews, name='completeprofile'),
     url(r'^updatecompanyform/$',views.updateCompanyDetail.as_view(), name='updateform'),

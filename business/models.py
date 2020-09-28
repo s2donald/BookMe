@@ -151,7 +151,6 @@ class Company(models.Model):
     subcategory = models.ManyToManyField(SubCategory)
     description = models.TextField(max_length=500, db_index=True, blank=True, null=True)
     address = models.CharField(max_length=200)
-    avgrating = models.DecimalField(max_digits=5, decimal_places=2)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='published')
     email = models.EmailField(verbose_name='Business Email', max_length=60)
     phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$', message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")

@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from business.models import Company, SubCategory, OpeningHours, Services, Gallary, Amenities, Clients
 from account.models import Account
 from account.tasks import bizaddedEmailSent
-from consumer.models import Bookings
+from consumer.models import Bookings, Reviews
 from account.forms import AccountAuthenticationForm
 from django.contrib.auth import authenticate, login, logout
 from django_hosts.resolvers import reverse
@@ -832,6 +832,29 @@ def clientListView(request):
     company = Company.objects.get(user=user)
     clients = company.clients.all()
     return render(request,'bizadmin/companydetail/client/clients.html', {'company':company, 'clients':clients})
+
+from django import template
+
+register = template.Library()
+
+@register.filter(name='range')
+def filter_range(start, end):
+    return range(start, end)
+
+def reviewListView(request):
+    if not request.user.is_authenticated:
+        context={}
+        user_form = BusinessRegistrationForm()
+        context['business_registration_form'] = user_form
+        return render(request, 'account/bussignup.html', {'user_form':user_form})
+    email = request.user.email
+    user = get_object_or_404(Account, email=email)
+    if not user.on_board:
+        return redirect(reverse('completeprofile', host='bizadmin'))
+    
+    company = Company.objects.get(user=user)
+    reviews = Reviews.objects.filter(company=company)
+    return render(request,'bizadmin/dashboard/reviews/reviews.html', {'company':company, 'reviews':reviews})
 
 
 

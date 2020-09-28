@@ -97,7 +97,7 @@
             </div>
           </li>
 
-          <li>
+          <li class="{% block bpageact %}{%endblock%}">
             <a data-toggle="collapse" href="#portfolio">
               <i class="fas fa-id-card"></i>
               <p>
@@ -123,8 +123,8 @@
             </div>
           </li>
           
-          <li>
-            <a href="">
+          <li class="{% block bizreview %}{%endblock%}">
+            <a href="{% host_url 'reviewlist' host 'bizadmin' %}">
               <i class="fas fa-star"></i>
               <p>Reviews</p>
             </a>

@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Category, Company, Services, SubCategory, Amenities, OpeningHours, Gallary
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.contrib.postgres.search import SearchVector
+from django.contrib.postgres.search import SearchVector, SearchQuery, SearchRank
 from .forms import SearchForm, AddServiceForm, UpdateServiceForm, homeSearchForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
@@ -13,6 +13,7 @@ from django.http import JsonResponse
 from django.template.loader import render_to_string
 from consumer.models import Reviews
 from django.db.models import Count
+from django.db.models import F
 
 def privacyViews(request):
     return render(request, 'legal/privacypolicy.html')
@@ -24,53 +25,34 @@ def allsearch(request):
     companies = Company.objects.all()
     form = SearchForm()
     Search = None
-    results = []
-    paginator = Paginator(companies, 6)
-    page = request.GET.get('page')
-    try:
-        companiess = paginator.page(page)
-    except PageNotAnInteger:
-        companiess = paginator.page(1)
-    except EmptyPage:
-        companiess = paginator.page(paginator.num_pages)
-
+    q = 0
     if 'Search' in request.GET:
         form = SearchForm(request.GET)
+        if 'Location' in request.GET:
+            q = 1
+            form = homeSearchForm(request.GET)
         if form.is_valid():
             Search = form.cleaned_data['Search']
-            
-            results = Company.objects.annotate(search=SearchVector('business_name','description'),).filter(search=Search)
-            return render(request, 'business/company/list.html',{'page':page,'category':category, 'categories':categories ,'companies':results, 'name': Search,'form':form,'subcategories':subcategories})
-    
-    
-    
-    return render(request, 'business/home.html', {'page':page,'category':category, 'categories':categories, 'subcategories':subcategories,'form':form, 'companies':companiess})
+            if q == 1:
+                loc = form.cleaned_data['Location']
 
-def homesearch(request):
-    category = None
-    categories = Category.objects.all()
-    subcategories = SubCategory.objects.all()
-    companies = Company.objects.all()
-    form = homeSearchForm()
-    Search = None
-    results = []
-    paginator = Paginator(companies, 6)
-    page = request.GET.get('page')
-    try:
-        companiess = paginator.page(page)
-    except PageNotAnInteger:
-        companiess = paginator.page(1)
-    except EmptyPage:
-        companiess = paginator.page(paginator.num_pages)
-    if 'Search' in request.GET:
-        form = SearchForm(request.GET)
-        if form.is_valid():
-            Search = form.cleaned_data['Search']
-            results = Company.objects.annotate(search=SearchVector('business_name','description'),).filter(search=Search)
-            return render(request, 'business/company/list.html',{'page':page,'category':category, 'categories':categories ,'companies':results, 'name': Search,'form':form})
-    
-    return render(request, 'business/home.html', {'page':page,'category':category, 'categories':categories, 'subcategories':subcategories,'form':form, 'companies':companiess})
-
+            # results = Company.objects.annotate(search=SearchVector('business_name','description'),).filter(search=Search)
+            #This may need to ge optimized
+            results = Services.objects.annotate(search=SearchVector('name'),).filter(search=Search)
+            ids = results.values_list('business', flat=True).distinct()
+            results = Company.objects.filter(id__in=ids)|Company.objects.annotate(search=SearchVector('business_name','description'),).filter(search=Search)
+            results = results.order_by('business_name')
+            total = results.count()
+            paginator = Paginator(results, 6)
+            page = request.GET.get('page')
+            try:
+                results = paginator.page(page)
+            except PageNotAnInteger:
+                results = paginator.page(1)
+            except EmptyPage:
+                results = paginator.page(paginator.num_pages)
+            return render(request, 'business/company/list.html',{'total':total,'page':page,'search':Search,'category':category, 'categories':categories ,'companies':results, 'name': Search,'form':form,'subcategories':subcategories})
+    return render(request, 'business/company/list.html')
 
 # Create your views here.
 def homepage(request, category_slug=None):
@@ -103,8 +85,9 @@ def company_list(request, category_slug=None, company_slug=None, tag_slug=None):
     if tag_slug:
         tag = get_object_or_404(Tag, slug=tag_slug)
         companies = companies.filter(tags__in=[tag])
+    
     form = SearchForm()
-
+    total = companies.count()
     paginator = Paginator(companies, 6)
     page = request.GET.get('page')
     try:
@@ -114,7 +97,7 @@ def company_list(request, category_slug=None, company_slug=None, tag_slug=None):
     except EmptyPage:
         companiess = paginator.page(paginator.num_pages)
 
-    return render(request, 'business/company/list.html',{'page':page,'subcategories':subcategories,'category':category, 'companies':companiess, 'categories':categories, 'form':form,'tag':tag, 'name':name})
+    return render(request, 'business/company/list.html',{'total':total,'page':page,'subcategories':subcategories,'category':category, 'companies':companiess, 'categories':categories, 'form':form,'tag':tag, 'name':name})
 
 def company_detail(request, id, slug):
     company = get_object_or_404(Company, id=id, slug=slug, available=True)

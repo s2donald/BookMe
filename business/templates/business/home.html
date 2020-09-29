@@ -11,8 +11,7 @@
               <h1 class="header-font font-weight-bold text-shadow">Life is for service</h1>
             </div>
             <div class="search-bar bg-white bg-home">
-              <form action="{% url 'business:post-search' %}" method="GET" width="100%">
-                {% csrf_token %}
+              <form action="{% url 'business:bizsearch' %}" method="GET" width="100%">
                 <div class="row marg-top padd1 paddquart padd15 form-group">
                     <div class="col-lg-4 d-flex align-items-center">
                         {{ search.Search }}

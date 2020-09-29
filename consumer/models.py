@@ -58,7 +58,7 @@ class Reviews(models.Model):
     star = models.IntegerField(validators=[MinValueValidator(1),MaxValueValidator(5)])
     created = models.DateTimeField(auto_now_add=True)
     class Meta:
-        ordering = ('-created',)
+        ordering = ('star',)
         unique_together=(('reviewer','company'),)
         index_together=(('reviewer','company'),)
         verbose_name = 'Review'

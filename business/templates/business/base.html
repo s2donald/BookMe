@@ -33,7 +33,7 @@
         <nav class="navbar navbar-expand-lg navbar-dark nav-box-round bg-light flex-shrink-2 flex-grow-0">
             <div class="container-fluid justify-content-between">
                 <a class="mb-1 pr-2" href="/"><img width="100px" height="100px" style="border-radius:10px;" src="{% static "/img/favicon/logo/GibeleLogo.svg" %}"></a>
-                <form method="GET" class="mr-2 my-auto w-100 d-inline-block order-1" action="{% url 'business:post-search' %}">
+                <form method="GET" class="mr-2 my-auto w-100 d-inline-block order-1" action="{% url 'business:bizsearch' %}">
                     <div class="input-group">
                         {{ form.Search }}
                         <span class="input-group-append">
@@ -88,33 +88,6 @@
             </div>
         
         </nav>
-        {% comment %} {% if categories %}
-
-        <div class="collapse show" id="collapseExample">
-        <nav class="navbar bg-purple nav-box-round flex-shrink-1 flex-grow-0" id="collapseExample">
-            
-            <div class="container-fluid">
-                {% for c in categories %}
-                    <div class="btn-group my-1">
-                        <a class="btn btn-sm btn-outline-dark" href="{{ c.get_absolute_url }}">{{c.name}}</a>
-                        <a class="btn btn-sm btn-outline-dark dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <span class="sr-only">Toggle Dropdown</span>
-                        </a>
-                        <div class="dropdown-menu float-xs-right">
-                            {% for sc in subcategories %}
-                            {% if sc.category.name == c.name %}
-                                <a href="{{ sc.get_absolute_url }}" class="dropdown-item">{{ sc.name }}</a>
-                            {% endif %}
-                            {% endfor %}
-                        </div>
-                        
-                    </div>
-                {% endfor %}
-            </div>
-        </nav>
-        </div>
-        
-        {% endif %} {% endcomment %}
 
         <div class="main">
             {% block content %}

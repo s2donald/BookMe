@@ -1,13 +1,19 @@
 <div class="pagination justify-content-center">
         <ul class="pagination pagination-template d-flex justify-content-center">
             {% if page.has_previous %}
-                <li class="page-item"><a class="page-link" href="?page={{ page.previous_page_number }}"> <i class="fa fa-angle-left"></i></a></li>
-                <li class="page-item"><a class="page-link" href="?page={{ page.previous_page_number }}">{{ page.previous_page_number }}</a></li>
+                <li class="page-item"><a class="page-link" href="?page={{ page.previous_page_number }}{% if request.GET.Search %}&Search={{request.GET.Search}}{% endif %}{% if request.GET.Location %}&Location={{request.GET.Location}}{% endif %}"> <i class="fa fa-angle-left"></i></a></li>
             {% endif %}
-                <li class="page-item active"><a class="page-link" href="#">{{ page.number }}</a></li>
+            {% for i in page.paginator.page_range %}
+                {% if i == page.number %}
+                    <li class="page-item active"><a class="page-link" href="?page={{ i }}{% if request.GET.Search %}&Search={{request.GET.Search}}{% endif %}{% if request.GET.Location %}&Location={{request.GET.Location}}{% endif %}">{{ i }}</a></li>
+                {% else %}
+                    <li class="page-item"><a class="page-link" href="?page={{ i }}{% if request.GET.Search %}&Search={{request.GET.Search}}{% endif %}{% if request.GET.Location %}&Location={{request.GET.Location}}{% endif %}">{{ i }}</a></li>
+                {% endif %}
+                
+            {% endfor %}
+            
             {% if page.has_next %}
-                <li class="page-item"><a class="page-link" href="?page={{ page.next_page_number }}">{{ page.next_page_number }}</a></li>
-                <li class="page-item"><a class="page-link" href="?page={{ page.next_page_number }}"> <i class="fa fa-angle-right"></i></a></li>
+                <li class="page-item"><a class="page-link" href="?page={{ page.next_page_number }}{% if request.GET.Search %}&Search={{request.GET.Search}}{% endif %}{% if request.GET.Location %}&Location={{request.GET.Location}}{% endif %}"> <i class="fa fa-angle-right"></i></a></li>
             {% endif %}
         </ul>
 </div>

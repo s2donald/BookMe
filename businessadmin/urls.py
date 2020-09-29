@@ -3,8 +3,10 @@ from django.conf.urls import url, include
 from . import views
 app_name = 'businessadmin'
 urlpatterns = [
+    url(r'bpage/hours/$', views.businessHoursView, name='hours'),
     url(r'bpage/photo/$', views.businessPhotoView, name='photos'),
     url(r'bpage/amentities/$', views.businessAmenitiesView, name='amenities'),
+    
     url(r'dashboard/schedule/$', views.scheduleView, name='schedule'),
     url(r'dashboard/profile/security/$',views.profileSecurityViews, name='security'),
     url(r'dashboard/profile/billing/$',views.profileBillingViews, name='billing'),

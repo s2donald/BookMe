@@ -192,7 +192,7 @@ def signupViews(request):
             login(request, account)
             company = Company.objects.create(user=account,business_name=bname,
                                                 description='',address='',postal='',
-                                                state='',city='',status='draft', avgrating=0)
+                                                state='',city='',status='draft')
             biz_hours = OpeningHours.objects.bulk_create([
                 OpeningHours(company=company, weekday=0,is_closed=True),
                 OpeningHours(company=company, weekday=1,is_closed=False),
@@ -671,11 +671,22 @@ def businessPhotoView(request):
     photos = Gallary.objects.filter(company=company)
     return render(request,'bizadmin/businesspage/photos.html',{'company':company, 'photos':photos})
 
+@login_required
 def businessAmenitiesView(request):
     company = Company.objects.get(user=request.user)
     amenities = Amenities.objects.filter(company=company)
-
     return render(request,'bizadmin/businesspage/amenities.html',{'company':company, 'amenities':amenities})
+
+def businessHoursView(request):
+    company = Company.objects.get(user=request.user)
+    sunday = OpeningHours.objects.get(company=company, weekday=0)
+    monday = OpeningHours.objects.get(company=company, weekday=1)
+    tuesday = OpeningHours.objects.get(company=company, weekday=2)
+    wednesday = OpeningHours.objects.get(company=company, weekday=3)
+    thursday = OpeningHours.objects.get(company=company, weekday=4)
+    friday = OpeningHours.objects.get(company=company, weekday=5)
+    saturday = OpeningHours.objects.get(company=company, weekday=6)
+    return render(request, 'bizadmin/businesspage/hours.html', {'company':company,'sunday':sunday, 'monday':monday, 'tuesday':tuesday,'wednesday':wednesday, 'thursday':thursday, 'friday':friday, 'saturday':saturday})
 
 class addTagAPI(View):
     def post(self, request):

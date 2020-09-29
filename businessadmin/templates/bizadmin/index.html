@@ -119,6 +119,12 @@
                     <span class="sidebar-normal"> Amenities and Tags</span>
                   </a>
                 </li>
+                <li class=''>
+                  <a href="{% host_url 'hours' host 'bizadmin'%}">
+                    <span class="sidebar-mini-icon"><i class="fas fa-clock"></i></span>
+                    <span class="sidebar-normal"> Business Hours</span>
+                  </a>
+                </li>
               </ul>
             </div>
           </li>
@@ -240,9 +246,9 @@
               </li>
               <li class="dropdown nav-item">
                 <a href="{% host_url 'bizadminlogout' host 'bizadmin' %}" class="dropdown-toggle nav-link" data-toggle="dropdown">
-                  {% if company.image %}
+                  {% if request.user.avatar %}
                         <div class="photo">
-                            <img src="{{ company.image.url }}" alt="{{company.business_name}} Profile Photo">
+                            <img src="{{ request.user.avatar.url }}" alt="{{ request.user.first_name }} Profile Photo">
                         </div>
                   {% else %}
                     <i class="fas fa-user-circle"></i>
@@ -250,7 +256,7 @@
                   
                   <b class="caret d-none d-lg-block d-xl-block"></b>
                   <p class="d-lg-none">
-                    Log out
+                    Account
                   </p>
                 </a>
                 <ul class="dropdown-menu dropdown-navbar">

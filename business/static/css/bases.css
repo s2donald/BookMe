@@ -243,8 +243,9 @@ a:focus {
     vertical-align: middle;
   }
   .svg-icon {
-    width: 18px;
-    height: 18px;
+    width: 20px;
+    height: 25px;
+    opacity: 1 !important;
     vertical-align: text-bottom;
     stroke: currentColor;
     stroke-width: 3;
@@ -257,7 +258,7 @@ a:focus {
     width: 2.5rem;
     height: 2.5rem;
     text-align: center;
-    opacity: 0.5;
+    opacity: 0.75;
     color: #fff;
     border-radius: 50%;
     background: #343a40;
@@ -265,7 +266,7 @@ a:focus {
   }
   
   .card-fav-icon:hover {
-    opacity: .7;
+    opacity: 1;
   }
   
   .card-fav-icon svg {

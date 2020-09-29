@@ -5,23 +5,35 @@
 {% block content %}
     <div class="container">
         {% if category %}
-            <h1 class="text-center">{{ category.name }}({{companies|length}})</h1>
+            <h1 class="text-center">{{ category.name }}({{total}})</h1>
         {% else %}
-            <h1 class="text-center">{% if name %}Results for {{ name }}({{companies|length}}){% else %}No Results Found{% endif %}</h1>
+            <h1 class="text-center">{% if name %}Results for {{ name }}({{total}}){% else %}No Results Found{% endif %}</h1>
         {% endif %}
         <div class="row">
             {% for company in companies %}
+            {% with users_like=company.users_like.all %}
                 <!-- venue item-->
             <div class="col-md-6 mb-5 hover-animate">
               <div class="card h-100 border-0 shadow">
                 <div class="card-img-top img-fluid overflow-hidden dark-overlay bg-cover" >
                   <img style="width:100%; max-height:250px;" src="{% if company.image %}{{ company.image.url }}{% else %}{% static "img/no_image.png" %}{% endif %}" alt="">
                   <div class="card-img-overlay-top d-flex justify-content-between align-items-center">
+                    {% if request.user in users_like %}
+                    <a class="card-fav-icon position-relative z-40" href="#"> 
+                      <svg class="svg-icon text-danger" style="opacity: 1 !important;">
+                        <use xlink:href="#heart-liked"></use>
+                      </svg>
+                    </a>
+                    {% else %}
                     <a class="card-fav-icon position-relative z-40" href="#"> 
                       <svg class="svg-icon text-white">
-                        <use xlink:href="#heart-1"> </use>
-                      </svg></a>
+                        <use xlink:href="#heart-unliked"> </use>
+                      </svg>
+                    </a>
+                    {% endif %}
+                    
                   </div>
+                  {% endwith %}
                 </div>
                 <div class="card-body">
                   <p class="mb-2 text-xs">{% for x in '12345' %}<i class="fas fa-star {% if forloop.counter|avg_reviews:company.id %}text-warning{% else %}text-gray-300{% endif %}"></i>{% endfor %}

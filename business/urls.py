@@ -10,8 +10,7 @@ urlpatterns = [
     path('<slug:category_slug>/',views.company_list, name='company_list_by_category'),
     path('list/', views.company_list, name='company_list'),
     path('privacy/', views.privacyViews, name='privacy'),
-    path('search', views.allsearch,name='post-search'),
-    path('homesearch', views.homesearch,name='all-search'),
+    path('search', views.allsearch,name='bizsearch'),
     path('', views.homepage, name='homepage'),
     
 ]

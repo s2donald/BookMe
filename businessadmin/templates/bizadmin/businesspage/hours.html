@@ -1,0 +1,245 @@
+{% extends 'bizadmin/index.html' %}
+{% load static %}
+{% load hosts %}
+{% block bpageact%}active{%endblock%}
+{% block businessadmin %}
+<!-- Main page content-->
+    <div class="content">
+        <div class="row">
+            <div class="col-md-10 ml-auto mr-auto">
+                <header class="page-header page-header-compact page-header-light mb-4">
+                    <div class="container">
+                        <div class="page-header-content">
+                            <div class="row align-items-center justify-content-between pt-3">
+                                <div class="col-auto mb-3">
+                                    <h1 class="page-header-title">
+                                        Business Page - Shop Hours
+                                    </h1>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </header>
+                <!-- Account page navigation-->
+                <nav class="nav nav-borders">
+                    <a class="nav-link  ml-0" href="{% host_url 'photos' host 'bizadmin'%}">Photo and Gallery</a>
+                    <a class="nav-link" href="{% host_url 'amenities' host 'bizadmin'%}">Amenities and Tags</a>
+                    <a class="nav-link activate" href="{% host_url 'hours' host 'bizadmin'%}">Business Hours</a>
+                </nav>
+                <hr class="mt-0 mb-4" />
+                <form>
+                {% csrf_token %}
+                <div class="card text-center">
+                    <h2 class="fs-title text-center card-header">Business Hours</h2>
+                <h3 class="fs-subtitle text-center">Add your business hours</h3>
+                <div class="row text-center px-3 justify-content-center">
+                    <div class="col-md-12 mt-3">
+                        <div class="justify-content-center my-auto align-items-center">
+                            <strong for="" class="text-danger">Sunday Business Hours</strong>
+                            <input type="checkbox" name="sunOpen" {% if sunday.is_closed %}{% else %}checked{% endif %} class="bootstrap-switch bootstrap-switch-red my-0" id="sunOpen" data-on-label="OPEN" data-off-label=""/>
+                        </div>
+                            <div class="row justify-content-center" id="sundaytimes">
+                                <div class="col-sm-6 col-lg-4 col-lg-2">
+                                <div class="input-group justify-content-center mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text bg-transparent text-white">Open Time</span>
+                                    </div>
+                                    <input type="text" class="datetimepicker form-control text-center" name="sunOpenHour" id="sunOpenHour" value="{{ sunday.from_hour }}"/>
+                                </div>
+                                </div>
+                                <div class="col-sm-6 col-lg-4 col-lg-2">
+                                <div class="input-group justify-content-center mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text bg-transparent text-white">Close Time</span>
+                                    </div>
+                                    <input type="text" class="datetimepicker form-control text-center" name="sunCloseHour" id="sunCloseHour" value="{{ sunday.to_hour }}"/>
+                                </div>
+                                </div>
+                            </div>
+                    </div>
+                    <hr>
+                    <div class="col-md-12 mt-1">
+                        <div class="justify-content-center my-auto align-items-center">
+                            <strong for="" class="text-danger">Monday Business Hours</strong>
+                            <input name="monOpen" {% if monday.is_closed %}{% else %}checked{% endif %} type="checkbox" class="bootstrap-switch bootstrap-switch-red my-0" data-on-label="OPEN" data-off-label=""/>
+                        </div>
+                            <div class="row justify-content-center">
+                                <div class="col-sm-6 col-lg-4 col-lg-2">
+                                <div class="input-group justify-content-center mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text bg-transparent text-white">Open Time</span>
+                                    </div>
+                                    <input type="text" class="datetimepicker form-control text-center" name="monOpenHour" id="monOpenHour" value="{{ monday.from_hour }}"/>
+                                </div>
+                                </div>
+                                <div class="col-sm-6 col-lg-4 col-lg-2">
+                                <div class="input-group justify-content-center mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text bg-transparent text-white">Close Time</span>
+                                    </div>
+                                    <input type="text" class="datetimepicker form-control text-center" name="monCloseHour" id="monCloseHour" value="{{ monday.to_hour }}"/>
+                                </div>
+                                </div>
+                            </div>
+                    </div>
+                    <div class="col-md-12 mt-1">
+                        <div class="justify-content-center my-auto align-items-center">
+                            <strong for="" class="text-danger">Tuesday Business Hours</strong>
+                            <input name="tuesOpen" {% if tuesday.is_closed %}{% else %}checked{% endif %} type="checkbox" class="bootstrap-switch bootstrap-switch-red my-0" data-on-label="OPEN" data-off-label=""/>
+                        </div>
+                            <div class="row justify-content-center">
+                                <div class="col-sm-6 col-lg-4 col-lg-2">
+                                <div class="input-group justify-content-center mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text bg-transparent text-white">Open Time</span>
+                                    </div>
+                                    <input type="text" class="datetimepicker form-control text-center" name="tuesOpenHour" id="tuesOpenHour" value="{{ tuesday.from_hour }}"/>
+                                </div>
+                                </div>
+                                <div class="col-sm-6 col-lg-4 col-lg-2">
+                                <div class="input-group justify-content-center mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text bg-transparent text-white">Close Time</span>
+                                    </div>
+                                    <input type="text" class="datetimepicker form-control text-center" name="tuesCloseHour" id="tuesCloseHour" value="{{ tuesday.to_hour }}"/>
+                                </div>
+                                </div>
+                            </div>
+                    </div>
+                    <div class="col-md-12 mt-1">
+                        <div class="justify-content-center my-auto align-items-center">
+                            <strong for="" class="text-danger">Wednesday Business Hours</strong>
+                            <input name="wedOpen" {% if wednesday.is_closed %}{% else %}checked{% endif %} type="checkbox" class="bootstrap-switch bootstrap-switch-red my-0" data-on-label="OPEN" data-off-label=""/>
+                        </div>
+                            <div class="row justify-content-center">
+                                <div class="col-sm-6 col-lg-4 col-lg-2">
+                                <div class="input-group justify-content-center mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text bg-transparent text-white">Open Time</span>
+                                    </div>
+                                    <input type="text" class="datetimepicker form-control text-center" name="wedOpenHour" id="wedOpenHour" value="{{ wednesday.from_hour }}"/>
+                                </div>
+                                </div>
+                                <div class="col-sm-6 col-lg-4 col-lg-2">
+                                <div class="input-group justify-content-center mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text bg-transparent text-white">Close Time</span>
+                                    </div>
+                                    <input type="text" class="datetimepicker form-control text-center" name="wedCloseHour" id="wedCloseHour" value="{{ wednesday.to_hour }}"/>
+                                </div>
+                                </div>
+                            </div>
+                    </div>
+                    <div class="col-md-12 mt-1">
+                        <div class="justify-content-center my-auto align-items-center">
+                            <strong for="" class="text-danger">Thursday Business Hours</strong>
+                            <input name="thursOpen" {% if thursday.is_closed %}{% else %}checked{% endif %} type="checkbox" class="bootstrap-switch bootstrap-switch-red my-0" data-on-label="OPEN" data-off-label=""/>
+                        </div>
+                            <div class="row justify-content-center">
+                                <div class="col-sm-6 col-lg-4 col-lg-2">
+                                <div class="input-group justify-content-center mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text bg-transparent text-white">Open Time</span>
+                                    </div>
+                                    <input type="text" class="datetimepicker form-control text-center" name="thursOpenHour" id="thursOpenHour" value="{{ thursday.from_hour }}"/>
+                                </div>
+                                </div>
+                                <div class="col-sm-6 col-lg-4 col-lg-2">
+                                <div class="input-group justify-content-center mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text bg-transparent text-white">Close Time</span>
+                                    </div>
+                                    <input type="text" class="datetimepicker form-control text-center" name="thursCloseHour" id="thursCloseHour" value="{{ thursday.to_hour }}"/>
+                                </div>
+                                </div>
+                            </div>
+                    </div>
+                    <div class="col-md-12 mt-1">
+                        <div class="justify-content-center my-auto align-items-center">
+                            <strong for="" class="text-danger">Friday Business Hours</strong>
+                            <input name="friOpen" {% if friday.is_closed %}{% else %}checked{% endif %} type="checkbox" class="bootstrap-switch bootstrap-switch-red my-0" data-on-label="OPEN" data-off-label=""/>
+                        </div>
+                            <div class="row justify-content-center">
+                                <div class="col-sm-6 col-lg-4 col-lg-2">
+                                <div class="input-group justify-content-center mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text bg-transparent text-white">Open Time</span>
+                                    </div>
+                                    <input type="text" class="datetimepicker form-control text-center" name="friOpenHour" id="friOpenHour" value="{{ friday.from_hour }}"/>
+                                </div>
+                                </div>
+                                <div class="col-sm-6 col-lg-4 col-lg-2">
+                                <div class="input-group justify-content-center mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text bg-transparent text-white">Close Time</span>
+                                    </div>
+                                    <input type="text" class="datetimepicker form-control text-center" name="friCloseHour" id="friCloseHour" value="{{ friday.to_hour }}"/>
+                                </div>
+                                </div>
+                            </div>
+                    </div>
+                    <div class="col-md-12 mt-1">
+                        <div class="justify-content-center my-auto align-items-center">
+                            <strong for="" class="text-danger">Saturday Business Hours</strong>
+                            <input name="satOpen" {% if saturday.is_closed %}{% else %}checked{% endif %} type="checkbox" class="bootstrap-switch bootstrap-switch-red my-0" data-on-label="OPEN" data-off-label=""/>
+                        </div>
+                            <div class="row justify-content-center">
+                                <div class="col-sm-6 col-lg-4 col-lg-2">
+                                <div class="input-group justify-content-center mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text bg-transparent text-white">Open Time</span>
+                                    </div>
+                                    <input type="text" class="datetimepicker form-control text-center" name="satOpenHour" id="satOpenHour" value="{{ saturday.from_hour }}"/>
+                                </div>
+                                </div>
+                                <div class="col-sm-6 col-lg-4 col-lg-2">
+                                <div class="input-group justify-content-center mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text bg-transparent text-white">Close Time</span>
+                                    </div>
+                                    <input type="text" class="datetimepicker form-control text-center" name="satCloseHour" id="satCloseHour" value="{{ saturday.to_hour }}"/>
+                                </div>
+                                </div>
+                            </div>
+                    </div>
+
+                    <button class="btn btn-primary text-center mb-3" type="submit">Save Hours</button>
+                </div>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script>
+    $('.datetimepicker').datetimepicker({
+        format: 'LT',
+        icons: {
+        time: "fas fa-clock",
+        up: "fa fa-chevron-up",
+        down: "fa fa-chevron-down",
+        previous: 'tim-icons icon-minimal-left',
+        next: 'tim-icons icon-minimal-right',
+        today: 'fa fa-screenshot',
+        clear: 'fa fa-trash',
+        close: 'fa fa-remove'
+        }
+    });
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    const csrftoken = getCookie('csrftoken');
+    
+    </script>
+{% endblock %}

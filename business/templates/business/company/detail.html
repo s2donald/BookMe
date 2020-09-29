@@ -242,16 +242,16 @@
               </div>
               <div class="text-center">
                 {% with users_like=company.users_like.all %}
-                <p><a class="licolor" href="#"> <i class="fa fa-heart"></i> {% if request.user in users_like %}Un f{% else %}F{% endif %}avourite this company</a></p>
-                {% with liked_count=users_like.count %}
-                {% if liked_count == 1 %}
-                  <span>{{ liked_count }} person loves this business</span>
-                {% elif liked_count > 1 %}
-                  <span>{{ liked_count }} people love this business</span>
-                {% else %}
-                  <span>Be the first to favourite this business</span>
-                {% endif %}
-                {% endwith %}
+                  <p><a class="licolor" href="#"> <i class="fa fa-heart"></i> {% if request.user in users_like %}Unf{% else %}F{% endif %}avourite this company</a></p>
+                  {% with liked_count=users_like.count %}
+                  {% if liked_count == 1 %}
+                    <span>{{ liked_count }} person loves this business</span>
+                  {% elif liked_count > 1 %}
+                    <span>{{ liked_count }} people love this business</span>
+                  {% else %}
+                    <span>Be the first to favourite this business</span>
+                  {% endif %}
+                  {% endwith %}
                 {% endwith %}
               </div>
             </div>

@@ -265,6 +265,15 @@ a:focus {
     line-height: 2.5rem;
   }
   
+  .svg-pic{
+    width: 100%;
+    height: 300px;
+    opacity: 1 !important;
+    vertical-align: text-bottom;
+    stroke: currentColor;
+    stroke-width: 1;
+    --layer1: currentColor;
+  }
   .card-fav-icon:hover {
     opacity: 1;
   }

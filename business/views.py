@@ -14,6 +14,8 @@ from django.template.loader import render_to_string
 from consumer.models import Reviews
 from django.db.models import Count
 from django.db.models import F
+import json
+from django.views import View
 
 def privacyViews(request):
     return render(request, 'legal/privacypolicy.html')
@@ -219,3 +221,20 @@ def UpdateServiceView(request, pk, pks, slug):
 
     return render(request, 'business/company/manage/service/update.html',{'service':service, 'update_form':service_update_form})
 
+from django.template.loader import render_to_string
+class company_like(View):
+    def post(self, request):
+        if not request.user.is_authenticated:
+            return redirect(reverse('login'))
+        data=json.loads(request.body)
+        ids = data['company_id']
+        action = data['action']
+        company = Company.objects.get(pk=ids)
+        if action == 'like':
+            company.users_like.add(request.user)
+            data['hearts'] = render_to_string('business/company/user_like/like.html', {'company':company})
+        else:
+            company.users_like.remove(request.user)
+            data['hearts'] = render_to_string('business/company/user_like/unlike.html', {'company':company})
+        return JsonResponse(data)
+    

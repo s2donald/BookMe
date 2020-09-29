@@ -17,15 +17,15 @@
               <div class="card h-100 border-0 shadow">
                 <div class="card-img-top img-fluid overflow-hidden dark-overlay bg-cover" >
                   <img style="width:100%; max-height:250px;" src="{% if company.image %}{{ company.image.url }}{% else %}{% static "img/no_image.png" %}{% endif %}" alt="">
-                  <div class="card-img-overlay-top d-flex justify-content-between align-items-center">
+                  <div class="card-img-overlay-top d-flex justify-content-between align-items-center" id="{{ company.id }}">
                     {% if request.user in users_like %}
-                    <a class="card-fav-icon position-relative z-40" href="#"> 
+                    <a class="card-fav-icon position-relative z-40 like" data-id="{{ company.id }}" data-action="unlike"> 
                       <svg class="svg-icon text-danger" style="opacity: 1 !important;">
                         <use xlink:href="#heart-liked"></use>
                       </svg>
                     </a>
                     {% else %}
-                    <a class="card-fav-icon position-relative z-40" href="#"> 
+                    <a class="card-fav-icon position-relative z-40 like" data-id="{{ company.id }}" data-action="like"> 
                       <svg class="svg-icon text-white">
                         <use xlink:href="#heart-unliked"> </use>
                       </svg>
@@ -50,9 +50,50 @@
             </div>
             {{ sea }}
             {% empty %}
-                <h1>There are no services available yet.</h1>
+                <h1>We could not find what you were searching for..</h1>
             {% endfor %}
         </div>
         {% include "business/pagination.html" with page=companies %}
     </div>
 {% endblock %}
+{% block ajaxscripts %}
+    <script>
+      function getCookie(name) {
+                            let cookieValue = null;
+                            if (document.cookie && document.cookie !== '') {
+                                const cookies = document.cookie.split(';');
+                                for (let i = 0; i < cookies.length; i++) {
+                                    const cookie = cookies[i].trim();
+                                    // Does this cookie string begin with the name we want?
+                                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                                        break;
+                                    }
+                                }
+                            }
+                                return cookieValue;
+                            }
+                            const csrftoken = getCookie('csrftoken');
+                            
+      $(document).ready(function(){
+        $('a.like').click(function(e){
+          var company = $(this).attr("data-id")
+          var actions = $(this).attr("data-action")
+          var heart = document.getElementById(company.toString())
+          console.log(company)
+          $.ajax({
+                url: "{% host_url 'business:company_like' host 'www' %}",
+                data: JSON.stringify({company_id: company, action: actions}),
+                type: "POST",
+                dataType: 'json',
+                headers:{
+                    "X-CSRFToken": csrftoken
+                },
+                success: function (data) {
+                    heart.innerHTML= data.hearts
+                },
+            });
+        });
+      });
+    </script>
+{% endblock  %}

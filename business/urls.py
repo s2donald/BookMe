@@ -8,6 +8,7 @@ urlpatterns = [
     path('update/<int:pk>/<int:pks>/<slug:slug>/', views.UpdateServiceView, name='update_service'),
     path('<slug:slug>/<int:id>/',views.company_detail,name='company_detail'),
     path('<slug:category_slug>/',views.company_list, name='company_list_by_category'),
+    path('userlike', views.company_like.as_view(), name='company_like'),
     path('list/', views.company_list, name='company_list'),
     path('privacy/', views.privacyViews, name='privacy'),
     path('search', views.allsearch,name='bizsearch'),

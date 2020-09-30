@@ -242,14 +242,15 @@
               </div>
               <div class="text-center">
                 {% with users_like=company.users_like.all %}
-                  <p><a class="licolor" href="#"> <i class="fa fa-heart"></i> {% if request.user in users_like %}Unf{% else %}F{% endif %}avourite this company</a></p>
                   {% with liked_count=users_like.count %}
+                  <p><a class="licolor likes" id="{{ company.id }}" href="#" data-id="{{ company.id }}" data-total={{ liked_count }} data-action="{% if request.user in users_like %}unlike{% else %}like{% endif %}"> <i class="fa fa-heart"></i> {% if request.user in users_like %}Unf{% else %}F{% endif %}avourite this company</a></p>
+  
                   {% if liked_count == 1 %}
-                    <span>{{ liked_count }} person loves this business</span>
+                    <span id="totalsLikes">{{ liked_count }} person loves this business</span>
                   {% elif liked_count > 1 %}
-                    <span>{{ liked_count }} people love this business</span>
+                    <span id="totalsLikes">{{ liked_count }} people love this business</span>
                   {% else %}
-                    <span>Be the first to favourite this business</span>
+                    <span id="totalsLikes">Be the first to favourite this business</span>
                   {% endif %}
                   {% endwith %}
                 {% endwith %}
@@ -279,18 +280,20 @@
                       <img style="width:100%; max-height:250px;" src="{% if sim_comp.image %}{{ sim_comp.image.url }}{% else %}{% static "img/no_image.png" %}{% endif %}" alt="">
                       <div class="card-img-overlay-top d-flex justify-content-between align-items-center">
                       {% with users_like=sim_comp.users_like.all %}
-                        <a class="card-fav-icon position-relative z-index-40" href="javascript: void();"> 
-                          {% if request.user in users_like %}
+                        {% if request.user in users_like %}
+                          <a class="card-fav-icon position-relative z-40 like" href="#" id="{{ sim_comp.id }}" data-id="{{ sim_comp.id }}" data-action="unlike"> 
                             <svg class="svg-icon text-danger" style="opacity: 1 !important;">
                               <use xlink:href="#heart-liked"></use>
                             </svg>
+                          </a>
                           {% else %}
+                          <a class="card-fav-icon position-relative z-40 like" href="#" id="{{ sim_comp.id }}" data-id="{{ sim_comp.id }}" data-action="like"> 
                             <svg class="svg-icon text-white">
                               <use xlink:href="#heart-unliked"> </use>
                             </svg>
-                          {% endif %}
-                        </a>
-                        {% endwith %}
+                          </a>
+                        {% endif %}
+                      {% endwith %}
                       </div>
                     </div>
                     <div class="card-body">
@@ -404,3 +407,108 @@
       })
     </script>
 {% endblock extrascripts %}
+{% block ajaxscripts %}
+    <script>
+      function getCookie(name) {
+                            let cookieValue = null;
+                            if (document.cookie && document.cookie !== '') {
+                                const cookies = document.cookie.split(';');
+                                for (let i = 0; i < cookies.length; i++) {
+                                    const cookie = cookies[i].trim();
+                                    // Does this cookie string begin with the name we want?
+                                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                                        break;
+                                    }
+                                }
+                            }
+                                return cookieValue;
+                            }
+                            const csrftoken = getCookie('csrftoken');
+                            
+      $(document).ready(function(){
+        $('a.like').click(function(e){
+          e.preventDefault()
+          var elem = $(this)
+          var company = elem.attr("data-id")
+          var actions = elem.attr("data-action")
+          var inside = document.getElementById(company)
+          $.ajax({
+                url: "{% host_url 'business:company_like' host 'www' %}",
+                data: JSON.stringify({company_id: company, action: actions}),
+                type: "POST",
+                dataType: 'json',
+                headers:{
+                    "X-CSRFToken": csrftoken
+                },
+                success: function (data) {
+                    if (!data.good){
+                      location.href='{% host_url "login" host "www" %}'
+                    }
+                    else{
+                      if (actions == 'like'){
+                        elem.attr("data-action", 'unlike')
+                      }
+                      else{
+                        elem.attr("data-action", 'like')
+                      }
+                      inside.innerHTML= data.hearts
+                    }
+                },
+            });
+        });
+
+        $('a.likes').click(function(e){
+          e.preventDefault()
+          var elem = $(this)
+          var company = elem.attr("data-id")
+          var actions = elem.attr("data-action")
+          var total_likes = parseInt(elem.attr("data-total"))
+          var inside = document.getElementById(company)
+          var likedFeedback = document.getElementById('totalsLikes')
+          $.ajax({
+                url: "{% host_url 'business:company_like' host 'www' %}",
+                data: JSON.stringify({company_id: company, action: actions}),
+                type: "POST",
+                dataType: 'json',
+                headers:{
+                    "X-CSRFToken": csrftoken
+                },
+                success: function (data) {
+                    if (!data.good){
+                      location.href='{% host_url "login" host "www" %}'
+                    }
+                    else{
+                      if (actions == 'like'){
+                        elem.attr("data-action", 'unlike')
+                        inside.innerHTML= `<i class="fa fa-heart"></i> Unfavourite this company`
+                        elem.attr("data-total", total_likes+1)
+                        if(total_likes+1==1){
+                          likedFeedback.innerHTML = `1 person loves this business`
+                        }
+                        else {
+                          likedFeedback.innerHTML = (total_likes + 1).toString() + ` people love this business`
+                        }
+
+                      }
+                      else{
+                        elem.attr("data-action", 'like')
+                        inside.innerHTML= `<i class="fa fa-heart"></i> Favourite this company`
+                        elem.attr("data-total", total_likes-1)
+                        if(total_likes - 1==0){
+                          likedFeedback.innerHTML = `Be the first to favourite this business`
+                        }
+                        else if(total_likes - 1==1) {
+                          likedFeedback.innerHTML = `1 person loves this business`
+                        }
+                        else {
+                          likedFeedback.innerHTML = (total_likes - 1).toString() + ` people love this business`
+                        }
+                      }
+                    }
+                },
+            });
+        });
+      });
+    </script>
+{% endblock  %}

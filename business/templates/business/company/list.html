@@ -17,15 +17,15 @@
               <div class="card h-100 border-0 shadow">
                 <div class="card-img-top img-fluid overflow-hidden dark-overlay bg-cover" >
                   <img style="width:100%; max-height:250px;" src="{% if company.image %}{{ company.image.url }}{% else %}{% static "img/no_image.png" %}{% endif %}" alt="">
-                  <div class="card-img-overlay-top d-flex justify-content-between align-items-center" id="{{ company.id }}">
+                  <div class="card-img-overlay-top d-flex justify-content-between align-items-center">
                     {% if request.user in users_like %}
-                    <a class="card-fav-icon position-relative z-40 like" data-id="{{ company.id }}" data-action="unlike"> 
+                    <a class="card-fav-icon position-relative z-40 like" href="#" id="{{ company.id }}" data-id="{{ company.id }}" data-action="unlike"> 
                       <svg class="svg-icon text-danger" style="opacity: 1 !important;">
                         <use xlink:href="#heart-liked"></use>
                       </svg>
                     </a>
                     {% else %}
-                    <a class="card-fav-icon position-relative z-40 like" data-id="{{ company.id }}" data-action="like"> 
+                    <a class="card-fav-icon position-relative z-40 like" href="#" id="{{ company.id }}" data-id="{{ company.id }}" data-action="like"> 
                       <svg class="svg-icon text-white">
                         <use xlink:href="#heart-unliked"> </use>
                       </svg>
@@ -77,10 +77,11 @@
                             
       $(document).ready(function(){
         $('a.like').click(function(e){
-          var company = $(this).attr("data-id")
-          var actions = $(this).attr("data-action")
-          var heart = document.getElementById(company.toString())
-          console.log(company)
+          e.preventDefault()
+          var elem = $(this)
+          var company = elem.attr("data-id")
+          var actions = elem.attr("data-action")
+          var inside = document.getElementById(company)
           $.ajax({
                 url: "{% host_url 'business:company_like' host 'www' %}",
                 data: JSON.stringify({company_id: company, action: actions}),
@@ -90,7 +91,18 @@
                     "X-CSRFToken": csrftoken
                 },
                 success: function (data) {
-                    heart.innerHTML= data.hearts
+                    if (!data.good){
+                      location.href='{% host_url "login" host "www" %}'
+                    }
+                    else{
+                      if (actions == 'like'){
+                        elem.attr("data-action", 'unlike')
+                      }
+                      else{
+                        elem.attr("data-action", 'like')
+                      }
+                      inside.innerHTML= data.hearts
+                    }
                 },
             });
         });

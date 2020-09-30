@@ -122,8 +122,8 @@ def company_detail(request, id, slug):
     galPhotos = Gallary.objects.filter(company=company)
     company_tags_ids = company.tags.values_list('id', flat=True)
     similar_companies = Company.objects.order_by().filter(tags__in=company_tags_ids).exclude(id=company.id).distinct()
-    similar_companies = similar_companies.annotate(same_tags=Count('tags')).order_by('-same_tags', '-business_name').distinct()
-    print(similar_companies.count())
+    similar_companies = similar_companies.annotate(same_tags=Count('tags')).order_by('-same_tags', '-business_name').distinct()[:10]
+    
     return render(request, 'business/company/detail.html', {'similar_companies':similar_companies,'photos':galPhotos,'sun_hour':sun_hour,'mon_hour':mon_hour,'tues_hour':tues_hour,'wed_hour':wed_hour,'thur_hour':thur_hour,'fri_hour':fri_hour,'sat_hour':sat_hour,'subcategories':subcategories,'comp_categ':comp_categ,'amenities':amenities,'address':address,'company':company,'category':category,'categories':categories, 'services':services, 'form':form, 'reviews':reviews})
 
 @login_required
@@ -225,7 +225,9 @@ from django.template.loader import render_to_string
 class company_like(View):
     def post(self, request):
         if not request.user.is_authenticated:
-            return redirect(reverse('login'))
+            data = {}
+            data['good'] = False
+            return JsonResponse(data)
         data=json.loads(request.body)
         ids = data['company_id']
         action = data['action']
@@ -236,5 +238,6 @@ class company_like(View):
         else:
             company.users_like.remove(request.user)
             data['hearts'] = render_to_string('business/company/user_like/unlike.html', {'company':company})
+        data['good'] = True
         return JsonResponse(data)
     

@@ -34,7 +34,7 @@
                         <hr class="mt-0 mb-4" />
                         <div class="row">
                             <div class="col-md-12 text-center mb-4">
-                                <button class="btn btn-primary">Add Client</button>
+                                <button id="addclients" class="btn btn-primary" type="button" data-toggle="modal" data-target="#modal-client">Add Client</button>
                             </div>
 
                             <div class="col-xl-12">
@@ -102,18 +102,56 @@
   </div>
 </div>
 
-<div class="modal fade" id="modal-service" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="modal-client" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Add your services</h5>
+        <h5 class="modal-title font-weight-bold d-flex justify-content-center pr-1" id="exampleModalLabel">Add a client</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
-      <form method="POST" id="createserv">
+      <form method="POST" id="createclient">
         {% csrf_token %}
+        <div class="row">
+            <div class="col-md-6">
+            <label for="">First Name</label>
+                {{ form.first_name|as_crispy_field }}
+            </div>
+            <div class="col-md-6">
+            <label for="">Last Name</label>
+                {{ form.last_name|as_crispy_field }}
+            </div>
+            <div class="col-md-12">
+            <label for="">Email</label>
+                {{ form.email|as_crispy_field }}
+            </div>
+            <div class="col-md-12">
+                {{ form.phone|as_crispy_field }}
+            </div>
+            <div class="col-md-12">
+            <label for="">Client Address</label>
+                {{ form.address|as_crispy_field }}
+            </div>
+            <div class="col-4">
+            <label for="">Province</label>
+                {{ form.province|as_crispy_field }}
+            </div>
+            <div class="col-4">
+            <label for="">Postal Code</label>
+                {{ form.postal|as_crispy_field }}
+            </div>
+            <div class="col-4">
+            <label for="">City</label>
+                {{ form.city|as_crispy_field }}
+            </div>
+
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary" id="saveNewClient">Save Client</button>
+        </div>
       </form>
     </div>
   </div>

@@ -27,14 +27,24 @@ def allsearch(request):
     companies = Company.objects.all()
     form = SearchForm()
     Search = None
+    cat = None
+    subcat = None
     q = 0
     if 'Search' in request.GET:
         form = SearchForm(request.GET)
         if 'Location' in request.GET:
             q = 1
             form = homeSearchForm(request.GET)
+            categorys = request.GET['category']
+            if categorys:
+                try:
+                    cat = Category.objects.get(pk=categorys)
+                except:
+                    subcat = SubCategory.objects.get(pk=categorys)
+
         if form.is_valid():
             Search = form.cleaned_data['Search']
+
             if q == 1:
                 loc = form.cleaned_data['Location']
 
@@ -43,7 +53,12 @@ def allsearch(request):
             results = Services.objects.annotate(search=SearchVector('name'),).filter(search=Search)
             ids = results.values_list('business', flat=True).distinct()
             results = Company.objects.filter(id__in=ids)|Company.objects.annotate(search=SearchVector('business_name','description'),).filter(search=Search)
-            results = results.order_by('business_name')
+            if cat:
+                results = results.filter(category=cat).order_by('business_name')
+            if subcat:
+                results = results.filter(subcategory=subcat).order_by('business_name')
+            if not cat and not subcat:    
+                results = results.order_by('business_name')
             total = results.count()
             paginator = Paginator(results, 6)
             page = request.GET.get('page')
@@ -53,7 +68,8 @@ def allsearch(request):
                 results = paginator.page(1)
             except EmptyPage:
                 results = paginator.page(paginator.num_pages)
-            return render(request, 'business/company/list.html',{'total':total,'page':page,'search':Search,'category':category, 'categories':categories ,'companies':results, 'name': Search,'form':form,'subcategories':subcategories})
+                print(Search)
+            return render(request, 'business/company/list.html',{'total':total,'page':page,'category':category, 'categories':categories ,'companies':results, 'name': Search,'form':form,'subcategories':subcategories})
     return render(request, 'business/company/list.html')
 
 # Create your views here.

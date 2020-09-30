@@ -20,14 +20,14 @@
                         {{ search.Location }}
                     </div>
                     <div class="col-lg-3 d-flex align-items-center form-group no-divider">
-                        <select class="selectcolor selectpicker show-tick form-control" data-size="5" data-dropdown-align-right="true" title="Categories">
-                            <option class="selectcolor" value="small">All Services</option>
+                        <select name="category" class="selectcolor selectpicker show-tick form-control" data-size="5" data-dropdown-align-right="true" title="Categories">
+                            <option class="selectcolor" value="">All Services</option>
                             {% for c in categories %}
                                 <optgroup label="{{ c.name }}">
-                                    <option id="{{ c.slug }}" class="selectcolor" value="small">All {{c.name}}</option>
+                                    <option id="{{ c.slug }}" class="selectcolor" value="{{ c.id }}">All {{c.name}}</option>
                                     {% for sc in subcategories %}
                                         {% if sc.category.name == c.name %}
-                                            <option id="{{ sc.slug }}" data-subtext="{{c.name}}" class="selectcolor" value="small">{{sc.name}}</option>
+                                            <option id="{{ sc.slug }}" data-subtext="{{c.name}}" class="selectcolor" value="{{ sc.id }}">{{sc.name}}</option>
                                         {% endif %}
                                     {% endfor %}
                                 </optgroup>

@@ -27,7 +27,7 @@
                     <a class="nav-link activate" href="{% host_url 'hours' host 'bizadmin'%}">Business Hours</a>
                 </nav>
                 <hr class="mt-0 mb-4" />
-                <form>
+                <form method="POST">
                 {% csrf_token %}
                 <div class="card text-center">
                     <h2 class="fs-title text-center card-header">Business Hours</h2>

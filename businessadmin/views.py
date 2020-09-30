@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .forms import BusinessRegistrationForm, UpdateCompanyForm
+from .forms import BusinessRegistrationForm, UpdateCompanyForm, AddClientForm
 from django.contrib.auth.decorators import login_required
 from business.models import Company, SubCategory, OpeningHours, Services, Gallary, Amenities, Clients
 from account.models import Account
@@ -842,7 +842,8 @@ def clientListView(request):
     
     company = Company.objects.get(user=user)
     clients = company.clients.all()
-    return render(request,'bizadmin/companydetail/client/clients.html', {'company':company, 'clients':clients})
+    form = AddClientForm()
+    return render(request,'bizadmin/companydetail/client/clients.html', {'company':company, 'clients':clients, 'form':form})
 
 from django import template
 

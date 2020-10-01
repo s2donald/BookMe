@@ -1,0 +1,21 @@
+{% load hosts %}
+{% for client in clients %}
+    <tr>
+    <td class="text-center" scope="row">{{ forloop.counter }}</td>
+    <td class="text-center">{{ client.first_name }} {{ client.last_name }}</td>
+    <td class="text-center">{{ client.phone }}</td>
+    <td class="text-center">{{ client.email}}</td>
+    <td class="text-center">
+        <!-- Update Service buttons -->
+        <button type="button" class="updatebtn btn btn-sm btn-outline-primary" data-toggle="modal" data-target="#modal-update" data-url="{%  host_url 'updateclient' client.id host 'bizadmin' %}">
+            <span class="fa fa-pencil-alt"></span>
+        </button>
+        <!-- Delete Service buttons -->
+        <button type="button" class="trashcan btn btn-sm btn-danger" data-toggle="modal" data-target="#modal-delete" data-url="{%  host_url 'deleteclient' client.id host 'bizadmin' %}">
+            <span class="fa fa-trash"></span>
+        </button>
+    </td>
+    </tr>
+{% empty %}
+    <td colspan="8" class="text-center">You have no clients yet.</td>
+{% endfor %}

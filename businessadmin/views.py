@@ -352,7 +352,42 @@ class createserviceAPI(View):
         data['html_service_list'] = render_to_string('bizadmin/companydetail/services/partial/partial_service_list.html', {'services':services})
         return JsonResponse(data)
 
+class createclientAPI(View):
+    def post(self,request):
+        form = AddClientForm(request.POST)
+        data = dict()
+        if form.is_valid():
+            company = Company.objects.get(user=request.user)
+            first_name = form.cleaned_data.get('first_name')
+            last_name = form.cleaned_data.get('last_name')
+            phone = form.cleaned_data.get('phone')
+            email = form.cleaned_data.get('email')
+            address = form.cleaned_data.get('address')
+            postal = form.cleaned_data.get('postal')
+            city = form.cleaned_data.get('city')
+            province = form.cleaned_data.get('province')
+            Clients.objects.create(company=company, first_name=first_name, last_name=last_name, email=email,phone=phone,
+                                city=city,postal=postal,province=province,address=address)
+            clients = company.clients.all()
+            data['form_is_valid'] = True
+            data['view'] = 'Your client has been added!'
+            data['icon'] = 'success'
+        else:
+            data['form_is_valid'] = False
+            data['view'] = 'Your client was not added. There was an error.'
+            data['icon'] = 'error'
+        data['html_service_list'] = render_to_string('bizadmin/companydetail/client/partial/partial_client_list.html', {'clients':clients})
+        return JsonResponse(data)
 
+class deleteclientAPI(View):
+    def get(self, request, pk):
+        data = dict()
+        company = Company.objects.get(user=request.user)
+        client = get_object_or_404(Clients, pk=pk, company=company)
+        client.delete()
+        clients = company.clients.all()
+        data['html_service_list'] = render_to_string('bizadmin/companydetail/client/partial/partial_client_list.html', {'clients':clients})
+        return JsonResponse(data)
 
 
 
@@ -382,6 +417,102 @@ class deleteserviceAPI(View):
         service.delete()
         services = Services.objects.filter(business=company)
         data['html_service_list'] = render_to_string('bizadmin/companydetail/services/partial/partial_service_list.html', {'services':services})
+        return JsonResponse(data)
+
+class updateclientAPI(View):
+    def get(self, request, pk):
+        company = Company.objects.get(user=request.user)
+        client = get_object_or_404(Clients, pk=pk,  company=company)
+        dat = {'first_name': client.first_name, 'last_name': client.last_name, 'email': client.email,  'phone': client.phone,  'address': client.address,  'province':client.province, 'postal':client.postal, 'city':client.city}
+        data=dict()
+        form = AddClientForm(initial=dat)
+        context = {'form':form, 'client':client}
+        data['html_form'] = render_to_string('bizadmin/companydetail/client/partial/partial_client_update.html', context, request=request)
+        return JsonResponse(data)
+
+    def post(self, request, pk):
+        company = Company.objects.get(user=request.user)
+        client = get_object_or_404(Clients, pk=pk, company=company)
+        form = AddClientForm(request.POST)
+        data=dict()
+        if form.is_valid():
+            client.first_name = form.cleaned_data.get('first_name')
+            client.last_name = form.cleaned_data.get('last_name')
+            client.email = form.cleaned_data.get('email')
+            client.phone = form.cleaned_data.get('phone')
+            client.address = form.cleaned_data.get('address')
+            client.province = form.cleaned_data.get('province')
+            client.postal = form.cleaned_data.get('postal')
+            client.city = form.cleaned_data.get('city')
+            client.save()
+            data['form_is_valid'] = True
+            clients = company.clients.all()
+            data['html_service_list'] = render_to_string('bizadmin/companydetail/client/partial/partial_client_list.html', {'clients':clients})
+            data['view'] = 'The clients information has been updated'
+        else:
+            data['form_is_valid'] = False
+        return JsonResponse(data)
+
+
+class saveBusinessHours(View):
+    def post(self, request):
+        sun_from = request.POST['sunOpenHour']
+        sun_to = request.POST['sunCloseHour']
+        sun_closed = not request.POST.get('sunOpen', False)
+        mon_from = request.POST['monOpenHour']
+        mon_to = request.POST['monCloseHour']
+        mon_closed = not request.POST.get('monOpen', False)
+        tues_from = request.POST['tuesCloseHour']
+        tues_to = request.POST['tuesOpenHour']
+        tues_closed = not request.POST.get('tuesOpen', False)
+        wed_from = request.POST['wedOpenHour']
+        wed_to = request.POST['wedCloseHour']
+        wed_closed = not request.POST.get('wedOpen', False)
+        thurs_from = request.POST['thursOpenHour']
+        thurs_to = request.POST['thursCloseHour']
+        thurs_closed = not request.POST.get('thursOpen', False)
+        fri_from = request.POST['friOpenHour']
+        fri_to = request.POST['friCloseHour']
+        fri_closed = not request.POST.get('friOpen', False)
+        sat_from = request.POST['satOpenHour']
+        sat_to = request.POST['satCloseHour']
+        sat_closed = not request.POST.get('satOpen', False)
+        company = Company.objects.get(user=request.user)
+        objs = [
+            OpeningHours.objects.get(company=company, weekday=0),
+            OpeningHours.objects.get(company=company, weekday=1),
+            OpeningHours.objects.get(company=company, weekday=2),
+            OpeningHours.objects.get(company=company, weekday=3),
+            OpeningHours.objects.get(company=company, weekday=4),
+            OpeningHours.objects.get(company=company, weekday=5),
+            OpeningHours.objects.get(company=company, weekday=6),
+        ]
+        objs[0].is_closed = sun_closed
+        objs[1].is_closed = mon_closed
+        objs[2].is_closed = tues_closed
+        objs[3].is_closed = wed_closed
+        objs[4].is_closed = thurs_closed
+        objs[5].is_closed = fri_closed
+        objs[6].is_closed = sat_closed
+
+        objs[0].from_hour = sun_from
+        objs[1].from_hour = mon_from
+        objs[2].from_hour = tues_from
+        objs[3].from_hour = wed_from
+        objs[4].from_hour = thurs_from
+        objs[5].from_hour = fri_from
+        objs[6].from_hour = sat_from
+
+        objs[0].to_hour = sun_to
+        objs[1].to_hour = mon_to
+        objs[2].to_hour = tues_to
+        objs[3].to_hour = wed_to
+        objs[4].to_hour = thurs_to
+        objs[5].to_hour = fri_to
+        objs[6].to_hour = sat_to
+
+        OpeningHours.objects.bulk_update(objs,['is_closed','from_hour','to_hour'])
+        data = {'good':True}
         return JsonResponse(data)
 
 #used in the onboarding page

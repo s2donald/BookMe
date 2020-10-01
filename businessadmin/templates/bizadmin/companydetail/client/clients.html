@@ -40,7 +40,7 @@
                             <div class="col-xl-12">
 
                                 <div class="table-responsive">
-                                    <table id="service-table" class="table table-dark table-hover">
+                                    <table class="table table-dark table-hover">
                                         <thead>
                                             <tr>
                                                 <th class="text-center" scope="col">#</th>
@@ -49,7 +49,7 @@
                                                 <th class="text-center">Email</th>
                                             </tr>
                                         </thead>
-                                        <tbody>
+                                        <tbody id="client-table">
                                             {% for client in clients %}
                                                 <tr>
                                                     <td class="text-center" scope="row">{{ forloop.counter }}</td>
@@ -58,11 +58,11 @@
                                                     <td class="text-center">{{ client.email}}</td>
                                                     <td class="text-center">
                                                         <!-- Update Service buttons -->
-                                                        <button type="button" class="js-update-product btn btn-sm btn-outline-primary" data-toggle="modal" data-target="#modal-update" data-url="#">
+                                                        <button type="button" class="updatebtn btn btn-sm btn-outline-primary" data-toggle="modal" data-target="#modal-update" data-url="{%  host_url 'updateclient' client.id host 'bizadmin' %}">
                                                             <span class="fa fa-pencil-alt"></span>
                                                         </button>
                                                         <!-- Delete Service buttons -->
-                                                        <button type="button" class="js-delete-product btn btn-sm btn-danger" data-toggle="modal" data-target="#modal-delete" data-url="#">
+                                                        <button type="button" class="trashcan btn btn-sm btn-danger" data-toggle="modal" data-target="#modal-delete" data-url="{%  host_url 'deleteclient' client.id host 'bizadmin' %}">
                                                             <span class="fa fa-trash"></span>
                                                         </button>
                                                     </td>
@@ -77,7 +77,6 @@
                             </div>
                         </div>
                     </div>
-
 <div class="modal fade" id="modal-update" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -150,7 +149,7 @@
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary" id="saveNewClient">Save Client</button>
+            <button type="submit" class="btn btn-primary" id="saveNewClient">Add Client</button>
         </div>
       </form>
     </div>
@@ -188,10 +187,10 @@
                     });
                     var $this = $(this)
                     var urldata = $this.attr('data-url')
+                    console.log(urldata)
                     swalStyles.fire({
-                        title: 'Are you sure you want to delete the service?',
+                        title: 'Are you sure you want to remove the client?',
                         text: 'You will not be able to change this',
-                        {% comment %} icon: 'warning', {% endcomment %}
                         showCancelButton: true,
                         reverseButtons: true
                                     }).then((result) => {
@@ -200,14 +199,13 @@
                                                 type:'GET',
                                                 dataType: 'json',
                                                 url: urldata,
-                                                cache: false,
                                                 success: function(data){
                                                     var htmlcontent = data.html_service_list
-                                                    var el = document.querySelector('#service-t');
+                                                    var el = document.querySelector('#client-table');
                                                     el.innerHTML = htmlcontent
                                                     Swal.fire({
-                                                        title: '{{ s.name }} Service Deleted!', 
-                                                        text: 'Your service has been deleted.', 
+                                                        title: '{{ s.name }} Client Removed!', 
+                                                        text: 'Your client has been removed from your list.', 
                                                         icon: 'success' 
                                                     });
                                                 }
@@ -225,20 +223,20 @@
                                     });
                                 });
 
-            $('#createserv').submit(function(e){
+            $('#createclient').submit(function(e){
                 e.preventDefault();
                 $.ajax({
                     type:'POST',
-                    url: "{% host_url 'createservice' host 'bizadmin' %}",
-                    data: $('#createserv').serialize(),
+                    url: "{% host_url 'createclient' host 'bizadmin' %}",
+                    data: $('#createclient').serialize(),
                     headers:{
                         "X-CSRFToken": csrftoken
                     },
                     success:function(data){
 
-                        $('#modal-service').modal('hide');
+                        $('#modal-client').modal('hide');
                         var htmlcontent = data.html_service_list
-                        var el = document.querySelector('#service-t');
+                        var el = document.querySelector('#client-table');
                         el.innerHTML = htmlcontent
                         Swal.fire({
                             title:data.view,
@@ -247,14 +245,6 @@
                     }
                 });
             });
-
-            {% comment %} $(document).on('click', '.updatebtn', function(e){
-                var $this = $(this)
-                var urldata = $this.attr("data-url")
-                e.preventDefault();
-                $.aja
-            }); {% endcomment %}
-
 
 
             $(document).on('click', '.updatebtn', function () { 

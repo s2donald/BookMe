@@ -27,11 +27,11 @@
                     <a class="nav-link activate" href="{% host_url 'hours' host 'bizadmin'%}">Business Hours</a>
                 </nav>
                 <hr class="mt-0 mb-4" />
-                <form method="POST">
+                <form method="POST" id="subhour">
                 {% csrf_token %}
                 <div class="card text-center">
                     <h2 class="fs-title text-center card-header">Business Hours</h2>
-                <h3 class="fs-subtitle text-center">Add your business hours</h3>
+                <h3 class="fs-subtitle text-center">Update your business hours</h3>
                 <div class="row text-center px-3 justify-content-center">
                     <div class="col-md-12 mt-3">
                         <div class="justify-content-center my-auto align-items-center">
@@ -240,6 +240,22 @@
         return cookieValue;
     }
     const csrftoken = getCookie('csrftoken');
-    
+    $('#subhour').submit(function(e){
+        e.preventDefault();
+        $.ajax({
+            type:'POST',
+            url: "{% host_url 'businessHourSave' host 'bizadmin' %}",
+            data: $('#subhour').serialize(),
+            headers:{
+                "X-CSRFToken": csrftoken
+            },
+            success:function(data){
+                Swal.fire({
+                    title:'Your business hours have been saved',
+                    icon: 'success'
+                });
+            }
+        });
+    });
     </script>
 {% endblock %}

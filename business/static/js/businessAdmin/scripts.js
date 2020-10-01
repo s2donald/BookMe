@@ -85,6 +85,7 @@ $(document).ready(function(){
           $("#service-table tbody").html(data.html_service_list);
           console.log(data.html_service_list)
           $('#service-t').html(data.html_service_list)
+          $('#client-table').html(data.html_service_list)
           $("#modal-service").modal("hide");
           $("#modal-delete").modal("hide");
           $("#modal-update").modal("hide");
@@ -113,6 +114,7 @@ $(document).ready(function(){
     // Delete product
     $("#service-table").on("click", ".js-delete-product", loadDelForm);
     $("#modal-delete").on("submit", ".js-product-delete-form", saveForm);
+
 
 });
 

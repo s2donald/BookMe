@@ -103,11 +103,11 @@ class AddClientForm(forms.ModelForm):
     last_name = forms.CharField(label='',max_length=30, required=True, widget=forms.TextInput(attrs={'style':'color:black;'}))
     phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$', message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
     phone = forms.CharField(label='Phone Number',required=False, validators=[phone_regex], max_length=30,widget=forms.TextInput(attrs={'style':'color:black;'}))
-    email = forms.EmailField(label='',widget=forms.TextInput(attrs={'style':'color:black;'}))
-    address = forms.CharField(label='', max_length=35,widget=forms.TextInput(attrs={'style':'color:black;'}))
-    province = forms.CharField(label='', max_length=35,widget=forms.TextInput(attrs={'style':'color:black;'}))
-    postal = forms.CharField(label='', max_length=35,widget=forms.TextInput(attrs={'style':'color:black;'}))
-    city = forms.CharField(label='', max_length=35,widget=forms.TextInput(attrs={'style':'color:black;'}))
+    email = forms.EmailField(label='',required=False, widget=forms.TextInput(attrs={'style':'color:black;'}))
+    address = forms.CharField(label='', required=False,max_length=35,widget=forms.TextInput(attrs={'style':'color:black;'}))
+    province = forms.CharField(label='', required=False,max_length=35,widget=forms.TextInput(attrs={'style':'color:black;'}))
+    postal = forms.CharField(label='', required=False,max_length=35,widget=forms.TextInput(attrs={'style':'color:black;'}))
+    city = forms.CharField(label='', required=False,max_length=35,widget=forms.TextInput(attrs={'style':'color:black;'}))
     class Meta:
         model = Clients
         fields = ('first_name','last_name','phone','email','address','province','postal','city')

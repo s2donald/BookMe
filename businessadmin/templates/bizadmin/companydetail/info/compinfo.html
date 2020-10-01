@@ -315,8 +315,6 @@
                     "X-CSRFToken": csrftoken
                 },
                 success: function (data) {
-
-                    console.log(data.email_error)
                     if (data.email_error) {
                         businessemail.classList.remove("has-success");
                         businessemail.classList.add("has-danger");
@@ -373,12 +371,16 @@
             url: "{% host_url 'saveDetailForm' host 'bizadmin' %}",
             success: function(data){
                 if(data.errors){
-                    error.style.display= "block"
-                    error.innerHTML = `<p style="color:red!important;">${data.errors}</p>`
+                    Swal.fire({
+                        title:'There was an error in your form. We were unable to save the changes.',
+                        icon: 'error',
+                    });
                 }
                 if(data.good){
-                    error.style.display= "block"
-                    error.innerHTML = `<p style="color:green!important;">${data.good}</p>`
+                    Swal.fire({
+                        title:'Your information has been saved',
+                        icon: 'success',
+                    });
                 }
 
             }

@@ -169,7 +169,8 @@ def LoginView(request):
         form = AccountAuthenticationForm()
 
     context['login_form'] = form
-    return render(request, 'registration/login.html', {'form':form})
+    search = SearchForm()
+    return render(request, 'registration/login.html', {'login_form':form, 'form':search})
 
 def SignUpView(request):
     return render(request, 'account/signup.html')

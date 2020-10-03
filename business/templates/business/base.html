@@ -23,7 +23,8 @@
         <link href="https://fonts.googleapis.com/css2?family=Arvo:wght@700&display=swap" rel="stylesheet">
         <link href="https://fonts.googleapis.com/css2?family=Baloo+Tamma+2:wght@500&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="{% static "css/magnific-popup.css"%}">
-        <link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Paytone+One&display=swap" rel="stylesheet">
+        {% comment %} <link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=swap" rel="stylesheet"> {% endcomment %}
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/4.0.0/css/jasny-bootstrap.min.css" integrity="sha512-VUj0sZbQFPixq7NJ6ioBRK/scakfsdlKl647mLmZaZHWPgpnrWvIfy80/QF3q1l+kozBc8IHrTEoiZY25PSUTw==" crossorigin="anonymous" />
         <!-- swiper-->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.4.1/css/swiper.min.css">
@@ -32,7 +33,7 @@
     <body id="page-wrapper fontarvo">
         <nav class="navbar navbar-expand-lg navbar-dark nav-box-round bg-light flex-shrink-2 flex-grow-0">
             <div class="container-fluid justify-content-between">
-                <a class="mb-1 pr-2" href="/"><img width="100px" height="100px" style="border-radius:10px;" src="{% static "/img/favicon/logo/GibeleLogo.svg" %}"></a>
+                <a class="mb-1 pr-2" href="/"><img width="150px"  src="{% static "/img/favicon/logo/GibeleLogo.svg" %}"></a>
                 <form method="GET" class="mr-2 my-auto w-100 d-inline-block order-1" action="{% url 'business:bizsearch' %}">
                     <div class="input-group">
                         {{ form.Search }}
@@ -43,16 +44,19 @@
                     </div>
                 </form>
             
-                <button class="navbar-toggler order-0" type="button" data-toggle="collapse" data-target="#navbarResponsive">
-                    <span class="navbar-toggler-icon"></span>
+                <button class="navbar-toggler order-0 collapsed" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="true" aria-label="Toggle navigation">
+                    <span class="icon-bar top-bar"></span>
+                    <span class="icon-bar middle-bar"></span>
+                    <span class="icon-bar bottom-bar"></span>
+                    <span class="sr-only">Toggle navigation</span>
                 </button>
             </div>
 
         <div class="navbar-collapse collapse flex-shrink-1 flex-grow-0 order-last inline-block" id="navbarResponsive">
-            <ul class="navbar-nav mr-auto mt-lg-0 inline-block">
+            <ul class="navbar-nav mr-auto inline-block">
                 {% if user.is_authenticated %}
                     <li class="d-lg-none d-xl-inline-block">
-                    <p class="mx-1">Welcome 
+                    <p class="mx-1 my-auto">Welcome 
                         <a class="licolor" href="{% if user.is_business %}{% host_url 'home' host 'bizadmin' %}{% else %}{% url 'account:account' %}{% endif %}">
                             {% if user.first_name == None %}
                                 {{ user.username }}
@@ -63,25 +67,24 @@
                     </p>
                     </li>
                 {% endif %}
-                <div class="my-auto mx-1">
+                <div class="my-auto mx-2">
                     {% if user.is_business %}
-                        <a href="{% host_url 'schedule' host 'bizadmin'%}" class="btn btn-outline-primary inline-block">Business Dashboard</a>
+                        <a href="{% host_url 'schedule' host 'bizadmin'%}" class="btn btn-outline-primary inline-block my-3">Business Dashboard</a>
                     {% else %}
-                        <a href="{% host_url 'bizadminmain' host 'bizadmin' %}" class="btn btn-outline-primary inline-block">List a business</a>
+                        <a href="{% host_url 'bizadminmain' host 'bizadmin' %}" class="btn btn-outline-primary inline-block my-3">List a business</a>
                     {% endif %}
                 </div>
                 {% if user.is_authenticated %}
-                    <div class="my-auto mx-1">
-                        <a class="btn btn-outline-primary mt-1" href="{% url 'account:account' %}" ><i class="fas fa-user-circle"></i> Account</a>
+                    <div class="mx-2">
+                        <a class="licolor d-flex align-items-center" href="{% url 'account:account' %}" >Account <i class="fas fa-user-circle mx-1"></i></a>
+                        <hr>
+                        <a class="licolor d-flex align-items-center" href="{% url 'logout' %}">Logout <i class="fas fa-sign-out-alt mx-1"></i></a>
                     </div>
-                    <div class="my-auto mx-1">
-                        <a class="btn btn-outline-primary mt-1" href="{% url 'logout' %}">Logout <i class="fas fa-sign-out-alt"></i></a>
-                    </div>
-                    
                 {% else %}
-                    <div class="my-auto mx-1">
-                        <a class="btn btn-outline-primary mt-1" href="{% url 'account:signup' %}" >Sign Up</a>
-                        <a class="btn btn-outline-primary mt-1" href="{% url 'login' %}">Login</a>
+                    <div class="mx-2">
+                        <a class="licolor d-flex align-items-center" href="{% url 'account:signup' %}" >Register</a>
+                        <hr>
+                        <a class="licolor d-flex align-items-center" href="{% url 'login' %}">Login</a>
                     </div>
                 {% endif %}
             </ul>

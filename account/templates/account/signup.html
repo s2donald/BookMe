@@ -5,41 +5,48 @@
 <div class="container-fluid">
     <div class="row min-vh-100">
         <div class="col-md-8 col-lg-6 col-xl-5 position-relative">
-            
-            <h1>Welcome to Gibele</h1>
-            <p>Enter your details to create an account:</p>
-            <p>An account must be created to be able to book services and list services.</p>
-            <form class="text-center" method="post">
-                {% csrf_token %}
-                <div class="row">
-                    <div class="col-md-12">
-                        {{ user_form.email|as_crispy_field }}
-                    </div>
-                    <div class="col-md-12">
-                        {{ user_form.phone|as_crispy_field }}
-                    </div>
-                    <div class="col-md-6">
-                        {{ user_form.password1|as_crispy_field }}
-                    </div>
-                    <div class="col-md-6">
-                        {{ user_form.password2|as_crispy_field }}
-                    </div>
-                    
-                    <div class="col-md-6">
-                        {{ user_form.first_name|as_crispy_field }}
-                    </div>
-                    <div class="col-md-6">
-                        {{ user_form.last_name|as_crispy_field }}
-                    </div>
+            <div class="card shadow-lg border-0 rounded-lg">
+
+                
+                <div class="card-header"><h1 >Welcome to Gibele</h1><h3 class="font-weight-bold my-4 licolor">Create a Gibele Account</h3></div>
+                <div class="card-body">
+                    <!-- Registration form-->
+                    <form method='post'>
+                        {% csrf_token %}
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                {{ user_form.first_name|as_crispy_field }}
+                            </div>
+                            <div class="col-md-6">
+                                {{ user_form.last_name|as_crispy_field }}
+                            </div>
+                            <div class="col-md-6">
+                                {{ user_form.email|as_crispy_field }}
+                            </div>
+                            <div class="col-md-6">
+                                <!-- Form Group (last name)-->
+                                <div class="form-group">
+                                    {{ user_form.phone|as_crispy_field }}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                {{ user_form.password1|as_crispy_field }}
+                            </div>
+                            <div class="col-md-6">
+                                {{ user_form.password2|as_crispy_field }}
+                            </div>
+                        </div>
+                        <!-- Form Group (create account submit)-->
+                        <div class="form-group mt-1 mb-0 text-center"><button class="btn btn-outline-primary text-center" type="submit">Create my account</button></div>
+                    </form>
                 </div>
-                <button class="btn btn-primary justify-content-center" type="submit" name="cons_reg">Create my account</button>
-                <hr class="my-3 hr-text letter-spacing-2" data-content="OR">
-                <div class="col-md-12 mx-auto">
-                    <button class="btn btn-primary btn-social mb-3" style="display:inline-block"><i class="fa fa-facebook-f fab mr-1"> </i>Sign Up With Facebook!</button>
+                <div class="card-footer text-center">
+                    <div class="small"><a class="licolor" href="{% url 'login' %}">Have an account? Go login</a></div>
                 </div>
-            </form>
+            </div>
         </div>
-        <div class="col-md-4 col-lg-6 col-xl-7">
+        <div class="col-md-4 col-lg-6 col-xl-7 nopadding">
             <!-- Image-->
             <div class="bg-cover h-100 mr-n3" style="background-image: url({% static "/img/signup-pexel.jpg" %});"></div>
         </div>

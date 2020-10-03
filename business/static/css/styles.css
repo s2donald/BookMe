@@ -153,6 +153,15 @@ a.licolor:hover, a.licolor:focus {
     margin-bottom: 20px;
 }
 
+.logo-height{
+  height:50px;
+}
+
+@media only screen and (max-width: 700px) {
+  .logo-height {
+    height:40px; }
+  }
+
 /*progressbar*/
 #progressbar {
     margin-bottom: 30px;
@@ -8802,7 +8811,7 @@ table.tablesorter thead tr .headerSortDown {
   .main-panel[data="primary"] {
     border-top: 2px solid #e14eca; }
   .main-panel > .content {
-    padding: 80px 30px 30px 280px;
+    padding: 40px 30px 30px 280px;
     min-height: calc(100vh - 70px); }
   .main-panel > .navbar {
     margin-bottom: 0; }

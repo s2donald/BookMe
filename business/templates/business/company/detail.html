@@ -122,15 +122,17 @@
                 </div>
             
               {% for review in reviews %}
+              {% with reviewer=review.reviewer %}
               <div class="media d-block d-sm-flex review">
-                <div class="text-md-center mr-4 mr-xl-5"><img class="d-block avatar avatar-xl p-2 mb-2" src="img/avatar/avatar-8.jpg" alt="{{ review.reviewer.first_name }} {{ review.reviewer.last_name }}"><span class="text-uppercase text-muted text-sm">{{ review.created|date:"M d, Y"}}</span></div>
+                <div class="text-md-center mr-4 mr-xl-5"><img class="d-block avatar avatar-xl p-2 mb-2" src=" {% if reviewer.avatar %}{{reviewer.avatar.url}}{% else %}https://epicattorneymarketing.com/wp-content/uploads/2016/07/Headshot-Placeholder-1.png{% endif %} " alt="{{ reviewer.first_name }} {{ reviewer.last_name }}"><span class="text-uppercase text-muted text-sm">{{ review.created|date:"M d, Y"}}</span></div>
                 <div class="media-body">
-                  <h6 class="mt-2 mb-1">{{ review.reviewer.first_name }} {{ review.reviewer.last_name }}</h6>
+                  <h6 class="mt-2 mb-1">{{ reviewer.first_name }} {{ reviewer.last_name }}</h6>
                   <div class="mb-2">{% for x in '12345' %}<i class="fas fa-star {% if forloop.counter <= review.star %}text-warning{% else %}text-gray-300{% endif %}"></i>{% endfor %}
                   </div>
                   <p class="text-muted text-sm">{{ review.review }}     </p>
                 </div>
               </div>
+              {% endwith %}
               {% empty %}
                 <h6>Be the first to write a review on this business after you complete a service with them.</h6>
               {% endfor %}

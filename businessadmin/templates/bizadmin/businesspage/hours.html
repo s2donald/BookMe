@@ -30,8 +30,8 @@
                 <form method="POST" id="subhour">
                 {% csrf_token %}
                 <div class="card text-center">
-                    <h2 class="fs-title text-center card-header">Business Hours</h2>
-                <h3 class="fs-subtitle text-center">Update your business hours</h3>
+                    <h2 class="text-center card-header">Business Hours</h2>
+                <p class="text-center text-subtitle">Update your business hours</p>
                 <div class="row text-center px-3 justify-content-center">
                     <div class="col-md-12 mt-3">
                         <div class="justify-content-center my-auto align-items-center">
@@ -44,7 +44,7 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text bg-transparent text-white">Open Time</span>
                                     </div>
-                                    <input type="text" class="datetimepicker form-control text-center" name="sunOpenHour" id="sunOpenHour" value="{{ sunday.from_hour }}"/>
+                                    <input type="text" class="datetimepicker form-control text-center" name="sunOpenHour" id="sunOpenHour" value="{{ sunday.from_hour|time:"H:i" }}"/>
                                 </div>
                                 </div>
                                 <div class="col-sm-6 col-lg-4 col-lg-2">
@@ -52,7 +52,7 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text bg-transparent text-white">Close Time</span>
                                     </div>
-                                    <input type="text" class="datetimepicker form-control text-center" name="sunCloseHour" id="sunCloseHour" value="{{ sunday.to_hour }}"/>
+                                    <input type="text" class="datetimepicker form-control text-center" name="sunCloseHour" id="sunCloseHour" value="{{ sunday.to_hour|time:"H:i" }}"/>
                                 </div>
                                 </div>
                             </div>
@@ -69,7 +69,7 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text bg-transparent text-white">Open Time</span>
                                     </div>
-                                    <input type="text" class="datetimepicker form-control text-center" name="monOpenHour" id="monOpenHour" value="{{ monday.from_hour }}"/>
+                                    <input type="text" class="datetimepicker form-control text-center" name="monOpenHour" id="monOpenHour" value="{{ monday.from_hour|time:"H:i" }}"/>
                                 </div>
                                 </div>
                                 <div class="col-sm-6 col-lg-4 col-lg-2">
@@ -77,7 +77,7 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text bg-transparent text-white">Close Time</span>
                                     </div>
-                                    <input type="text" class="datetimepicker form-control text-center" name="monCloseHour" id="monCloseHour" value="{{ monday.to_hour }}"/>
+                                    <input type="text" class="datetimepicker form-control text-center" name="monCloseHour" id="monCloseHour" value="{{ monday.to_hour|time:"H:i" }}"/>
                                 </div>
                                 </div>
                             </div>
@@ -93,7 +93,7 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text bg-transparent text-white">Open Time</span>
                                     </div>
-                                    <input type="text" class="datetimepicker form-control text-center" name="tuesOpenHour" id="tuesOpenHour" value="{{ tuesday.from_hour }}"/>
+                                    <input type="text" class="datetimepicker form-control text-center" name="tuesOpenHour" id="tuesOpenHour" value="{{ tuesday.from_hour|time:"H:i" }}"/>
                                 </div>
                                 </div>
                                 <div class="col-sm-6 col-lg-4 col-lg-2">
@@ -101,7 +101,7 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text bg-transparent text-white">Close Time</span>
                                     </div>
-                                    <input type="text" class="datetimepicker form-control text-center" name="tuesCloseHour" id="tuesCloseHour" value="{{ tuesday.to_hour }}"/>
+                                    <input type="text" class="datetimepicker form-control text-center" name="tuesCloseHour" id="tuesCloseHour" value="{{ tuesday.to_hour|time:"H:i" }}"/>
                                 </div>
                                 </div>
                             </div>
@@ -117,7 +117,7 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text bg-transparent text-white">Open Time</span>
                                     </div>
-                                    <input type="text" class="datetimepicker form-control text-center" name="wedOpenHour" id="wedOpenHour" value="{{ wednesday.from_hour }}"/>
+                                    <input type="text" class="datetimepicker form-control text-center" name="wedOpenHour" id="wedOpenHour" value="{{ wednesday.from_hour|time:"H:i" }}"/>
                                 </div>
                                 </div>
                                 <div class="col-sm-6 col-lg-4 col-lg-2">
@@ -125,7 +125,7 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text bg-transparent text-white">Close Time</span>
                                     </div>
-                                    <input type="text" class="datetimepicker form-control text-center" name="wedCloseHour" id="wedCloseHour" value="{{ wednesday.to_hour }}"/>
+                                    <input type="text" class="datetimepicker form-control text-center" name="wedCloseHour" id="wedCloseHour" value="{{ wednesday.to_hour|time:"H:i" }}"/>
                                 </div>
                                 </div>
                             </div>
@@ -141,7 +141,7 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text bg-transparent text-white">Open Time</span>
                                     </div>
-                                    <input type="text" class="datetimepicker form-control text-center" name="thursOpenHour" id="thursOpenHour" value="{{ thursday.from_hour }}"/>
+                                    <input type="text" class="datetimepicker form-control text-center" name="thursOpenHour" id="thursOpenHour" value="{{ thursday.from_hour|time:"H:i" }}"/>
                                 </div>
                                 </div>
                                 <div class="col-sm-6 col-lg-4 col-lg-2">
@@ -149,7 +149,7 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text bg-transparent text-white">Close Time</span>
                                     </div>
-                                    <input type="text" class="datetimepicker form-control text-center" name="thursCloseHour" id="thursCloseHour" value="{{ thursday.to_hour }}"/>
+                                    <input type="text" class="datetimepicker form-control text-center" name="thursCloseHour" id="thursCloseHour" value="{{ thursday.to_hour|time:"H:i" }}"/>
                                 </div>
                                 </div>
                             </div>
@@ -165,7 +165,7 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text bg-transparent text-white">Open Time</span>
                                     </div>
-                                    <input type="text" class="datetimepicker form-control text-center" name="friOpenHour" id="friOpenHour" value="{{ friday.from_hour }}"/>
+                                    <input type="text" class="datetimepicker form-control text-center" name="friOpenHour" id="friOpenHour" value="{{ friday.from_hour|time:"H:i" }}"/>
                                 </div>
                                 </div>
                                 <div class="col-sm-6 col-lg-4 col-lg-2">
@@ -173,7 +173,7 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text bg-transparent text-white">Close Time</span>
                                     </div>
-                                    <input type="text" class="datetimepicker form-control text-center" name="friCloseHour" id="friCloseHour" value="{{ friday.to_hour }}"/>
+                                    <input type="text" class="datetimepicker form-control text-center" name="friCloseHour" id="friCloseHour" value="{{ friday.to_hour|time:"H:i" }}"/>
                                 </div>
                                 </div>
                             </div>
@@ -189,7 +189,7 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text bg-transparent text-white">Open Time</span>
                                     </div>
-                                    <input type="text" class="datetimepicker form-control text-center" name="satOpenHour" id="satOpenHour" value="{{ saturday.from_hour }}"/>
+                                    <input type="text" class="datetimepicker form-control text-center" name="satOpenHour" id="satOpenHour" value="{{ saturday.from_hour|time:"H:i" }}"/>
                                 </div>
                                 </div>
                                 <div class="col-sm-6 col-lg-4 col-lg-2">
@@ -197,7 +197,7 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text bg-transparent text-white">Close Time</span>
                                     </div>
-                                    <input type="text" class="datetimepicker form-control text-center" name="satCloseHour" id="satCloseHour" value="{{ saturday.to_hour }}"/>
+                                    <input type="text" class="datetimepicker form-control text-center" name="satCloseHour" id="satCloseHour" value="{{ saturday.to_hour|time:"H:i" }}"/>
                                 </div>
                                 </div>
                             </div>

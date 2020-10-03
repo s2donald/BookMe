@@ -39,6 +39,7 @@ urlpatterns = [
     url(r'galupload/$', views.galImageUpload, name='galleryupload'),
     url(r'imageuploads/$', views.headerImageUploads, name='imageuploads'),
     url(r'imageupload/$', views.headerImageUpload, name='imageupload'),
+    url(r'profileimg/$', views.profileImageUpload, name='profileimg'),
     url(r'file-upload/$', views.fileUploadView, name='upload'),
     url(r'signup/$', views.signupViews, name='bizadminsignup'),
     url(r'logout/$', views.LogoutView, name='bizadminlogout'),

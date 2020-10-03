@@ -72,7 +72,6 @@ class bookingTimes(View):
         duration_hour = Services.objects.get(pk=s_id).duration_hour
         duration_minute = Services.objects.get(pk=s_id).duration_minute
         is_auth = request.user.is_authenticated
-
         if open_hours.is_closed==False:
             slist = list(time_slots(b_open,b_close,interval, duration_hour, duration_minute, year, month, day, company))
             # appslot = list(appointmentValid(slist, duration_hour, duration_minute, len(slist)))
@@ -131,15 +130,13 @@ class createAppointment(View):
             # province = user.province
             # city = user.city
             if Bookings.objects.filter(company=company, start=start, end=end).count()<1:
-                booking = Bookings.objects.create(user=user,service=service, company=company,
-                                                start=start, end=end, price=price)
+                booking = Bookings.objects.create(user=user,service=service, company=company,start=start, end=end, price=price)
                 booking.save()
                 if not Clients.objects.filter(company=company,email=user.email, first_name=user.first_name,last_name=user.last_name,phone=user.phone).exists():
-                    guest = Clients.objects.create(first_name=user.first_name,last_name=user.last_name,phone=user.phone,email=user.email)
+                    guest = Clients.objects.create(company=company,first_name=user.first_name,last_name=user.last_name,phone=user.phone,email=user.email)
                     guest.save()
                     company.clients.add(guest)
                     company.save()
-                company.save()
                 good = True
             else:
                 good = False

@@ -14,7 +14,6 @@ from business.forms import AddCompanyForm, AddServiceForm, UpdateServiceForm, Bo
 from django.forms import inlineformset_factory
 from django.views import View
 from slugify import slugify
-
 from .forms import MainPhoto
 
 # Create your views here.
@@ -124,21 +123,21 @@ def completeViews(request):
             objs[5].is_closed = fri_closed
             objs[6].is_closed = sat_closed
 
-            objs[0].from_hour = sun_from
-            objs[1].from_hour = mon_from
-            objs[2].from_hour = tues_from
-            objs[3].from_hour = wed_from
-            objs[4].from_hour = thurs_from
-            objs[5].from_hour = fri_from
-            objs[6].from_hour = sat_from
+            objs[0].from_hour = datetime.strptime(sun_from,"%I:%M %p")
+            objs[1].from_hour = datetime.strptime(mon_from,"%I:%M %p")
+            objs[2].from_hour = datetime.strptime(tues_from,"%I:%M %p")
+            objs[3].from_hour = datetime.strptime(wed_from,"%I:%M %p")
+            objs[4].from_hour = datetime.strptime(thurs_from,"%I:%M %p")
+            objs[5].from_hour = datetime.strptime(fri_from,"%I:%M %p")
+            objs[6].from_hour = datetime.strptime(sat_from,"%I:%M %p")
 
-            objs[0].to_hour = sun_to
-            objs[1].to_hour = mon_to
-            objs[2].to_hour = tues_to
-            objs[3].to_hour = wed_to
-            objs[4].to_hour = thurs_to
-            objs[5].to_hour = fri_to
-            objs[6].to_hour = sat_to
+            objs[0].to_hour = datetime.strptime(sun_to,"%I:%M %p")
+            objs[1].to_hour = datetime.strptime(mon_to,"%I:%M %p")
+            objs[2].to_hour = datetime.strptime(tues_to,"%I:%M %p")
+            objs[3].to_hour = datetime.strptime(wed_to,"%I:%M %p")
+            objs[4].to_hour = datetime.strptime(thurs_to,"%I:%M %p")
+            objs[5].to_hour = datetime.strptime(fri_to,"%I:%M %p")
+            objs[6].to_hour = datetime.strptime(sat_to,"%I:%M %p")
 
             OpeningHours.objects.bulk_update(objs,['is_closed','from_hour','to_hour'])
             for s in subcategory:
@@ -462,8 +461,8 @@ class saveBusinessHours(View):
         mon_from = request.POST['monOpenHour']
         mon_to = request.POST['monCloseHour']
         mon_closed = not request.POST.get('monOpen', False)
-        tues_from = request.POST['tuesCloseHour']
-        tues_to = request.POST['tuesOpenHour']
+        tues_from = request.POST['tuesOpenHour']
+        tues_to = request.POST['tuesCloseHour']
         tues_closed = not request.POST.get('tuesOpen', False)
         wed_from = request.POST['wedOpenHour']
         wed_to = request.POST['wedCloseHour']
@@ -495,22 +494,21 @@ class saveBusinessHours(View):
         objs[5].is_closed = fri_closed
         objs[6].is_closed = sat_closed
 
-        objs[0].from_hour = sun_from
-        objs[1].from_hour = mon_from
-        objs[2].from_hour = tues_from
-        objs[3].from_hour = wed_from
-        objs[4].from_hour = thurs_from
-        objs[5].from_hour = fri_from
-        objs[6].from_hour = sat_from
+        objs[0].from_hour = datetime.strptime(sun_from,"%I:%M %p")
+        objs[1].from_hour = datetime.strptime(mon_from,"%I:%M %p")
+        objs[2].from_hour = datetime.strptime(tues_from,"%I:%M %p")
+        objs[3].from_hour = datetime.strptime(wed_from,"%I:%M %p")
+        objs[4].from_hour = datetime.strptime(thurs_from,"%I:%M %p")
+        objs[5].from_hour = datetime.strptime(fri_from,"%I:%M %p")
+        objs[6].from_hour = datetime.strptime(sat_from,"%I:%M %p")
 
-        objs[0].to_hour = sun_to
-        objs[1].to_hour = mon_to
-        objs[2].to_hour = tues_to
-        objs[3].to_hour = wed_to
-        objs[4].to_hour = thurs_to
-        objs[5].to_hour = fri_to
-        objs[6].to_hour = sat_to
-
+        objs[0].to_hour = datetime.strptime(sun_to,"%I:%M %p")
+        objs[1].to_hour = datetime.strptime(mon_to,"%I:%M %p")
+        objs[2].to_hour = datetime.strptime(tues_to,"%I:%M %p")
+        objs[3].to_hour = datetime.strptime(wed_to,"%I:%M %p")
+        objs[4].to_hour = datetime.strptime(thurs_to,"%I:%M %p")
+        objs[5].to_hour = datetime.strptime(fri_to,"%I:%M %p")
+        objs[6].to_hour = datetime.strptime(sat_to,"%I:%M %p")
         OpeningHours.objects.bulk_update(objs,['is_closed','from_hour','to_hour'])
         data = {'good':True}
         return JsonResponse(data)
@@ -596,7 +594,7 @@ class updateserviceAPI(View):
 ## Adding the homepage views and all stuff required for the homepage
 from django.utils import timezone
 import pytz
-from datetime import timedelta
+from datetime import timedelta, datetime
 from django.db.models import Sum
 from decimal import Decimal
 @login_required
@@ -744,13 +742,34 @@ def headerImageUpload(request):
             image = Image.open(img)
             box = (x, y, w+x, h+y)
             cropped_image = image.crop(box)
-            resized_image = cropped_image.resize((500,500),Image.ANTIALIAS)
+            resized_image = cropped_image.resize((1600,900),Image.ANTIALIAS)
             thumb_io = BytesIO()
             resized_image.save(thumb_io, image.format)
             company.image.save(image.filename, ContentFile(thumb_io.getvalue()), save=False)
             company.save()
     
     return redirect(reverse('information', host='bizadmin'))
+
+@login_required
+def profileImageUpload(request):
+    if request.POST:
+        user = Account.objects.get(email=request.user)
+        img = request.FILES.get('imageFile')
+        x = Decimal(request.POST.get('x'))
+        y = Decimal(request.POST.get('y'))
+        w = Decimal(request.POST.get('width'))
+        h = Decimal(request.POST.get('height'))
+        if img:
+            image = Image.open(img)
+            box = (x, y, w+x, h+y)
+            cropped_image = image.crop(box)
+            resized_image = cropped_image.resize((200,200),Image.ANTIALIAS)
+            thumb_io = BytesIO()
+            resized_image.save(thumb_io, image.format)
+            user.avatar.save(image.filename, ContentFile(thumb_io.getvalue()), save=False)
+            user.save()
+    
+    return redirect(reverse('profile', host='bizadmin'))
 
 #For the gallery and photos main photo
 @login_required
@@ -808,6 +827,7 @@ def businessAmenitiesView(request):
     amenities = Amenities.objects.filter(company=company)
     return render(request,'bizadmin/businesspage/amenities.html',{'company':company, 'amenities':amenities})
 
+@login_required
 def businessHoursView(request):
     company = Company.objects.get(user=request.user)
     sunday = OpeningHours.objects.get(company=company, weekday=0)
@@ -894,17 +914,23 @@ def compinfoViews(request):
                     'fb_link':company.fb_link,'twitter_link':company.twitter_link,'instagram_link':company.instagram_link,'website_link':company.website_link,'phone':company.phone}
     updateform = UpdateCompanyForm(initial=initialVal)
     return render(request, 'bizadmin/companydetail/info/compinfo.html', {'company':company, 'updateform': updateform})
-
+    
+import re
 #This update form updates the company detail info
 class updateCompanyDetail(View):
     def post(self, request):
         data = json.loads(request.body)
         bname = data['name']
         email = data['email']
+        phone = data['phone']
+        regex= r'^\+?1?\d{9,15}$'
+        result = re.match(regex, phone)
         if not bname:
             return JsonResponse({'name_error':'You must include a business name'})
         if (request.user.email!=str(email)) and (Account.objects.filter(email=email).exists()):
             return JsonResponse({'email_error':'This email already exists!'})
+        if not result:
+            return JsonResponse({'phone_error':'This is not a valid phone number. Please try again'})
         return JsonResponse({'good':'we good'})
 
 class saveCompanyDetail(View):

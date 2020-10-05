@@ -301,36 +301,6 @@
         
     });
 
-    businessemail.addEventListener('keyup', (e) =>{
-        const businessemailVal = e.target.value;
-        businessemail.classList.remove("has-danger");
-        businessemail.classList.add("has-success");
-        feedBackEmail.style.display="none";
-            $.ajax({
-                url: "{% host_url 'updateform' host 'bizadmin' %}",
-                data: JSON.stringify({email: businessemailVal, name:'test'}),
-                type: "POST",
-                dataType: 'json',
-                headers:{
-                    "X-CSRFToken": csrftoken
-                },
-                success: function (data) {
-                    if (data.email_error) {
-                        businessemail.classList.remove("has-success");
-                        businessemail.classList.add("has-danger");
-                        feedBackEmail.style.display="block";
-                        feedBackEmail.innerHTML=`<p style="color:red!important;">${data.email_error}</p>`
-                    }
-                    else {
-                        businessname.classList.remove("has-danger");
-                        feedBackEmail.style.display="none";
-                    }
-
-                },
-            });
-        
-    });
-
     businessphone.addEventListener('keyup', (e) =>{
         const businessphoneVal = e.target.value;
         businessphone.classList.remove("has-danger");

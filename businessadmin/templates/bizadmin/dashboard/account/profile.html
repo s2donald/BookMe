@@ -3,6 +3,7 @@
 {% load hosts %}
 {% block linescript %}
 {% endblock linescript %}
+{% load crispy_forms_tags %}
 {% block activedetails%}active{%endblock%}
 {% block java %}
 
@@ -85,7 +86,7 @@
                             <a class="nav-link activate ml-0" href="{% host_url 'profile' host 'bizadmin'%}">Profile</a>
                             <a class="nav-link" href="{% host_url 'billing' host 'bizadmin'%}">Billing</a>
                             <a class="nav-link" href="{% host_url 'security' host 'bizadmin'%}">Security</a>
-                            <a class="nav-link" href="{% host_url 'profile' host 'bizadmin'%}">Notifications</a>
+                            <a class="nav-link" href="{% host_url 'notifications' host 'bizadmin'%}">Notifications</a>
                         </nav>
                         <hr class="mt-0 mb-4" />
                         <div class="row">
@@ -95,7 +96,7 @@
                                     <div class="card-header">Main Profile Photo</div>
                                     <div class="card-body text-center">
                                         <!-- Profile picture image-->
-                                        <img class="img-account-profile rounded-circle mb-2" height="300px" width="300px" src="{% if request.user.avatar %}{{ request.user.avatar.url }}{% else %}https://epicattorneymarketing.com/wp-content/uploads/2016/07/Headshot-Placeholder-1.png{% endif %}" alt="300x300" />
+                                        <img class="img-account-profile rounded-circle mb-2" width="300px" src="{% if request.user.avatar %}{{ request.user.avatar.url }}{% else %}https://epicattorneymarketing.com/wp-content/uploads/2016/07/Headshot-Placeholder-1.png{% endif %}" alt="300x300" />
                                         <!-- Profile picture help block-->
                                         <div class="small font-italic text-muted mb-4">JPG or PNG no larger than 5 MB</div>
                                         <!-- Profile picture upload button -->
@@ -113,36 +114,27 @@
                                 <div class="card mb-4">
                                     <div class="card-header">Account Details</div>
                                     <div class="card-body">
-                                        <form class="text-center" method="POST">
-                                            {% csrf_token %}
+                                        <form class="text-center" method="POST" id="accountUpdate">
+                                          
                                             <!-- Form Row-->
-                                            <div class="form-row text-left">
-                                                <!-- Form Group (first name)-->
-                                                <div class="form-group col-md-6">
-                                                    <label class="small mb-1" for="inputFirstName">First name</label>
-                                                    <input class="form-control" id="inputFirstName" type="text" placeholder="Enter your first name" value="{{ request.user.first_name }}" />
-                                                </div>
-                                                <!-- Form Group (last name)-->
-                                                <div class="form-group col-md-6">
-                                                    <label class="small mb-1" for="inputLastName">Last name</label>
-                                                    <input class="form-control" id="inputLastName" type="text" placeholder="Enter your last name" value="{{ request.user.last_name }}" />
-                                                </div>
-                                            </div>
-                                            <!-- Form Row        -->
-                                            <div class="form-row text-left">
-                                                <!-- Form Group (email address)-->
-                                                <div class="form-group col-md-6">
-                                                    <label class="small mb-1" for="inputEmailAddress"> Account Email Address</label>
-                                                    <input class="form-control" id="inputEmailAddress" type="email" placeholder="Enter your email address" value="{{ request.user.email }}" />
-                                                    <div class="invalid_email m-0 p-0" style="display:none; color:red!important;"></div>
-                                                </div>
-                                                <!-- Form Group (phone number)-->
-                                                <div class="form-group col-md-6">
-                                                    <label class="small mb-1" for="inputPhone">Personal Phone number</label>
-                                                    <input class="form-control" id="inputPhone" type="tel" placeholder="Enter your phone number" value="{{ request.user.phone }}" />
-                                                    <div class="invalid_phone m-0 p-0" style="display:none; color:red!important;"></div>
-                                                </div>
-                                            </div>
+                                            {% csrf_token %}
+                    <div class="row">
+                        <div class="col-md-6 text-left" id="fname">
+                            {{ personal_form.first_name|as_crispy_field }}
+                            
+                        </div>
+                        <div class="col-md-6 text-left" id="lname">
+                            {{ personal_form.last_name|as_crispy_field }}
+                        </div>
+                        <div class="col-md-12 text-left" id="pemail">
+                            {{ personal_form.email|as_crispy_field}}
+                            <div class="invalid_feedback m-0 p-0" style="display:none"></div>
+                        </div>
+                        <div class="col-md-12 text-left" id="pphone">
+                            {{ personal_form.phone|as_crispy_field}}
+                            <div class="invalid_phone m-0 p-0" style="display:none; color:red;"></div>
+                        </div>
+                    </div>
                                             <!-- Save changes button-->
                                             <button class="btn btn-primary text-center" type="button" id="savePers">Save changes</button>
                                         </form>
@@ -210,9 +202,9 @@
                                     });
                                 }
                             }
-                var businessemail = document.getElementById('inputEmailAddress')
+                var businessemail = document.getElementById('id_email')
 
-                const feedBackEmail = document.querySelector('.invalid_email');
+                const feedBackEmail = document.querySelector('.invalid_feedback');
                 const feeBackPhone = document.querySelector('.invalid_phone')
                 businessemail.addEventListener('keyup', (e) =>{
                 const businessemailVal = e.target.value;
@@ -238,16 +230,16 @@
                                 feedBackEmail.style.display="none";
                             }
 
-                                },
-                            });
-                        
+                        },
                     });
-                var businessphone = document.getElementById('inputPhone')
+                        
+                });
+                var businessphone = document.getElementById('id_phone')
                 businessphone.addEventListener('keyup', (e) =>{
-                const businessphoneVal = e.target.value;
-                businessphone.classList.remove("has-danger");
-                businessphone.classList.add("has-success");
-                feedBackEmail.style.display="none";
+                    const businessphoneVal = e.target.value;
+                    businessphone.classList.remove("has-danger");
+                    businessphone.classList.add("has-success");
+                    feedBackEmail.style.display="none";
                     $.ajax({
                         url: "{% host_url 'updateform' host 'bizadmin' %}",
                         data: JSON.stringify({email: "{{ request.user.email }}", name:'test', phone:businessphoneVal}),
@@ -270,7 +262,30 @@
 
                         },
                     });
-                
-            });
+                });
+                submitBtn = document.querySelector('#savePers');
+                submitBtn.addEventListener('click', (e)=>{
+                    $.ajax({
+                        data: $('#accountUpdate').serialize(),
+                        type: "post",
+                        url: "{% host_url 'accountCheck' host 'bizadmin' %}",
+                        success: function(data){
+                            if(data.errors){
+                                Swal.fire({
+                                    title:'There was an error in your form. We were unable to save the changes.',
+                                    icon: 'error',
+                                });
+                            }
+                            if(data.good){
+                                Swal.fire({
+                                    title:'Your information has been saved',
+                                    icon: 'success',
+                                });
+                            }
+
+                        }
+                    });
+                    return false;
+                });
 </script>
 {% endblock %}

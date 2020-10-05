@@ -57,7 +57,7 @@
                             <a id="loginGibeleForm" class="btn btn-outline-primary mb-1">Log into your Gibele Account</a>
                         </div>
                         <div class="col-md-12" id="pphone">
-                            <a class="btn btn-primary mb-1 fb">Sign in using Facebook</a>
+                            <a class="btn btn-primary mb-1 fb" href="{% host_url 'social:begin' "facebook" host 'bookingurl' slug=company.slug %}">Sign in using Facebook</a>
                         </div>
                         
                     </div>
@@ -82,8 +82,8 @@
                         <div class="col-md-12" id="pphone">
                             <a id="toguestForm" class="btn btn-outline-primary mb-1">Book appointment as a guest</a>
                         </div>
-                        <div class="col-md-12" id="pphone">
-                            <a class="btn btn-primary mb-1 fb">Sign in using Facebook</a>
+                        <div class="col-md-12">
+                            <a class="btn btn-primary mb-1" id="facebookAuth" href="{% host_url 'social:begin' "facebook" host 'bookingurl' slug=company.slug %}">Sign in using Facebook</a>
                         </div>
                         
                     </div>
@@ -249,7 +249,7 @@
                     });
                 });
             });
-                    
+
             guestFormGib.addEventListener('click',function(e){
                 authenticateform.classList.remove("d-none")
                 authGibeleForm.classList.add("d-none")

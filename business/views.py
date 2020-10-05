@@ -18,7 +18,22 @@ import json
 from django.views import View
 
 def privacyViews(request):
-    return render(request, 'legal/privacypolicy.html')
+    category = None
+    categories = Category.objects.all()
+    subcategories = SubCategory.objects.all()
+    form = SearchForm()
+    search = homeSearchForm()
+    user = request.user
+    return render(request, '/legal/privacypolicy.html', {'user':user,'search':search, 'category':category, 'categories':categories, 'subcategories':subcategories,'form':form})
+
+def tosViews(request):
+    category = None
+    categories = Category.objects.all()
+    subcategories = SubCategory.objects.all()
+    form = SearchForm()
+    search = homeSearchForm()
+    user = request.user
+    return render(request, 'legal/termsofservice.html')
 
 def allsearch(request):
     category = None
@@ -59,6 +74,8 @@ def allsearch(request):
                 results = results.filter(subcategory=subcat).order_by('business_name')
             if not cat and not subcat:    
                 results = results.order_by('business_name')
+            
+            results = results.filter(status='published')
             total = results.count()
             paginator = Paginator(results, 6)
             page = request.GET.get('page')
@@ -68,7 +85,6 @@ def allsearch(request):
                 results = paginator.page(1)
             except EmptyPage:
                 results = paginator.page(paginator.num_pages)
-                print(Search)
             return render(request, 'business/company/list.html',{'total':total,'page':page,'category':category, 'categories':categories ,'companies':results, 'name': Search,'form':form,'subcategories':subcategories})
     return render(request, 'business/company/list.html')
 
@@ -105,6 +121,7 @@ def company_list(request, category_slug=None, company_slug=None, tag_slug=None):
         companies = companies.filter(tags__in=[tag])
     
     form = SearchForm()
+    companies = companies.filter(status='published')
     total = companies.count()
     paginator = Paginator(companies, 6)
     page = request.GET.get('page')

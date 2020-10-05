@@ -1,8 +1,9 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .forms import BusinessRegistrationForm, UpdateCompanyForm, AddClientForm
+from .forms import BusinessRegistrationForm, UpdateCompanyForm, AddClientForm, AddNotesForm
 from django.contrib.auth.decorators import login_required
 from business.models import Company, SubCategory, OpeningHours, Services, Gallary, Amenities, Clients
 from account.models import Account
+from account.forms import UpdatePersonalForm
 from account.tasks import bizaddedEmailSent
 from consumer.models import Bookings, Reviews
 from account.forms import AccountAuthenticationForm
@@ -242,18 +243,44 @@ def profileViews(request):
         if user.on_board:
             company = Company.objects.get(user=user)
             image_form = MainPhoto()
-            return render(request, 'bizadmin/dashboard/account/profile.html',{'company':company, 'image_form':image_form})
+            personal_data = {'first_name': user.first_name, 
+                    'last_name': user.last_name, 
+                    'email':user.email, 
+                    'phone':user.phone}
+            personal_form = UpdatePersonalForm(initial=personal_data)
+            return render(request, 'bizadmin/dashboard/account/profile.html',{'company':company, 'image_form':image_form, 'personal_form':personal_form})
         else:
             return redirect(reverse('completeprofile', host='bizadmin'))
     else:
         loginViews(request)
     
+class personDetailSave(View):
+    def post(self, request):
+        personal_form = UpdatePersonalForm(request.POST, instance=request.user)
+        acct = get_object_or_404(Account, email=request.user)
+        if personal_form.is_valid():
+            acct.first_name = personal_form.cleaned_data.get('first_name')
+            acct.last_name = personal_form.cleaned_data.get('last_name')
+            acct.email = personal_form.cleaned_data.get('email')
+            acct.phone = personal_form.cleaned_data.get('phone')
+            acct.save()
+            return JsonResponse({'good':"The data was good"})
+        else:
+            return JsonResponse({'errors':'There were errors'})
 
 def profileBillingViews(request):
     return render(request,'bizadmin/dashboard/account/billing.html')
 
+@login_required()
 def profileSecurityViews(request):
-    return render(request,'bizadmin/dashboard/account/security.html')
+    company = get_object_or_404(Company, user=request.user)
+    return render(request,'bizadmin/dashboard/account/security.html', {'company':company})
+
+@login_required()
+def notifViews(request):
+    company = get_object_or_404(Company, user=request.user)
+    notesForm = AddNotesForm(initial={'notes':company.notes})
+    return render(request,'bizadmin/dashboard/account/notification.html', {'company':company, 'notesForm':notesForm})
 
 @login_required
 def scheduleView(request):
@@ -858,6 +885,38 @@ class removeTagAPI(View):
         if not tag:
             return JsonResponse({'email_error':'You must choose a subdomain or else a random one will be chosen.','email_valid':True})
         return JsonResponse({'tags':'works'})
+from django.contrib.auth import update_session_auth_hash
+class updatePassword(View):
+    def post(self, request):
+        currPass = request.POST.get('currentPassword')
+        newPass = request.POST.get('newPassword')
+        confirmPass = request.POST.get('confirmPassword')
+        user = get_object_or_404(Account, email=request.user)
+        if not user.check_password(currPass):
+            return JsonResponse({'badresponse':'We could not verify your password. Please try again.'})
+        
+        if not (newPass==confirmPass):
+            return JsonResponse({'badresponse':'Your passwords don\'t match.'})
+
+        if len(newPass)<8 or not any(char.isalpha() for char in newPass) or not any(char.isdigit() for char in newPass):
+            return JsonResponse({'badresponse': 'Your password must have atleast 8 characters, 1 digit and 1 letter.'})
+        
+        user.set_password(newPass)
+        user.save()
+        update_session_auth_hash(request, user)
+        return JsonResponse({'good':'We have changed your password successfully!'})
+
+class changePrivateView(View):
+    def post(self, request):
+        data = json.loads(request.body)
+        privacy = data['private']
+        company = get_object_or_404(Company, user=request.user)
+        if privacy:
+            company.status='draft'
+        else:
+            company.status='published'
+        company.save()
+        return JsonResponse({'good':'We updated your privacy settings'})
 
 import string
 class addAmenityAPI(View):
@@ -914,7 +973,7 @@ def compinfoViews(request):
                     'fb_link':company.fb_link,'twitter_link':company.twitter_link,'instagram_link':company.instagram_link,'website_link':company.website_link,'phone':company.phone}
     updateform = UpdateCompanyForm(initial=initialVal)
     return render(request, 'bizadmin/companydetail/info/compinfo.html', {'company':company, 'updateform': updateform})
-    
+
 import re
 #This update form updates the company detail info
 class updateCompanyDetail(View):

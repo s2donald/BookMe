@@ -9,6 +9,7 @@ urlpatterns = [
 
     url(r'dashboard/schedule/$', views.scheduleView, name='schedule'),
     url(r'dashboard/profile/security/$',views.profileSecurityViews, name='security'),
+    url(r'dashboard/profile/notifs/$', views.notifViews, name='notifications'),
     url(r'dashboard/profile/billing/$',views.profileBillingViews, name='billing'),
     url(r'dashboard/profile/$',views.profileViews, name='profile'),
     url(r'detail/info/', views.compinfoViews, name='information'),
@@ -28,11 +29,13 @@ urlpatterns = [
     url(r'updatec/(?P<pk>\d+)/$', views.updateclientAPI.as_view(), name='updateclient'),
 
     url(r'reviews/$', views.reviewListView, name='reviewlist'),
+    url(r'privatetoggle/$', views.changePrivateView.as_view(), name='changePrivate'),
 
     url(r'onboarding/check/subdomain/$', views.subdomainCheck.as_view(), name='subdomain'),
     url(r'onboarding/$', views.completeViews, name='completeprofile'),
     url(r'^updatecompanyform/$',views.updateCompanyDetail.as_view(), name='updateform'),
-    url(r'^companyformsave/$', views. saveCompanyDetail.as_view(), name='saveDetailForm'),
+    url(r'^companyformsave/$', views.saveCompanyDetail.as_view(), name='saveDetailForm'),
+    url(r'^accountFormSave/$', views.personDetailSave.as_view(), name='accountCheck'),
     url(r'home/$', views.homepageViews, name='home'),
 
     url(r'deletegal/$', views.deleteGalPic.as_view(), name='deletegalpic'),
@@ -52,6 +55,8 @@ urlpatterns = [
     url(r'^removetag/$', views.removeTagAPI.as_view(), name='removetag'),
     url(r'^addbusinessh/$',views.saveBusinessHours.as_view(), name='businessHourSave'),
 
+
+    url(r'^updatedpass/$', views.updatePassword.as_view(), name='updatepassword'),
     url(r'^pricing/$', views.pricingViews, name='pricingBusiness'),
     url(r'^$', views.businessadmin, name='bizadminmain'),
 

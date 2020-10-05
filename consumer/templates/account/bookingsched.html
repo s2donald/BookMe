@@ -1,5 +1,7 @@
 {% extends 'account/user_sidebar.html' %}
 {% load static %}
+{% load hosts %}
+{% block bookingactive %}active{% endblock  %}
 {% block information %}
 <section class="py-5">
       <div class="container">
@@ -7,18 +9,19 @@
         {% for future in futureBookings %}
             <div class="col-sm-12 mb-5 hover-animate">
               <div class="card h-100 border-0 shadow">
-
+                {% with company=future.company %}
                 <div class="card-body">
                   <div class="card-img-overlay-top d-flex justify-content-between align-items-center">
-                    <div class="badge badge-transparent badge-pill px-3 py-2">{{ future.company.category.name }}</div>
+                    <div class="badge badge-transparent badge-pill px-3 py-2">{{ company.category.name }}</div>
                   </div>
                   <h2 class="text-shadow">{{ future.service }}</h4>
-                  <h4 class="text-shadow">{{ future.company }}</h4>
+                  <h4 class="text-shadow">{{ company }}</h4>
                   <p class="text-sm text-muted mb-3"> Appointment Time: {{ future.start }}</p>
                 </div>
                 <div class="card-body text-center">
-                    <a class="btn btn-outline-primary" href="#">Book Again</a>
+                    <a class="btn rounded-pill btn-warning" href="{% host_url 'bookingurls' host 'bookingurl' slug=company.slug %}">Book Again</a>
                 </div>
+                {% endwith %}
               </div>
             </div>
         {% empty %}
@@ -33,7 +36,7 @@
             
                     <div class="col-sm-12 mb-5 hover-animate">
                     <div class="card h-100 border-0 shadow">
-
+                        {% with company=past.company %}
                         <div class="card-body">
                         <div class="card-img-overlay-top d-flex justify-content-between align-items-center">
                             <div class="badge badge-transparent badge-pill px-3 py-2">{{ past.company.category.name }}</div>
@@ -44,8 +47,9 @@
                         </div>
                         <div class="card-body text-center">
                             <a class="btn btn-outline-primary">Write a review</a>
-                            <a class="btn btn-outline-primary" href="#">Book Again</a>
+                            <a class="btn rounded-pill btn-warning" href="{% host_url 'bookingurls' host 'bookingurl' slug=company.slug %}">Book Again</a>
                         </div>
+                        {% endwith %}
                     </div>
                     </div>
 

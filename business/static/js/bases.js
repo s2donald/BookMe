@@ -124,8 +124,8 @@ $(document).ready(function (){
         },
         // Navigation arrows
         navigation: {
-            nextEl: '#homeNext',
-            prevEl: '#homePrev',
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
         },
     });    
 

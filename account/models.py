@@ -7,27 +7,23 @@ from django.shortcuts import reverse
 # Create your models here.
 
 class MyAccountManager(BaseUserManager):
-    def create_user(self, email, phone, password=None):
+    def create_user(self, email, password=None, avatar=None):
         if not email:
             raise ValueError("Users must have an email address")
-
-        if not phone:
-            raise ValueError("Users must have a phone number")
 
 
         user = self.model(
             email = self.normalize_email(email),
-            phone=phone
         )
+        user.avatar = avatar
         user.set_password(password)
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, email, phone, password=None):
+    def create_superuser(self, email, password=None):
         user = self.create_user(
             email = self.normalize_email(email),
             password=password,
-            phone=phone
         )
         user.is_admin = True
         user.is_staff = True
@@ -41,7 +37,7 @@ class Account(AbstractBaseUser):
     first_name = models.CharField(verbose_name="First Name", max_length=30, unique=False,null=True, blank=True)
     last_name = models.CharField(verbose_name="Last Name", max_length=30, unique=False, null=True, blank=True)
     phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$', message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
-    phone = models.CharField("Phone Number",validators=[phone_regex], max_length=17, unique=True)
+    phone = models.CharField("Phone Number",validators=[phone_regex], max_length=17, unique=True, null=True, blank=True)
     address = models.CharField(max_length=200)
     postal = models.CharField(max_length=35)
     province = models.CharField(max_length=35)

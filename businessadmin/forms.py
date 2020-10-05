@@ -111,3 +111,12 @@ class AddClientForm(forms.ModelForm):
     class Meta:
         model = Clients
         fields = ('first_name','last_name','phone','email','address','province','postal','city')
+
+class AddNotesForm(forms.ModelForm):
+    notes = forms.CharField(label='', max_length=250,required=False, widget=forms.Textarea(attrs={'rows':4,'cols':20}))
+    confirm_text = forms.CharField(label='', max_length=250,required=False, widget=forms.Textarea(attrs={'rows':4,'cols':20}))
+    confirm_email = forms.CharField(label='', max_length=250,required=False, widget=forms.Textarea(attrs={'rows':4,'cols':20}))
+    class Meta:
+        model = Company
+        fields = ('notes',)
+

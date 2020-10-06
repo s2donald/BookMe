@@ -40,7 +40,7 @@
       <div class="container">
 
         <div class="row">
-          <div class="col-lg-7">
+          <div class="col-lg-7 order-1">
             <div class="text-block">
             <div class="d-flex justify-content-between align-items-start flex-column flex-lg-row align-items-lg-end">
             <div class="text-black mb-4 mb-lg-0">
@@ -76,28 +76,6 @@
                 <h3 class="mb-3">Location</h3>
                 <div id="map"></div>
                 <hr>
-            </div>
-            
-            <div class="text-block">
-              <!-- Gallery-->
-              <h3 class="mb-4">Gallery</h3>
-              {% if photos %}
-                <div class="row gallery ml-n1 mr-n1">
-                  <div class="swiper-container gallery-slider">
-                    <!-- Additional required wrapper-->
-                    <div class="swiper-wrapper" id="photos">
-                  </div>
-                      <div class="swiper-pagination swiper-pagination-white"></div>
-                      <div class="swiper-button-prev swiper-button-white circle-slide"></div>
-                      <div class="swiper-button-next swiper-button-white circle-slide"></div>
-                  </div>
-                  </div>
-              
-              {% else %}
-
-              <h6>This business has not uploaded any gallary images yet.</h6>
-
-              {% endif %}
             </div>
             <!-- Amenities-->
             {% if amenities %}
@@ -141,7 +119,7 @@
             </div>
             <hr>
           </div>
-          <div class="col-lg-5">
+          <div class="col-lg-5 order-2 order-lg-3 order-sm-3">
             <div class="pl-xl-4">
               <!-- Opening Hours      -->
               <div class="card border-0 shadow mb-5">
@@ -259,13 +237,36 @@
               </div>
             </div>
           </div>
+
+          <div class="text-block col-lg-12 order-3">
+              <!-- Gallery-->
+              <h3 class="mb-4">Gallery</h3>
+              {% if photos %}
+                <div class="row gallery ml-n1 mr-n1">
+                  <div class="swiper-container gallery-slider">
+                    <!-- Additional required wrapper-->
+                    <div class="swiper-wrapper" id="photos">
+                  </div>
+                      <div class="swiper-pagination swiper-pagination-white"></div>
+                      <div class="swiper-button-prev swiper-button-white circle-slide"></div>
+                      <div class="swiper-button-next swiper-button-white circle-slide"></div>
+                  </div>
+                  </div>
+              
+              {% else %}
+
+              <h6>This business has not uploaded any gallary images yet.</h6>
+
+              {% endif %}
+          </div>
+
+
         </div>
       </div>
     </section>
-
   {% if similar_companies %}
     <div class="py-6 bg-gray-100"> 
-      <div class="container">
+      <div class="container mt-3">
         <h5 class="mb-0">Similar places</h5>
         <p class="subtitle text-sm text-primary mb-4">You may also like</p>
         <!-- Slider main container-->

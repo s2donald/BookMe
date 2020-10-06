@@ -1,9 +1,9 @@
 {% extends 'business/base.html' %}
 {% load static %}
 {% load hosts %}
-
+{% block hidesearch %} d-none {% endblock %}
 {% block content %}
-    <section class="hero-home" style="background-image:url({% static 'img/background-home.jpg' %});background-color: #cccccc;">
+    <section class="hero-home" style="background: linear-gradient(180deg, #ff5f6d 0%, rgba(0,0,0,0) 100%);">
       <div class="container z-index-20">
         <div class="row">
           <div class="col-xl-12">
@@ -71,11 +71,11 @@
             </div>
             <div class="col-md-12 col-sm-12 cardio">
                 <div class="card text-center">
-                    <object height="300px" width="100%" id="barber-svg-id" data="{% static 'css/svg-img/homes.svg' %}" type="image/svg+xml"></object>
+                    <object height="300px" width="100%" id="home-svg-id" data="{% static 'css/svg-img/homes.svg' %}" type="image/svg+xml"></object>
                     <div class="card-body">
                         <h4 class="card-title">Home Services</h4>
                         <p class="card-text">If you are looking to renovate your home, look no further! Book an appointment with one of our partners to discuss your needs.</p>
-                        <a href="business-services/" class="btn btn-outline-primary">Find Home Services Near You</a>
+                        <a href="home-services/" class="btn btn-outline-primary">Find Home Services Near You</a>
                     </div>
                 </div>
             </div>

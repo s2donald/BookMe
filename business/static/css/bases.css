@@ -253,7 +253,7 @@ hr.hrwhite{
 }
 .header-font{
     font-family: 'Paytone One', sans-serif;
-    color:#fff;
+    color: whitesmoke;
     font-size:75px !important;
 }
 
@@ -603,7 +603,7 @@ button:active,
     background: linear-gradient(90deg, #ff5f6d 0%,#ffc371 100%);
 }
 .bg-light {
-    background: linear-gradient(90deg, #ff5f6d 0%, #ffc371 100%);
+    background: linear-gradient(90deg, #ff5f6d 0%, #ff5f6d 100%);
 }
 .bg-dark {
     background: #1b1b1b;
@@ -940,7 +940,7 @@ footer {
 #sidebar {
     min-width: 260px;
     max-width: 260px;
-    background: #e14eca;
+    background: #0772db;
     color: #fff;
     transition: all 0.3s;
 }
@@ -1006,7 +1006,7 @@ footer {
 
 #sidebar .sidebar-header {
     padding: 20px;
-    background: #e03eca;
+    background: #0772db;
 }
 
 #sidebar .sidebar-header strong {
@@ -1016,7 +1016,7 @@ footer {
 
 #sidebar ul.components {
     padding: 20px 0;
-    border-bottom: 1px solid #e14eca;
+    border-bottom: 1px solid #0772db;
 }
 
 #sidebar ul li a {
@@ -1038,7 +1038,7 @@ footer {
 #sidebar ul li.active>a,
 a[aria-expanded="true"] {
     color: #fff;
-    background: #e03eca;
+    background: #00ADF3;
 }
 
 a[data-toggle="collapse"] {
@@ -1323,7 +1323,8 @@ figure {
   
   @media (min-width: 768px) {
     .hero-home {
-      min-height: 600px;
+      min-height: 400px;
+      padding-bottom: 200px;
     }
   }
 
@@ -1700,6 +1701,14 @@ figure {
     font-weight: bold;
   }
 
+  .licolorblue {
+    color: #0772db;
+    font-weight: bold;
+  }
+  a.licolorblue:hover, a.licolorblue:focus {
+      color: #00ADF3 !important;
+  }
+
   /* .btn.btn-primary{
     border-radius: 10px;
     background: var(--gradient-color);
@@ -1728,24 +1737,24 @@ figure {
 
 .btn.btn-info{
   border-radius: 10px;
-  background: linear-gradient(90deg, #ba54f5 0%, #e14eca 100%);
+  background: linear-gradient(90deg, #0772db 0%, #0772db 100%);
   background-clip: padding-box;
   color: whitesmoke;
   transition: background .6 ease;
-  border-color: linear-gradient(90deg, #ba54f5 0%, #e14eca 100%);
+  border-color: linear-gradient(90deg, #0772db 0%, #0772db 100%);
   
 }
 .btn.btn.btn-info:hover{
   background: whitesmoke;
   background-clip: padding-box;
   color: black;
-  border-color: #ff69b4;
+  border-color: #0772db;
 }
 .btn.btn-info::after{
   position:absolute;
   top:-2px; left:-2px;
   bottom: -2px; right: -2px;
-  background: linear-gradient(90deg, #ba54f5 0%, #e14eca 100%);
+  background: linear-gradient(90deg, #0772db 0%, #0772db 100%);
   content:'';
   z-index:-1;
   border-radius: 10px;

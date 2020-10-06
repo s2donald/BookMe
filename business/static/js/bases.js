@@ -288,7 +288,8 @@ $(document).ready(function (){
                 slidesPerColumn: 1,
             },
             565: {
-                slidesPerView: 1
+                slidesPerView: 1,
+                slidesPerColumn: 1,
             }
         },
         

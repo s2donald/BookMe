@@ -172,11 +172,14 @@ class LoginView(View):
                 login(request, user)
                 return JsonResponse({'result':True})
             else:
-                print('hello')
                 return JsonResponse({'result':False})
         else:
             return JsonResponse({'result':False})
         
     def get(self, request):
+        return JsonResponse({})
+
+class facebookLogin(View):
+    def post(self, request):
         return JsonResponse({})
 

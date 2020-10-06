@@ -165,6 +165,7 @@ class Company(models.Model):
     cancellation = models.IntegerField(choices=cancellationtime,default='0')
     interval = models.IntegerField(choices=INTERVAL, default=1)
     image = models.ImageField(upload_to=get_user_image_folder, blank=True)
+    emailReminders = models.BooleanField(default=True)
     users_like = models.ManyToManyField(Account, related_name='companies_liked', blank=True)
     available = models.BooleanField(default=True)
     created = models.DateTimeField(auto_now_add=True)

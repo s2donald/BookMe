@@ -50,16 +50,13 @@
                                 <div class="invalid_phone m-0 p-0" style="display:none; color:red;"></div>
                             </div>
                             <div class="col-md-12" id="subbtndiv">
-                                <button id="submitGuestForm" type="submit" class="btn btn-outline-primary mb-1 subbtn">Book as a guest</button>
+                                <button id="submitGuestForm" type="submit" class="btn btn-outline-primary subbtn">Book as a guest</button>
                             </div>
                         </div>
                         <div class="col-md-12" id="pphone">
-                            <a id="loginGibeleForm" class="btn btn-outline-primary mb-1">Log into your Gibele Account</a>
+                            <a id="loginGibeleForm" class="btn btn-pill btn-warning mb-1">Log into your Gibele Account</a>
                         </div>
-                        <div class="col-md-12" id="pphone">
-                            <a class="btn btn-primary mb-1 fb" href="{% host_url 'social:begin' "facebook" host 'bookingurl' slug=company.slug %}">Sign in using Facebook</a>
-                        </div>
-                        
+                        <div class="fb-login-button mb-1" data-size="large" data-button-type="login_with" data-layout="rounded" data-auto-logout-link="false" data-use-continue-as="true" data-width=""></div>
                     </div>
                 </form>
 
@@ -75,17 +72,14 @@
                                 {{ gibele_form|crispy }}
                             </div>
                             <div class="col-md-12">
-                                <button id="signInGibeleForm" type="submit" class="btn btn-outline-primary mb-1">Login</button>
+                                <button id="signInGibeleForm" type="submit" class="btn btn-pill btn-warning mb-1">Login</button>
                             </div>
                            
                         </div>
                         <div class="col-md-12" id="pphone">
                             <a id="toguestForm" class="btn btn-outline-primary mb-1">Book appointment as a guest</a>
                         </div>
-                        <div class="col-md-12">
-                            <a class="btn btn-primary mb-1" id="facebookAuth" href="{% host_url 'social:begin' "facebook" host 'bookingurl' slug=company.slug %}">Sign in using Facebook</a>
-                        </div>
-                        
+                        <div class="fb-login-button" data-size="large" data-button-type="login_with" data-layout="rounded" data-auto-logout-link="false" data-use-continue-as="true" data-width=""></div>
                     </div>
                 </form>
 
@@ -250,11 +244,15 @@
                 });
             });
 
+            
+
             guestFormGib.addEventListener('click',function(e){
                 authenticateform.classList.remove("d-none")
                 authGibeleForm.classList.add("d-none")
                 authenticateform.reset()
             });
+
+            
         }
         else{
             bookingCreation();
@@ -267,7 +265,6 @@
     });
     function guestbookingCreation(){
         let csrftoken = getCookie('csrftoken');
-
         const first_name = document.querySelector('#id_first_name')
         const last_name = document.querySelector('#id_last_name')
         const emailGuest = document.querySelector('#id_email')
@@ -286,7 +283,6 @@
                         .then((data) => {
                             const confheader3 = document.querySelector(".confheader3")
                             if (data.good){
-                                console.log('wewe')
                                 feedbackConf.classList.remove("d-none");
                                 confheader3.innerHTML = 'Confirmed Booking!'
                                 bookingtimes.innerHTML = `<p style="font-size:25px;">Thank you for setting an appointment with us! Your appointment with <strong>{{ company.business_name }}</strong> will take place on <strong>`+ data.date +`</strong> at <strong>`+data.time+`</strong> for a <strong>{{ service.name }}</strong>.</p><p style="font-size:25px;">We have sent the additional details of your service to your email.</p>`
@@ -327,8 +323,6 @@
                 }
             });
     }
-    
-    
 </script>
 
 {% endblock %}

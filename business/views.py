@@ -24,7 +24,7 @@ def privacyViews(request):
     form = SearchForm()
     search = homeSearchForm()
     user = request.user
-    return render(request, '/legal/privacypolicy.html', {'user':user,'search':search, 'category':category, 'categories':categories, 'subcategories':subcategories,'form':form})
+    return render(request, 'legal/privacypolicy.html', {'user':user,'search':search, 'category':category, 'categories':categories, 'subcategories':subcategories,'form':form})
 
 def tosViews(request):
     category = None
@@ -33,7 +33,7 @@ def tosViews(request):
     form = SearchForm()
     search = homeSearchForm()
     user = request.user
-    return render(request, 'legal/termsofservice.html')
+    return render(request, 'legal/termsofservice.html', {'user':user,'search':search, 'category':category, 'categories':categories, 'subcategories':subcategories,'form':form})
 
 def allsearch(request):
     category = None

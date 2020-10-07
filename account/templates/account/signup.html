@@ -1,5 +1,6 @@
 {% extends 'business/base.html' %}
 {% load static %}
+{% load hosts %}
 {% block content %}
 {% load crispy_forms_tags %}
 <div class="container-fluid">
@@ -37,12 +38,13 @@
                                 {{ user_form.password2|as_crispy_field }}
                             </div>
                         </div>
+                        <p class="text-center">By signing up you agree to our <a class="licolorblue" href="{% host_url 'business:terms' host 'www' %}">Terms</a> &amp; <a class="licolorblue" href="{% host_url 'business:privacy' host 'www' %}">Privacy</a> </p>
                         <!-- Form Group (create account submit)-->
                         <div class="form-group mt-1 mb-0 text-center"><button class="btn btn-outline-primary text-center" type="submit">Create my account</button></div>
                     </form>
                 </div>
                 <div class="card-footer text-center">
-                    <div class="small"><a class="licolor" href="{% url 'login' %}">Have an account? Go login</a></div>
+                    <div class="small"><a class="licolorblue" href="{% url 'login' %}">Have an account? Go login</a></div>
                 </div>
             </div>
         </div>

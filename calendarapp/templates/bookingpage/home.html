@@ -1,6 +1,13 @@
 {% extends 'bookingpage/bookingpage.html'%}
 {% load hosts %}
 {% block booking %}
+<script>
+    {% if company.notes %}
+        Swal.fire({
+            title:'{{ company.notes }}'
+        });
+    {% endif %}
+</script>
 <div class="text-block dark-overlay">
     {% if services %}
         <h2>All Services</h2>
@@ -20,5 +27,4 @@
         {% endfor %}
     {% endif %}
 </div>
-
 {% endblock booking %}

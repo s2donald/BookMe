@@ -1,0 +1,140 @@
+{% extends 'bizadmin/index.html' %}
+{% load static %}
+{% load hosts %}
+{% load crispy_forms_tags %}
+{% block activedetails%}active{%endblock%}
+{% block businessadmin %}
+
+                    <!-- Main page content-->
+                    <div class="content">
+                        <div class="row">
+                        <div class="col-md-10 ml-auto mr-auto">
+                        <header class="page-header page-header-compact page-header-light mb-4">
+                        <div class="container">
+                            <div class="page-header-content">
+                                <div class="row align-items-center justify-content-between pt-3">
+                                    <div class="col-auto mb-3">
+                                        <h1 class="page-header-title">
+                                            Account Settings - Booking
+                                        </h1>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </header>
+                        <!-- Account page navigation-->
+                        <nav class="nav nav-borders">
+                            <a class="nav-link ml-0" href="{% host_url 'profile' host 'bizadmin'%}">Profile</a>
+                            <a class="nav-link" href="{% host_url 'billing' host 'bizadmin'%}">Billing</a>
+                            <a class="nav-link activate" href="{% host_url 'bookingSetting' host 'bizadmin' %}">Booking Settings</a>
+                            <a class="nav-link" href="{% host_url 'security' host 'bizadmin'%}">Security</a>
+                            <a class="nav-link" href="{% host_url 'notifications' host 'bizadmin'%}">Notifications</a>
+                        </nav>
+                        <hr class="mt-0 mb-4" />
+
+                        <form id="intervalForm">
+                        <div class="row">
+                            <div class="col-lg-4">
+                                <!-- Security preferences card-->
+                                <div class="card mb-4">
+                                    <div class="card-header">Main Booking Settings</div>
+                                    <div class="card-body">
+                                        <div class="col-lg-12">
+                                                <label for="" class="font-weight-bold d-flex justify-content-center pr-1">Booking Interval <a type="button" data-toggle="tooltip" data-placement="top" title="Set the duration for appointment slots"> <i class="fas fa-question-circle licolor"></i></a></label>
+                                                {{ booking_form.interval|as_crispy_field }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <!-- Two factor authentication card-->
+                                <div class="card mb-4">
+                                    <div class="card-header">Cancellation Options</div>
+                                    <div class="card-body">
+                                        <label for="" class="font-weight-bold d-flex justify-content-center pr-1">Cancellation Policy <a type="button" data-toggle="tooltip" data-placement="top" title="The length of time before an appointment which a customer can cancel"> <i class="fas fa-question-circle licolor"></i></a></label>
+                                        {{ booking_form.cancellation|as_crispy_field }}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4">
+                                <div class="card mb-4">
+                                    <div class="card-header">Allow returning clients</div>
+                                    <div class="card-body text-center">
+                                        <form>
+                                            <label for="" class="font-weight-bold d-flex justify-content-center pr-1">Returning Clients Only<a type="button" data-toggle="tooltip" data-placement="top" title="Only accept clients who are on your client list"> <i class="fas fa-question-circle licolor"></i></a></label>
+                                            <input name="returning" type="checkbox" class="bootstrap-switch bootstrap-switch-red my-0" data-on-label="True"/>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        </form>
+                    </div>
+                    </div>
+                        </div>
+                    </div>
+{% endblock %}
+{% block java %}
+    <script>
+        $(document).ready(function(){
+            var selectInterval = document.getElementById("id_interval");
+            var selectCancellation = document.getElementById('id_cancellation');
+            function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+                return cookieValue;
+            }
+            const csrftoken = getCookie('csrftoken');
+
+            selectInterval.addEventListener('change',function(e){
+                const interval = e.target.value
+                $.ajax({
+                    url: '{% host_url "bookingIntervalAPI" host "bizadmin" %}',
+                    data: $('#intervalForm').serialize(),
+                    type: "POST",
+                    dataType: 'json',
+                    headers:{
+                        "X-CSRFToken": csrftoken
+                    },
+                    success: function(){
+                        Swal.fire({
+                            title: 'We successfully updated your booking interval',
+                            icon:'success'
+                        });
+                    },
+                });
+            });
+
+            selectCancellation.addEventListener('change',function(e){
+                const cancellation = e.target.value
+                $.ajax({
+                    url: '{% host_url "bookingIntervalAPI" host "bizadmin" %}',
+                    data: $('#intervalForm').serialize(),
+                    type: "POST",
+                    dataType: 'json',
+                    headers:{
+                        "X-CSRFToken": csrftoken
+                    },
+                    success: function(){
+                        Swal.fire({
+                            title: 'We successfully updated your cancellation policy',
+                            icon:'success'
+                        });
+                    },
+                });
+            });
+
+        });
+    </script>
+{% endblock java %}

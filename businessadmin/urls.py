@@ -8,11 +8,16 @@ urlpatterns = [
     url(r'bpage/amentities/$', views.businessAmenitiesView, name='amenities'),
 
     url(r'dashboard/schedule/$', views.scheduleView, name='schedule'),
+    url(r'dashboard/profile/booking/$', views.bookingSettingViews, name='bookingSetting'),
     url(r'dashboard/profile/security/$',views.profileSecurityViews, name='security'),
     url(r'dashboard/profile/notifs/$', views.notifViews, name='notifications'),
     url(r'dashboard/profile/billing/$',views.profileBillingViews, name='billing'),
     url(r'dashboard/profile/$',views.profileViews, name='profile'),
-    url(r'detail/info/', views.compinfoViews, name='information'),
+    url(r'detail/info/$', views.compinfoViews, name='information'),
+    url(r'updateBookingInterval', views.bookingAPI.as_view() ,name='bookingIntervalAPI'),
+
+    url(r'update/emailinfo/$', views.updateEmailSetting.as_view(), name='emailUpdate'),
+    url(r'update/notes/$', views.notesUpdate.as_view(), name='notesUpdate'),
 
     url(r'detail/service/', views.servicesDetailView, name='service_detail'),
     url(r'detail/clients/', views.clientListView, name='client_list'),

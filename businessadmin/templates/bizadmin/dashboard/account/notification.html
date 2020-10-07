@@ -26,8 +26,9 @@
                         <nav class="nav nav-borders">
                             <a class="nav-link ml-0" href="{% host_url 'profile' host 'bizadmin'%}">Profile</a>
                             <a class="nav-link" href="{% host_url 'billing' host 'bizadmin'%}">Billing</a>
+                            <a class="nav-link" href="{% host_url 'bookingSetting' host 'bizadmin' %}">Booking Settings</a>
                             <a class="nav-link" href="{% host_url 'security' host 'bizadmin'%}">Security</a>
-                            <a class="nav-link activate" href="{% host_url 'profile' host 'bizadmin'%}">Notifications</a>
+                            <a class="nav-link activate" href="{% host_url 'notifications' host 'bizadmin'%}">Notifications</a>
                         </nav>
                         <hr class="mt-0 mb-4" />
                         <div class="row">
@@ -39,8 +40,15 @@
                                         <form>
                                         {% csrf_token %}
                                             <div class="col-12 align-items-center my-auto">
-                                                <label for="" class="subtitle">Receive email reminders for upcoming appointments.</label>
-                                                {{ notesForm.recEmail|as_crispy_field }}
+                                                <p for="" class="small text-muted">Receive email reminders for upcoming appointments.</p>
+                                                <div class="custom-control custom-radio">
+                                                    <input class="custom-control-input" id="emailReminder" type="radio" name="reminders" {% if company.emailReminders %}checked{% endif %} />
+                                                    <label class="custom-control-label" name="radPublic" for="emailReminder">Receive email reminders</label>
+                                                </div>
+                                                <div class="custom-control custom-radio">
+                                                    <input class="custom-control-input" id="noemailReminder" type="radio" name="reminders" {% if company.emailReminders == False %}checked{% endif %} />
+                                                    <label class="custom-control-label" name="radPrivate"  for="noemailReminder">Don't receive email reminders</label>
+                                                </div>
                                             </div>
                                         </form>
                                     </div>
@@ -55,7 +63,7 @@
                                         {% if company.has_texts %}
                                             
                                         {% else %}
-                                            <button class="btn btn-primary">Purchase text messages</button>
+                                            <button class="btn btn-primary" id="textSettingBtn" type="button">Purchase text messages</button>
                                         {% endif %}
                                     </div>
                                 </div>
@@ -65,10 +73,20 @@
                                 <div class="card mb-4">
                                     <div class="card-header">Notes to Clients</div>
                                     <div class="card-body">
-                                        <p class="small text-muted">Display a message to your clients whenever they reach your booking page</p>
-                                        <form>
+                                        <form id="notesForm">
                                             {% csrf_token %}
+
+                                            <p class="small text-muted">Display a message to your clients whenever they reach your booking page</p>
+                                            <div class="custom-control custom-radio">
+                                                <input class="custom-control-input" id="radioShowNotes" type="radio" name="radioShowNotes" {% if company.shownotes %}checked{% endif %} />
+                                                <label class="custom-control-label" name="radPublic" for="radioShowNotes">Display message to clients</label>
+                                            </div>
+                                            <div class="custom-control custom-radio">
+                                                <input class="custom-control-input" id="radioHideNotes" type="radio" name="radioShowNotes" {% if company.shownotes == False %}checked{% endif %} />
+                                                <label class="custom-control-label" name="radPrivate"  for="radioHideNotes">Don't display message to clients</label>
+                                            </div>
                                             {{ notesForm.notes|as_crispy_field }}
+                                            <button class="btn btn-primary" id="notesButton" type="button">Save Notes Setting</button>
                                         </form>
                                     </div>
                                 </div>
@@ -96,11 +114,80 @@
                     }
                 }
             }
-        return cookieValue;
-    }
-    const csrftoken = getCookie('csrftoken');
-
-        
+            return cookieValue;
+        }
+        const csrftoken = getCookie('csrftoken');
+        var emailBtn = document.getElementById("noemailReminder");
+        var textBtn = document.getElementById("textSettingBtn");
+        var notesBtn = document.getElementById("notesButton");
+        var emailrmdr = document.getElementById("emailReminder")
+        emailBtn.addEventListener('click', function(){
+            $.ajax({
+                url: '{% host_url "emailUpdate" host "bizadmin" %}',
+                data: JSON.stringify({emailReminder:emailrmdr.checked}),
+                type: "POST",
+                dataType: 'json',
+                headers:{
+                    "X-CSRFToken": csrftoken
+                },
+                success: function(data){
+                    Swal.fire({
+                        title:'We saved your email settings',
+                        icon:'success'
+                    })
+                },
+            });
+        });
+        emailrmdr.addEventListener('click', function(){
+            $.ajax({
+                url: '{% host_url "emailUpdate" host "bizadmin" %}',
+                data: JSON.stringify({emailReminder:emailrmdr.checked}),
+                type: "POST",
+                dataType: 'json',
+                headers:{
+                    "X-CSRFToken": csrftoken
+                },
+                success: function(data){
+                    Swal.fire({
+                        title:'We saved your email settings',
+                        icon:'success'
+                    })
+                },
+            });
+        });
+        textBtn.addEventListener('click', function(){
+            Swal.fire({
+                title:'Automated text message support is currently unavailable. We will send you an email once it becomes available!',
+                icon:'error',
+            });
+        });
+        var clientMsgNotes = document.getElementById('radioShowNotes')
+        var clientNotes = document.getElementById('id_notes')
+        notesBtn.addEventListener('click',function(){
+            $.ajax({
+                url: '{% host_url "notesUpdate" host "bizadmin" %}',
+                data: JSON.stringify({isnotes:clientMsgNotes.checked, notes:clientNotes.value}),
+                type: "POST",
+                dataType: 'json',
+                headers:{
+                    "X-CSRFToken": csrftoken
+                },
+                success: function(data){
+                    if (data.error){
+                        Swal.fire({
+                            title: 'We could not save your notes submission. Please try again later',
+                            icon: data.error
+                        });
+                    }
+                    else{
+                        Swal.fire({
+                            title: 'We have saved your notes settings',
+                            icon: data.good
+                        });
+                    }
+                },
+            });
+        });
     });
     </script>
 {% endblock java %}

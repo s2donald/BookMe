@@ -99,14 +99,14 @@ class homeSearchForm(forms.Form):
 class AddServiceForm(forms.ModelForm):
     name = forms.CharField(label='Service Name', widget=forms.Textarea(attrs={'style':'color:black;','rows':1, 'cols':20,}))
     description = forms.CharField(label='Details Of Service',max_length=250, required=True, widget=forms.Textarea(attrs={'rows':4, 'cols':20, 'style':'color:black;'}))
-    price_type = forms.ChoiceField(label='Price Type',choices=price_choices, widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control'}))
+    price_type = forms.ChoiceField(label='Price Type',choices=price_choices, widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control', 'data-size':'5'}))
     price = forms.DecimalField(label='Price ($)',max_digits=10, required=True, widget=forms.TextInput(attrs={'type':'number','style':'color:black;', 'rows':1, 'cols':20,}))
-    duration_hour = forms.ChoiceField(label='Duration Hour',choices=hours_choices, widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control'}))
-    duration_minute = forms.ChoiceField(label='Duration Minute',choices=minute_choices_no_zero,initial= '5', widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control'}))
-    checkintime = forms.ChoiceField(label='Check In Time',choices=minute_choices, widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control'}))
-    padding = forms.ChoiceField(label='Buffer',choices=beforeafter, widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control'}))
-    paddingtime_hour = forms.ChoiceField(label='Buffer Hour',choices=hours_choices, widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control'}))
-    paddingtime_minute = forms.ChoiceField(label='Buffer Minute',choices=minute_choices, widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control'}))
+    duration_hour = forms.ChoiceField(label='Duration Hour',choices=hours_choices, widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control', 'data-size':'5'}))
+    duration_minute = forms.ChoiceField(label='Duration Minute',choices=minute_choices_no_zero,initial= '5', widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control', 'data-size':'5'}))
+    checkintime = forms.ChoiceField(label='Check In Time',choices=minute_choices, widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control', 'data-size':'5'}))
+    padding = forms.ChoiceField(label='Buffer',choices=beforeafter, widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control', 'data-size':'5'}))
+    paddingtime_hour = forms.ChoiceField(label='Buffer Hour',choices=hours_choices, widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control', 'data-size':'5'}))
+    paddingtime_minute = forms.ChoiceField(label='Buffer Minute',choices=minute_choices, widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control', 'data-size':'5'}))
     class Meta:
         model = Services
         fields = ('name','description','price_type','price','available','duration_hour',
@@ -121,14 +121,14 @@ class BookingSettingForm(forms.Form):
 class UpdateServiceForm(forms.ModelForm):
     name = forms.CharField(label='Service Name', widget=forms.Textarea(attrs={'style':'color:black;','rows':1, 'cols':20,}))
     description = forms.CharField(label='Details Of Service',max_length=250, required=True, widget=forms.Textarea(attrs={'rows':4, 'cols':20, 'style':'color:black;'}))
-    price_type = forms.ChoiceField(label='Price Type',choices=price_choices, widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control'}))
-    price = forms.DecimalField(label='Price ($)',max_digits=10, required=True, widget=forms.TextInput(attrs={'type':'number','style':'color:black;', 'rows':1, 'cols':20,}))
-    duration_hour = forms.ChoiceField(label='Duration Hour',choices=hours_choices, widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control'}))
-    duration_minute = forms.ChoiceField(label='Duration Minute',choices=minute_choices,initial= '5', widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control'}))
-    checkintime = forms.ChoiceField(label='Check In Time',choices=minute_choices, widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control'}))
-    padding = forms.ChoiceField(label='Buffer',choices=beforeafter, widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control'}))
-    paddingtime_hour = forms.ChoiceField(label='Buffer Hour',choices=hours_choices, widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control'}))
-    paddingtime_minute = forms.ChoiceField(label='Buffer Minute',choices=minute_choices, widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control'}))
+    price_type = forms.ChoiceField(label='Price Type',choices=price_choices, widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control', 'data-size':'5'}))
+    price = forms.DecimalField(label='Price ($)',max_digits=10, required=True, widget=forms.TextInput(attrs={'type':'number','style':'color:black;', 'rows':1, 'cols':20}))
+    duration_hour = forms.ChoiceField(label='Duration Hour',choices=hours_choices, widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control', 'data-size':'5'}))
+    duration_minute = forms.ChoiceField(label='Duration Minute',choices=minute_choices,initial= '5', widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control', 'data-size':'5'}))
+    checkintime = forms.ChoiceField(label='Check In Time',choices=minute_choices, widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control', 'data-size':'5'}))
+    padding = forms.ChoiceField(label='Buffer',choices=beforeafter, widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control', 'data-size':'5'}))
+    paddingtime_hour = forms.ChoiceField(label='Buffer Hour',choices=hours_choices, widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control', 'data-size':'5'}))
+    paddingtime_minute = forms.ChoiceField(label='Buffer Minute',choices=minute_choices, widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control', 'data-size':'5'}))
     class Meta:
         model = Services
         fields = ('name','description','price_type','price','available','duration_hour','duration_minute',

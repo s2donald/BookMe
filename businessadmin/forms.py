@@ -114,7 +114,6 @@ class AddClientForm(forms.ModelForm):
 
 class AddNotesForm(forms.ModelForm):
     notes = forms.CharField(label='', max_length=250,required=False, widget=forms.Textarea(attrs={'rows':4,'cols':20}))
-    sendEmail = forms.BooleanField(label='', widget=forms.TextInput(attrs={'class':'bootstrap-switch bootstrap-switch-red'}))
     class Meta:
         model = Company
         fields = ('notes',)

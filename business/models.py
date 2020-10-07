@@ -166,6 +166,7 @@ class Company(models.Model):
     interval = models.IntegerField(choices=INTERVAL, default=1)
     image = models.ImageField(upload_to=get_user_image_folder, blank=True)
     emailReminders = models.BooleanField(default=True)
+    shownotes = models.BooleanField(default=False)
     users_like = models.ManyToManyField(Account, related_name='companies_liked', blank=True)
     available = models.BooleanField(default=True)
     created = models.DateTimeField(auto_now_add=True)

@@ -465,7 +465,7 @@ a:link{
 
 
 .licolor {
-    color: #854fee;
+    color: #854fee !important;
     font-weight: bold;
 }
 a.licolor:hover, a.licolor:focus {
@@ -1702,7 +1702,7 @@ figure {
   }
 
   .licolorblue {
-    color: #0772db;
+    color: #0772db !important;
     font-weight: bold;
   }
   a.licolorblue:hover, a.licolorblue:focus {

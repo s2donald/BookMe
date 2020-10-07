@@ -282,6 +282,37 @@ def notifViews(request):
     notesForm = AddNotesForm(initial={'notes':company.notes})
     return render(request,'bizadmin/dashboard/account/notification.html', {'company':company, 'notesForm':notesForm})
 
+class updateEmailSetting(View):
+    def post(self, request):
+        data = json.loads(request.body)
+        email = data['emailReminder']
+        print(email)
+        company = get_object_or_404(Company, user=request.user)
+        if email == True:
+            company.emailReminders = True
+        else:
+            company.emailReminders = False
+        company.save()
+
+        return JsonResponse({'good':'girl'})
+
+class notesUpdate(View):
+    def post(self, request):
+        data = json.loads(request.body)
+        notesShow = data['isnotes']
+        company  = get_object_or_404(Company, user=request.user)
+        notes = data['notes']
+        company.notes = notes
+        print(notes)
+        if notesShow:
+            company.shownotes = True
+        else:
+            company.shownotes = False
+        company.save()
+
+        return JsonResponse({'good':'success'})
+
+
 @login_required
 def scheduleView(request):
     user = request.user
@@ -1001,7 +1032,6 @@ class saveCompanyDetail(View):
             company.business_name = form.cleaned_data.get('business_name')
             company.category = form.cleaned_data.get('category')
             subcategory = form.cleaned_data.get('subcategory')
-            print(subcategory)
             email = form.cleaned_data.get('email')
             if not email==company.email:
                 company.email = email
@@ -1014,7 +1044,8 @@ class saveCompanyDetail(View):
             company.city = form.cleaned_data.get('city')
             company.province = form.cleaned_data.get('province')
             company.website_link = form.cleaned_data.get('website_link')
-            company.fb_link = form.cleaned_data.get('fb_link')
+            fb = form.cleaned_data.get('fb_link')
+            company.fb_link =fb
             company.twitter_link = form.cleaned_data.get('twitter_link')
             company.instagram_link = form.cleaned_data.get('instagram_link')
             company.save()
@@ -1026,6 +1057,26 @@ class saveCompanyDetail(View):
             return JsonResponse({'good':'We have saved your company information!'})
         else:
             return JsonResponse({'errors':'Please double check your form. There may be errors.'})
+
+def bookingSettingViews(request):
+    company = get_object_or_404(Company, user=request.user)
+    bookingform = BookingSettingForm(initial={'interval':company.interval, 'cancellation':company.cancellation})
+    return render(request, 'bizadmin/dashboard/account/booking.html', {'company':company, 'booking_form':bookingform})
+
+class bookingAPI(View):
+    def post(self, request):
+        bookForm = BookingSettingForm(request.POST)
+        if bookForm.is_valid():
+            company =  get_object_or_404(Company, user=request.user)
+            interval = bookForm.cleaned_data.get('interval')
+            cancellation = bookForm.cleaned_data.get('cancellation')
+            company.interval = interval
+            company.cancellation = cancellation
+            company.save()
+            return JsonResponse({'title':'', 'icon':'error'})
+        else:
+            return JsonResponse({'title':'Unfortunately, there was an error that occured. Please try again.', 'icon':'error'})
+       
 
 def servicesDetailView(request):
     if not request.user.is_authenticated:

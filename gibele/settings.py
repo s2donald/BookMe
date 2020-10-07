@@ -100,7 +100,7 @@ SOCIAL_AUTH_FACEBOOK_KEY = '780700556106489'
 SOCIAL_AUTH_FACEBOOK_SECRET = '2b1e633621cc391cda8ad11afeed7bd6'
 SOCIAL_AUTH_FACEBOOK_SCOPE = ['email']
 SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {
-   'fields': 'id, name, email'
+   'fields': 'id, name, email,picture'
 }
 SOCIAL_AUTH_USERNAME_IS_FULL_EMAIL = True
 # Database

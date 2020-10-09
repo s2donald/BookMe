@@ -16,7 +16,7 @@ from django.forms import inlineformset_factory
 from django.views import View
 from slugify import slugify
 from .forms import MainPhoto
-
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 # Create your views here.
 def businessadmin(request):
     user = request.user
@@ -406,7 +406,15 @@ class createserviceAPI(View):
             data['icon'] = 'error'
         company = Company.objects.get(user=request.user)
         services = Services.objects.filter(business=company)
-        data['html_service_list'] = render_to_string('bizadmin/companydetail/services/partial/partial_service_list.html', {'services':services})
+        paginator = Paginator(services, 10)
+        page = request.GET.get('page')
+        try:
+            services = paginator.page(page)
+        except PageNotAnInteger:
+            services = paginator.page(1)
+        except EmptyPage:
+            services = paginator.page(paginator.num_pages)
+        data['html_service_list'] = render_to_string('bizadmin/companydetail/services/partial/partial_service_list.html', {'page':page,'services':services})
         return JsonResponse(data)
 
 class createclientAPI(View):
@@ -473,7 +481,15 @@ class deleteserviceAPI(View):
         service = get_object_or_404(Services, pk=pk, business=company)
         service.delete()
         services = Services.objects.filter(business=company)
-        data['html_service_list'] = render_to_string('bizadmin/companydetail/services/partial/partial_service_list.html', {'services':services})
+        paginator = Paginator(services, 10)
+        page = request.GET.get('page')
+        try:
+            services = paginator.page(page)
+        except PageNotAnInteger:
+            services = paginator.page(1)
+        except EmptyPage:
+            services = paginator.page(paginator.num_pages)
+        data['html_service_list'] = render_to_string('bizadmin/companydetail/services/partial/partial_service_list.html', {'page':page,'services':services})
         return JsonResponse(data)
 
 class updateclientAPI(View):
@@ -596,8 +612,16 @@ def updateserviceViews(request, pk):
             service.save()
             data['form_is_valid'] = True
             services = Services.objects.filter(business=company)
-            data['html_service_list'] = render_to_string('bizadmin/dashboard/profile/services/partial_service_list.html', {'services':services})
-            data['html_service_list_bizadmin'] = render_to_string('bizadmin/companydetail/services/partial/partial_service_list.html', {'services':services})
+            paginator = Paginator(services, 10)
+            page = request.GET.get('page')
+            try:
+                services = paginator.page(page)
+            except PageNotAnInteger:
+                services = paginator.page(1)
+            except EmptyPage:
+                services = paginator.page(paginator.num_pages)
+            data['html_service_list'] = render_to_string('bizadmin/dashboard/profile/services/partial_service_list.html', {'page':page,'services':services})
+            data['html_service_list_bizadmin'] = render_to_string('bizadmin/companydetail/services/partial/partial_service_list.html', {'page':page,'services':services})
             data['view'] = 'Your service has been updated'
         else:
             data['form_is_valid'] = False
@@ -616,7 +640,15 @@ class updateserviceAPI(View):
         dat = {'name': service.name, 'description': service.description, 'price_type':service.price_type, 'price':service.price, 'available':service.available, 'duration_hour':service.duration_hour, 'duration_minute':service.duration_minute, 'checkintime':service.checkintime, 'padding':service.padding, 'paddingtime_hour':service.paddingtime_hour, 'paddingtime_minute':service.paddingtime_minute}
         data=dict()
         form = UpdateServiceForm(initial=dat)
-        context = {'service_form':form, 'service':service}
+        paginator = Paginator(services, 10)
+        page = request.GET.get('page')
+        try:
+            services = paginator.page(page)
+        except PageNotAnInteger:
+            services = paginator.page(1)
+        except EmptyPage:
+            services = paginator.page(paginator.num_pages)
+        context = {'service_form':form, 'page':page ,'service':service}
         data['html_form'] = render_to_string('bizadmin/companydetail/services/partial/partial_service_update.html', context, request=request)
         return JsonResponse(data)
 
@@ -641,7 +673,15 @@ class updateserviceAPI(View):
             service.save()
             data['form_is_valid'] = True
             services = Services.objects.filter(business=company)
-            data['html_service_list'] = render_to_string('bizadmin/companydetail/services/partial/partial_service_list.html', {'services':services})
+            paginator = Paginator(services, 10)
+            page = request.GET.get('page')
+            try:
+                services = paginator.page(page)
+            except PageNotAnInteger:
+                services = paginator.page(1)
+            except EmptyPage:
+                services = paginator.page(paginator.num_pages)
+            data['html_service_list'] = render_to_string('bizadmin/companydetail/services/partial/partial_service_list.html', {'page':page,'services':services})
             data['view'] = 'Your service has been updated'
         else:
             data['form_is_valid'] = False
@@ -1100,8 +1140,16 @@ def servicesDetailView(request):
 
     company = Company.objects.get(user=user)
     services = Services.objects.filter(business=company)
+    paginator = Paginator(services, 10)
+    page = request.GET.get('page')
+    try:
+        services = paginator.page(page)
+    except PageNotAnInteger:
+        services = paginator.page(1)
+    except EmptyPage:
+        services = paginator.page(paginator.num_pages)
     service_form = AddServiceForm()
-    return render(request,'bizadmin/companydetail/services/service.html', {'company':company, 'services':services, 'service_form':service_form})
+    return render(request,'bizadmin/companydetail/services/service.html', {'page':page,'company':company, 'services':services, 'service_form':service_form})
 
 from itertools import chain
 
@@ -1142,7 +1190,15 @@ def reviewListView(request):
     
     company = Company.objects.get(user=user)
     reviews = Reviews.objects.filter(company=company)
-    return render(request,'bizadmin/dashboard/reviews/reviews.html', {'company':company, 'reviews':reviews})
+    paginator = Paginator(reviews, 10)
+    page = request.GET.get('page')
+    try:
+        reviews = paginator.page(page)
+    except PageNotAnInteger:
+        reviews = paginator.page(1)
+    except EmptyPage:
+        reviews = paginator.page(paginator.num_pages)
+    return render(request,'bizadmin/dashboard/reviews/reviews.html', {'page':page,'company':company, 'reviews':reviews})
 
 
 

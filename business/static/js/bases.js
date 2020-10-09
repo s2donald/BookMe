@@ -276,15 +276,12 @@ $(document).ready(function (){
     var swiper = new Swiper('.gallery-slider', {
         slidesPerView: 3,
         slidesPerColumn: 2,
-        spaceBetween: 10,
         breakpoints: {
             1200: {
                 slidesPerView: 3,
-                spaceBetween: 25
             },
             991: {
                 slidesPerView: 2,
-                spaceBetween: 25,
                 slidesPerColumn: 1,
             },
             565: {

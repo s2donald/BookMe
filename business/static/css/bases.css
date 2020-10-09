@@ -479,7 +479,6 @@ a.licolor:hover, a.licolor:focus {
     white-space: nowrap;
     text-align: center;
  }
-
 .btn.btn-link:hover{
     background: inherit;
     background-clip: padding-box;
@@ -582,10 +581,6 @@ button:active,
   border-width: 0.1em;
 } 
 
-.modal-body{
-    max-height: calc(80vh - 212px);
-    overflow-y: auto;
-}
 
 .navbar{
     padding: .8rem;
@@ -831,11 +826,11 @@ footer {
   .btn.btn-selectpicker {
     color: #ced4da;
     border-color: #ced4da;
-    color: #854fee;
+    color: black;
   }
   
   .btn.btn-selectpicker:hover {
-    color: #854fee;
+    color: black;
     background-color: #ced4da;
     border-color: #ced4da;
   }
@@ -851,9 +846,14 @@ footer {
   
   .btn.btn-selectpicker:not(:disabled):not(.disabled):active, .btn.btn-selectpicker:not(:disabled):not(.disabled).active,
   .show > .btn.btn-selectpicker.dropdown-toggle {
-    color: #854fee;
+    color: black;
     background-color: #ced4da;
     border-color: #ced4da;
+  }
+
+  .dropdown-item.active,
+  .dropdown-item:active {
+    background-color: #854fee !important;
   }
   
   .btn.btn-selectpicker:not(:disabled):not(.disabled):active:focus, .btn.btn-selectpicker:not(:disabled):not(.disabled).active:focus,

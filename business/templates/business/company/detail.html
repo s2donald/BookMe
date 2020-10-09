@@ -40,14 +40,14 @@
       <div class="container">
 
         <div class="row">
-          <div class="col-lg-7 order-1">
+          <div class="col-lg-7">
             <div class="text-block">
             <div class="d-flex justify-content-between align-items-start flex-column flex-lg-row align-items-lg-end">
             <div class="text-black mb-4 mb-lg-0">
             <div class="badge badge-pill px-3 py-2 mb-4">Automotive Services</div>
             <h1 class="text-shadow verified">{{ company.business_name }}</h1>
             <div class="text-block">
-                <p class="text-block"><i class="fa-map-marker-alt fa mr-1 licolor"></i> {{ address }}</p>
+                <p class="text-block"><i class="fa-map-marker-alt fa mr-1 licolor"></i> {{ company.address }}, {{ company.city }}</p>
                 <p class="mb-0 d-flex align-items-center">{% for x in '12345' %}<i class="fas fa-star {% if forloop.counter|avg_reviews:company.id %}text-warning{% else %}text-gray-300{% endif %}"></i>{% endfor %}{{ reviews|length }} Reviews</p>
             </div>
           </div>
@@ -119,7 +119,7 @@
             </div>
             <hr>
           </div>
-          <div class="col-lg-5 order-2 order-lg-3 order-sm-3">
+          <div class="col-lg-5">
             <div class="pl-xl-4">
               <!-- Opening Hours      -->
               <div class="card border-0 shadow mb-5">
@@ -238,14 +238,17 @@
             </div>
           </div>
 
-          <div class="text-block col-lg-12 order-3">
+          <div class="text-block col-lg-12 col-lg-push-12">
               <!-- Gallery-->
               <h3 class="mb-4">Gallery</h3>
               {% if photos %}
                 <div class="row gallery ml-n1 mr-n1">
                   <div class="swiper-container gallery-slider">
                     <!-- Additional required wrapper-->
-                    <div class="swiper-wrapper" id="photos">
+                    <div class="swiper-wrapper">
+                      {% for p in photos %}
+                      <div class="swiper-slide"><a href="{{ p.photos.url }}"><img loading="lazy" style="height:auto; width:300px;" src="{{ p.photos.url }}" alt="some gallary images"></a></div>
+                      {% endfor %}
                   </div>
                       <div class="swiper-pagination swiper-pagination-white"></div>
                       <div class="swiper-button-prev swiper-button-white circle-slide"></div>
@@ -361,7 +364,7 @@
         }
 
         function geocodeAddress(geocoder, resultsMap) {
-            var address = '{{ address }}';
+            var address = '{{ company.address }}';
             geocoder.geocode({ address: address }, function(results, status) {
                 if (status === "OK") {
                 resultsMap.setCenter(results[0].geometry.location);

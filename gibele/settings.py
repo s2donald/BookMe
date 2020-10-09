@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'businessadmin.apps.BusinessadminConfig',
     'consumer.apps.ConsumerConfig',
     'calendarapp.apps.CalendarappConfig',
+    'django.contrib.gis',
     'crispy_forms',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -108,7 +109,7 @@ SOCIAL_AUTH_USERNAME_IS_FULL_EMAIL = True
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'ENGINE': 'django.contrib.gis.db.backends.postgis',
         'NAME': 'gibele1',
         'USER': 'sdonald',
         'PASSWORD': 'Kingston36227',

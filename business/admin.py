@@ -34,6 +34,7 @@ class ClientsInline(admin.TabularInline):
 @admin.register(Company)
 class CompanyAdmin(admin.ModelAdmin):
     list_display = ['user','business_name','slug','available','created','updated']
+    exclude = ['location']
     list_filter = ['available', 'created', 'updated']
     list_editable = ['available']
     inlines = [ ClientsInline, GallaryInline, OpeningHoursInline, AmenitiesInline ]

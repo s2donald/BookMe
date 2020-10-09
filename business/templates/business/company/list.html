@@ -9,7 +9,22 @@
         {% else %}
             <h1 class="text-center">{% if name %}Results for {{ name }}({{total}}){% else %}No Results Found{% endif %}</h1>
         {% endif %}
-        <div class="row">
+        <div class="d-flex justify-content-between align-items-center flex-column flex-md-row my-3 col-md-12">
+              <div class="mr-3">
+                <p class="mb-3 mb-md-0"><strong>{{ total }}</strong> results found</p>
+              </div>
+              <div>
+                <label class="form-label mr-2" for="sortCompany">Sort by</label>
+                <select class="selectpicker text-black" name="sort" id="sortCompany" data-style="btn-selectpicker" title="">
+                  {% comment %} <option value="sortBy_0">Most popular   </option> {% endcomment %}
+                  {% comment %} <option value="sortBy_Rec">Recommended   </option> {% endcomment %}
+                  {% comment %} <option value="sortBy_2">Newest   </option> {% endcomment %}
+                  {% comment %} <option value="sortBy_3">Oldest   </option> {% endcomment %}
+                  <option value="sortBy_Closest" selected>Closest   </option>
+                </select>
+              </div>
+            </div>
+        <div class="row" id="companyCardList">
             {% for company in companies %}
             {% with users_like=company.users_like.all %}
                 <!-- venue item-->
@@ -37,8 +52,6 @@
                     </div>
                         {% if gal %}
                           <div class="swiper-pagination swiper-pagination-white"></div>
-                          <div class="swiper-button-prev swiper-button-white circle-slide"></div>
-                          <div class="swiper-button-next swiper-button-white circle-slide"></div>
                         {% endif %}
                       
                   </div>
@@ -65,13 +78,17 @@
                   {% endwith %}
                 </div>
                 <div class="card-body">
-                  <p class="mb-2 text-xs">{% for x in '12345' %}<i class="fas fa-star {% if forloop.counter|avg_reviews:company.id %}text-warning{% else %}text-gray-300{% endif %}"></i>{% endfor %}
-                    ({{company.company_reviews.all|length}})</p>
-                  <h4 class="text-shadow">{{ company.business_name }}</h4>
-                  <p class="text-muted">{{ company.description|slice:"0:50"}}</p>
+                  <div class=" d-flex justify-content-between">
+                    <p class="mb-2">{% for x in '12345' %}<i class="fas fa-star {% if forloop.counter|avg_reviews:company.id %}text-warning{% else %}text-gray-300{% endif %}"></i>{% endfor %}
+                      ({{company.company_reviews.all|length}})</p>
+                      <div class="">{{ company.city}}</div>
+                  </div>
+                    <h4 class="text-shadow">{{ company.business_name }}</h4>
+                    <p class="text-muted">{{ company.description|slice:"0:50"}}</p>
+                  
                   {% comment %} <p class="text-sm text-muted mb-3"> {{ company.description }}</p> {% endcomment %}
                 </div>
-                <div class="card-body text-center">
+                <div class="card-footer text-center">
                     <a href="{% host_url 'bookingurls' host 'bookingurl' slug=company.slug %}"class="btn btn-warning">Book Now</a>
                     <a href="{{ company.get_absolute_url }}" class="btn btn-outline-primary">View Details</a>
                 </div>

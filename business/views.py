@@ -14,8 +14,11 @@ from django.template.loader import render_to_string
 from consumer.models import Reviews
 from django.db.models import Count
 from django.db.models import F
-import json
+import json, geocoder
 from django.views import View
+from django.contrib.gis.geos import GEOSGeometry, Point
+from django.contrib.gis.db.models.functions import Distance, GeometryDistance
+
 
 def privacyViews(request):
     category = None
@@ -45,6 +48,7 @@ def allsearch(request):
     cat = None
     subcat = None
     q = 0
+    
     if 'Search' in request.GET:
         form = SearchForm(request.GET)
         if 'Location' in request.GET:
@@ -56,26 +60,45 @@ def allsearch(request):
                     cat = Category.objects.get(pk=categorys)
                 except:
                     subcat = SubCategory.objects.get(pk=categorys)
+        else:
+            ip = geocoder.ipinfo('me').address
 
         if form.is_valid():
             Search = form.cleaned_data['Search']
 
             if q == 1:
                 loc = form.cleaned_data['Location']
+            else:
+                loc = 'me'
 
             # results = Company.objects.annotate(search=SearchVector('business_name','description'),).filter(search=Search)
             #This may need to ge optimized
             results = Services.objects.annotate(search=SearchVector('name'),).filter(search=Search)
             ids = results.values_list('business', flat=True).distinct()
             results = Company.objects.filter(id__in=ids)|Company.objects.annotate(search=SearchVector('business_name','description'),).filter(search=Search)
-            if cat:
-                results = results.filter(category=cat).order_by('business_name')
-            if subcat:
-                results = results.filter(subcategory=subcat).order_by('business_name')
-            if not cat and not subcat:    
-                results = results.order_by('business_name')
+            
             
             results = results.filter(status='published')
+
+            if loc=='me':
+                ip = geocoder.ipinfo('me').latlng
+            else:
+                ip = geocoder.google(loc, key="AIzaSyBaZM_O3d1-xDrecS_fbcbvoT5qDmLmje0").latlng
+            
+            if ip:
+                lat = ip[0]
+                lng = ip[1]
+                pnt = Point(lng,lat, srid=4326)
+                print(results)
+                results = results.annotate(distance=GeometryDistance("location", pnt)).order_by("distance")
+            else:
+                if cat:
+                    results = results.filter(category=cat).order_by('business_name')
+                if subcat:
+                    results = results.filter(subcategory=subcat).order_by('business_name')
+                if not cat and not subcat:    
+                    results = results.order_by('business_name')
+
             total = results.count()
             paginator = Paginator(results, 6)
             page = request.GET.get('page')
@@ -122,6 +145,12 @@ def company_list(request, category_slug=None, company_slug=None, tag_slug=None):
     
     form = SearchForm()
     companies = companies.filter(status='published')
+    ip = geocoder.ipinfo('me').latlng
+    if ip:
+        lat = ip[0]
+        lng = ip[1]
+        pnt = GEOSGeometry('POINT('+ str(lng) + ' ' + str(lat) + ')', srid=4326)
+        companies = companies.annotate(distance=Distance('location', pnt)).order_by('distance')
     total = companies.count()
     paginator = Paginator(companies, 6)
     page = request.GET.get('page')
@@ -131,7 +160,6 @@ def company_list(request, category_slug=None, company_slug=None, tag_slug=None):
         companiess = paginator.page(1)
     except EmptyPage:
         companiess = paginator.page(paginator.num_pages)
-
     return render(request, 'business/company/list.html',{'total':total,'page':page,'subcategories':subcategories,'category':category, 'companies':companiess, 'categories':categories, 'form':form,'tag':tag, 'name':name})
 
 def company_detail(request, id, slug):

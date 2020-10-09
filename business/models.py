@@ -1,4 +1,4 @@
-from django.db import models
+from django.contrib.gis.db import models
 from django.urls import reverse
 from taggit.managers import TaggableManager
 from django.core.validators import RegexValidator
@@ -6,9 +6,9 @@ from account.models import Account, MyAccountManager
 from django.utils.text import slugify
 from django.contrib.auth.models import AbstractBaseUser
 from django.utils import timezone
-from django.db.models.signals import pre_save
+from django.db.models.signals import pre_save, post_save
 from gibele.utils import unique_slug_generator, unique_slug_generator_services
-
+import geocoder
 # This category holds our different types of services such as
 #   automotive services, health and wellness services, home services, etc
 #   These should not be modified by the user
@@ -177,6 +177,7 @@ class Company(models.Model):
     twitter_link = models.URLField(max_length=200, blank=True, null=True)
     website_link = models.URLField(max_length=200, blank=True, null=True)
     tags = TaggableManager(blank=True)
+    location = models.PointField(blank=True, null=True)
     class Meta:
         ordering = ('-publish',)
         verbose_name = 'company'
@@ -205,7 +206,15 @@ def slug_generator(sender, instance, *args, **kwargs):
     if not instance.slug:
         instance.slug = unique_slug_generator(instance)
 
+def location_update(sender, instance, *args, **kwargs):
+    address = instance.address
+    g = geocoder.google(address + "," + instance.city,key="AIzaSyBaZM_O3d1-xDrecS_fbcbvoT5qDmLmje0")
+    lat = g.latlng[0]
+    lng = g.latlng[1]
+    instance.location = "POINT(" + str(lng) + " " + str(lat) +")"
+    
 pre_save.connect(slug_generator, sender=Company)
+post_save.connect(location_update, sender=Company)
 
 class Clients(models.Model):
     company = models.ForeignKey(Company, on_delete=models.CASCADE,related_name='clients')

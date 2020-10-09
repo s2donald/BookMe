@@ -1737,24 +1737,49 @@ figure {
 
 .btn.btn-info{
   border-radius: 10px;
-  background: linear-gradient(90deg, #0772db 0%, #0772db 100%);
+  background: linear-gradient(90deg, #854fee 0%, #854fee 100%);
   background-clip: padding-box;
   color: whitesmoke;
   transition: background .6 ease;
-  border-color: linear-gradient(90deg, #0772db 0%, #0772db 100%);
+  border-color: linear-gradient(90deg, #854fee 0%, #854fee 100%);
   
 }
 .btn.btn.btn-info:hover{
   background: whitesmoke;
   background-clip: padding-box;
   color: black;
-  border-color: #0772db;
+  border-color: #854fee;
 }
 .btn.btn-info::after{
   position:absolute;
   top:-2px; left:-2px;
   bottom: -2px; right: -2px;
-  background: linear-gradient(90deg, #0772db 0%, #0772db 100%);
+  background: linear-gradient(90deg, #854fee 0%, #854fee 100%);
+  content:'';
+  z-index:-1;
+  border-radius: 10px;
+}
+
+.btn.btn-danger{
+  border-radius: 10px;
+  background: linear-gradient(90deg, #e14eca 0%, #e14eca 100%);
+  background-clip: padding-box;
+  color: whitesmoke;
+  transition: background .6 ease;
+  border-color: linear-gradient(90deg, #e14eca 0%, #e14eca 100%);
+  
+}
+.btn.btn.btn-danger:hover{
+  background: whitesmoke;
+  background-clip: padding-box;
+  color: black;
+  border-color: #e14eca;
+}
+.btn.btn-danger::after{
+  position:absolute;
+  top:-2px; left:-2px;
+  bottom: -2px; right: -2px;
+  background: linear-gradient(90deg, #e14eca 0%, #e14eca 100%);
   content:'';
   z-index:-1;
   border-radius: 10px;

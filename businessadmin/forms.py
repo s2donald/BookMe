@@ -99,7 +99,7 @@ class UpdateCompanyForm(forms.ModelForm):
 from business.models import Clients
 
 class AddClientForm(forms.ModelForm):
-    first_name = forms.CharField(label='',max_length=30, required=True, widget=forms.TextInput(attrs={'style':'color:black;'}))
+    first_name = forms.CharField(label='',max_length=30, required=True)
     last_name = forms.CharField(label='',max_length=30, required=True, widget=forms.TextInput(attrs={'style':'color:black;'}))
     phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$', message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
     phone = forms.CharField(label='Phone Number',required=False, validators=[phone_regex], max_length=30,widget=forms.TextInput(attrs={'style':'color:black;'}))

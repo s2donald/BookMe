@@ -68,9 +68,9 @@ def allsearch(request):
 
             if q == 1:
                 loc = form.cleaned_data['Location']
-            else:
+            
+            if not loc:
                 loc = 'me'
-
             # results = Company.objects.annotate(search=SearchVector('business_name','description'),).filter(search=Search)
             #This may need to ge optimized
             results = Services.objects.annotate(search=SearchVector('name'),).filter(search=Search)
@@ -89,7 +89,6 @@ def allsearch(request):
                 lat = ip[0]
                 lng = ip[1]
                 pnt = Point(lng,lat, srid=4326)
-                print(results)
                 results = results.annotate(distance=GeometryDistance("location", pnt)).order_by("distance")
             else:
                 if cat:

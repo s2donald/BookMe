@@ -84,8 +84,7 @@
                       <div class="">{{ company.city}}</div>
                   </div>
                     <h4 class="text-shadow">{{ company.business_name }}</h4>
-                    <p class="text-muted">{{ company.description|slice:"0:50"}}</p>
-                  
+                    <p class="text-muted">{{ company.description|slice:"0:50"}}{% if company.description|length|get_digit:"-1" > 49 %}...{% endif %} </p>
                   {% comment %} <p class="text-sm text-muted mb-3"> {{ company.description }}</p> {% endcomment %}
                 </div>
                 <div class="card-footer text-center">

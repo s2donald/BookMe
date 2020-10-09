@@ -25,7 +25,7 @@
                         <!-- Account page navigation-->
                         <nav class="nav nav-borders">
                             <a class="nav-link ml-0" href="{% host_url 'profile' host 'bizadmin'%}">Profile</a>
-                            <a class="nav-link" href="{% host_url 'billing' host 'bizadmin'%}">Billing</a>
+                            {% comment %} <a class="nav-link" href="{% host_url 'billing' host 'bizadmin'%}">Billing</a> {% endcomment %}
                             <a class="nav-link activate" href="{% host_url 'bookingSetting' host 'bizadmin' %}">Booking Settings</a>
                             <a class="nav-link" href="{% host_url 'security' host 'bizadmin'%}">Security</a>
                             <a class="nav-link" href="{% host_url 'notifications' host 'bizadmin'%}">Notifications</a>
@@ -34,7 +34,7 @@
 
                         <form id="intervalForm">
                         <div class="row">
-                            <div class="col-lg-4">
+                            <div class="col-lg-8">
                                 <!-- Security preferences card-->
                                 <div class="card mb-4">
                                     <div class="card-header">Main Booking Settings</div>
@@ -44,12 +44,6 @@
                                                 {{ booking_form.interval|as_crispy_field }}
                                         </div>
                                     </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-4">
-                                <!-- Two factor authentication card-->
-                                <div class="card mb-4">
-                                    <div class="card-header">Cancellation Options</div>
                                     <div class="card-body">
                                         <label for="" class="font-weight-bold d-flex justify-content-center pr-1">Cancellation Policy <a type="button" data-toggle="tooltip" data-placement="top" title="The length of time before an appointment which a customer can cancel"> <i class="fas fa-question-circle licolor"></i></a></label>
                                         {{ booking_form.cancellation|as_crispy_field }}
@@ -59,11 +53,18 @@
 
                             <div class="col-lg-4">
                                 <div class="card mb-4">
-                                    <div class="card-header">Allow returning clients</div>
+                                    <div class="card-header">Booking Options</div>
                                     <div class="card-body text-center">
                                         <form>
                                             <label for="" class="font-weight-bold d-flex justify-content-center pr-1">Returning Clients Only<a type="button" data-toggle="tooltip" data-placement="top" title="Only accept clients who are on your client list"> <i class="fas fa-question-circle licolor"></i></a></label>
-                                            <input name="returning" type="checkbox" class="bootstrap-switch bootstrap-switch-red my-0" data-on-label="True"/>
+                                            <div class="custom-control custom-radio">
+                                                <input class="custom-control-input" id="radioReturning" type="radio" name="radioPrivacy" {% if company.returning %}checked{% endif %} />
+                                                <label class="custom-control-label" name="radReturning" for="radioReturning">Returning Clients Only</label>
+                                            </div>
+                                            <div class="custom-control custom-radio">
+                                                <input class="custom-control-input" id="radioOpen" type="radio" name="radioPrivacy" {% if company.returning == False %}checked{% endif %} />
+                                                <label class="custom-control-label" name="radPrivate" for="radioOpen">Open for everyone to book</label>
+                                            </div>
                                         </form>
                                     </div>
                                 </div>
@@ -129,6 +130,41 @@
                     success: function(){
                         Swal.fire({
                             title: 'We successfully updated your cancellation policy',
+                            icon:'success'
+                        });
+                    },
+                });
+            });
+
+            $('#radioReturning').on('click', function(){
+                $.ajax({
+                    url: '{% host_url "bookingReturningAPI" host "bizadmin" %}',
+                    data: JSON.stringify({returning:true}),
+                    type: "POST",
+                    dataType: 'json',
+                    headers:{
+                        "X-CSRFToken": csrftoken
+                    },
+                    success: function(){
+                        Swal.fire({
+                            title: 'We successfully updated your returning clients option',
+                            icon:'success'
+                        });
+                    },
+                });
+            });
+            $('#radioOpen').on('click', function(){
+                $.ajax({
+                    url: '{% host_url "bookingReturningAPI" host "bizadmin" %}',
+                    data: JSON.stringify({returning:false}),
+                    type: "POST",
+                    dataType: 'json',
+                    headers:{
+                        "X-CSRFToken": csrftoken
+                    },
+                    success: function(){
+                        Swal.fire({
+                            title: 'We successfully updated your returning clients option',
                             icon:'success'
                         });
                     },

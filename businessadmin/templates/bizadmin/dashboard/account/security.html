@@ -24,7 +24,7 @@
                         <!-- Account page navigation-->
                         <nav class="nav nav-borders">
                             <a class="nav-link ml-0" href="{% host_url 'profile' host 'bizadmin'%}">Profile</a>
-                            <a class="nav-link" href="{% host_url 'billing' host 'bizadmin'%}">Billing</a>
+                            {% comment %} <a class="nav-link" href="{% host_url 'billing' host 'bizadmin'%}">Billing</a> {% endcomment %}
                             <a class="nav-link" href="{% host_url 'bookingSetting' host 'bizadmin' %}">Booking Settings</a>
                             <a class="nav-link activate" href="{% host_url 'security' host 'bizadmin'%}">Security</a>
                             <a class="nav-link" href="{% host_url 'notifications' host 'bizadmin'%}">Notifications</a>
@@ -82,7 +82,7 @@
                             </div>
                             <div class="col-lg-4">
                                 <!-- Two factor authentication card-->
-                                <div class="card mb-4">
+                                {% comment %} <div class="card mb-4">
                                     <div class="card-header">Two-Factor Authentication</div>
                                     <div class="card-body">
                                         <p>Add another level of security to your account by enabling two-factor authentication. We will send you a text message to verify your login attempts on unrecognized devices and browsers.</p>
@@ -99,13 +99,13 @@
                                             </div>
                                         </form>
                                     </div>
-                                </div>
+                                </div> {% endcomment %}
                                 <!-- Delete account card-->
                                 <div class="card mb-4">
                                     <div class="card-header">Delete Account</div>
                                     <div class="card-body">
                                         <p>Deleting your account is a permanent action and cannot be undone. If you are sure you want to delete your account, select the button below.</p>
-                                        <button class="btn btn-danger-soft text-danger" type="button">I understand, delete my account</button>
+                                        <button class="btn btn-danger-soft text-danger" id="deleteAcct" type="button">I understand, delete my account</button>
                                     </div>
                                 </div>
                             </div>
@@ -196,6 +196,13 @@
                         icon: 'success'
                     });
                 },
+            });
+        });
+
+        $("#deleteAcct").on('click', function(){
+            Swal.fire({
+                title: 'We are sad to see you leave.',
+                html: 'Please send an email to support@gibele.com to finalize the deletion of your account.'
             });
         });
     });

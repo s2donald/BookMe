@@ -1076,7 +1076,16 @@ class bookingAPI(View):
             return JsonResponse({'title':'', 'icon':'error'})
         else:
             return JsonResponse({'title':'Unfortunately, there was an error that occured. Please try again.', 'icon':'error'})
-       
+
+class returningAPI(View):
+    def post(self, request):
+        data = json.loads(request.body)
+        returning = data['returning']
+        company = get_object_or_404(Company, user=request.user)
+        company.returning = returning
+        company.save()
+        return JsonResponse({'good':'good'})
+
 
 def servicesDetailView(request):
     if not request.user.is_authenticated:

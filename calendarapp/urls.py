@@ -10,6 +10,6 @@ urlpatterns = [
     url(r'^bookingtime/$', views.bookingTimes.as_view(), name='bookingtimeretrieval'),
     url(r'^facebookLoginBooked/$', views.facebookLogin.as_view(), name='facebookLogin'),
     path('social-auth/',include('social_django.urls',namespace='social'), name='fb'),
-    url(r'^(?P<pk>\d+)/$', views.bookingServiceView, name='bookingserviceurls'),
+    url(r'^service(?P<pk>\d+)/$', views.bookingServiceView, name='bookingserviceurls'),
     url(r'^$', views.bookingurl, name='bookingurls'),
 ]

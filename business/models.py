@@ -212,9 +212,10 @@ def location_update(sender, instance, *args, **kwargs):
     lat = g.latlng[0]
     lng = g.latlng[1]
     instance.location = "POINT(" + str(lng) + " " + str(lat) +")"
+    print(instance.location)
     
 pre_save.connect(slug_generator, sender=Company)
-post_save.connect(location_update, sender=Company)
+pre_save.connect(location_update, sender=Company)
 
 class Clients(models.Model):
     company = models.ForeignKey(Company, on_delete=models.CASCADE,related_name='clients')

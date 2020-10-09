@@ -14,7 +14,8 @@ urlpatterns = [
     url(r'dashboard/profile/billing/$',views.profileBillingViews, name='billing'),
     url(r'dashboard/profile/$',views.profileViews, name='profile'),
     url(r'detail/info/$', views.compinfoViews, name='information'),
-    url(r'updateBookingInterval', views.bookingAPI.as_view() ,name='bookingIntervalAPI'),
+    url(r'updateBookingInterval/$', views.bookingAPI.as_view() ,name='bookingIntervalAPI'),
+    url(r'returningbookingReturningAPI/$', views.returningAPI.as_view(), name='bookingReturningAPI'),
 
     url(r'update/emailinfo/$', views.updateEmailSetting.as_view(), name='emailUpdate'),
     url(r'update/notes/$', views.notesUpdate.as_view(), name='notesUpdate'),

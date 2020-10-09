@@ -11,9 +11,9 @@
               <div class="card h-100 border-0 shadow">
                 {% with company=future.company %}
                 <div class="card-body">
-                  <div class="card-img-overlay-top d-flex justify-content-between align-items-center">
+                  {% comment %} <div class="card-img-overlay-top d-flex justify-content-between align-items-center">
                     <div class="badge badge-transparent badge-pill px-3 py-2">{{ company.category.name }}</div>
-                  </div>
+                  </div> {% endcomment %}
                   <h2 class="text-shadow">{{ future.service }}</h4>
                   <h4 class="text-shadow">{{ company }}</h4>
                   <p class="text-sm text-muted mb-3"> Appointment Time: {{ future.start }}</p>
@@ -27,10 +27,11 @@
         {% empty %}
             <p class="text-muted mb-5">You have no upcoming appointments.</p>
         {% endfor %}
+        {% include 'account/pagination/pagination.html' with page=futureBookings %}
         <p class="mb-6"> <img class="img-fluid" src="img/illustration/undraw_trip_dv9f.svg" alt="" style="width: 400px;"></p>
 
         {% if pastBookings %}
-            <h2 class="mb-5">Your past bookings</h2>
+            <h2 class="mb-5" id="pbookings">Your past bookings</h2>
             {% for past in pastBookings %}
                 <div class="row">
             
@@ -57,6 +58,8 @@
             {% empty %}
             
             {% endfor %}
+
+        {% include 'account/pagination/pastpagination.html' with page=pastBookings %}
         {% endif %}
         
       </div>

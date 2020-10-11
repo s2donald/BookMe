@@ -274,14 +274,14 @@ $(document).ready(function (){
     });
 
     var swiper = new Swiper('.gallery-slider', {
-        slidesPerView: 3,
-        slidesPerColumn: 2,
+        slidesPerView: 4,
+        slidesPerColumn: 1,
         breakpoints: {
             1200: {
-                slidesPerView: 3,
+                slidesPerView: 4,
             },
             991: {
-                slidesPerView: 2,
+                slidesPerView: 1,
                 slidesPerColumn: 1,
             },
             565: {

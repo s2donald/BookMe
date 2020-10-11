@@ -53,20 +53,20 @@
 
         <div class="navbar-collapse collapse flex-shrink-1 flex-grow-0 order-last inline-block" id="navbarResponsive">
             <ul class="navbar-nav mr-auto inline-block">
-                {% if user.is_authenticated %}
+                {% comment %} {% if user.is_authenticated %}
                     <div class="d-lg-none d-xl-inline-block my-auto mx-auto">
                         <p class="d-flex-inline pt-3 pr-1 flex-nowrap">Welcome <a class="btn btn-link licolorblue p-0" href="{% if user.is_business %}{% host_url 'home' host 'bizadmin' %}{% else %}{% url 'account:account' %}{% endif %}">{{user.first_name}}</a></p>
                     </div>
-                {% endif %}
+                {% endif %} {% endcomment %}
                 <div class="my-auto mx-auto">
                     {% if user.is_business %}
-                        <a href="{% host_url 'schedule' host 'bizadmin'%}" class="btn btn-outline-primary inline-block my-lg-2 mx-auto">Business Dashboard</a>
+                        <a href="{% host_url 'schedule' host 'bizadmin'%}" class="btn btn-outline-primary btn-sm my-lg-2 mx-auto">Business Dashboard</a>
                     {% else %}
-                        <a href="{% host_url 'bizadminmain' host 'bizadmin' %}" class="btn btn-outline-primary inline-block my-lg-2 mx-auto">List a business</a>
+                        <a href="{% host_url 'bizadminmain' host 'bizadmin' %}" class="btn btn-outline-primary btn-sm my-lg-2 mx-auto">List a business</a>
                     {% endif %}
                 </div>
                 {% if user.is_authenticated %}
-                        <a class="btn btn-link pt-3 py-lg-1 mx-auto licolorblue d-flex align-items-center" href="{% url 'account:account' %}" >Account <i class="fas fa-user-circle mx-1"></i></a>
+                        <a class="btn btn-link pt-3 py-lg-1 mx-auto licolorblue d-flex align-items-center" href="{% url 'account:account' %}" >{{ user.first_name }} <i class="fas fa-user-circle mx-1"></i></a>
                         <a class="btn btn-link mx-auto my-lg-2 licolorblue d-flex align-items-center" href="{% url 'logout' %}">Logout <i class="fas fa-sign-out-alt mx-1"></i></a>
                 {% else %}
                         <a class="btn btn-link pt-3 py-lg-1 mx-auto licolorblue d-flex align-items-center" href="{% url 'account:signup' %}" >Register</a>

@@ -57,9 +57,12 @@
                 {% if services %}
                     <h2>Services</h1>
                     {% for s in services %}
+                        {% with hour=s.duration_hour min=s.duration_minute type=s.price_type %}
                         <h3 class="mb-3">{{ s.name }}</h3>
+                        <strong class="text-header">{% if not hour == 0 %}{{ hour }} hour {% endif %} {% if not min == 0 and not hour == 0 %}&amp;{% endif %} {% if not min == 0 %}{{ min }} min{% endif %}</strong>
                         <p class="text-muted">{{ s.description }}</p>
-                        <p>${{ s.price }}</p>
+                        <p>{% if type == "fixed" %}Fixed price of{% elif type == 'start' %}Prices start at{% elif type == 'variable' %}<strong>Prices Varies</strong>{% endif %}{% if type == 'variable' %}{% elif type == 'free' %}<strong>Free</strong> {% elif type == 'dont' %}{% else %} <strong>${{ s.price }}</strong>{% endif %}</p>
+                        {% endwith %}
                         <a href="{% host_url 'bookingserviceurls' pk=s.id host 'bookingurl' slug=company.slug %}" class="btn btn-outline-primary">Book Now</a>
                         <hr>
                         
@@ -94,11 +97,11 @@
             </div>
             {% endif %}
             <hr>
-            <div class="text-block">
+            <div class="text-block" id="reviewlist">
                 <div class="d-flex justify-content-between">
                     <h5 class="mb-4 licolor">Reviews</h5>
                 </div>
-            
+              {% if reviews %}
               {% for review in reviews %}
               {% with reviewer=review.reviewer %}
               <div class="media d-block d-sm-flex review">
@@ -111,9 +114,11 @@
                 </div>
               </div>
               {% endwith %}
-              {% empty %}
-                <h6>Be the first to write a review on this business after you complete a service with them.</h6>
               {% endfor %}
+              {% include 'business/company/pagination_review/pagination.html' with page=reviews %}
+              {% else %}
+                <h6>Be the first to write a review on this business after you complete a service with them.</h6>
+              {% endif %}
             
               
             </div>
@@ -203,19 +208,19 @@
                 <div class="card-body">
                   <ul class="list-unstyled mb-4">
 
-                    <li class="mb-2"> <a class="licolor text-sm text-decoration-none" href="tel:{{ company.phone }}"><i class="fa fa-phone mr-3"></i><span class="text-muted">{{ company.phone }}</span></a></li>
-                    <li class="mb-2"> <a class="licolor text-sm text-decoration-none" href="mailto:{{ company.email }}"><i class="fa fa-envelope mr-3"></i><span class="text-muted">{{ company.email }}</span></a></li>
+                    <li class="mb-2"> <a rel="nofollow" class="licolor text-sm text-decoration-none" href="tel:{{ company.phone }}"><i class="fa fa-phone mr-3"></i><span class="text-muted">{{ company.phone }}</span></a></li>
+                    <li class="mb-2"> <a rel="nofollow" class="licolor text-sm text-decoration-none" href="mailto:{{ company.email }}"><i class="fa fa-envelope mr-3"></i><span class="text-muted">{{ company.email }}</span></a></li>
                     {% if company.website_link %}
-                      <li class="mb-2"> <a class="licolor text-sm text-decoration-none" href="{{ company.website_link }}"><i class="fa fa-globe mr-3"></i><span class="text-muted">{{ company.website_link }}</span></a></li>
+                      <li class="mb-2"> <a rel="nofollow" class="licolor text-sm text-decoration-none" href="{{ company.website_link }}"><i class="fa fa-globe mr-3"></i><span class="text-muted">{{ company.website_link }}</span></a></li>
                     {% endif %}
                     {% if company.fb_link %}
-                      <li class="mb-2"> <a class="licolor text-blue text-sm text-decoration-none" href="{{ company.fb_link}}"><i class="fab fa-facebook mr-3"></i><span class="text-muted">Facebook</span></a></li>
+                      <li class="mb-2"> <a rel="nofollow" class="licolor text-blue text-sm text-decoration-none" href="{{ company.fb_link}}"><i class="fab fa-facebook mr-3"></i><span class="text-muted">Facebook</span></a></li>
                     {% endif %}
                     {% if company.twitter_link %}
-                      <li class="mb-2"> <a class="licolor text-sm text-decoration-none" href="{{ company.twitter_link}}"><i class="fab fa-twitter mr-3"></i><span class="text-muted">Twitter</span></a></li>
+                      <li class="mb-2"> <a rel="nofollow" class="licolor text-sm text-decoration-none" href="{{ company.twitter_link}}"><i class="fab fa-twitter mr-3"></i><span class="text-muted">Twitter</span></a></li>
                     {% endif %}
                     {% if company.instagram_link %}
-                      <li class="mb-2"> <a class="licolor text-sm text-decoration-none" href="{{ company.instagram_link}}"><i class="fab fa-instagram mr-3"></i><span class="text-muted">Instagram</span></a></li>
+                      <li class="mb-2"> <a rel="nofollow" class="licolor text-sm text-decoration-none" href="{{ company.instagram_link}}"><i class="fab fa-instagram mr-3"></i><span class="text-muted">Instagram</span></a></li>
                     {% endif %}
                   </ul>
                 </div>
@@ -237,8 +242,8 @@
               </div>
             </div>
           </div>
-
-          <div class="text-block col-lg-12 col-lg-push-12">
+        </div>
+        <div class="col-lg-12">
               <!-- Gallery-->
               <h3 class="mb-4">Gallery</h3>
               {% if photos %}
@@ -262,9 +267,6 @@
 
               {% endif %}
           </div>
-
-
-        </div>
       </div>
     </section>
   {% if similar_companies %}

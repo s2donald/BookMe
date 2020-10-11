@@ -48,7 +48,7 @@ def allsearch(request):
     cat = None
     subcat = None
     q = 0
-    
+    loc = None
     if 'Search' in request.GET:
         form = SearchForm(request.GET)
         if 'Location' in request.GET:
@@ -60,8 +60,6 @@ def allsearch(request):
                     cat = Category.objects.get(pk=categorys)
                 except:
                     subcat = SubCategory.objects.get(pk=categorys)
-        else:
-            ip = geocoder.ipinfo('me').address
 
         if form.is_valid():
             Search = form.cleaned_data['Search']
@@ -70,7 +68,12 @@ def allsearch(request):
                 loc = form.cleaned_data['Location']
             
             if not loc:
-                loc = 'me'
+                if not request.user.is_authenticated:
+                    loc = 'me'
+                elif request.user.address:
+                    loc = request.user.address
+                else:
+                    loc = 'me'
             # results = Company.objects.annotate(search=SearchVector('business_name','description'),).filter(search=Search)
             #This may need to ge optimized
             results = Services.objects.annotate(search=SearchVector('name'),).filter(search=Search)
@@ -113,14 +116,15 @@ def allsearch(request):
 # Create your views here.
 def homepage(request, category_slug=None):
     category = None
-    categories = Category.objects.all()
+    categories = Category.objects.all().exclude(slug="other")
+    otherObj = Category.objects.get(slug="other")
     subcategories = SubCategory.objects.all()
     form = SearchForm()
     search = homeSearchForm()
     user = request.user
     if category_slug:
         category = get_object_or_404(Category, slug=category_slug)
-    return render(request, 'business/home.html', {'user':user,'search':search, 'category':category, 'categories':categories, 'subcategories':subcategories,'form':form})
+    return render(request, 'business/home.html', {'otherObj':otherObj,'user':user,'search':search, 'category':category, 'categories':categories, 'subcategories':subcategories,'form':form})
 
 def company_list(request, category_slug=None, company_slug=None, tag_slug=None):
     category = None
@@ -183,8 +187,17 @@ def company_detail(request, id, slug):
     company_tags_ids = company.tags.values_list('id', flat=True)
     similar_companies = Company.objects.order_by().filter(tags__in=company_tags_ids).exclude(id=company.id).distinct()
     similar_companies = similar_companies.annotate(same_tags=Count('tags')).order_by('-same_tags', '-business_name').distinct()[:10]
-    
-    return render(request, 'business/company/detail.html', {'similar_companies':similar_companies,'photos':galPhotos,'sun_hour':sun_hour,'mon_hour':mon_hour,'tues_hour':tues_hour,'wed_hour':wed_hour,'thur_hour':thur_hour,'fri_hour':fri_hour,'sat_hour':sat_hour,'subcategories':subcategories,'comp_categ':comp_categ,'amenities':amenities,'address':address,'company':company,'category':category,'categories':categories, 'services':services, 'form':form, 'reviews':reviews})
+    paginator = Paginator(reviews, 6)
+    page = request.GET.get('page')
+    try:
+        reviews = paginator.page(page)
+    except PageNotAnInteger:
+        reviews = paginator.page(1)
+    except EmptyPage:
+        reviews = paginator.page(paginator.num_pages)
+
+
+    return render(request, 'business/company/detail.html', {'page':page,'similar_companies':similar_companies,'photos':galPhotos,'sun_hour':sun_hour,'mon_hour':mon_hour,'tues_hour':tues_hour,'wed_hour':wed_hour,'thur_hour':thur_hour,'fri_hour':fri_hour,'sat_hour':sat_hour,'subcategories':subcategories,'comp_categ':comp_categ,'amenities':amenities,'address':address,'company':company,'category':category,'categories':categories, 'services':services, 'form':form, 'reviews':reviews})
 
 @login_required
 def ManageServiceListView(request, id, slug):

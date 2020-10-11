@@ -208,7 +208,10 @@ def slug_generator(sender, instance, *args, **kwargs):
 
 def location_update(sender, instance, *args, **kwargs):
     address = instance.address
-    g = geocoder.google(address + "," + instance.city,key="AIzaSyBaZM_O3d1-xDrecS_fbcbvoT5qDmLmje0")
+    if not address:
+        g = geocoder.ipinfo('me')
+    else:
+        g = geocoder.google(address + "," + instance.city,key="AIzaSyBaZM_O3d1-xDrecS_fbcbvoT5qDmLmje0")
     lat = g.latlng[0]
     lng = g.latlng[1]
     instance.location = "POINT(" + str(lng) + " " + str(lat) +")"
@@ -219,6 +222,7 @@ pre_save.connect(location_update, sender=Company)
 
 class Clients(models.Model):
     company = models.ForeignKey(Company, on_delete=models.CASCADE,related_name='clients')
+    user = models.ForeignKey(Account, on_delete=models.CASCADE, related_name='company_booked',null=True, blank=True)
     first_name = models.CharField(verbose_name="First Name", max_length=30, unique=False)
     last_name = models.CharField(verbose_name="Last Name", max_length=30, unique=False,null=True, blank=True)
     email = models.EmailField(verbose_name='Email', max_length=60)
@@ -232,7 +236,12 @@ class Clients(models.Model):
     def __str__(self):
         return self.first_name + ' ' + self.last_name
 
-    
+#This model should include all requests for bookings or getting on the client list(Bookings not added yet)
+class CompanyReq(models.Model):
+    user = models.ForeignKey(Account, on_delete=models.CASCADE, related_name='requests')
+    company = models.ForeignKey(Company, on_delete=models.CASCADE,related_name='reqclients')
+
+
 
 class OpeningHours(models.Model):
     company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name='hours')

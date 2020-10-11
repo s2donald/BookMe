@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from .forms import BusinessRegistrationForm, UpdateCompanyForm, AddClientForm, AddNotesForm
 from django.contrib.auth.decorators import login_required
-from business.models import Company, SubCategory, OpeningHours, Services, Gallary, Amenities, Clients
+from business.models import Company, SubCategory, OpeningHours, Services, Gallary, Amenities, Clients, CompanyReq
 from account.models import Account
 from account.forms import UpdatePersonalForm
 from account.tasks import bizaddedEmailSent
@@ -187,10 +187,11 @@ def signupViews(request):
             user_form.save()
             email = user_form.cleaned_data.get('email')
             raw_pass = user_form.cleaned_data.get('password1')
+            phone = user_form.cleaned_data.get('phone')
             bname = request.POST.get('bname', '')
             account = authenticate(email=email, password=raw_pass)
             login(request, account)
-            company = Company.objects.create(user=account,business_name=bname,
+            company = Company.objects.create(user=account,business_name=bname,email=email,phone=phone,
                                                 description='',address='',postal='',
                                                 state='',city='',status='draft')
             biz_hours = OpeningHours.objects.bulk_create([
@@ -406,7 +407,7 @@ class createserviceAPI(View):
             data['icon'] = 'error'
         company = Company.objects.get(user=request.user)
         services = Services.objects.filter(business=company)
-        paginator = Paginator(services, 10)
+        paginator = Paginator(services, 5)
         page = request.GET.get('page')
         try:
             services = paginator.page(page)
@@ -481,7 +482,7 @@ class deleteserviceAPI(View):
         service = get_object_or_404(Services, pk=pk, business=company)
         service.delete()
         services = Services.objects.filter(business=company)
-        paginator = Paginator(services, 10)
+        paginator = Paginator(services, 5)
         page = request.GET.get('page')
         try:
             services = paginator.page(page)
@@ -612,7 +613,7 @@ def updateserviceViews(request, pk):
             service.save()
             data['form_is_valid'] = True
             services = Services.objects.filter(business=company)
-            paginator = Paginator(services, 10)
+            paginator = Paginator(services, 5)
             page = request.GET.get('page')
             try:
                 services = paginator.page(page)
@@ -640,15 +641,8 @@ class updateserviceAPI(View):
         dat = {'name': service.name, 'description': service.description, 'price_type':service.price_type, 'price':service.price, 'available':service.available, 'duration_hour':service.duration_hour, 'duration_minute':service.duration_minute, 'checkintime':service.checkintime, 'padding':service.padding, 'paddingtime_hour':service.paddingtime_hour, 'paddingtime_minute':service.paddingtime_minute}
         data=dict()
         form = UpdateServiceForm(initial=dat)
-        paginator = Paginator(services, 10)
-        page = request.GET.get('page')
-        try:
-            services = paginator.page(page)
-        except PageNotAnInteger:
-            services = paginator.page(1)
-        except EmptyPage:
-            services = paginator.page(paginator.num_pages)
-        context = {'service_form':form, 'page':page ,'service':service}
+        
+        context = {'service_form':form,'service':service}
         data['html_form'] = render_to_string('bizadmin/companydetail/services/partial/partial_service_update.html', context, request=request)
         return JsonResponse(data)
 
@@ -673,7 +667,7 @@ class updateserviceAPI(View):
             service.save()
             data['form_is_valid'] = True
             services = Services.objects.filter(business=company)
-            paginator = Paginator(services, 10)
+            paginator = Paginator(services, 5)
             page = request.GET.get('page')
             try:
                 services = paginator.page(page)
@@ -702,6 +696,8 @@ def homepageViews(request):
         if user.on_board:
             company = Company.objects.get(user=user)
             bpp = 0
+            cdb = 0
+            sdb = 0
             if company.image:
                 bpp = bpp + 25
             gallary = Gallary.objects.filter(company=company)
@@ -713,6 +709,21 @@ def homepageViews(request):
                     bpp = bpp +50
                 else:
                     bpp =100
+            if company.clients:
+                cdb = 100
+            
+            services = Services.objects.filter(business=company)
+            print(services)
+            for service in services:
+                sdb = sdb + 25
+                if sdb >= 100:
+                    sdb = 100
+                    break
+            print(sdb)
+
+
+
+
                 
             week = timezone.now() - timedelta(days=7)
             twoweek = week - timedelta(days=7)
@@ -815,7 +826,7 @@ def homepageViews(request):
 
             month = [int(month12),int(month11),int(month10),int(month9),int(month8),int(month7),int(month6),int(month5),int(month4),int(month3),int(month2),int(month1),]
             monthlabel = [labelM11,labelM10,labelM9,labelM8,labelM7,labelM6,labelM5,labelM4,labelM3,labelM2,labelM1,labelM0]
-            return render(request,'bizadmin/home/home.html', {'company':company, 'week':week, 'weeklabel':weeklabel, 'month':month, 'monthlabel':monthlabel, 'bpp':bpp})
+            return render(request,'bizadmin/home/home.html', {'sdb':sdb,'cdb':cdb,'company':company, 'week':week, 'weeklabel':weeklabel, 'month':month, 'monthlabel':monthlabel, 'bpp':bpp})
         else:
             return redirect(reverse('completeprofile', host='bizadmin'))
     else:
@@ -1140,7 +1151,7 @@ def servicesDetailView(request):
 
     company = Company.objects.get(user=user)
     services = Services.objects.filter(business=company)
-    paginator = Paginator(services, 10)
+    paginator = Paginator(services, 5)
     page = request.GET.get('page')
     try:
         services = paginator.page(page)

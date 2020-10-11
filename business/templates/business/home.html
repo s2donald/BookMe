@@ -6,7 +6,7 @@
     <section class="hero-home" style="background: linear-gradient(180deg, #ff5f6d 0%, rgba(0,0,0,0) 100%);">
       <div class="container z-index-20">
         <div class="row">
-          <div class="col-xl-12">
+          <div class="col-xl-12 mt-4">
             <div class="text-center text-white text-lg-left">
               {% comment %} <p class="subtitle letter-spacing-4 mb-2 text-secondary text-shadow">The best services on Gibele</p> {% endcomment %}
               <h1 class="header-font font-weight-bold text-shadow">LIFE IS FOR SERVICE</h1>
@@ -24,6 +24,7 @@
                         <select name="category" class="selectcolor selectpicker show-tick form-control"  data-size="5" data-dropdown-align-right="true" title="Categories">
                             <option class="selectcolor" value="">All Services</option>
                             {% for c in categories %}
+                                
                                 <optgroup label="{{ c.name }}">
                                     <option id="{{ c.slug }}" class="selectcolor" value="{{ c.id }}">All {{c.name}}</option>
                                     {% for sc in subcategories %}
@@ -32,8 +33,10 @@
                                         {% endif %}
                                     {% endfor %}
                                 </optgroup>
-                            
                             {% endfor %}
+                            <optgroup label="Other">
+                                <option id="{{ otherObj.slug }}" class="selectcolor" value="{{ otherObj.id }}">Other</option>
+                            </optgroup>
                         </select>
                   </div>
                   <div class="col-lg-2">

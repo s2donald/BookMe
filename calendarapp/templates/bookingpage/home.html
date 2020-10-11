@@ -2,9 +2,14 @@
 {% load hosts %}
 {% block booking %}
 <script>
-    {% if company.notes %}
+    {% if company.shownotes %}
         Swal.fire({
-            title:'{{ company.notes }}'
+            title:'{{ company.notes }}',
+            customClass:{
+                confirmButton: 'btn btn-info',
+                cancelButton: 'btn btn-danger',
+            },
+            buttonsStyling: false,
         });
     {% endif %}
 </script>
@@ -14,17 +19,253 @@
         <hr class="hrwhite">
         {% for s in services %}
             <div class="row text-center no-gutters underlay">
-                <div class="col-md-6">
+                <div class="col-md-6 pb-0">
                     <h3 class="mb-3">{{ s.name }}</h3>
-                    <p class="licolor">{{ s.description }}</p>
+                    <p class="text-muted">{{ s.description }}</p>
                 </div>
-                <div class="col-md-6">
-                    <p class="text">${{ s.price }}</p>
-                    <a href="{% host_url 'bookingserviceurls' pk=s.id host 'bookingurl' slug=company.slug %}" class="btn btn-sm btn-outline-primary" style="height:auto;">Book Now</a>
+                <div class="col-md-6 pt-0 mt-0">
+                    <p class="font-weight-bold mt-1">${{ s.price }}</p>
+                    <a id="serv{{ s.id }}" href="{% host_url 'bookingserviceurls' pk=s.id host 'bookingurl' slug=company.slug %}" class="btn btn-sm btn-outline-primary" style="height:auto;">Book Now</a>
                 </div>                 
             </div>
             <hr class="hrwhite">
         {% endfor %}
     {% endif %}
 </div>
+
+<script>
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+                                for (let i = 0; i < cookies.length; i++) {
+                                    const cookie = cookies[i].trim();
+                                    // Does this cookie string begin with the name we want?
+                                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                                        break;
+                                    }
+                                }
+                            }
+                                return cookieValue;
+                            }
+                            const csrftoken = getCookie('csrftoken');
+                            
+    {% for s in services %}
+    
+        $('#serv{{ s.id }}').click(function(e){
+            var url = $(this).attr('href');
+            
+
+            // Prevent default action (e.g. following the link)
+            e.preventDefault();
+
+            {% if company.returning %}
+                {% if returnClient %}
+                    // Open the url in the current window. Set to "_blank" instead of "_self" to open in a new window.
+                    window.open(url, "_self");
+                {% else %}
+                    {% if user.is_authenticated %}
+                    Swal.fire({
+                        customClass:{
+                            confirmButton: 'btn btn-info',
+                            cancelButton: 'btn btn-danger',
+                        },
+                        buttonsStyling: false,
+                        title: 'This service provider does not accept new clients. ',
+                        html: `<p>Click the request button below to get added onto the client list.</p>`,
+                        confirmButtonText: 'Get On The List',
+                    }).then(function(result){
+                        if (result.isConfirmed){
+                            $.ajax({
+                                type:'POST',
+                                url: '{% host_url 'requestSpotAsClient' host 'bookingurl' slug=company.slug %}',
+                                async:false,
+                                data:{company_id:'{{ company.id }}'},
+                                headers:{
+                                    "X-CSRFToken": csrftoken
+                                },
+                                success: function(data){
+                                    Swal.fire({
+                                    customClass:{
+                                        confirmButton: 'btn btn-info',
+                                        cancelButton: 'btn btn-danger',
+                                    },
+                                    title: 'Your request has been sent to {{ company.business_name }}.',
+                                    html: `<p>We will send you an email once your request has been approved.</p>`,
+                                    icon: 'success',
+                                    customClass:{
+                                        confirmButton: 'btn btn-info',
+                                        cancelButton: 'btn btn-danger',
+                                    },
+                                    })    
+                                }
+                            });
+                        }
+                    });
+                    {% else %}
+                    Swal.fire({
+                        customClass:{
+                            confirmButton: 'btn btn-info',
+                            denyButton: 'btn btn-link licolorblue',
+                            cancelButton: 'btn btn-danger',
+                        },
+                        buttonsStyling: false,
+                        showDenyButton: true,
+                        showCancelButton: true,
+                        allowOutsideClick: false,
+                        title: 'This service provider does not accept new clients. ',
+                        html: `<p>Please log into Gibele to place a request</p><input type="text" id="login" class="swal2-input" placeholder="Email">
+                                <input type="password" id="password" class="swal2-input" placeholder="Password">`,
+                        confirmButtonText: 'Sign In',
+                        denyButtonText: `Sign Up`,
+                        focusConfirm: false,
+                        
+                        preConfirm: () => {
+                            const login = Swal.getPopup().querySelector('#login').value
+                            const password = Swal.getPopup().querySelector('#password').value
+                            var res = false
+                            const csrftoken = getCookie('csrftoken');
+                            if (!login || !password) {
+                                Swal.showValidationMessage(`Please enter your login and password`)
+                            }
+                            $.ajax({
+                                type:'POST',
+                                url: '{% host_url 'loginbooking' host 'bookingurl' slug=company.slug %}',
+                                async: false,
+                                headers:{
+                                    "X-CSRFToken": csrftoken
+                                },
+                                data:{
+                                    email: login,
+                                    password: password
+                                },
+                                success: function(data){
+                                    if(data.result){
+                                        return true
+                                    }
+                                    else{
+                                        Swal.showValidationMessage(`Incorrect email or password`)
+                                        return false
+                                    }
+                                }
+                            });
+                        }
+                        }).then((result) => {
+                            if (result.isConfirmed){
+                                //Send the request
+                                const csrftoken = getCookie('csrftoken');
+                                $.ajax({
+                                    type:'POST',
+                                    url: '{% host_url 'checkIfClient' host 'bookingurl' slug=company.slug %}',
+                                    async: false,
+                                    headers:{
+                                        "X-CSRFToken": csrftoken
+                                    },
+                                    data:{company_id:'{{ company.id }}'},
+                                    success: function(data){
+                                        if (data.good){
+                                            window.open(url, "_self");
+                                        }
+                                        else if (data.data == 'notclient'){
+                                            Swal.fire({
+                        customClass:{
+                            confirmButton: 'btn btn-info',
+                            cancelButton: 'btn btn-danger',
+                        },
+                        buttonsStyling: false,
+                        title: 'This service provider does not accept new clients. ',
+                        html: `<p>Click the request button below to get added onto the client list.</p>`,
+                        confirmButtonText: 'Get On The List',
+                    }).then(function(result){
+                        if (result.isConfirmed){
+                            $.ajax({
+                                type:'POST',
+                                url: '{% host_url 'requestSpotAsClient' host 'bookingurl' slug=company.slug %}',
+                                async:false,
+                                data:{company_id:'{{ company.id }}'},
+                                headers:{
+                                    "X-CSRFToken": csrftoken
+                                },
+                                success: function(data){
+                                    Swal.fire({
+                                    customClass:{
+                                        confirmButton: 'btn btn-info',
+                                        cancelButton: 'btn btn-danger',
+                                    },
+                                    title: 'Your request has been sent to {{ company.business_name }}.',
+                                    html: `<p>We will send you an email once your request has been approved.</p>`,
+                                    icon: 'success',
+                                    customClass:{
+                                        confirmButton: 'btn btn-info',
+                                        cancelButton: 'btn btn-danger',
+                                    },
+                                    })    
+                                }
+                            });
+                        }
+                    });
+                                        }
+                                    }
+                                })
+                            }
+                            if (result.isDenied){
+                                Swal.fire({
+                                    customClass:{
+                                    confirmButton: 'btn btn-info',
+                                    cancelButton: 'btn btn-danger',
+                                },
+                                showCancelButton: true,
+                                buttonsStyling: false,
+                                allowOutsideClick: false,
+                                title: 'Sign Up for a free Gibele account',
+                                html: `<p>Please sign up for Gibele to place a request</p>
+                                <div class="row swalPadding">
+                                    <div class="col-md-6 swalPadding">
+                                        <input type="text" id="first" class="swal2-input" placeholder="First Name">
+                                    </div>
+                                    <div class="col-md-6 swalPadding">
+                                        <input type="text" id="last" class="swal2-input" placeholder="Last Name">
+                                    </div>
+                                    <div class="col-md-12 swalPadding">
+                                        <input type="text" id="login" class="swal2-input" placeholder="Email">
+                                    </div>
+                                    <div class="col-md-6 swalPadding">
+                                        <input type="password" id="password" class="swal2-input" placeholder="Password">
+                                    </div>
+                                    <div class="col-md-6 swalPadding">
+                                        <input type="password" id="confpassword" class="swal2-input" placeholder="Confirm Password">
+                                    </div>
+                                </div>`,
+                                confirmButtonText: 'Create Account',
+                                focusConfirm: false,
+                                preConfirm: () => {
+                                    const login = Swal.getPopup().querySelector('#login').value
+                                    const first = Swal.getPopup().querySelector('#first').value
+                                    const last = Swal.getPopup().querySelector('#last').value
+                                    const password = Swal.getPopup().querySelector('#password').value
+                                    const confpassword = Swal.getPopup().querySelector('#confpassword').value
+                                    if (password != confpassword) {
+                                        Swal.showValidationMessage('The passwords don\'t match.')
+                                        return false
+                                    }
+
+                                }
+                                });
+                            }
+                    });
+                    {% endif %}
+
+                {% endif %}
+                
+            {% else %}
+                // Open the url in the current window. Set to "_blank" instead of "_self" to open in a new window.
+                window.open(url, "_self");
+            {% endif %}
+            
+        });
+    {% endfor %}
+
+</script>
+
 {% endblock booking %}

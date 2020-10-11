@@ -1301,6 +1301,10 @@ figure {
     padding: 1rem;
 }
 
+.swalPadding {
+  padding: 0!important;
+}
+
 #foo-head{
     display: block;
 }

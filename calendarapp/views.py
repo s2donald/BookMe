@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from account.models import Account
-from business.models import Company, Services, OpeningHours, Clients
+from business.models import Company, Services, OpeningHours, Clients, CompanyReq
 from consumer.models import Bookings
 from django.http import JsonResponse
 from django.views import View
@@ -20,7 +20,11 @@ def bookingurl(request):
     user = request.user
     company = request.viewing_company
     services = Services.objects.filter(business=company)
-    return render(request, 'bookingpage/home.html', {'user': user, 'company':company, 'services':services})
+    if user.is_authenticated:
+        returnClient = company.clients.filter(user=user).exists()
+    else:
+        returnClient = False
+    return render(request, 'bookingpage/home.html', {'returnClient':returnClient,'user': user, 'company':company, 'services':services})
 
 def bookingServiceView(request, pk):
     user = request.user
@@ -28,7 +32,12 @@ def bookingServiceView(request, pk):
     service = get_object_or_404(Services, id=pk)
     personal_form = UpdatePersonalForm()
     gibele_form = AccountAuthenticationForm()
-    return render(request, 'bookingpage/indservice.html', {'user': user, 'company':company, 'service':service, 'personal_form':personal_form, 'gibele_form':gibele_form})
+    if user.is_authenticated:
+        returnClient = company.clients.filter(user=user).exists()
+        print(returnClient)
+    else:
+        returnClient = False
+    return render(request, 'bookingpage/indservice.html', {'returnClient':returnClient,'user': user, 'company':company, 'service':service, 'personal_form':personal_form, 'gibele_form':gibele_form})
 
 def time_slots(start_time, end_time, interval, duration_hour, duration_minute, year, month, day, company):
     t = start_time
@@ -172,6 +181,7 @@ class LoginView(View):
                 login(request, user)
                 return JsonResponse({'result':True})
             else:
+                print('false')
                 return JsonResponse({'result':False})
         else:
             return JsonResponse({'result':False})
@@ -182,4 +192,31 @@ class LoginView(View):
 class facebookLogin(View):
     def post(self, request):
         return JsonResponse({})
+
+class requestSpot(View):
+    def post(self, request):
+        if request.user.is_authenticated:
+            user = get_object_or_404(Account, email=request.user.email)
+        else:
+            return JsonResponse({'data':'You must be signed in. Please try again later'})
+        company_id = request.POST.get('company_id')
+        company = get_object_or_404(Company, id=company_id)
+        requestUser = CompanyReq.objects.filter(user=user, company=company).exists()
+        if not requestUser:
+            requestUser = CompanyReq.objects.create(user=user, company=company)
+            requestUser.save()
+        return JsonResponse({'data':'good'})
+
+class checkIfClientView(View):
+    def post(self, request):
+        if request.user.is_authenticated:
+            user = get_object_or_404(Account, email=request.user.email)
+        else:
+            return JsonResponse({'data':"You must be signed in. Please tr again later"})
+        company_id = request.POST.get('company_id')
+        company = get_object_or_404(Company, id=company_id)
+        requestUser = company.clients.filter(user=user, company=company).exists()
+        if not requestUser:
+            return JsonResponse({'data':'notclient'})
+        return JsonResponse({'good':'good'})
 

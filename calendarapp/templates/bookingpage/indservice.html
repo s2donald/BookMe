@@ -2,6 +2,7 @@
 {% load hosts %}
 {% load crispy_forms_tags %}
 {% block booking %}
+
 <div class="text-block dark-overlay justify-content-center align-items-center">
     {% if service %}
         <h2>{{ service.name }}</h2>
@@ -148,6 +149,7 @@
     var authen
     dates.addEventListener('change', (e) =>{
         const loader = document.querySelector(".sk-folding-cube").classList.remove("d-none")
+        helper.classList.add("d-none")
         const date = document.querySelector("#datepicker")._flatpickr.selectedDates[0];
         const month = date.getMonth();
         const day = date.getDate();
@@ -186,6 +188,7 @@
             else{
                 helper.innerHTML=`<p>No slots available</p>`
             }
+            helper.classList.remove("d-none")
             const loader = document.querySelector(".sk-folding-cube").classList.add("d-none")
         });              
     });
@@ -239,9 +242,9 @@
                             else{
                                 errGib.classList.remove("d-none")
                             }
-                            }
-                    });
+                    }
                 });
+            });
             });
 
             
@@ -326,3 +329,24 @@
 </script>
 
 {% endblock %}
+
+{% block scripts %}
+<script>
+    $(document).ready(function(){
+        {% if company.returning %}
+            {% if returnClient %}
+            {% else %}
+                Swal.fire({
+                    title: 'This service provider only accepts returning clients.',
+                    html: 'Please log into Gibele and submit a request to get added into the clients list.',
+                    allowOutsideClick: false,
+                });
+
+            {% endif %}
+                    
+            {% endif %}
+        })
+        
+</script>
+{% endblock scripts %}
+

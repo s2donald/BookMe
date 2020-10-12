@@ -24,54 +24,38 @@
         }
     });
         document.addEventListener('DOMContentLoaded', function(){
-                
+                function gcd (a, b) {
+                    return (b == 0) ? a : gcd (b, a%b);
+                }
+                var w = screen.width;
+                var h = screen.height;
+                var r = gcd (w, h);
+                var aspect = (w/r)/(h/r)/0.8
+
                 var leftitems = 'prev,next today'
-                var rightitems = 'dayGridMonth,dayGridWeek,dayGridDay'
-                var initviewcal = 'dayGridWeek'
-                var asprat = 1
+                var rightitems = 'listWeek,listDay'
+                var initviewcal = 'listDay'
+
+                
+
+                var asprat = aspect
                 var calendarEl = document.getElementById('calendar');
                 var calendar = new FullCalendar.Calendar(calendarEl, {
-                    views: {
-                        timeGrid: {
-                        eventLimit: 2 // adjust to 6 only for timeGridWeek/timeGridDay
-                        },
+                    
+                    buttonText: {
+                        listWeek: 'Week',
+                        listDay: 'Day',
                     },
                     selectable: true,
-                    select: function(info) {
-                    // on select we show the Sweet Alert modal with an input
-                    Swal.fire({
-                        title: 'Add a booking',
-                        html: '<div class="form-group">' +
-                        '<input class="form-control text-default" placeholder="Event Title" id="input-field">' +
-                        '</div>',
-                        showCancelButton: true,
-                        confirmButtonClass: 'btn btn-primary',
-                        cancelButtonClass: 'btn btn-danger',
-                        buttonsStyling: false
-                    }).then(function(result) {
-
-                        var eventData;
-                        event_title = $('#input-field').val();
-
-                        if (event_title) {
-                        eventData = {
-                            title: event_title,
-                            start: info.startStr,
-                            end: info.endStr,
-                            className: 'event-azure',
-                        };
-                            calendar.addEvent(eventData);
-                        }
-                    });
-                },
                 aspectRatio: asprat,
                 events:[
                 {% for booking in bookings %}
                     {
                         title: '{{ booking.service.name }}',
-                        desc: '{{ booking.slug }}',
+                        description: '{{ booking.slug }}',
                         start: '{{ booking.start|date:"Y-m-d" }}'+'T'+'{{ booking.start|date:"H:i:s" }}',
                         end: '{{ booking.end|date:"Y-m-d" }}'+'T'+'{{ booking.end|date:"H:i:s" }}',
+                        id: '{{ booking.id }}',
                         {% if forloop.counter|divisibleby:"2" %}
                             className: 'event-green',
                         {% elif forloop.counter|divisibleby:"3" %}
@@ -79,39 +63,69 @@
                         {% else %}
                             className:'event-red',
                         {% endif %}
-                        
                     },
                 {% endfor %}
                 ],
                 eventClick: function(info) {
-                    alert('Event: ' + info.event.title);
-                    Swal.fire({
-                        title: info.event.title,
-                        html: '<div class="form-group">' +
-                        '<input class="form-control text-default" placeholder="Event Title" id="input-field">' +
-                        '</div>',
-                        showCancelButton: true,
-                        confirmButtonClass: 'btn btn-primary',
-                        cancelButtonClass: 'btn btn-danger',
-                        buttonsStyling: false
+
+                    $.ajax({
+                        type: 'GET',
+                        url: '{% host_url "getBookingId" host "bizadmin" %}',
+                        data:{booking_id:info.event.id},
+                        async:false,
+                        success: function(data){
+                            var name ='S'
+                            Swal.fire({
+                                title: info.event.title,
+                                html: data.html_string,
+                                showCancelButton: true,
+                                customClass:{
+                                    confirmButton: 'btn btn-primary',
+                                    cancelButton: 'btn btn-danger',
+                                },
+                                buttonsStyling: false,
+                            });
+                        },
                     })
                 },
-
+                noEventsClassNames: 'No bookings to display',
                 initialView: initviewcal,
                 headerToolbar: {
                     center: rightitems,
                     left: 'title',
                     right: leftitems
+                },navLinks: true,
+                navLinkDayClick: function(date, jsEvent) {
+                    //When you click the day
                 }
             });
             calendar.render()
+        });
+        
+        $('body').on('click', 'button.fc-prev-button', function() {
+            
         });
     </script>
         <!-- Main page content-->
         <div class="content">
         <div class="row">
-          <div class="col-md-10 ml-auto mr-auto">
+        <div class="col-md-12 ml-auto mr-auto">
+            <div class="card mx-auto">
+            <div class="card-header">Schedule Manager</div>
+            <div class="card-body">
+                <button class="btn btn-primary" id="addbooking">Add A Booking</button>
+            </div>
+
+            <div class="card-body">
+
+                <p>If you want to reschedule or delete a booking, go into the Agenda below, navigate to the date of the booking and click on the booking. </p>
+            </div>
+                
+            </div>
+        </div>
+          <div class="col-md-12 ml-auto mr-auto">
             <div class="card card-calendar">
+            <div class="card-header"></div>
               <div class="card-body">
                 <div id="calendar"></div>
               </div>
@@ -119,4 +133,15 @@
           </div>
         </div>
       </div>
+      <script>
+        $(document).ready(function(e){
+            $('#addbooking').on('click', function(){
+                Swal.fire({
+                    title: 'Add a booking',
+                    html: `<p>Hello</p>`,
+
+                });
+            });
+        });
+      </script>
 {% endblock %}

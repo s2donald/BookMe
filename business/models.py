@@ -137,7 +137,10 @@ cancellationtime = (
 )
 
 def get_user_image_folder(instance, filename):
-    return "company/images/user_{0}/{1}/".format(instance.user.id, filename)
+    return "company/images/user_{0}/imagefolder/{1}/".format(instance.user, filename)
+
+def get_user_image_folder(instance, filename):
+    return "company/images/user_{0}/requested/{1}/".format(instance.user, filename)
 
 #This is the model for the information we need from each company that is listed on the website
 class Company(models.Model):
@@ -179,7 +182,7 @@ class Company(models.Model):
     tags = TaggableManager(blank=True)
     location = models.PointField(blank=True, null=True)
     class Meta:
-        ordering = ('-publish',)
+        ordering = ('-updated',)
         verbose_name = 'company'
         verbose_name_plural = 'companies'
         index_together =(('slug','id'),)
@@ -235,11 +238,20 @@ class Clients(models.Model):
 
     def __str__(self):
         return self.first_name + ' ' + self.last_name
-
+from django.utils.timezone import now
 #This model should include all requests for bookings or getting on the client list(Bookings not added yet)
 class CompanyReq(models.Model):
     user = models.ForeignKey(Account, on_delete=models.CASCADE, related_name='requests')
     company = models.ForeignKey(Company, on_delete=models.CASCADE,related_name='reqclients')
+    created_at = models.DateTimeField(auto_now_add=True)
+    add_to_list = models.BooleanField(default=False)
+    
+    #To be implemented in the near future, the client can add a description and an image to requested items
+    description = models.CharField(max_length=200,blank=True)
+    image = models.ImageField(upload_to=get_user_image_folder, blank=True)
+    class Meta:
+        ordering = ('created_at',)
+        verbose_name = 'Request For Company'
 
 
 

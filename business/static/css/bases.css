@@ -463,6 +463,9 @@ a:link{
     background-color: #854fee;
 }
 
+.licolorblack {
+  color: black !important;
+}
 
 .licolor {
     color: #854fee !important;
@@ -483,6 +486,15 @@ a.licolor:hover, a.licolor:focus {
     background: inherit;
     background-clip: padding-box;
     color: #d52ecd;
+}
+
+.fc-event:hover:hover{
+  background-color: #854fee !important;
+}
+
+.btn.text-white.btn-link:hover {
+  color: #854fee !important;
+  font-weight: bold;
 }
 
 .btn-social {
@@ -513,7 +525,6 @@ a.licolor:hover, a.licolor:focus {
 
 .btn{
     position: relative;
-    border: 3px solid transparent;
     border-radius:4px;
 }
 .btn:focus,.btn::after {
@@ -542,6 +553,7 @@ button:active,
 .btn.btn-outline-primary{
     border-radius: 50px;
     background: var(--gradient-color);
+    border: 3px solid transparent;
     background-clip: padding-box;
     color: whitesmoke;
     transition: background .6 ease;
@@ -564,6 +576,33 @@ button:active,
     z-index:-1;
     border-radius: 50px;
 }
+
+
+.btn.btn-outline-light{
+  border-radius: 5px;
+  border: 3px solid transparent;
+  color: white;
+  font-weight: bold;
+  transition: background .6 ease;
+  border-color: white;
+}
+.btn.btn.btn-outline-light:hover{
+  background: white;
+  background-clip: padding-box;
+  color: #854fee;
+  border-color: #854fee;
+  border-radius: 5px;
+}
+.btn.btn-outline-light::after{
+  position:absolute;
+  top:-2px; left:-2px;
+  bottom: -2px; right: -2px;
+  background: var(--gradient-color);
+  content:'';
+  z-index:-1;
+  border-radius: 5px;
+}
+
 
 button:active,
 .btn.btn-outline-dark{
@@ -1742,6 +1781,7 @@ figure {
 .btn.btn-info{
   border-radius: 10px;
   background: linear-gradient(90deg, #854fee 0%, #854fee 100%);
+  border: 3px solid transparent;
   background-clip: padding-box;
   color: whitesmoke;
   transition: background .6 ease;
@@ -1768,6 +1808,7 @@ figure {
   border-radius: 10px;
   background: linear-gradient(90deg, #e14eca 0%, #e14eca 100%);
   background-clip: padding-box;
+  border: 3px solid transparent;
   color: whitesmoke;
   transition: background .6 ease;
   border-color: linear-gradient(90deg, #e14eca 0%, #e14eca 100%);
@@ -1794,6 +1835,7 @@ figure {
   border-radius: 10px;
   background: linear-gradient(90deg, #ff1a00 0%, #ff9900 100%);
   background-clip: padding-box;
+  border: 3px solid transparent;
   color: whitesmoke;
   transition: background .6 ease;
   border-color: linear-gradient(90deg, #ff1a00 0%, #ff9900 100%);

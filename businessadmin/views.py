@@ -1188,6 +1188,7 @@ register = template.Library()
 def filter_range(start, end):
     return range(start, end)
 
+@login_required
 def reviewListView(request):
     if not request.user.is_authenticated:
         context={}
@@ -1210,6 +1211,62 @@ def reviewListView(request):
     except EmptyPage:
         reviews = paginator.page(paginator.num_pages)
     return render(request,'bizadmin/dashboard/reviews/reviews.html', {'page':page,'company':company, 'reviews':reviews})
+
+@login_required
+def requestListViews(request):
+    email = request.user.email
+    user = get_object_or_404(Account, email=email)
+    if not user.is_business:
+        return redirect(reverse('home', host='bizadmin'))
+    if not user.on_board:
+        return redirect(reverse('completeprofile', host='bizadmin'))
+    company = Company.objects.get(user=user)
+    requested = CompanyReq.objects.filter(company=company).order_by('created_at')
+
+    paginator = Paginator(requested, 10)
+    page = request.GET.get('page')
+    try:
+        requested = paginator.page(page)
+    except PageNotAnInteger:
+        requested = paginator.page(1)
+    except EmptyPage:
+        requested = paginator.page(paginator.num_pages)
+
+    return render(request, 'bizadmin/dashboard/request/request.html',{'page':page,'company':company, 'requested':requested})
+
+class getBooking(View):
+    def get(self, request):
+        company = get_object_or_404(Company, user=request.user)
+        booking_id = request.GET.get('booking_id')
+        booking = Bookings.objects.get(id=booking_id)
+        service = booking.service
+        if booking.user:
+            htmlString = render_to_string('bizadmin/dashboard/schedule/bookingInfo.html',{'user':booking.user})
+        else:
+            guest = booking.guest
+        return JsonResponse({'html_string':htmlString})
+
+class addRequestedViews(View):
+    def post(self, request, pk):
+        req = get_object_or_404(CompanyReq, id=pk)
+        user = req.user
+        company = get_object_or_404(Company, user= request.user)
+        Clients.objects.create(company=company, user=user, first_name=user.first_name, last_name=user.last_name, email=user.email,phone=user.phone,
+                                city=user.city,postal=user.postal,province=user.province,address=user.address)
+        req.delete()
+        
+
+        return JsonResponse({'added':'We have added ' + user.first_name + ' to your client list.'})
+
+class deleteRequestedViews(View):
+    def post(self, request, pk):
+        req = get_object_or_404(CompanyReq, id=pk)
+        user = req.user
+        req.delete()
+
+        return JsonResponse({'deleted':'We have rejected ' + user.first_name + '\'s request to join your client list.'})
+
+
 
 
 

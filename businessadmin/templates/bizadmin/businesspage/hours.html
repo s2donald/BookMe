@@ -252,7 +252,12 @@
             success:function(data){
                 Swal.fire({
                     title:'Your business hours have been saved',
-                    icon: 'success'
+                    icon: 'success',
+                    customClass:{
+                        confirmButton: 'btn btn-primary',
+                        cancelButton: 'btn btn-danger',
+                    },
+                    buttonsStyling: false,
                 });
             }
         });

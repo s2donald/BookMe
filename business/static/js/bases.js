@@ -46,7 +46,7 @@ $(document).ready(function (){
     // =====================================================
 
     var detailSlider = new Swiper('.detail-slider', {
-        slidesPerView: 3,
+        slidesPerView: 5,
         spaceBetween: 0,
         centeredSlides: true,
         zoom:true,
@@ -57,6 +57,9 @@ $(document).ready(function (){
             prevEl: '.swiper-button-prev',
         },
         breakpoints: {
+            1280:{
+                slidesPerView: 4,
+            },
             991: {
                 slidesPerView: 3
             },
@@ -274,14 +277,15 @@ $(document).ready(function (){
     });
 
     var swiper = new Swiper('.gallery-slider', {
-        slidesPerView: 4,
+        slidesPerView: 3,
         slidesPerColumn: 1,
+        centeredSlides: true,
         breakpoints: {
             1200: {
-                slidesPerView: 4,
+                slidesPerView: 3,
             },
             991: {
-                slidesPerView: 1,
+                slidesPerView: 2,
                 slidesPerColumn: 1,
             },
             565: {

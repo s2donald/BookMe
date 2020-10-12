@@ -206,7 +206,11 @@
                                                     Swal.fire({
                                                         title: '{{ s.name }} Client Removed!', 
                                                         text: 'Your client has been removed from your list.', 
-                                                        icon: 'success' 
+                                                        icon: 'success',customClass:{
+                                                            confirmButton: 'btn btn-primary',
+                                                            cancelButton: 'btn btn-danger',
+                                                        },
+                                                    buttonsStyling: false,
                                                     });
                                                 }
                                             });
@@ -216,8 +220,8 @@
                                         ) {
                                             swalStyles.fire(
                                             'Cancelled',
-                                            'We still have your service saved! 😊',
-                                            'error'
+                                            'Your client is still saved in your database! 😊',
+                                            'error',
                                             )
                                         }
                                     });
@@ -241,6 +245,11 @@
                         Swal.fire({
                             title:data.view,
                             icon:data.icon,
+                            customClass:{
+                                confirmButton: 'btn btn-primary',
+                                cancelButton: 'btn btn-danger',
+                            },
+                        buttonsStyling: false,
                         });
                     }
                 });

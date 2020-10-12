@@ -129,6 +129,13 @@
             </div>
           </li>
           
+          <li class="{% block bizrequests %}{%endblock%}">
+            <a href="{% host_url 'requestList' host 'bizadmin' %}" >
+              <i class="fas fa-clipboard-list"></i>
+              <p>Requests</p>
+            </a>
+          </li>
+
           <li class="{% block bizreview %}{%endblock%}">
             <a href="{% host_url 'reviewlist' host 'bizadmin' %}">
               <i class="fas fa-star"></i>

@@ -133,7 +133,12 @@
                 success: function(data){
                     Swal.fire({
                         title:'We saved your email settings',
-                        icon:'success'
+                        icon:'success',
+                        customClass:{
+                                confirmButton: 'btn btn-primary',
+                                cancelButton: 'btn btn-danger',
+                            },
+                        buttonsStyling: false,
                     })
                 },
             });
@@ -150,7 +155,12 @@
                 success: function(data){
                     Swal.fire({
                         title:'We saved your email settings',
-                        icon:'success'
+                        icon:'success',
+                        customClass:{
+                                confirmButton: 'btn btn-primary',
+                                cancelButton: 'btn btn-danger',
+                            },
+                        buttonsStyling: false,
                     })
                 },
             });
@@ -159,6 +169,11 @@
             Swal.fire({
                 title:'Automated text message support is currently unavailable. We will send you an email once it becomes available!',
                 icon:'error',
+                customClass:{
+                                confirmButton: 'btn btn-primary',
+                                cancelButton: 'btn btn-danger',
+                            },
+                        buttonsStyling: false,
             });
         });
         var clientMsgNotes = document.getElementById('radioShowNotes')
@@ -176,13 +191,23 @@
                     if (data.error){
                         Swal.fire({
                             title: 'We could not save your notes submission. Please try again later',
-                            icon: data.error
+                            icon: data.error,
+                            customClass:{
+                                confirmButton: 'btn btn-primary',
+                                cancelButton: 'btn btn-danger',
+                            },
+                        buttonsStyling: false,
                         });
                     }
                     else{
                         Swal.fire({
                             title: 'We have saved your notes settings',
-                            icon: data.good
+                            icon: data.good,
+                            customClass:{
+                                confirmButton: 'btn btn-primary',
+                                cancelButton: 'btn btn-danger',
+                            },
+                        buttonsStyling: false,
                         });
                     }
                 },

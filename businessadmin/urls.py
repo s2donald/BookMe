@@ -44,6 +44,8 @@ urlpatterns = [
     url(r'^accountFormSave/$', views.personDetailSave.as_view(), name='accountCheck'),
     url(r'home/$', views.homepageViews, name='home'),
 
+    url(r'getbook/$', views.getBooking.as_view(), name='getBookingId'),
+
     url(r'deletegal/$', views.deleteGalPic.as_view(), name='deletegalpic'),
     url(r'galupload/$', views.galImageUpload, name='galleryupload'),
     url(r'imageuploads/$', views.headerImageUploads, name='imageuploads'),
@@ -54,6 +56,10 @@ urlpatterns = [
     url(r'logout/$', views.LogoutView, name='bizadminlogout'),
     url(r'login/$', views.loginViews, name='bizadminlogin'),
     url(r'^faq/$', views.faqBusinessViews, name='faqbusiness'),
+
+    url(r'requests/', views.requestListViews, name='requestList'),
+    url(r'requestedAdd/(?P<pk>\d+)/$', views.addRequestedViews.as_view(), name='addRequested'),
+    url(r'requestedDelete/(?P<pk>\d+)/$', views.deleteRequestedViews.as_view(), name='deleteRequested'),
 
     url(r'^addamenity/$', views.addAmenityAPI.as_view(), name='addamenity'),
     url(r'^removeamenity/$', views.removeAmenityAPI.as_view(), name='removeamenity'),

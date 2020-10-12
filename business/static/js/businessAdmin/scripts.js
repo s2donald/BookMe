@@ -62,7 +62,12 @@ $(document).ready(function(){
           $("#modal-update").modal("hide");
           Swal.fire({
             title:data.view,
-            icon:'success'
+            icon:'success',
+            customClass:{
+              confirmButton: 'btn btn-primary',
+              cancelButton: 'btn btn-danger',
+          },
+      buttonsStyling: false,
           });
         }
         else {
@@ -91,7 +96,12 @@ $(document).ready(function(){
           $("#modal-update").modal("hide");
           Swal.fire({
             title:data.view,
-            icon:'success'
+            icon:'success',
+            customClass:{
+              confirmButton: 'btn btn-primary',
+              cancelButton: 'btn btn-danger',
+          },
+      buttonsStyling: false,
           });
         }
         else {

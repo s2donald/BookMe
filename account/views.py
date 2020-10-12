@@ -45,8 +45,13 @@ def ConsumerRegistrationView(request):
             user_form.save()
             email = user_form.cleaned_data.get('email')
             raw_pass = user_form.cleaned_data.get('password1')
+            rmrme = request.POST.get('rememberPasswordCheck')
+            
             account = authenticate(email=email, password=raw_pass)
             login(request, account)
+            if not rmrme:
+                request.session.set_expiry(0)
+            
             return redirect('account:registered')
         else:
             context['consumer_registration_form'] = user_form
@@ -160,10 +165,14 @@ def LoginView(request):
         if form.is_valid():
             email = request.POST['email']
             password = request.POST['password']
+            rmrme = request.POST.get('rememberPasswordCheck')
+            print(rmrme)
             user = authenticate(email=email, password=password)
 
             if user:
                 login(request, user)
+                if not rmrme:
+                    request.session.set_expiry(0)
                 return redirect('business:homepage')
     else:
         form = AccountAuthenticationForm()

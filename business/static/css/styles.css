@@ -34,6 +34,7 @@ body {
 a.licolor:hover, a.licolor:focus {
   color: #d52ecd !important;
 }
+
 #my-slug-container {
   display: inline-block;
   position: relative;
@@ -155,6 +156,10 @@ a.licolor:hover, a.licolor:focus {
 
 .logo-height{
   height:50px;
+}
+
+.fc-theme-standard .fc-list-day-cushion {
+  background-color: #1e1e2f !important;
 }
 
 @media only screen and (max-width: 700px) {
@@ -10437,7 +10442,10 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
 
 .fc {
   direction: ltr;
-  text-align: left; }
+  text-align: left; 
+  color: black;
+  background-color:inherit
+}
 
 .fc-rtl {
   text-align: right; }
@@ -10524,8 +10532,6 @@ hr.fc-divider {
 .fc table {
   width: 100%;
   box-sizing: border-box;
-  /* fix scrollbar issue in firefox */
-  table-layout: fixed;
   border-collapse: collapse;
   border-spacing: 0;
   font-size: 1em;
@@ -10652,7 +10658,6 @@ temporary rendered events).
 .fc-event {
   position: relative;
   /* for resize handle and other inner positioning */
-  display: block;
   /* make the <a> tag block */
   font-size: .85em;
   line-height: 1.3;
@@ -10677,12 +10682,16 @@ temporary rendered events).
   /* default BACKGROUND color */ }
 
 .fc-event,
-.fc-event:hover,
 .ui-widget .fc-event {
   color: #ffffff;
   /* default TEXT color */
   text-decoration: none;
   /* if <a> has an href */ }
+
+  .fc-event:hover {
+    color: rgb(0, 0, 0);
+  }
+
 
 .fc-event[href],
 .fc-event.fc-draggable {

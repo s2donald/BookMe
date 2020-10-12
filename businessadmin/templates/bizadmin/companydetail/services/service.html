@@ -203,7 +203,12 @@
                                                     Swal.fire({
                                                         title: '{{ s.name }} Service Deleted!', 
                                                         text: 'Your service has been deleted.', 
-                                                        icon: 'success' 
+                                                        icon: 'success',
+                                                        customClass:{
+                                                            confirmButton: 'btn btn-primary',
+                                                            cancelButton: 'btn btn-danger',
+                                                        },
+                                                        buttonsStyling: false,
                                                     });
                                                 }
                                             });
@@ -238,19 +243,15 @@
                         Swal.fire({
                             title:data.view,
                             icon:data.icon,
+                            customClass:{
+                                confirmButton: 'btn btn-primary',
+                                cancelButton: 'btn btn-danger',
+                            },
+                        buttonsStyling: false,
                         });
                     }
                 });
             });
-
-            {% comment %} $(document).on('click', '.updatebtn', function(e){
-                var $this = $(this)
-                var urldata = $this.attr("data-url")
-                e.preventDefault();
-                $.aja
-            }); {% endcomment %}
-
-
 
             $(document).on('click', '.updatebtn', function () { 
                 var btn = $(this);

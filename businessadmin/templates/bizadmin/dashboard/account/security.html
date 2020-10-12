@@ -151,12 +151,22 @@
                         Swal.fire({
                             title: data.badresponse,
                             icon: 'error',
+                            customClass:{
+                                confirmButton: 'btn btn-primary',
+                                cancelButton: 'btn btn-danger',
+                            },
+                        buttonsStyling: false,
                         });
                     }
                     else {
                         Swal.fire({
                             title:'We have successfully updated your password',
                             icon:'success',
+                            customClass:{
+                                confirmButton: 'btn btn-primary',
+                                cancelButton: 'btn btn-danger',
+                            },
+                        buttonsStyling: false,
                         });
                     }
                     document.getElementById('passwordForm').reset()
@@ -176,7 +186,12 @@
                 success: function(data){
                     Swal.fire({
                         title: data.good,
-                        icon: 'success'
+                        icon: 'success',
+                        customClass:{
+                                confirmButton: 'btn btn-primary',
+                                cancelButton: 'btn btn-danger',
+                            },
+                        buttonsStyling: false,
                     });
                 },
             });
@@ -193,7 +208,12 @@
                 success: function(data){
                     Swal.fire({
                         title: data.good,
-                        icon: 'success'
+                        icon: 'success',
+                        customClass:{
+                                confirmButton: 'btn btn-primary',
+                                cancelButton: 'btn btn-danger',
+                            },
+                        buttonsStyling: false,
                     });
                 },
             });
@@ -202,7 +222,12 @@
         $("#deleteAcct").on('click', function(){
             Swal.fire({
                 title: 'We are sad to see you leave.',
-                html: 'Please send an email to support@gibele.com to finalize the deletion of your account.'
+                html: 'Please send an email to support@gibele.com to finalize the deletion of your account.',
+                customClass:{
+                    confirmButton: 'btn btn-primary',
+                    cancelButton: 'btn btn-danger',
+                },
+                buttonsStyling: false,
             });
         });
     });

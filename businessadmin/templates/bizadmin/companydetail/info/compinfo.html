@@ -344,12 +344,22 @@
                     Swal.fire({
                         title:'There was an error in your form. We were unable to save the changes.',
                         icon: 'error',
+                        customClass:{
+                            confirmButton: 'btn btn-primary',
+                            cancelButton: 'btn btn-danger',
+                       },
+                       buttonsStyling: false,
                     });
                 }
                 if(data.good){
                     Swal.fire({
                         title:'Your information has been saved',
                         icon: 'success',
+                        customClass:{
+                            confirmButton: 'btn btn-primary',
+                            cancelButton: 'btn btn-danger',
+                        },
+                        buttonsStyling: false,
                     });
                 }
 
@@ -358,5 +368,5 @@
         return false;
     });
 
-                        </script>
+    </script>
 {% endblock %}

@@ -203,7 +203,7 @@ class requestSpot(View):
         company = get_object_or_404(Company, id=company_id)
         requestUser = CompanyReq.objects.filter(user=user, company=company).exists()
         if not requestUser:
-            requestUser = CompanyReq.objects.create(user=user, company=company)
+            requestUser = CompanyReq.objects.create(user=user, company=company, add_to_list=True)
             requestUser.save()
         return JsonResponse({'data':'good'})
 
@@ -212,11 +212,37 @@ class checkIfClientView(View):
         if request.user.is_authenticated:
             user = get_object_or_404(Account, email=request.user.email)
         else:
-            return JsonResponse({'data':"You must be signed in. Please tr again later"})
+            return JsonResponse({'data':"You must be signed in. Please try again later"})
         company_id = request.POST.get('company_id')
         company = get_object_or_404(Company, id=company_id)
         requestUser = company.clients.filter(user=user, company=company).exists()
         if not requestUser:
             return JsonResponse({'data':'notclient'})
+        return JsonResponse({'good':'good'})
+
+from django.core.validators import validate_email
+from django import forms
+class createAccountView(View):
+    def post(self, request):
+        email = request.POST.get('email')
+        first = request.POST.get('first')
+        last = request.POST.get('last')
+        pw = request.POST.get('password')
+
+        try:
+            validate_email(email)
+        except forms.ValidationError:
+            return JsonResponse({'error':'notanemail'})
+        
+        if Account.objects.filter(email=email).exists():
+            return JsonResponse({'error':'taken'})
+        else:
+            acct = Account.objects.create_user(email=email,password=pw)
+            acct.first_name = first
+            acct.last_name=last
+            acct.is_consumer=True
+            acct.save()
+            account = authenticate(email=email, password=pw)
+            login(request, account)
         return JsonResponse({'good':'good'})
 

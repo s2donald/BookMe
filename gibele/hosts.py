@@ -1,7 +1,7 @@
 from django.conf import settings
 from django_hosts import patterns, host
 
-settings.PARENT_HOST = 'gibele.com:8000'
+settings.PARENT_HOST = 'pure-fjord-45840.herokuapp.com'
 host_patterns = patterns('',
     # host(r'www', 'gibele.urls',name='ww'),
     host(r'', settings.ROOT_URLCONF, name='www'),

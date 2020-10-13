@@ -21,11 +21,11 @@ django-widget-tweaks==1.4.8
 djangorestframework==3.11.1
 Flask==1.1.2
 future==0.18.2
-GDAL==3.1.3
+GDAL==2.4.0
 geocoder==1.38.1
 geographiclib==1.50
 geopy==2.0.0
-geos==0.2.2
+geos==3.7.2
 gunicorn==20.0.4
 idna==2.10
 itsdangerous==1.1.0
@@ -36,7 +36,7 @@ MarkupSafe==1.1.1
 oauthlib==3.1.0
 Pillow==7.0.0
 postgis==1.0.4
-proj==0.2.0
+proj==5.2.0
 psycopg2-binary==2.8.4
 pycparser==2.20
 PyJWT==1.7.1

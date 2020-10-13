@@ -5,8 +5,8 @@ settings.PARENT_HOST = 'gibele.com:8000'
 host_patterns = patterns('',
     # host(r'www', 'gibele.urls',name='ww'),
     host(r'business','businessadmin.urls', name='bizadmin'),
+    host(r'www', settings.ROOT_URLCONF, name='www'),
     host(r'(?P<slug>[-\w]+)', 'calendarapp.urls', callback='calendarapp.views.get_companyslug',name='bookingurl'),
 
-    host(r'', settings.ROOT_URLCONF, name='www'),
     # host(r'', settings.ROOT_URLCONF, name='www'),
 )

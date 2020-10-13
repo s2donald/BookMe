@@ -21,7 +21,6 @@ django-widget-tweaks==1.4.8
 djangorestframework==3.11.1
 Flask==1.1.2
 future==0.18.2
-GDAL==2.4.0
 geocoder==1.38.1
 geographiclib==1.50
 geopy==2.0.0

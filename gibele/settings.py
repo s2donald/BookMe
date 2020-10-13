@@ -27,7 +27,7 @@ DEBUG = False
 
 TIME_INPUT_FORMATS = ['%I:%M %p',]
 
-ALLOWED_HOSTS = ['gibele.com', '.gibele.com', '.gibele.com:8000', 'gibele.com:8000', 'www.192.168.2.19', '.192.168.2.19', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['pure-fjord-45840.herokuapp.com/','.pure-fjord-45840.herokuapp.com/','gibele.com', '.gibele.com', '.gibele.com:8000', 'gibele.com:8000', 'www.192.168.2.19', '.192.168.2.19', 'localhost', '127.0.0.1']
 SESSION_COOKIE_DOMAIN=".gibele.com"
 DOMAIN_NAME='gibele.com'
 
@@ -172,7 +172,7 @@ EMAIL_USE_SSL = True
 
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
-# SECURE_SSL_REDIRECT=True
+SECURE_SSL_REDIRECT=True
 
 GDAL_LIBRARY_PATH = os.environ.get('GDAL_LIBRARY_PATH')
 GEOS_LIBRARY_PATH = os.environ.get('GEOS_LIBRARY_PATH')

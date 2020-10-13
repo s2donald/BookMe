@@ -28,8 +28,8 @@ DEBUG = True
 TIME_INPUT_FORMATS = ['%I:%M %p',]
 
 ALLOWED_HOSTS = ['pure-fjord-45840.herokuapp.com','.pure-fjord-45840.herokuapp.com','gibele.com', '.gibele.com', '.gibele.com:8000', 'gibele.com:8000', 'www.192.168.2.19', '.192.168.2.19', 'localhost', '127.0.0.1']
-SESSION_COOKIE_DOMAIN=".gibele.com"
-DOMAIN_NAME='gibele.com'
+SESSION_COOKIE_DOMAIN="pure-fjord-45840.herokuapp.com"
+DOMAIN_NAME='pure-fjord-45840.herokuapp.com'
 
 # Application definition
 
@@ -72,7 +72,7 @@ MIDDLEWARE = [
 ROOT_URLCONF = 'gibele.urls'
 ROOT_HOSTCONF = 'gibele.hosts'
 DEFAULT_HOST = ' '
-DEFAULT_REDIRECT_URL = "https://www.gibele.com:8000"
+DEFAULT_REDIRECT_URL = "https://pure-fjord-45840.herokuapp.com"
 
 TEMPLATES = [
     {

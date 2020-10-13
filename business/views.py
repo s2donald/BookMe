@@ -114,17 +114,13 @@ def allsearch(request):
     return render(request, 'business/company/list.html')
 
 # Create your views here.
-def homepage(request, category_slug=None):
-    category = None
+def homepage(request):
     categories = Category.objects.all().exclude(slug="other")
     otherObj = Category.objects.get(slug="other")
     subcategories = SubCategory.objects.all()
-    form = SearchForm()
     search = homeSearchForm()
     user = request.user
-    if category_slug:
-        category = get_object_or_404(Category, slug=category_slug)
-    return render(request, 'business/home.html', {'otherObj':otherObj,'user':user,'search':search, 'category':category, 'categories':categories, 'subcategories':subcategories,'form':form})
+    return render(request, 'business/home.html', {'otherObj':otherObj,'user':user,'search':search, 'categories':categories, 'subcategories':subcategories})
 
 def company_list(request, category_slug=None, company_slug=None, tag_slug=None):
     category = None

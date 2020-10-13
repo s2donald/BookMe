@@ -71,7 +71,7 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'gibele.urls'
 ROOT_HOSTCONF = 'gibele.hosts'
-DEFAULT_HOST = 'www'
+DEFAULT_HOST = ' '
 DEFAULT_REDIRECT_URL = "https://www.gibele.com:8000"
 
 TEMPLATES = [

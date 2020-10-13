@@ -72,7 +72,6 @@ MIDDLEWARE = [
 ROOT_URLCONF = 'gibele.urls'
 ROOT_HOSTCONF = 'gibele.hosts'
 DEFAULT_HOST = 'www'
-DEFAULT_REDIRECT_URL = "https://pure-fjord-45840.herokuapp.com"
 
 TEMPLATES = [
     {

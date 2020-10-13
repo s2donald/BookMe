@@ -1,1 +1,3 @@
 gdal-bin
+binutils 
+libproj-dev

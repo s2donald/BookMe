@@ -43,7 +43,7 @@ INSTALLED_APPS = [
     'businessadmin.apps.BusinessadminConfig',
     'consumer.apps.ConsumerConfig',
     'calendarapp.apps.CalendarappConfig',
-    # 'django.contrib.gis',
+    'django.contrib.gis',
     'crispy_forms',
     'django.contrib.admin',
     'django.contrib.auth',

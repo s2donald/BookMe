@@ -488,10 +488,6 @@ a.licolor:hover, a.licolor:focus {
     color: #d52ecd;
 }
 
-.fc-event:hover:hover{
-  background-color: #854fee !important;
-}
-
 .btn.text-white.btn-link:hover {
   color: #854fee !important;
   font-weight: bold;

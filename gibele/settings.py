@@ -110,9 +110,11 @@ SOCIAL_AUTH_USERNAME_IS_FULL_EMAIL = True
 DATABASES = {
     'default': {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
-        'NAME': 'gibele1',
-        'USER': 'sdonald',
-        'PASSWORD': 'Kingston36227',
+        'NAME': 'dincpbe3b8dka',
+        'USER': 'vmiwncxghkdhcc',
+        'PASSWORD': '991784e49b6adedff41826280a771e98419ea2389ea374efc4bd11cc61f7a8d2',
+        'HOST':'ec2-52-21-0-111.compute-1.amazonaws.com',
+        'POST':'5432',
     }
 }
 

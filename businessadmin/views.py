@@ -74,8 +74,8 @@ def completeViews(request):
             mon_from = request.POST['monOpenHour']
             mon_to = request.POST['monCloseHour']
             mon_closed = not request.POST.get('monOpen', False)
-            tues_from = request.POST['tuesCloseHour']
-            tues_to = request.POST['tuesOpenHour']
+            tues_from = request.POST['tuesOpenHour']
+            tues_to = request.POST['tuesCloseHour']
             tues_closed = not request.POST.get('tuesOpen', False)
             wed_from = request.POST['wedOpenHour']
             wed_to = request.POST['wedCloseHour']
@@ -99,7 +99,8 @@ def completeViews(request):
             company.city = city
             company.status = status
             company.interval = interval
-            company.returning = returning
+            if returning:
+                company.returning = returning
             company.notes = notes
             company.cancellation = cancellation
             if subdomain != company.slug:
@@ -144,7 +145,7 @@ def completeViews(request):
             for s in subcategory:
                 company.subcategory.add(s)
 
-            return render(request, 'bizadmin/home/home.html', {'company':company})
+            return redirect(reverse('home', host='bizadmin'))
 
     biz_form = AddCompanyForm()
     service_form = AddServiceForm()

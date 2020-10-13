@@ -1,2 +1,2 @@
 release: python manage.py migrate
-web: gunicorn portfolio.wsgi
+web: gunicorn gibele.wsgi

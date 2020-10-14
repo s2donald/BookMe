@@ -157,21 +157,47 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
+USE_S3 = os.getenv('USE_S3') == 'TRUE'
 
-AWS_ACCESS_KEY_ID = 'AKIA5YCTBN72FMLDSXOJ'
-AWS_SECRET_ACCESS_KEY = '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'
-AWS_STORAGE_BUCKET_NAME = 'django-gibele'
-AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
-AWS_S3_OBJECT_PARAMETERS = {
-    'CacheControl': 'max-age=86400',
-}
-AWS_LOCATION = 'static'
+if USE_S3:
+    # aws settings
+    AWS_ACCESS_KEY_ID = os.getenv('AKIA5YCTBN72FMLDSXOJ')
+    AWS_SECRET_ACCESS_KEY = os.getenv('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')
+    AWS_STORAGE_BUCKET_NAME = os.getenv('django-gibele')
+    AWS_DEFAULT_ACL = None
+    AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
+    AWS_S3_OBJECT_PARAMETERS = {'CacheControl': 'max-age=86400'}
+    # s3 static settings
+    STATIC_LOCATION = 'static'
+    STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{STATIC_LOCATION}/'
+    STATICFILES_STORAGE = 'gibele.storage_backends.StaticStorage'
+    # s3 public media settings
+    PUBLIC_MEDIA_LOCATION = 'media'
+    MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{PUBLIC_MEDIA_LOCATION}/'
+    DEFAULT_FILE_STORAGE = 'gibele.storage_backends.PublicMediaStorage'
+else:
+    STATIC_URL = '/staticfiles/'
+    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+    MEDIA_URL = '/mediafiles/'
+    MEDIA_ROOT = os.path.join(BASE_DIR, 'mediafiles')
 
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'business/static'),
-]
-STATIC_URL = 'https://%s/%s/' % (AWS_S3_CUSTOM_DOMAIN, AWS_LOCATION)
-STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
+
+
+# AWS_ACCESS_KEY_ID = 'AKIA5YCTBN72FMLDSXOJ'
+# AWS_SECRET_ACCESS_KEY = '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'
+# AWS_STORAGE_BUCKET_NAME = 'django-gibele'
+# AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
+# AWS_S3_OBJECT_PARAMETERS = {
+#     'CacheControl': 'max-age=86400',
+# }
+# AWS_LOCATION = 'static'
+
+# STATICFILES_DIRS = [
+#     os.path.join(BASE_DIR, 'business/static'),
+# ]
+# STATIC_URL = 'https://%s/%s/' % (AWS_S3_CUSTOM_DOMAIN, AWS_LOCATION)
+# STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
 # STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 # STATIC_URL = '/static/'

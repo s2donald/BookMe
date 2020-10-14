@@ -100,7 +100,7 @@ def completeViews(request):
             company.status = status
             company.interval = interval
             if returning:
-                company.returning = returning
+                company.returning = True
             company.notes = notes
             company.cancellation = cancellation
             if subdomain != company.slug:
@@ -230,7 +230,7 @@ def loginViews(request):
                         return redirect(reverse('completeprofile', host='bizadmin'))
                         
                 else:
-                    return redirect(reverse('business:homepage', host='www'))
+                    return redirect(reverse('notbusiness', host='bizadmin'))
         else:
             context['business_registration_form'] = user_form
             

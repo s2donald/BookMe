@@ -166,7 +166,7 @@ def LoginView(request):
             email = request.POST['email']
             password = request.POST['password']
             rmrme = request.POST.get('rememberPasswordCheck')
-            print(rmrme)
+            
             user = authenticate(email=email, password=password)
 
             if user:

@@ -123,7 +123,6 @@ def homepage(request):
     return render(request, 'business/home.html', {'otherObj':otherObj,'user':user,'search':search, 'categories':categories, 'subcategories':subcategories})
 
 def company_list(request, category_slug=None, company_slug=None, tag_slug=None):
-    print('w')
     category = None
     categories = Category.objects.all()
     subcategories = SubCategory.objects.all()

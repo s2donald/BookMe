@@ -28,8 +28,8 @@ DEBUG = True
 TIME_INPUT_FORMATS = ['%I:%M %p',]
 
 ALLOWED_HOSTS = ['pure-fjord-45840.herokuapp.com','.pure-fjord-45840.herokuapp.com','gibele.com', '.gibele.com', '.gibele.com:8000', 'gibele.com:8000', 'www.192.168.2.19', '.192.168.2.19', 'localhost', '127.0.0.1']
-SESSION_COOKIE_DOMAIN="gibele.com"
-DOMAIN_NAME='gibele.com'
+SESSION_COOKIE_DOMAIN= "gibele.com"
+DOMAIN_NAME= 'gibele.com'
 
 # Application definition
 
@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'storages',
     'taggit',
     'rest_framework',
 ]
@@ -156,15 +157,33 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-STATIC_URL = '/static/'
-STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'static'),
-)
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-MEDIA_URL ='/media/'
-MEDIA_ROOT=os.path.join(BASE_DIR,'media/')
+AWS_ACCESS_KEY_ID = 'AKIA5YCTBN72FMLDSXOJ'
+AWS_SECRET_ACCESS_KEY = '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'
+AWS_STORAGE_BUCKET_NAME = 'django-gibele'
+AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
+AWS_S3_OBJECT_PARAMETERS = {
+    'CacheControl': 'max-age=86400',
+}
+AWS_LOCATION = 'static'
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'business/static'),
+]
+STATIC_URL = 'https://%s/%s/' % (AWS_S3_CUSTOM_DOMAIN, AWS_LOCATION)
+STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+
+# STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+# STATIC_URL = '/static/'
+# STATICFILES_DIRS = (
+#     os.path.join(BASE_DIR, 'static'),
+# )
+# STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+DEFAULT_FILE_STORAGE = 'gibele.storage_backends.MediaStorage'
+
+# MEDIA_URL ='/media/'
+# MEDIA_ROOT=os.path.join(BASE_DIR,'media/')
 
 LOGIN_REDIRECT_URL = 'business:homepage'
 

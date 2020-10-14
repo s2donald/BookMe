@@ -230,7 +230,7 @@ def loginViews(request):
                         return redirect(reverse('completeprofile', host='bizadmin'))
                         
                 else:
-                    return redirect(reverse('notbusiness', host='bizadmin'))
+                    return redirect(reverse('business:homepage', host='www'))
         else:
             context['business_registration_form'] = user_form
             

@@ -2,7 +2,7 @@ from django.conf import settings
 from django_hosts import patterns, host
 
 if settings.DEBUG:
-    settings.PARENT_HOST = 'gibele.com:8000'
+    settings.PARENT_HOST = 'gibele.com'
 else:
     settings.PARENT_HOST = 'gibele.com'
 

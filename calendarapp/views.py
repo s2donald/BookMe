@@ -34,7 +34,6 @@ def bookingServiceView(request, pk):
     gibele_form = AccountAuthenticationForm()
     if user.is_authenticated:
         returnClient = company.clients.filter(user=user).exists()
-        print(returnClient)
     else:
         returnClient = False
     return render(request, 'bookingpage/indservice.html', {'returnClient':returnClient,'user': user, 'company':company, 'service':service, 'personal_form':personal_form, 'gibele_form':gibele_form})

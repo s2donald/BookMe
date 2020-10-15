@@ -50,10 +50,22 @@
                     <a class="nav-link d-md-inline-block" href="{% host_url 'faqbusiness' host 'bizadmin' %}">FAQ</a>
                 </li>
             </ul>
-            {% if business %}
+            {% if user.is_business %}
                 <ul class="navbar-nav ml-auto">
                     <li class="nav-item">
                         <a class="btn btn-outline-light btn-sm" href="{% host_url 'completeprofile' host 'bizadmin' %}">Go to your business page</a>
+                    </li>
+                    <li class="nav-item pt-1">
+                        <a class="nav-link d-md-inline-block" href="{% host_url 'bizadminlogout' host 'bizadmin' %}">Log Out</a>
+                    </li>
+                </ul>
+            {% elif user.is_consumer %}
+                <ul class="navbar-nav ml-auto my-auto">
+                    <li class="nav-item pb-1">
+                        <a class="btn btn-outline-light btn-sm" href="{% host_url 'newbizcreate' host 'bizadmin' %}">Create a business page</a>
+                    </li>
+                    <li class="nav-item pt-1">
+                        <a class="nav-link d-md-inline-block" href="{% host_url 'bizadminlogout' host 'bizadmin' %}">Log Out</a>
                     </li>
                 </ul>
             {% else %}

@@ -46,7 +46,7 @@ $(document).ready(function (){
     // =====================================================
 
     var detailSlider = new Swiper('.detail-slider', {
-        slidesPerView: 5,
+        slidesPerView: 4,
         spaceBetween: 0,
         centeredSlides: true,
         zoom:true,

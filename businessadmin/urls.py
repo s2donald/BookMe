@@ -13,15 +13,17 @@ urlpatterns = [
     url(r'dashboard/profile/notifs/$', views.notifViews, name='notifications'),
     url(r'dashboard/profile/billing/$',views.profileBillingViews, name='billing'),
     url(r'dashboard/profile/$',views.profileViews, name='profile'),
-    url(r'detail/info/$', views.compinfoViews, name='information'),
     url(r'updateBookingInterval/$', views.bookingAPI.as_view() ,name='bookingIntervalAPI'),
     url(r'returningbookingReturningAPI/$', views.returningAPI.as_view(), name='bookingReturningAPI'),
 
     url(r'update/emailinfo/$', views.updateEmailSetting.as_view(), name='emailUpdate'),
     url(r'update/notes/$', views.notesUpdate.as_view(), name='notesUpdate'),
 
-    url(r'detail/service/', views.servicesDetailView, name='service_detail'),
-    url(r'detail/clients/', views.clientListView, name='client_list'),
+
+    url(r'detail/info/$', views.compinfoViews, name='information'),
+    url(r'detail/service/$', views.servicesDetailView, name='service_detail'),
+    url(r'detail/clients/$', views.clientListView, name='client_list'),
+
     url(r'creating/$', views.createserviceViews, name='service_create'),
     url(r'delete/(?P<pk>\d+)/$', views.deleteserviceViews, name='service_delete'),
     url(r'update/(?P<pk>\d+)/$', views.updateserviceViews, name='service_update'),
@@ -52,9 +54,12 @@ urlpatterns = [
     url(r'imageupload/$', views.headerImageUpload, name='imageupload'),
     url(r'profileimg/$', views.profileImageUpload, name='profileimg'),
     url(r'file-upload/$', views.fileUploadView, name='upload'),
+
+    url(r'createbusiness/$', views.createNewBusiness, name='newbizcreate'),
     url(r'signup/$', views.signupViews, name='bizadminsignup'),
     url(r'logout/$', views.LogoutView, name='bizadminlogout'),
     url(r'login/$', views.loginViews, name='bizadminlogin'),
+
     url(r'^faq/$', views.faqBusinessViews, name='faqbusiness'),
 
     url(r'requests/', views.requestListViews, name='requestList'),

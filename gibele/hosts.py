@@ -1,7 +1,7 @@
 from django.conf import settings
 from django_hosts import patterns, host
 
-settings.PARENT_HOST = 'gibele.com:8000'
+settings.PARENT_HOST = 'gibele.com'
 
 host_patterns = patterns('',
     # host(r'www', 'gibele.urls',name='ww'),

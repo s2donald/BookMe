@@ -90,6 +90,12 @@
                         <a class="btn btn-outline-primary mb-3 confbtn">Confirm and Secure Spot</a>
                     </div>
                     <div class="conffeedback d-none">
+                        <div class="sk-folding-cube d-none">
+                                    <div class="sk-cube1 sk-cube"></div>
+                                    <div class="sk-cube2 sk-cube"></div>
+                                    <div class="sk-cube4 sk-cube"></div>
+                                    <div class="sk-cube3 sk-cube"></div>
+                                </div>
                         <h3 class="confheader3">Appointment Confirmed!</h3>
                         <div class="text-block appoints"></div>
                         <div class="text-block message"></div>
@@ -271,9 +277,11 @@
         const last_name = document.querySelector('#id_last_name')
         const emailGuest = document.querySelector('#id_email')
         const phoneGuest = document.querySelector('#id_phone')
+        feedbackConf.classList.remove("d-none");
+        const loader = document.querySelector(".sk-folding-cube").classList.remove("d-none")
                         fetch("{% host_url 'creatingBooking' host 'bookingurl' slug=company.slug %}", {
                             body: JSON.stringify({time:booktime, date:bookingdate.toDateString(), month:bookingdate.getMonth(),
-                                                    day:bookingdate.getDate(),year:bookingdate.getFullYear(), s_id:serv_id, first_name:first_name.value, 
+                                                    day:bookingdate.getDate(), year:bookingdate.getFullYear(), s_id:serv_id, first_name:first_name.value, 
                                                     last_name:last_name.value, phone:phoneGuest.value, email:emailGuest.value }),
                             method: 'POST',
                             headers:{
@@ -285,21 +293,24 @@
                         .then((data) => {
                             const confheader3 = document.querySelector(".confheader3")
                             if (data.good){
-                                feedbackConf.classList.remove("d-none");
+                                
                                 confheader3.innerHTML = 'Confirmed Booking!'
                                 bookingtimes.innerHTML = `<p style="font-size:25px;">Thank you for setting an appointment with us! Your appointment with <strong>{{ company.business_name }}</strong> will take place on <strong>`+ data.date +`</strong> at <strong>`+data.time+`</strong> for a <strong>{{ service.name }}</strong>.</p><p style="font-size:25px;">We have sent the additional details of your service to your email.</p>`
                                 msg.innerHTML = `<a class="btn btn-outline-primary" href="{% host_url 'bookingurls' host 'bookingurl' slug=company.slug %}">Book another service</a>`
+                                const loader = document.querySelector(".sk-folding-cube").classList.add("d-none")
                             }
                             else{
-                                feedbackConf.classList.remove("d-none");
+                                
                                 confheader3.innerHTML = 'Timeslot has been fully booked out'
                                 bookingtimes.innerHTML = `<p style="font-size:25px;">Unfortunately we were unable to secure this spot for you. This timeslot has been fully booked out. Please try another time.</p>`
                                 msg.innerHTML = `<a class="btn btn-outline-primary" href="{% host_url 'bookingserviceurls' pk=service.id host 'bookingurl' slug=company.slug %}">Select a different time.</a>`
+                                const loader = document.querySelector(".sk-folding-cube").classList.add("d-none")
                             }
                         });
     }
         
     function bookingCreation(){
+        const loader = document.querySelector(".sk-folding-cube").classList.remove("d-none")
             csrftoken = getCookie('csrftoken');
             fetch("{% host_url 'creatingBooking' host 'bookingurl' slug=company.slug %}", {
                 body: JSON.stringify({time:booktime, date:bookingdate.toDateString(), month:bookingdate.getMonth(),day:bookingdate.getDate(),year:bookingdate.getFullYear(), s_id:serv_id }),
@@ -317,11 +328,13 @@
                     confheader3.innerHTML = 'Confirmed Booking!'
                     bookingtimes.innerHTML = `<p style="font-size:25px;">Thank you for setting an appointment with us! Your appointment with <strong>{{ company.business_name }}</strong> will take place on <strong>`+ data.date +`</strong> at <strong>`+data.time+`</strong> for a <strong>{{ service.name }}</strong>.</p><p style="font-size:25px;">We have sent the additional details of your service to your email.</p>`
                     msg.innerHTML = `<a class="btn btn-outline-primary" href="{% host_url 'business:homepage' host 'www' %}">Go to Gibele Website!</a>`
+                    const loader = document.querySelector(".sk-folding-cube").classList.add("d-none")
                 }
                 else{
                     feedbackConf.classList.remove("d-none");
                     confheader3.innerHTML = 'Timeslot has been fully booked out'
                     bookingtimes.innerHTML = `<p style="font-size:25px;">Unfortunately we were unable to secure this spot for you. This timeslot has been fully booked out. Please try another time.</p>`
+                    const loader = document.querySelector(".sk-folding-cube").classList.add("d-none")
                 }
             });
     }

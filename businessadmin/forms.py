@@ -8,6 +8,11 @@ from django.db import models
 
 from business.models import Company, Category, SubCategory
 
+class CreateSmallBizForm(forms.Form):
+    email = forms.EmailField(label='Business Email', required=True)
+    phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$', message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
+    phone = forms.CharField(label='Business Phone Number', validators=[phone_regex], required=True, max_length=30,)
+
 class BusinessRegistrationForm(UserCreationForm):
     first_name = forms.CharField(label='First Name', required=True, max_length=30)
     last_name = forms.CharField(label='Last Name', required=True, max_length=30)

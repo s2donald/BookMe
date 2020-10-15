@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .forms import BusinessRegistrationForm, UpdateCompanyForm, AddClientForm, AddNotesForm
+from .forms import BusinessRegistrationForm, UpdateCompanyForm, AddClientForm, AddNotesForm, CreateSmallBizForm
 from django.contrib.auth.decorators import login_required
 from business.models import Company, SubCategory, OpeningHours, Services, Gallary, Amenities, Clients, CompanyReq
 from account.models import Account
@@ -17,28 +17,58 @@ from django.views import View
 from slugify import slugify
 from .forms import MainPhoto
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+
 # Create your views here.
 def businessadmin(request):
     user = request.user
-    business = False
-    if user.is_authenticated and user.is_business:
-        business = True
 
-    return render(request, 'welcome/welcome.html', {'business':business, 'none':'d-none'})
+    return render(request, 'welcome/welcome.html', {'user':user, 'none':'d-none'})
 
 def pricingViews(request):
     user = request.user
-    business = False
-    if user.is_authenticated and user.is_business:
-        business = True
-    return render(request, 'welcome/pricing.html', {'business':business,'none':'d-none'})
+    return render(request, 'welcome/pricing.html', {'user':user,'none':'d-none'})
 
 def faqBusinessViews(request):
     user = request.user
-    business = False
-    if user.is_authenticated and user.is_business:
-        business = True
-    return render(request, 'welcome/faq.html', {'business':business,'none':'d-none'})
+    return render(request, 'welcome/faq.html', {'user':user,'none':'d-none'})
+
+def createNewBusiness(request):
+    user = request.user
+    user_form = CreateSmallBizForm()
+    if not user.is_authenticated:
+        context['business_registration_form'] = user_form
+        return render(request, 'account/bussignup.html', {'user_form':user_form})
+
+    if request.method == 'POST':
+        user_form = CreateSmallBizForm(request.POST)
+        
+        if user_form.is_valid():
+            email = user_form.cleaned_data.get('email')
+            phone = user_form.cleaned_data.get('phone')
+            bname = request.POST.get('bname', '')
+            company = Company.objects.create(user=user,business_name=bname,email=email,phone=phone,
+                                                description='',address='',postal='',
+                                                state='',city='',status='draft')
+            biz_hours = OpeningHours.objects.bulk_create([
+                OpeningHours(company=company, weekday=0,is_closed=True),
+                OpeningHours(company=company, weekday=1,is_closed=False),
+                OpeningHours(company=company, weekday=2,is_closed=False),
+                OpeningHours(company=company, weekday=3,is_closed=False),
+                OpeningHours(company=company, weekday=4,is_closed=False),
+                OpeningHours(company=company, weekday=5,is_closed=False),
+                OpeningHours(company=company, weekday=6,is_closed=True),
+            ])
+            user.is_business=True
+            user.save()
+            return redirect(reverse('completeprofile', host='bizadmin'))
+        else:
+            context['business_registration_form'] = user_form
+
+    if user.on_board:
+        return redirect(reverse('home', host='bizadmin'))
+    
+    
+    return render(request, 'account/createbusiness.html', {'user':user, 'none':'d-none', 'user_form':user_form})
 
 def completeViews(request):
     if not request.user.is_authenticated:
@@ -50,7 +80,7 @@ def completeViews(request):
     user = get_object_or_404(Account, email=email)
     
     if user.on_board:
-        return redirect(reverse('schedule', host='bizadmin')) 
+        return redirect(reverse('home', host='bizadmin')) 
     if request.method == 'POST':
         biz_form = AddCompanyForm(request.POST)
         booking_form = BookingSettingForm(request.POST)
@@ -230,7 +260,7 @@ def loginViews(request):
                         return redirect(reverse('completeprofile', host='bizadmin'))
                         
                 else:
-                    return redirect(reverse('business:homepage', host='www'))
+                    return redirect(reverse('newbizcreate', host='bizadmin'))
         else:
             context['business_registration_form'] = user_form
             
@@ -714,18 +744,13 @@ def homepageViews(request):
                 cdb = 100
             
             services = Services.objects.filter(business=company)
-            print(services)
+
             for service in services:
                 sdb = sdb + 25
                 if sdb >= 100:
                     sdb = 100
                     break
-            print(sdb)
 
-
-
-
-                
             week = timezone.now() - timedelta(days=7)
             twoweek = week - timedelta(days=7)
             threeweek = twoweek - timedelta(days=7)
@@ -852,7 +877,7 @@ def headerImageUpload(request):
             image = Image.open(img)
             box = (x, y, w+x, h+y)
             cropped_image = image.crop(box)
-            resized_image = cropped_image.resize((1600,900),Image.ANTIALIAS)
+            resized_image = cropped_image.resize((1910,1000),Image.ANTIALIAS)
             thumb_io = BytesIO()
             resized_image.save(thumb_io, image.format)
             company.image.save(image.filename, ContentFile(thumb_io.getvalue()), save=False)
@@ -895,7 +920,7 @@ def headerImageUploads(request):
             image = Image.open(img)
             box = (x, y, w+x, h+y)
             cropped_image = image.crop(box)
-            resized_image = cropped_image.resize((1600,900),Image.ANTIALIAS)
+            resized_image = cropped_image.resize((1910,1000),Image.ANTIALIAS)
             thumb_io = BytesIO()
             resized_image.save(thumb_io, image.format)
             company.image.save(image.filename, ContentFile(thumb_io.getvalue()), save=False)
@@ -1035,6 +1060,7 @@ class deleteGalPic(View):
 
         return JsonResponse({'pictures':'pictures'})
 
+@login_required
 def compinfoViews(request):
     if not request.user.is_authenticated:
         context={}
@@ -1044,7 +1070,7 @@ def compinfoViews(request):
     
     email = request.user.email
     user = get_object_or_404(Account, email=email)
-    
+
     if not user.on_board:
         return redirect(reverse('completeprofile', host='bizadmin'))
 

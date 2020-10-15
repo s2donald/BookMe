@@ -420,6 +420,15 @@ label {
   .table tbody + tbody {
     border-top: 0.125rem solid #e3e3e3; }
 
+a[type=button] {
+  background-color: rgba(0, 0, 0, 0) !important;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+   -ms-user-select: none;
+       user-select: none;
+
+}
+
 .table-sm th,
 .table-sm td {
   padding: 0.3rem; }
@@ -5511,7 +5520,14 @@ fieldset[disabled]
     border-bottom-color: transparent; }
   .form-control + .input-group-append .input-group-text,
   .form-control + .input-group-prepend .input-group-text {
-    background-color: #ffffff; }
+    background-color: transparent;
+    color: white;
+    border: 1px #1e1e2f;}
+    .input-group-append .input-group-text,
+    .input-group-prepend .input-group-text {
+      background-color: transparent;
+      color: white;
+      border: 1px #1e1e2f;}
 
 .has-success .input-group-append .input-group-text,
 .has-success .input-group-prepend .input-group-text,

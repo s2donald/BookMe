@@ -32,7 +32,7 @@
         {% endfor %}
     {% endif %}
 </div>
-
+<form>{% csrf_token %} </form>
 <script>
 function getCookie(name) {
     let cookieValue = null;
@@ -49,7 +49,7 @@ function getCookie(name) {
                             }
                                 return cookieValue;
                             }
-                            const csrftoken = getCookie('csrftoken');
+                            var csrftoken = getCookie('csrftoken');
                             
     {% for s in services %}
     
@@ -77,6 +77,7 @@ function getCookie(name) {
                         confirmButtonText: 'Get On The List',
                     }).then(function(result){
                         if (result.isConfirmed){
+                            csrftoken = getCookie('csrftoken');
                             $.ajax({
                                 type:'POST',
                                 url: '{% host_url 'requestSpotAsClient' host 'bookingurl' slug=company.slug %}',
@@ -125,7 +126,7 @@ function getCookie(name) {
                             const login = Swal.getPopup().querySelector('#login').value
                             const password = Swal.getPopup().querySelector('#password').value
                             var res = false
-                            const csrftoken = getCookie('csrftoken');
+                            csrftoken = getCookie('csrftoken');
                             if (!login || !password) {
                                 Swal.showValidationMessage(`Please enter your login and password`)
                             }
@@ -154,7 +155,7 @@ function getCookie(name) {
                         }).then((result) => {
                             if (result.isConfirmed){
                                 //Send the request
-                                const csrftoken = getCookie('csrftoken');
+                                csrftoken = getCookie('csrftoken');
                                 $.ajax({
                                     type:'POST',
                                     url: '{% host_url 'checkIfClient' host 'bookingurl' slug=company.slug %}',
@@ -179,6 +180,7 @@ function getCookie(name) {
                         confirmButtonText: 'Get On The List',
                     }).then(function(result){
                         if (result.isConfirmed){
+                            csrftoken = getCookie('csrftoken');
                             $.ajax({
                                 type:'POST',
                                 url: '{% host_url 'requestSpotAsClient' host 'bookingurl' slug=company.slug %}',
@@ -247,7 +249,7 @@ function getCookie(name) {
                                     const last = Swal.getPopup().querySelector('#last').value
                                     const password = Swal.getPopup().querySelector('#password').value
                                     const confpassword = Swal.getPopup().querySelector('#confpassword').value
-                                    const csrftoken = getCookie('csrftoken');
+                                    csrftoken = getCookie('csrftoken');
                                     if (password != confpassword) {
                                         Swal.showValidationMessage('The passwords don\'t match.')
                                         return false
@@ -280,7 +282,7 @@ function getCookie(name) {
                                     console.log(result)
                                     if (result.isConfirmed){
                                 //Send the request
-                                const csrftoken = getCookie('csrftoken');
+                                csrftoken = getCookie('csrftoken');
                                 $.ajax({
                                     type:'POST',
                                     url: '{% host_url 'checkIfClient' host 'bookingurl' slug=company.slug %}',
@@ -305,6 +307,7 @@ function getCookie(name) {
                                             confirmButtonText: 'Get On The List',
                                         }).then(function(result){
                                             if (result.isConfirmed){
+                                                csrftoken = getCookie('csrftoken');
                                                 $.ajax({
                                                     type:'POST',
                                                     url: '{% host_url 'requestSpotAsClient' host 'bookingurl' slug=company.slug %}',

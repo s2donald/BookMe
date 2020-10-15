@@ -115,7 +115,7 @@ class AddServiceForm(forms.ModelForm):
 class BookingSettingForm(forms.Form):
     interval = forms.ChoiceField(label='',choices=minute_choices_no_zero,initial= '30', widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control', 'data-size':'5', 'data-dropdown-align-right':'true'}))
     cancellation = forms.ChoiceField(label='',choices=cancellationtime, initial= '0', widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control', 'data-size':'5', 'data-dropdown-align-right':'true'}))
-    notes = forms.CharField(label='',max_length=250, required=False, widget=forms.Textarea(attrs={'rows':4, 'cols':20, 'style':'color:black;'}))
+    notes = forms.CharField(label='',max_length=250, required=False, widget=forms.Textarea(attrs={'rows':4, 'cols':20}))
 
 
 class UpdateServiceForm(forms.ModelForm):
@@ -135,14 +135,14 @@ class UpdateServiceForm(forms.ModelForm):
         'checkintime','padding','paddingtime_hour','paddingtime_minute')
 
 class AddCompanyForm(forms.ModelForm):
-    category = forms.ModelChoiceField(queryset=Category.objects.all(),label='', empty_label=None, widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control','title':'Category'}))
+    category = forms.ModelChoiceField(queryset=Category.objects.all(),label='', widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control','title':'Category'}))
     subcategory = forms.ModelMultipleChoiceField(queryset=SubCategory.objects.all(),label='', widget=forms.SelectMultiple(attrs={'class':'selectcolor selectpicker show-tick form-control','multiple':'', 'data-size':'5', 'data-dropdown-align-right':'true', 'title':'Subcategories'}))
-    description = forms.CharField(label='', max_length=500, widget=forms.Textarea(attrs={'style':'color:black;','rows':4,'cols':20}))
-    address = forms.CharField(label='', max_length=200, widget=forms.TextInput(attrs={'style':'color:black;','class':'form-control'}))
+    description = forms.CharField(label='', max_length=500, widget=forms.Textarea(attrs={'rows':4,'cols':20}))
+    address = forms.CharField(label='', max_length=200, widget=forms.TextInput(attrs={'class':'form-control'}))
     postal_regex = RegexValidator(regex=r"^[ABCEGHJKLMNPRSTVXY]{1}\d{1}[A-Z]{1} *\d{1}[A-Z]{1}\d{1}$")
-    postal = forms.CharField(max_length=10, validators=[postal_regex], label='', error_messages={'invalid': 'Enter a valid Postal Code or ZIP Code.'}, widget=forms.TextInput(attrs={'style':'color:black;','class':'form-control'}))
-    state = forms.CharField(max_length=2, label='', widget=forms.TextInput(attrs={'style':'color:black;','class':'form-control'}))
-    city = forms.CharField(max_length=30,label='', widget=forms.TextInput(attrs={'style':'color:black;','class':'form-control'}))
+    postal = forms.CharField(max_length=10, validators=[postal_regex], label='', error_messages={'invalid': 'Enter a valid Postal Code or ZIP Code.'}, widget=forms.TextInput(attrs={'class':'form-control'}))
+    state = forms.CharField(max_length=2, label='', widget=forms.TextInput(attrs={'class':'form-control'}))
+    city = forms.CharField(max_length=30,label='', widget=forms.TextInput(attrs={'class':'form-control'}))
     prefix = 'addcompany'
     class Meta:
         model = Company

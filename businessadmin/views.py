@@ -1267,9 +1267,4 @@ class deleteRequestedViews(View):
 
         return JsonResponse({'deleted':'We have rejected ' + user.first_name + '\'s request to join your client list.'})
 
-
-
-
-
-
     

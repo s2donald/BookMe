@@ -3,7 +3,6 @@
 {% load hosts %}
 {% load crispy_forms_tags %}
 {% block businessadmin %}
-
 <div class="modal fade" id="modal-delete" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content card">
@@ -105,112 +104,144 @@
   </div>
 </div>
 
+<div class="content-fluid">
+        <div class="col-md-12">
+          <!--      Wizard container        -->
+          <div class="wizard-container">
+            <div class="card card-wizard" data-color="primary" id="wizardProfile">
+              <form method="post" action="{% host_url 'completeprofile' host 'bizadmin' %}">
+              {% csrf_token %}
+                <!--        You can switch " data-color="primary" "  with one of the next bright colors: "green", "orange", "red", "blue"       -->
+                <div class="card-header text-center">
+                  <h3 class="card-title">
+                    Build Your Profile
+                  </h3>
+                  <h5 class="description">This information will let us know more about you.</h5>
+                  <div class="wizard-navigation">
+                    <div class="progress-with-circle">
+                      <div class="progress-bar" role="progressbar" aria-valuenow="1" aria-valuemin="1" aria-valuemax="3" style="width: 21%;"></div>
+                    </div>
+                    <ul>
+                      <li class="nav-item">
+                        <a class="nav-link active" href="#about" data-toggle="tab">
+                          <i class="fas fa-store"></i>
+                          <p class="d-none d-sm-block">Details</p>
+                        </a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link" href="#servicesform" data-toggle="tab">
+                          <i class="fas fa-bell"></i>
+                          <p class="d-none d-sm-block">Add Services</p>
+                        </a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link" href="#hoursform" data-toggle="tab">
+                          <i class="fas fa-clock"></i>
+                          <p class="d-none d-sm-block">Business Hours</p>
+                        </a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link" href="#bookingSettings" data-toggle="tab">
+                          <i class="fas fa-cog"></i>
+                          <p class="d-none d-sm-block">Booking Settings</p>
+                        </a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link" href="#confirmForm" data-toggle="tab">
+                          <i class="fas fa-check-circle"></i>
+                          <p class="d-none d-sm-block">Confirm</p>
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
 
-
-
-
-
-<div class="container-fluid justify-content-center">
-    <div class="col-md-12 mr-auto ml-auto">
-        <h1 class="text-center">Add your company information</h1>
-    
-            <!-- MultiStep Form -->
-<div class="row mb-3">
-    <div class="col-md-12 col-md-offset-3">
-        <form method="post" action="{% host_url 'completeprofile' host 'bizadmin' %}" id="msform" enctype="multipart/form-data">
-            {% csrf_token %}
-            <!-- progressbar -->
-            <ul id="progressbar">
-                <li class="active">Company Details</li>
-                <li>Add Services</li>
-                <li>Business Hours</li>
-                <li>Booking Settings</li>
-                <li>Confirm</li>
-            </ul>
-            <!-- fieldsets -->
-            <fieldset>
-                <h2 class="fs-title">Company Details</h2>
-                <h3 class="fs-subtitle">Tell us about {{ company.business_name }}</h3>
-                <div class="row">
+                <div class="card-body">
+                  <div class="tab-content">
+                    <div class="tab-pane show active" id="about">
+                      <h5 class="info-text"> Tell us about {{ company.business_name }}</h5>
+                      <div class="row">
                     <div class="col-md-6">
-                        <label for="" class="font-weight-bold d-flex justify-content-center pr-1">Main Category <a type="button" data-toggle="tooltip" data-placement="top" title="Select the main category of your business"> <i class="fas fa-question-circle licolor"></i></a></label>
+                        <label for="" class="font-weight-bold d-flex justify-content-center pr-1">Main Category <a data-toggle="tooltip" data-placement="top" title="Select the main category of your business"> <i class="fas fa-question-circle licolor"></i></a></label>
                         {{ biz_form.category|as_crispy_field }}
                     </div>
                     <div class="col-md-6">
-                        <label for="" class="font-weight-bold d-flex justify-content-center pr-1">Business Categories <a type="button" data-toggle="tooltip" data-placement="top" title="Select as many subcategories your business offers services in"> <i class="fas fa-question-circle licolor"></i></a></label>
+                        <label for="" class="font-weight-bold d-flex justify-content-center pr-1">Business Categories <a data-toggle="tooltip" data-placement="top" title="Select as many subcategories your business offers services in"> <i class="fas fa-question-circle licolor"></i></a></label>
                         {{ biz_form.subcategory|as_crispy_field }}
                     </div>
                     <div class="col-md-12">
-                        <label for="" class="font-weight-bold d-flex justify-content-center pr-1">Brief Business Description <a type="button" data-toggle="tooltip" data-placement="top" title="This brief company description will appear in the about section on your business page."> <i class="fas fa-question-circle licolor"></i></a></label>
+                        <label for="" class="font-weight-bold d-flex justify-content-center pr-1">Brief Business Description <a data-toggle="tooltip" data-placement="top" title="This brief company description will appear in the about section on your business page."> <i class="fas fa-question-circle licolor"></i></a></label>
                         {{ biz_form.description|as_crispy_field }}
                     </div>
                     <div class="col-md-12">
-                        <label for="" class="font-weight-bold d-flex justify-content-center pr-1">Business Address <a type="button" data-toggle="tooltip" data-placement="top" title="The address of your business"> <i class="fas fa-question-circle licolor"></i></a></label>
+                        <label for="" class="font-weight-bold d-flex justify-content-center pr-1">Business Address <a data-toggle="tooltip" data-placement="top" title="The address of your business"> <i class="fas fa-question-circle licolor"></i></a></label>
                         {{ biz_form.address|as_crispy_field }}
                     </div>
                     <div class="col-md-4">
-                        <label for="" class="font-weight-bold d-flex justify-content-center pr-1">Postal Code <a type="button" data-toggle="tooltip" data-placement="top" title="Postal Code or Zip Code"> <i class="fas fa-question-circle licolor"></i></a></label>
+                        <label for="" class="font-weight-bold d-flex justify-content-center pr-1">Postal Code <a data-toggle="tooltip" data-placement="top" title="Postal Code or Zip Code"> <i class="fas fa-question-circle licolor"></i></a></label>
                         {{ biz_form.postal|as_crispy_field }}
                     </div>
                     <div class="col-md-4">
-                        <label for="" class="font-weight-bold d-flex justify-content-center pr-1">Province/State <a type="button" data-toggle="tooltip" data-placement="top" title="Province or State"> <i class="fas fa-question-circle licolor"></i></a></label>
+                        <label for="" class="font-weight-bold d-flex justify-content-center pr-1">Province/State <a data-toggle="tooltip" data-placement="top" title="Province or State"> <i class="fas fa-question-circle licolor"></i></a></label>
                         {{ biz_form.state|as_crispy_field }}
                     </div>
                     <div class="col-md-4">
-                        <label for="" class="font-weight-bold d-flex justify-content-center pr-1">City <a type="button" data-toggle="tooltip" data-placement="top" title="The main category of your business"> <i class="fas fa-question-circle licolor"></i></a></label>
+                        <label for="" class="font-weight-bold d-flex justify-content-center pr-1">City <a data-toggle="tooltip" data-placement="top" title="The main category of your business"> <i class="fas fa-question-circle licolor"></i></a></label>
                         {{ biz_form.city|as_crispy_field }}
                     </div>
                 </div>
-                <input type="button" name="next" class="next btn btn-primary text-white" value="Next"/>
-            </fieldset>
-            <fieldset class="no-padding">
-                <h2 class="fs-title">Add Services</h2>
-                <h3 class="fs-subtitle">Add services which which you offer to customers</h3>
-                <div class="row justify-content-center">
-                    <button id="createservice" class="btn btn-primary mb-3 js-create-product justify-content-center" type="button" data-toggle="modal" data-target="#modal-service" >Add Service</button>
-                </div>
-                <div class="table-responsive">
-                    <table id="service-table" class="table table-dark table-hover">
-                        <thead>
-                            <tr>
-                            <th class="text-center" scope="col">#</th>
-                            <th class="text-center" scope="col">Service</th>
-                            <th class="text-center" scope="col">Price ($)</th>
-                            <th class="text-center">Update/Delete</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for service in services %}
-                                <tr>
-                                    <td class="text-center" scope="row">{{ forloop.counter }}</td>
-                                    <td class="text-center">{{ service.name }}</td>
-                                    <td class="text-center">{{ service.price }}</td>
-                                    <td class="text-center">
-                                        <!-- Update Service buttons -->
-                                        <button type="button" class="js-update-product btn btn-sm btn-outline-primary" data-toggle="modal" data-target="#modal-update" data-url="{% host_url 'service_update' service.id host 'bizadmin' %}">
-                                            <span class="fa fa-pencil-alt"></span>
-                                        </button>
-                                        <!-- Delete Service buttons -->
-                                        <button type="button" class="js-delete-product btn btn-sm btn-danger" data-toggle="modal" data-target="#modal-delete" data-url="{% host_url 'service_delete' service.id host 'bizadmin' %}">
-                                            <span class="fa fa-trash"></span>
-                                        </button>
-                                    </td>
-                                </tr>
-                            {% empty %}
-                                <td colspan="8" class="text-center">You do not have any services available</td>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-                <input type="button" name="previous" class="previous btn btn-secondary text-white" value="Previous"/>
-                <input type="button" name="next" class="next btn btn-primary text-white" value="Next"/>
-            </fieldset>
-            <fieldset>
-                <h2 class="fs-title">Business Hours</h2>
-                <h3 class="fs-subtitle">Add your business hours</h3>
-                <div class="row">
-                    <div class="col-md-12 mt-1">
-                        <div class="justify-content-center my-auto align-items-center">
+
+                    </div>
+                    <div class="tab-pane" id="servicesform">
+                      <h5 class="info-text"> Add the services you offer to customers</h5>
+                      <div class="row justify-content-center">
+                        <div class="col-lg-10 text-center">
+                          <div class="row justify-content-center">
+                                <button id="createservice" class="btn btn-primary mb-3 js-create-product justify-content-center" type="button" data-toggle="modal" data-target="#modal-service" >Add Service</button>
+                            </div>
+                            <div class="table-responsive">
+                                <table id="service-table" class="table table-dark table-hover">
+                                    <thead>
+                                        <tr>
+                                        <th class="text-center" scope="col">#</th>
+                                        <th class="text-center" scope="col">Service</th>
+                                        <th class="text-center" scope="col">Price ($)</th>
+                                        <th class="text-center">Update/Delete</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for service in services %}
+                                            <tr>
+                                                <td class="text-center" scope="row">{{ forloop.counter }}</td>
+                                                <td class="text-center">{{ service.name }}</td>
+                                                <td class="text-center">{{ service.price }}</td>
+                                                <td class="text-center">
+                                                    <!-- Update Service buttons -->
+                                                    <button type="button" class="js-update-product btn btn-sm btn-outline-primary" data-toggle="modal" data-target="#modal-update" data-url="{% host_url 'service_update' service.id host 'bizadmin' %}">
+                                                        <span class="fa fa-pencil-alt"></span>
+                                                    </button>
+                                                    <!-- Delete Service buttons -->
+                                                    <button type="button" class="js-delete-product btn btn-sm btn-danger" data-toggle="modal" data-target="#modal-delete" data-url="{% host_url 'service_delete' service.id host 'bizadmin' %}">
+                                                        <span class="fa fa-trash"></span>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        {% empty %}
+                                            <td colspan="8" class="text-center">You do not have any services available</td>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="tab-pane" id="hoursform">
+                      <div class="row justify-content-center">
+                        <div class="col-sm-12">
+                          <h5 class="info-text"> Add your business hours </h5>
+                        </div>
+                        <div class="col-md-12 mt-1">
+                        <div class="justify-content-center my-auto align-items-center text-center mx-auto">
                             <strong for="">Sunday Business Hours</strong>
                             <input type="checkbox" name="sunOpen" {% if sunday.is_closed %}{% else %}checked{% endif %} class="bootstrap-switch bootstrap-switch-red my-0" id="sunOpen" data-on-label="OPEN" data-off-label=""/>
                         </div>
@@ -232,9 +263,9 @@
                                 </div>
                                 </div>
                             </div>
-                    </div>
+                    
                     <div class="col-md-12 mt-1">
-                        <div class="justify-content-center my-auto align-items-center">
+                        <div class="justify-content-center my-auto align-items-center text-center mx-auto">
                             <strong for="">Monday Business Hours</strong>
                             <input name="monOpen" {% if monday.is_closed %}{% else %}checked{% endif %} type="checkbox" class="bootstrap-switch bootstrap-switch-red my-0" data-on-label="OPEN" data-off-label=""/>
                         </div>
@@ -258,7 +289,7 @@
                             </div>
                     </div>
                     <div class="col-md-12 mt-1">
-                        <div class="justify-content-center my-auto align-items-center">
+                        <div class="justify-content-center my-auto align-items-center text-center mx-auto">
                             <strong for="">Tuesday Business Hours</strong>
                             <input name="tuesOpen" {% if tuesday.is_closed %}{% else %}checked{% endif %} type="checkbox" class="bootstrap-switch bootstrap-switch-red my-0" data-on-label="OPEN" data-off-label=""/>
                         </div>
@@ -282,7 +313,7 @@
                             </div>
                     </div>
                     <div class="col-md-12 mt-1">
-                        <div class="justify-content-center my-auto align-items-center">
+                        <div class="justify-content-center my-auto align-items-center text-center mx-auto">
                             <strong for="">Wednesday Business Hours</strong>
                             <input name="wedOpen" {% if wednesday.is_closed %}{% else %}checked{% endif %} type="checkbox" class="bootstrap-switch bootstrap-switch-red my-0" data-on-label="OPEN" data-off-label=""/>
                         </div>
@@ -306,7 +337,7 @@
                             </div>
                     </div>
                     <div class="col-md-12 mt-1">
-                        <div class="justify-content-center my-auto align-items-center">
+                        <div class="justify-content-center my-auto align-items-center text-center mx-auto">
                             <strong for="">Thursday Business Hours</strong>
                             <input name="thursOpen" {% if thursday.is_closed %}{% else %}checked{% endif %} type="checkbox" class="bootstrap-switch bootstrap-switch-red my-0" data-on-label="OPEN" data-off-label=""/>
                         </div>
@@ -330,7 +361,7 @@
                             </div>
                     </div>
                     <div class="col-md-12 mt-1">
-                        <div class="justify-content-center my-auto align-items-center">
+                        <div class="justify-content-center my-auto align-items-center text-center mx-auto">
                             <strong for="">Friday Business Hours</strong>
                             <input name="friOpen" {% if friday.is_closed %}{% else %}checked{% endif %} type="checkbox" class="bootstrap-switch bootstrap-switch-red my-0" data-on-label="OPEN" data-off-label=""/>
                         </div>
@@ -354,7 +385,7 @@
                             </div>
                     </div>
                     <div class="col-md-12 mt-1">
-                        <div class="justify-content-center my-auto align-items-center">
+                        <div class="justify-content-center my-auto align-items-center text-center mx-auto">
                             <strong for="">Saturday Business Hours</strong>
                             <input name="satOpen" {% if saturday.is_closed %}{% else %}checked{% endif %} type="checkbox" class="bootstrap-switch bootstrap-switch-red my-0" data-on-label="OPEN" data-off-label=""/>
                         </div>
@@ -378,16 +409,15 @@
                             </div>
                     </div>
                 </div>
-                <input type="button" name="previous" class="previous btn btn-secondary text-white" value="Previous"/>
-                <input type="button" name="next" class="next btn btn-primary text-white" value="Next"/>
-            </fieldset>
-            <fieldset>
-                <h2 class="fs-title">Booking Settings</h2>
-                <h3 class="fs-subtitle">Configure some settings to make your booking experience unique</h3>
-                <div class="row text-center">
-                    
-                    <div class="col-md-12 col-lg-6 mx-auto justify-content-center">
-                        <label for="" class="font-weight-bold d-flex justify-content-center pr-1">Booking Link URL <a type="button" data-toggle="tooltip" data-placement="top" title="Choose a custom subdomain for your booking link which you can send to your clients or share to social media"> <i class="fas fa-question-circle licolor"></i></a></label>
+                      </div>
+                    </div>
+                    <div class="tab-pane" id="bookingSettings">
+                      <div class="row justify-content-center">
+                        <div class="col-sm-12">
+                          <h5 class="info-text"> Configure some settings to make your booking experience unique </h5>
+                        </div>
+                        <div class="col-md-12 col-lg-6 mx-auto justify-content-center">
+                        <label for="" class="font-weight-bold d-flex justify-content-center pr-1">Booking Link URL <a data-toggle="tooltip" data-placement="top" title="Choose a custom subdomain for your booking link which you can send to your clients or share to social media"> <i class="fas fa-question-circle licolor"></i></a></label>
                         <div class="col-md-12 justify-content-center">
                             <div class="input-group justify-content-center mb-3" id="id_subdomain">
                                 <input type="text" class="form-control" id="subdomain" placeholder="Enter a Subdomain, must only contain letters, numbers and hyphens. No spaces are allowed." aria-label="Users's subdomain" aria-describedby="basic-addon2" value="{{ company.slug }}">
@@ -400,131 +430,191 @@
                     </div>
                     <div class="col-md-12 input-group justify-content-center">
                     <div class="col-md-4">
-                        <label for="" class="font-weight-bold d-flex justify-content-center pr-1">Booking Interval <a type="button" data-toggle="tooltip" data-placement="top" title="Set the duration for appointment slots"> <i class="fas fa-question-circle licolor"></i></a></label>
+                        <label for="" class="font-weight-bold d-flex justify-content-center pr-1">Booking Interval <a data-toggle="tooltip" data-placement="top" title="Set the duration for appointment slots"> <i class="fas fa-question-circle licolor"></i></a></label>
                         {{ booking_form.interval|as_crispy_field }}
                     </div>
                     <div class="col-md-4">
-                        <label for="" class="font-weight-bold d-flex justify-content-center pr-1">Cancellation Policy <a type="button" data-toggle="tooltip" data-placement="top" title="The length of time before an appointment which a customer can cancel"> <i class="fas fa-question-circle licolor"></i></a></label>
+                        <label for="" class="font-weight-bold d-flex justify-content-center pr-1">Cancellation Policy <a data-toggle="tooltip" data-placement="top" title="The length of time before an appointment which a customer can cancel"> <i class="fas fa-question-circle licolor"></i></a></label>
                         {{ booking_form.cancellation|as_crispy_field }}
                     </div>
                     </div>
-                    <div class="col-md-12">
-                        <label for="" class="font-weight-bold d-flex justify-content-center pr-1">Returning Clients Only<a type="button" data-toggle="tooltip" data-placement="top" title="Only accept clients who are on your client list"> <i class="fas fa-question-circle licolor"></i></a></label>
+                    <div class="col-md-12 mx-auto text-center">
+                        <label for="" class="font-weight-bold d-flex justify-content-center pr-1">Returning Clients Only<a data-toggle="tooltip" data-placement="top" title="Only accept clients who are on your client list"> <i class="fas fa-question-circle licolor"></i></a></label>
                         <input name="returning" type="checkbox" class="bootstrap-switch bootstrap-switch-red my-0" data-on-label="True" data-off-label="False"/>
                     </div>
                     <div class="col-md-12">
-                        <label for="" class="font-weight-bold d-flex justify-content-center pr-1">Notes for customers(Optional) <a type="button" data-toggle="tooltip" data-placement="top" title="Display a popup message when clients first enter your booking link."> <i class="fas fa-question-circle licolor"></i></a></label>
+                        <label for="" class="font-weight-bold d-flex justify-content-center pr-1">Notes for customers(Optional) <a data-toggle="tooltip" data-placement="top" title="Display a popup message when clients first enter your booking link."> <i class="fas fa-question-circle licolor"></i></a></label>
                         {{ booking_form.notes|as_crispy_field }}
                     </div>
+                      </div>
+                    </div>
+                    <div class="tab-pane" id="confirmForm">
+                      <div class="row justify-content-center">
+                        <div class="col-sm-12">
+                          <h5 class="info-text"> Confirm everything that you have filled out then lets get booking! </h5>
+                        </div>
+                        
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <input type="button" name="previous" class="previous btn btn-secondary text-white" value="Previous"/>
-                <input type="button" name="next" class="next btn btn-primary text-white" value="Next"/>
-            </fieldset>
-            <fieldset>
-                <h2 class="fs-title">Confirm</h2>
-                <h3 class="fs-subtitle">Confirm everything that you have filled out then lets get booking!</h3>
-                <p class="text-black">Company Name: {{ company.business_name }}</p>
-                <p>Company Description: <small>kkjlkjljlkjlkjjjkljlj</small> </p>
-                <p>Company Address: <small>Addy, Postal, Province, State</small></p>
-                <input type="button" name="previous" class="previous btn btn-secondary text-white" value="Previous"/>
-                <input type="submit" name="submit" class="submit btn btn-primary text-white" value="Submit"/>
-            </fieldset>
-        </form>
-        <!-- /.link to designify.me code snippets -->
-    
-</div>
-<!-- /.MultiStep Form -->
+                <div class="card-footer">
+                  <div class="pull-right">
+                    <input type='button' class='btn btn-next btn-fill btn-primary btn-wd' name='next' value='Next' />
+                    <input type='submit' class='btn btn-finish btn-fill btn-primary btn-wd' name='finish' value='Finish' />
+                  </div>
+                  <div class="pull-left">
+                    <input type='button' class='btn btn-previous btn-fill btn-default btn-wd' name='previous' value='Previous' />
+                  </div>
+                  <div class="clearfix"></div>
+                </div>
+              </form>
+            </div>
+          </div>
 
-        </div>
-    </div>
+        <script>
+        demo = {
+            initNowUiWizard: function() {
+    // Code for the Validator
+    var $validator = $('.card-wizard form').validate({
+      rules: {
+        firstname: {
+          required: true,
+          minlength: 3
+        },
+        lastname: {
+          required: true,
+          minlength: 3
+        },
+        email: {
+          required: true,
+          minlength: 3,
+        },
+        number: {
+          required: true,
+          minlength: 3,
+        }
 
-</div>
-<script>
-    const sidebars = document.querySelector(".sidebar");
+      },
+      highlight: function(element) {
+        $(element).closest('.input-group').removeClass('has-success').addClass('has-danger');
+      },
+      success: function(element) {
+        $(element).closest('.input-group').removeClass('has-danger').addClass('has-success');
+      }
+    });
+
+    // Wizard Initialization
+    $('.card-wizard').bootstrapWizard({
+      'tabClass': 'nav nav-pills',
+      'nextSelector': '.btn-next',
+      'previousSelector': '.btn-previous',
+
+      onNext: function(tab, navigation, index) {
+        var $valid = $('.card-wizard form').valid();
+        if (!$valid) {
+          $validator.focusInvalid();
+          return false;
+        }
+      },
+
+      onInit: function(tab, navigation, index) {
+        //check number of tabs and fill the entire row
+        var $total = navigation.find('li').length;
+        $width = 100 / $total;
+
+        navigation.find('li').css('width', $width + '%');
+
+      },
+
+      onTabClick: function(tab, navigation, index) {
+        var $valid = $('.card-wizard form').valid();
+
+        if (!$valid) {
+          return false;
+        } else {
+          return true;
+        }
+      },
+
+      onTabShow: function(tab, navigation, index) {
+        var $total = navigation.find('li').length;
+        var $current = index + 1;
+
+        var $wizard = navigation.closest('.card-wizard');
+
+        // If it's the last tab then hide the last button and show the finish instead
+        if ($current >= $total) {
+          $($wizard).find('.btn-next').hide();
+          $($wizard).find('.btn-finish').show();
+        } else {
+          $($wizard).find('.btn-next').show();
+          $($wizard).find('.btn-finish').hide();
+        }
+
+        //update progress
+        var move_distance = 100 / $total;
+        move_distance = move_distance * (index) + move_distance / 2;
+
+        $wizard.find($('.progress-bar')).css({
+          width: move_distance + '%'
+        });
+        //e.relatedTarget // previous tab
+
+        $wizard.find($('.card-wizard .nav-pills li .nav-link.active')).addClass('checked');
+
+      }
+    });
+
+
+    // Prepare the preview for profile picture
+    $("#wizard-picture").change(function() {
+      readURL(this);
+    });
+
+    $('[data-toggle="wizard-radio"]').click(function() {
+      wizard = $(this).closest('.card-wizard');
+      wizard.find('[data-toggle="wizard-radio"]').removeClass('active');
+      $(this).addClass('active');
+      $(wizard).find('[type="radio"]').removeAttr('checked');
+      $(this).find('[type="radio"]').attr('checked', 'true');
+    });
+
+    $('[data-toggle="wizard-checkbox"]').click(function() {
+      if ($(this).hasClass('active')) {
+        $(this).removeClass('active');
+        $(this).find('[type="checkbox"]').removeAttr('checked');
+      } else {
+        $(this).addClass('active');
+        $(this).find('[type="checkbox"]').attr('checked', 'true');
+      }
+    });
+
+    $('.set-full-height').css('height', 'auto');
+
+    //Function to show image before upload
+
+    function readURL(input) {
+      if (input.files && input.files[0]) {
+        var reader = new FileReader();
+
+        reader.onload = function(e) {
+          $('#wizardPicturePreview').attr('src', e.target.result).fadeIn('slow');
+        }
+        reader.readAsDataURL(input.files[0]);
+      }
+    }
+
+  }
+  }
+        </script>
+        <script type="text/javascript">
+        const sidebars = document.querySelector(".sidebar");
     sidebars.classList.add("d-none");
 
     const sidebartoggle = document.querySelector(".navbar-wrapper");
     sidebartoggle.classList.add("d-none");
-    //jQuery time
-    var current_fs, next_fs, previous_fs; //fieldsets
-    var left, opacity, scale; //fieldset properties which we will animate
-    var animating; //flag to prevent quick multi-click glitches
-
-    $(".next").click(function(){
-        if(animating) return false;
-        animating = true;
-        
-        current_fs = $(this).parent();
-        next_fs = $(this).parent().next();
-        
-        //activate next step on progressbar using the index of next_fs
-        $("#progressbar li").eq($("fieldset").index(next_fs)).addClass("active");
-        
-        //show the next fieldset
-        next_fs.show(); 
-        //hide the current fieldset with style
-        current_fs.animate({opacity: 0}, {
-            step: function(now, mx) {
-                //as the opacity of current_fs reduces to 0 - stored in "now"
-                //1. scale current_fs down to 80%
-                scale = 1 - (1 - now) * 0.2;
-                //2. bring next_fs from the right(50%)
-                left = (now * 50)+"%";
-                //3. increase opacity of next_fs to 1 as it moves in
-                opacity = 1 - now;
-                current_fs.css({
-            'transform': 'scale('+scale+')',
-            'position': 'absolute'
-        });
-                next_fs.css({'left': left, 'opacity': opacity});
-            }, 
-            duration: 800, 
-            complete: function(){
-                current_fs.hide();
-                animating = false;
-            }, 
-            //this comes from the custom easing plugin
-            easing: 'easeInOutBack'
-        });
-    });
-
-    $(".previous").click(function(){
-        if(animating) return false;
-        animating = true;
-        
-        current_fs = $(this).parent();
-        previous_fs = $(this).parent().prev();
-        
-        //de-activate current step on progressbar
-        $("#progressbar li").eq($("fieldset").index(current_fs)).removeClass("active");
-        
-        //show the previous fieldset
-        previous_fs.show(); 
-        //hide the current fieldset with style
-        current_fs.animate({opacity: 0}, {
-            step: function(now, mx) {
-                //as the opacity of current_fs reduces to 0 - stored in "now"
-                //1. scale previous_fs from 80% to 100%
-                scale = 0.8 + (1 - now) * 0.2;
-                //2. take current_fs to the right(50%) - from 0%
-                left = ((1-now) * 50)+"%";
-                //3. increase opacity of previous_fs to 1 as it moves in
-                opacity = 1 - now;
-                current_fs.css({'left': left});
-                previous_fs.css({'transform': 'scale('+scale+')', 'opacity': opacity});
-            }, 
-            duration: 800, 
-            complete: function(){
-                current_fs.hide();
-                animating = false;
-            }, 
-            //this comes from the custom easing plugin
-            easing: 'easeInOutBack'
-        });
-    });
-
-</script>
-<script type="text/javascript">
+    
     function getCookie(name) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {
@@ -541,6 +631,14 @@
         return cookieValue;
     }
     const csrftoken = getCookie('csrftoken');
+
+    $(document).ready(function() {
+      // Initialise the wizard
+      demo.initNowUiWizard();
+      setTimeout(function() {
+        $('.card.card-wizard').addClass('active');
+      }, 600);
+    });
 
     const feedBackreasubdomain = document.querySelector(".invalid_subdomain")
     const subdomainField = document.querySelector("#id_subdomain");

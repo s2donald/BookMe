@@ -1,35 +1,129 @@
 {% extends 'bookingpage/bookingpage.html'%}
 {% load hosts %}
 {% load crispy_forms_tags %}
+{% load business_tags %}
 {% block booking %}
 
-<div class="text-block dark-overlay justify-content-center align-items-center">
-    {% if service %}
-        <h2>{{ service.name }}</h2>
-        <hr class="hrwhite">
-            <div class="row text-center underlay mb-3">
-                <form method="POST" class="justify-content-center fform" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    <div class="container-fluid">
-                        <div class="col-md-12 d-flex justify-content-center">
-                            <h3 class="mb-3">Select Your Preferred Date and Time</h3>
+<div class="container">
+        <div class="row">
+            <form method="POST" class="justify-content-center fform" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="container-fluid">
+                            <div class="col-md-12 d-flex justify-content-center">
+                                <h3 class="mb-3">Select Your Preferred Date and Time</h3>
+                            </div>
+                            <div class="row d-flex justify-content-center mb-3">
+                                <div class="pl-6" id="datepicker"></div>
+                                <div class="col-md-6">
+                                    <div class="" id="booking-header"><h4 class="text-center">Available Booking Times</h4></div>
+                                    <div class="sk-folding-cube d-none">
+                                        <div class="sk-cube1 sk-cube"></div>
+                                        <div class="sk-cube2 sk-cube"></div>
+                                        <div class="sk-cube4 sk-cube"></div>
+                                        <div class="sk-cube3 sk-cube"></div>
+                                    </div>
+                                    <div class="bookingbutton justify-content-left"></div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="row d-flex justify-content-center mb-3">
-                            <div class="pl-6" id="datepicker"></div>
-                            <div class="col-md-6">
-                                <div class="" id="booking-header"><h4 class="text-center">Available Booking Times</h4></div>
-                                <div class="sk-folding-cube d-none">
+            </form>
+            
+        <form class="sform d-none row" method="post">
+          <div class="col-lg-7 text-center">
+            <p class="subtitle text-white">Book your service with {{ company.business_name }}</p>
+            <h1 class="h2 mb-2"> Confirm To Secure Spot <span class="text-muted float-right"></span>      </h1>
+            <div class="text-block">
+              <h5 class="mb-4">{{ service.name }}</h5>
+              <div class="row mb-3 ">
+                <div class="col-md-6 d-flex align-items-center mb-3 mb-md-0 bg-light rounded">
+                  <div class="date-tile mr-3">
+                    <div class="text-uppercase"> <span class="text-sm" id="sm-mon">Apr</span><br><strong class="text-lg" id="numdate">17</strong></div>
+                  </div>
+                  <p class="text-sm mb-0" id="serDate"></p>
+                </div>
+                <div class="col-md-1"></div>
+                <div class="col-md-5 d-flex align-items-left mb-3 mb-md-0 bg-light rounded">
+                  <p class="text-sm mb-0 text-left" id="serDate"> {% if service.duration_hour > 0 %}{{ service.duration_hour }} hour{% endif %} {% if service.duration_minute > 0 and service.duration_hour > 0 %}and{% endif %} {{ service.duration_minute}} minute service.</p>
+                </div>
+              </div>
+            </div>
+            <div class="text-block">
+              <h5 class="mb-4">Things to keep in mind</h5>
+              <ul class="list-unstyled">
+                <li class="mb-2"> 
+                  <div class="media align-items-center mb-3">
+                    <div class="icon-rounded icon-rounded-sm bg-secondary-light mr-4"><i class="fa fas fa-info text-secondary fa-fw text-center"></i></div>
+                    <div class="media-body"><span class="text-sm">{{ company.notes }}</span></div>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="row form-block flex-column flex-sm-row">
+              <div class="col text-center text-sm-left">
+              </div>
+              <div class="col text-center text-sm-right"><a class="btn btn-outline-primary px-3 confbtn"> Confirm and Secure Spot<i class="fa-chevron-right fa ml-2"></i></a></div>
+            </div>
+          </div>
+          <div class="col-lg-5 pl-xl-5">
+            <div class="card-dark rounded border-0 shadow">
+              <div class="card-body p-4">
+                <div class="text-block pb-3">
+                  <div class="media align-items-center">
+                    <div class="media-body">
+                    <h5><a class="text-reset">{{ company.business_name }}</a></h5>
+                      <h6> <a class="text-reset">{{ company.category }}</a></h6>
+                      <p class="text-muted text-sm mb-0">{{ company.description|slice:50 }}</p>
+                      <div class="mt-n1">{% for x in '12345' %}<i class="fas fa-xs fa-star {% if forloop.counter|avg_reviews:company.id %}text-warning{% else %}text-gray-300{% endif %}"></i>{% endfor %}</div>
+                    </div><a href=""><img class="ml-3 rounded" src="{{ company.image.url }}" alt="" width="100"></a>
+                  </div>
+                </div>
+                <div class="text-block pt-3 pb-0">
+                  <table class="w-100">
+                    <tbody>
+                      <tr>
+                        <th class="font-weight-normal py-2">{% if service.price_type == 'free' %}Free Service{% elif service.price_type == 'dont' %}Contact {{ company.business_name}} for pricing {% elif service.price_type == 'variable' %}Prices Varies From{% endif %}</th>
+                        <td class="text-right py-2">{% if service.price_type == 'free' %}Free{% else %}${{ service.price }}{% endif %}</td>
+                      </tr>
+                      {% comment %} <tr>
+                        <th class="font-weight-normal pt-2 pb-3">Service fee</th>
+                        <td class="text-right pt-2 pb-3">$67.48</td>
+                      </tr> {% endcomment %}
+                    </tbody>
+                    <tfoot>
+                      <tr class="border-top">
+                        <th class="pt-3">Total</th>
+                        <td class="font-weight-bold text-right pt-3">{% if service.price_type == 'free' %}Free{% else %}${{ service.price }}{% endif %}</td>
+                      </tr>
+                    </tfoot>
+                  </table>
+                </div>
+              </div>
+              <div class="card-footer bg-primary-light py-4 border-0">
+                <div class="media align-items-center">
+                  <div class="media-body">
+                    <p class="text-sm text-warning opacity-8 mb-0">Taxes and other charges may apply. Payment is collected in person.</p>
+                    <h6 class="licolor"> {% if service.cancellation == 0 %}Flexible cancellation policy{% endif %}</h6>
+                    <p class="text-sm text-info opacity-8 mb-0">Appointments can be cancelled {% if service.cancellation > 0 %}within {{ service.cancellation }} hours of {% else %}anytime before the{% endif %} appointment.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            </form>
+          </div>
+          <div class="conffeedback d-none">
+                        <div class="sk-folding-cube d-none">
                                     <div class="sk-cube1 sk-cube"></div>
                                     <div class="sk-cube2 sk-cube"></div>
                                     <div class="sk-cube4 sk-cube"></div>
                                     <div class="sk-cube3 sk-cube"></div>
                                 </div>
-                                <div class="bookingbutton justify-content-left"></div>
-                            </div>
-                        </div>
+                        <h3 class="confheader3">Appointment Confirmed!</h3>
+                        <div class="text-block appoints"></div>
+                        <div class="text-block message"></div>
                     </div>
-                </form>
-                <form method="post" class="justify-content-center d-none" id="authform" enctype="multipart/form-data">
+        </div>
+
+        <form method="post" class="justify-content-center d-none" id="authform" enctype="multipart/form-data">
                     {% csrf_token %}
                     <div class="authver justify-content-center container-fluid">
                         <div class="row justify-content-center">
@@ -82,32 +176,15 @@
                     </div>
                 </form>
 
-                <form method="post" class="justify-content-center" id="confirmForm">
-                    {% csrf_token %}
-                    <div class="sform d-none container">
-                        <h3>Confirm Appointment To Secure Slot</h3>
-                        <div class="text-block appoint"></div>
-                        <a class="btn btn-outline-primary mb-3 confbtn">Confirm and Secure Spot</a>
-                    </div>
-                    <div class="conffeedback d-none">
-                        <div class="sk-folding-cube d-none">
-                                    <div class="sk-cube1 sk-cube"></div>
-                                    <div class="sk-cube2 sk-cube"></div>
-                                    <div class="sk-cube4 sk-cube"></div>
-                                    <div class="sk-cube3 sk-cube"></div>
-                                </div>
-                        <h3 class="confheader3">Appointment Confirmed!</h3>
-                        <div class="text-block appoints"></div>
-                        <div class="text-block message"></div>
-                    </div>
-                    
-                </form>
-            </div>
-            <hr class="hrwhite">
-    {% endif %}
 </div>
+
+{% endblock %}
+
+{% block scripts %}
 <script>
-    function getCookie(name) {
+$(document).ready(function(){
+
+function getCookie(name) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {
         const cookies = document.cookie.split(';');
@@ -140,16 +217,17 @@
     const secform = document.querySelector(".sform");
     const authenticateform = document.querySelector("#authform");
     const bookingtime = document.querySelector(".appoint");
-    const feedbackConf = document.querySelector(".conffeedback");
     const bookingtimes = document.querySelector(".appoints");
     const msg = document.querySelector('.message');
     const authGibeleForm = document.querySelector('#authformGibele');
+    const feedbackConf = document.querySelector(".conffeedback");
     var bookingdate = ""
     var bookedtime = ""
     var booktime
     var bookdate
     var serv_id
     var authen
+
     dates.addEventListener('change', (e) =>{
         const loader = document.querySelector(".sk-folding-cube").classList.remove("d-none")
         helper.classList.add("d-none")
@@ -179,7 +257,7 @@
             var evening = 0
             for (d in data.appointment_slots){
                 j = i + 1
-                h = `<a class="btn btn-outline-primary btn-sm mb-1 show" style="height:auto;" id="show`+j+`">${data.appointment_slots[i]}</a>`
+                h = `<a class="btn btn-info btn-sm mb-1 show" style="height:auto;" id="show`+j+`">${data.appointment_slots[i]}</a>`
                 astring = astring+h
                 i = i + 1
             }
@@ -199,10 +277,19 @@
 
     $(document).on("click", ".bookingbutton .show", function(){
             const timev = $(this).text();
+            var longmonthNames = ["January", "February", "March", "April", "May","June","July", "August", "September", "October", "November","December"];
+            var monthNames = ["Jan", "Feb", "Mar", "Apr", "May","June","July", "Aug", "Sept", "Oct", "Nov","Dec"];
+            var dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+            firform.innerHTML =""
 
-            firform.innerHTML=""
-            
-            bookingtime.innerHTML = `<p style="font-size:25px;">You are booking an appointment with <strong>{{ company.business_name }}</strong> at <strong>`+timev+`</strong> on <strong>`+ bookingdate.toDateString()+`</strong> for a <strong>{{ service.name }}</strong>.</p><p style="font-size:25px;">Please confirm your appointment by clicking the confirm button below.</p>`
+            const smallMonth = document.querySelector("#sm-mon")
+            const numdateNum = document.querySelector('#numdate')
+            const serviceDate = document.querySelector('#serDate')
+
+            smallMonth.innerHTML = monthNames[bookingdate.getMonth()]
+            numdateNum.innerHTML = bookingdate.getDate()
+            serviceDate.innerHTML = dayNames[bookingdate.getDay()] +`<br>` + timev
+
             secform.classList.remove("d-none");
                         
             booktime = timev
@@ -210,6 +297,7 @@
             serv_id = '{{ service.id }}'
             
     });
+
     const lconf = document.querySelector(".confbtn")
     lconf.addEventListener('click', addBooking, {once:true});
             
@@ -277,7 +365,6 @@
         const emailGuest = document.querySelector('#id_email')
         const phoneGuest = document.querySelector('#id_phone')
         feedbackConf.classList.remove("d-none");
-        const loader = document.querySelector(".sk-folding-cube").classList.remove("d-none")
                         fetch("{% host_url 'creatingBooking' host 'bookingurl' slug=company.slug %}", {
                             body: JSON.stringify({time:booktime, date:bookingdate.toDateString(), month:bookingdate.getMonth(),
                                                     day:bookingdate.getDate(), year:bookingdate.getFullYear(), s_id:serv_id, first_name:first_name.value, 
@@ -315,7 +402,6 @@
     }
         
     function bookingCreation(){
-        const loader = document.querySelector(".sk-folding-cube").classList.remove("d-none")
             csrftoken = getCookie('csrftoken');
             fetch("{% host_url 'creatingBooking' host 'bookingurl' slug=company.slug %}", {
                 body: JSON.stringify({time:booktime, date:bookingdate.toDateString(), month:bookingdate.getMonth(),day:bookingdate.getDate(),year:bookingdate.getFullYear(), s_id:serv_id }),
@@ -328,6 +414,7 @@
             .then((res) => res.json())
             .then((data) => {
                 const confheader3 = document.querySelector(".confheader3")
+                feedbackConf.classList.remove("d-none");
                 if (data.emailerr){
                                 confheader3.innerHTML = 'Unable to book service as a guest.'
                                 bookingtimes.innerHTML = `<p style="font-size:25px;">Please sign into Gibele using the email which you have provided.</p>`
@@ -350,14 +437,9 @@
                             }
             });
     }
-</script>
 
-{% endblock %}
 
-{% block scripts %}
-<script>
-    $(document).ready(function(){
-            {% if company.returning %}
+    {% if company.returning %}
                 {% if returnClient %}
                 {% else %}
                     {% if user.is_authenticated %}
@@ -665,8 +747,7 @@
                 
             {% endif %}
         });
-            
+
 
 </script>
 {% endblock scripts %}
-

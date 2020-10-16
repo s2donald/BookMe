@@ -319,6 +319,10 @@ a:focus {
     --layer2: currentColor;
   }
 
+  .card-dark {
+    background-color: #141313;
+  }
+
   .card-fav-icon {
     display: inline-block;
     width: 2.5rem;

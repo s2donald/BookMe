@@ -36,7 +36,7 @@ def bookingServiceView(request, pk):
         returnClient = company.clients.filter(user=user).exists()
     else:
         returnClient = False
-    return render(request, 'bookingpage/indservice.html', {'returnClient':returnClient,'user': user, 'company':company, 'service':service, 'personal_form':personal_form, 'gibele_form':gibele_form})
+    return render(request, 'bookingpage/testBookingPage.html', {'returnClient':returnClient,'user': user, 'company':company, 'service':service, 'personal_form':personal_form, 'gibele_form':gibele_form})
 
 def time_slots(start_time, end_time, interval, duration_hour, duration_minute, year, month, day, company):
     t = start_time
@@ -143,11 +143,12 @@ class createAppointment(View):
                     guest.save()
                     company.clients.add(guest)
                     company.save()
+                    booking = Bookings.objects.create(user=user,guest=guest,service=service, company=company,start=start, end=end, price=price)
+                    booking.save()
                 else:
-                    guest = Clients.objects.filter(company=company,email=user.email, first_name=user.first_name,last_name=user.last_name,phone=user.phone)[0]:
-                
-                booking = Bookings.objects.create(user=user,guest=guest,service=service, company=company,start=start, end=end, price=price)
-                booking.save()
+                    guest = Clients.objects.get(company=company, email=user.email, first_name=user.first_name,last_name=user.last_name,phone=user.phone)
+                    booking = Bookings.objects.create(user=user,guest=guest,service=service, company=company,start=start, end=end, price=price)
+                    booking.save()
                 good = True
             else:
                 good = False
@@ -163,8 +164,13 @@ class createAppointment(View):
                     company.clients.add(guest)
                     company.save()
                 else:
-                    guest = Clients.objects.filter(email=email, first_name=first_name,last_name=last_name,phone=phone)[0]
-                booking = Bookings.objects.create(guest=guest,service=service, company=company,
+                    guest = Clients.objects.get(company=company, email=email, first_name=first_name,last_name=last_name,phone=phone)
+                
+                if Account.objects.filter(email=email, is_guest=False).exists():
+                    return JsonResponse({'time':time, 's_id':s_id,'start':start,'date':date,'time':time, 'good':good, 'emailerr':'The email you have provided has already been used to create an account. Please sign into Gibele then try booking again later.'})
+                elif Account.objects.filter(email=email, is_guest=True).exists():
+                    user = Account.objects.get(email=email, is_guest=True)
+                booking = Bookings.objects.create(user=user,service=service, company=company,
                                                 start=start, end=end, price=price)
                 booking.save()
                 good = True

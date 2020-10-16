@@ -137,10 +137,10 @@ cancellationtime = (
 )
 
 def get_user_image_folder(instance, filename):
-    return "company/images/user_{0}/imagefolder/{1}/".format(instance.user, filename)
+    return "company/images/user_{0}/imagefolder/{1}/".format(instance.user.id, filename)
 
 def get_user_image_folder(instance, filename):
-    return "company/images/user_{0}/requested/{1}/".format(instance.user, filename)
+    return "company/images/user_{0}/requested/{1}/".format(instance.user.id, filename)
 
 #This is the model for the information we need from each company that is listed on the website
 class Company(models.Model):
@@ -225,7 +225,7 @@ pre_save.connect(location_update, sender=Company)
 
 class Clients(models.Model):
     company = models.ForeignKey(Company, on_delete=models.CASCADE,related_name='clients')
-    user = models.ForeignKey(Account, on_delete=models.CASCADE, related_name='company_booked')
+    user = models.ForeignKey(Account, on_delete=models.CASCADE, related_name='company_booked',null=True, blank=True)
     first_name = models.CharField(verbose_name="First Name", max_length=30, unique=False)
     last_name = models.CharField(verbose_name="Last Name", max_length=30, unique=False,null=True, blank=True)
     email = models.EmailField(verbose_name='Email', max_length=60)
@@ -245,8 +245,8 @@ class CompanyReq(models.Model):
     company = models.ForeignKey(Company, on_delete=models.CASCADE,related_name='reqclients')
     created_at = models.DateTimeField(auto_now_add=True)
     add_to_list = models.BooleanField(default=False)
-    
-    #To be implemented in the near future, the client can add a description and an image to requested items
+
+    #To be implemented in the near future, the client can add a description and an image to requested
     description = models.CharField(max_length=200,blank=True)
     image = models.ImageField(upload_to=get_user_image_folder, blank=True)
     class Meta:

@@ -74,7 +74,7 @@
                       <h6> <a class="text-reset">{{ company.category }}</a></h6>
                       <p class="text-muted text-sm mb-0">{{ company.description|slice:50 }}</p>
                       <div class="mt-n1">{% for x in '12345' %}<i class="fas fa-xs fa-star {% if forloop.counter|avg_reviews:company.id %}text-warning{% else %}text-gray-300{% endif %}"></i>{% endfor %}</div>
-                    </div><a href=""><img class="ml-3 rounded" src="{{ company.image.url }}" alt="" width="100"></a>
+                    </div>
                   </div>
                 </div>
                 <div class="text-block pt-3 pb-0">

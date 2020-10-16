@@ -225,7 +225,7 @@ pre_save.connect(location_update, sender=Company)
 
 class Clients(models.Model):
     company = models.ForeignKey(Company, on_delete=models.CASCADE,related_name='clients')
-    user = models.ForeignKey(Account, on_delete=models.CASCADE, related_name='company_booked',null=True, blank=True)
+    user = models.ForeignKey(Account, on_delete=models.CASCADE, related_name='company_booked')
     first_name = models.CharField(verbose_name="First Name", max_length=30, unique=False)
     last_name = models.CharField(verbose_name="Last Name", max_length=30, unique=False,null=True, blank=True)
     email = models.EmailField(verbose_name='Email', max_length=60)

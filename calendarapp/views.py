@@ -138,13 +138,16 @@ class createAppointment(View):
             # province = user.province
             # city = user.city
             if Bookings.objects.filter(company=company, start=start, end=end).count()<1:
-                booking = Bookings.objects.create(user=user,service=service, company=company,start=start, end=end, price=price)
-                booking.save()
                 if not Clients.objects.filter(company=company,email=user.email, first_name=user.first_name,last_name=user.last_name,phone=user.phone).exists():
-                    guest = Clients.objects.create(company=company,first_name=user.first_name,last_name=user.last_name,phone=user.phone,email=user.email)
+                    guest = Clients.objects.create(company=company, first_name=user.first_name,last_name=user.last_name,phone=user.phone,email=user.email)
                     guest.save()
                     company.clients.add(guest)
                     company.save()
+                else:
+                    guest = Clients.objects.filter(company=company,email=user.email, first_name=user.first_name,last_name=user.last_name,phone=user.phone)[0]:
+                
+                booking = Bookings.objects.create(user=user,guest=guest,service=service, company=company,start=start, end=end, price=price)
+                booking.save()
                 good = True
             else:
                 good = False
@@ -160,7 +163,7 @@ class createAppointment(View):
                     company.clients.add(guest)
                     company.save()
                 else:
-                    guest = Clients.objects.get(email=email, first_name=first_name,last_name=last_name,phone=phone)
+                    guest = Clients.objects.filter(email=email, first_name=first_name,last_name=last_name,phone=phone)[0]
                 booking = Bookings.objects.create(guest=guest,service=service, company=company,
                                                 start=start, end=end, price=price)
                 booking.save()

@@ -51,7 +51,7 @@
                 events:[
                 {% for booking in bookings %}
                     {
-                        title: '{{ booking.service.name }}',
+                        title: 'Service:{{ booking.service.name }} Client: Stephen Donald',
                         description: '{{ booking.slug }}',
                         start: '{{ booking.start|date:"Y-m-d" }}'+'T'+'{{ booking.start|date:"H:i:s" }}',
                         end: '{{ booking.end|date:"Y-m-d" }}'+'T'+'{{ booking.end|date:"H:i:s" }}',

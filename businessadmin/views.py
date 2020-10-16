@@ -176,6 +176,9 @@ def completeViews(request):
                 company.subcategory.add(s)
 
             return redirect(reverse('home', host='bizadmin'))
+        
+        else:
+            print(biz_form.errors)
 
     biz_form = AddCompanyForm()
     service_form = AddServiceForm()
@@ -463,7 +466,16 @@ class createclientAPI(View):
             postal = form.cleaned_data.get('postal')
             city = form.cleaned_data.get('city')
             province = form.cleaned_data.get('province')
-            Clients.objects.create(company=company, first_name=first_name, last_name=last_name, email=email,phone=phone,
+
+            if Account.objects.filter(email=email).exists():
+                user = Account.objects.get(email=email, is_guest=False)
+            else:
+                user = Account.objects.create(email=email, is_guest=True, first_name=first_name, 
+                                                last_name=last_name, email=email,phone=phone,
+                                                city=city,postal=postal,province=province,address=address)
+
+
+            Clients.objects.create(company=company, user=user first_name=first_name, last_name=last_name, email=email,phone=phone,
                                 city=city,postal=postal,province=province,address=address)
             clients = company.clients.all()
             data['form_is_valid'] = True

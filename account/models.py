@@ -43,9 +43,12 @@ class Account(AbstractBaseUser):
     province = models.CharField(max_length=35)
     city = models.CharField(max_length=35)
     avatar = models.ImageField(upload_to='users/profilepic/', blank=True)
+
     is_business= models.BooleanField(default=False)
     on_board= models.BooleanField(default=False)
     is_consumer= models.BooleanField(default=False)
+    is_guest=models.BooleanField(default=False)
+
     date_joined = models.DateTimeField(verbose_name='date joined', auto_now_add=True)
     last_login = models.DateTimeField(verbose_name='last login', auto_now=True)
     is_admin = models.BooleanField(default=False)

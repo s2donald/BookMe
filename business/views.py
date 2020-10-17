@@ -167,7 +167,6 @@ def company_detail(request, id, slug):
     category = None
     categories = Category.objects.all()
     subcategories = SubCategory.objects.all()
-    comp_categ = company.category
     services = Services.objects.all().filter(business=company)
     form = SearchForm()
     reviews = Reviews.objects.filter(company=company).order_by('-created')
@@ -193,7 +192,7 @@ def company_detail(request, id, slug):
         reviews = paginator.page(paginator.num_pages)
 
 
-    return render(request, 'business/company/detail.html', {'page':page,'similar_companies':similar_companies,'photos':galPhotos,'sun_hour':sun_hour,'mon_hour':mon_hour,'tues_hour':tues_hour,'wed_hour':wed_hour,'thur_hour':thur_hour,'fri_hour':fri_hour,'sat_hour':sat_hour,'subcategories':subcategories,'comp_categ':comp_categ,'amenities':amenities,'address':address,'company':company,'category':category,'categories':categories, 'services':services, 'form':form, 'reviews':reviews})
+    return render(request, 'business/company/detail.html', {'page':page,'similar_companies':similar_companies,'photos':galPhotos,'sun_hour':sun_hour,'mon_hour':mon_hour,'tues_hour':tues_hour,'wed_hour':wed_hour,'thur_hour':thur_hour,'fri_hour':fri_hour,'sat_hour':sat_hour,'subcategories':subcategories,'amenities':amenities,'address':address,'company':company,'category':category,'categories':categories, 'services':services, 'form':form, 'reviews':reviews})
 
 @login_required
 def ManageServiceListView(request, id, slug):

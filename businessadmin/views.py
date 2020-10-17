@@ -198,6 +198,14 @@ def completeViews(request):
                                                                                 'biz_form':biz_form, 'service_form':service_form,'subcategories':subcategories,'company':company,
                                                                                 'services':services})
 
+def load_subcat(request):
+    cat_id = request.GET.get('category')
+    if cat_id:
+        subcategories = SubCategory.objects.filter(category_id=cat_id).order_by('name')
+    else:
+        subcategories = None
+    return render(request, 'bizadmin/dashboard/profile/addcompanyhelper/subcat_dropdown_list_options.html', {'subcategories': subcategories})
+
 class subdomainCheck(View):
     def post(self, request):
         data=json.loads(request.body)
@@ -476,7 +484,7 @@ class createclientAPI(View):
                 
             Clients.objects.create(user=user, company=company, first_name=first_name, last_name=last_name, email=email,phone=phone,
                                 city=city,postal=postal,province=province,address=address)
-                                
+
             clients = company.clients.all()
             data['form_is_valid'] = True
             data['view'] = 'Your client has been added!'

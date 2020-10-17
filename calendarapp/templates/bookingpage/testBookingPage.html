@@ -81,8 +81,9 @@
                   <table class="w-100">
                     <tbody>
                       <tr>
-                        <th class="font-weight-normal py-2">{% if service.price_type == 'free' %}Free Service{% elif service.price_type == 'dont' %}Contact {{ company.business_name}} for pricing {% elif service.price_type == 'variable' %}Prices Varies From{% endif %}</th>
-                        <td class="text-right py-2">{% if service.price_type == 'free' %}Free{% else %}${{ service.price }}{% endif %}</td>
+                        {% with prctype=service.price_type prc=service.price %}
+                        <th class="font-weight-normal py-2">{% if prctype == 'free' %}Free Service{% elif prctype == 'dont' %}Contact {{ company.business_name}} for pricing {% elif prctype == 'variable' %}Prices Varies From {% elif prctype == 'fixed' %}Fixed Price of {% else %}{{ prctype }}{% endif %}</th>
+                        <td class="text-right py-2">{% if prctype == 'free' %}Free{% else %}${{ prc }}{% endif %}</td>
                       </tr>
                       {% comment %} <tr>
                         <th class="font-weight-normal pt-2 pb-3">Service fee</th>
@@ -92,7 +93,8 @@
                     <tfoot>
                       <tr class="border-top">
                         <th class="pt-3">Total</th>
-                        <td class="font-weight-bold text-right pt-3">{% if service.price_type == 'free' %}Free{% else %}${{ service.price }}{% endif %}</td>
+                        <td class="font-weight-bold text-right pt-3">{% if prctype == 'free' %}Free{% else %}${{ prc }}{% endif %}</td>
+                        {% endwith %}
                       </tr>
                     </tfoot>
                   </table>

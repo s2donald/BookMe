@@ -39,6 +39,7 @@ urlpatterns = [
     url(r'reviews/$', views.reviewListView, name='reviewlist'),
     url(r'privatetoggle/$', views.changePrivateView.as_view(), name='changePrivate'),
 
+    url(r'path/loadsubcategories', views.load_subcat, name='ajax_load_subcategories'),
     url(r'onboarding/check/subdomain/$', views.subdomainCheck.as_view(), name='subdomain'),
     url(r'onboarding/$', views.completeViews, name='completeprofile'),
     url(r'^updatecompanyform/$',views.updateCompanyDetail.as_view(), name='updateform'),

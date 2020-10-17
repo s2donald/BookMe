@@ -5,36 +5,33 @@
 {% block title %}{{ company.business_name }} - Gibele.com{% endblock %}
 {% block content %}
     <!-- Hero Section-->
-    <section class="pt-7 pb-5 d-flex align-items-end dark-overlay bg-cover">
+    {% with categoryname=company.category.name %}
+    <section class="pt-7 pb-5 d-flex align-items-end dark-overlay bg-cover" style="background-image: url('{% if company.image %}{{ company.image.url }}{% else %} {% if categoryname == 'Automotive Services' %}{% static "/img/automotive-noimage1.jpg" %}{% elif categoryname == 'Personal Care' %}{% endif %}{% endif %}'); height:250px;">
       <!-- Slider main container-->
-      {% comment %} style="background-image: url('{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/automotive-noimage1.jpg" %}{% endif %}'); width:auto; height:400px;" {% endcomment %}
+      {% comment %} style="background-image: url('{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/automotive-noimage1.jpg" %}{% endif %}'); height:400px;" {% endcomment %}
+      
+      {% if photos %}
       <div class="swiper-container detail-slider slider-gallery">
         <!-- Additional required wrapper-->
         <div class="swiper-wrapper">
           <!-- Slides-->
-          {% if comp_categ.name == 'Automotive Services' %}
+          {% if categoryname == 'Automotive Services' %}
                 <div class="swiper-slide"><a href="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/automotive-noimage1.jpg" %}{% endif %}" data-toggle="gallery-top" title="Header Image"><img class="img-fluid center" style="width:500px;max-height:600px;" src="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/automotive-noimage1.jpg" %}{% endif %}" alt="Header Image"></a></div>
           {% endif %}
-          {% if comp_categ.name == 'Personal Care' %}
+          {% if categoryname == 'Personal Care' %}
                 <div class="swiper-slide"><a href="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/beautynoimage1.jpg" %}{% endif %}" data-toggle="gallery-top" title="Header Image"><img class="img-fluid center" style="width:500px;max-height:600px; position: center;" src="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/beautynoimage1.jpg" %}{% endif %}" alt="Header Image"></a></div>
           {% endif %}
-          {% if photos %}
             {% for p in photos %}
               <div class="swiper-slide"><a href="{{ p.photos.url }}"><img loading="lazy" class="img-fluid center" style="width:500px;max-height:600px;" src="{{ p.photos.url }}" alt="Images"></a></div>
             {% endfor %}
-
-          {% else %}
-
-          <div class="swiper-slide"><img class="img-fluid" src="{% static "/img/white-background-500x500.jpg" %}" alt="No Image"></div>
-          <div class="swiper-slide"><img class="img-fluid" src="{% static "/img/white-background-500x500.jpg" %}" alt="No Image"></div>          {% endif %}
         </div>
-        {% if photos %}
           <div class="swiper-pagination swiper-pagination-white"></div>
           <div class="swiper-button-prev swiper-button-white circle-slide"></div>
           <div class="swiper-button-next swiper-button-white circle-slide"></div>
-        {% endif %}
       </div>
+      {% endif %}
     </section>
+    {% endwith %}
 
     <section class="py-0">
       <div class="container">
@@ -44,7 +41,6 @@
             <div class="text-block">
             <div class="d-flex justify-content-between align-items-start flex-column flex-lg-row align-items-lg-end">
               <div class="text-black mb-4 mb-lg-0">
-                <div class="badge badge-pill px-3 py-2 mb-4">Automotive Services</div>
                 <h1 class="text-shadow verified">{{ company.business_name }}</h1>
                 <div class="text-block">
                     <p class="text-block"><i class="fa-map-marker-alt fa mr-1 licolor"></i> {{ company.address }}, {{ company.city }}</p>

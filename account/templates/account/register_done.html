@@ -1,9 +1,20 @@
 {% extends 'business/base.html' %}
 {% load static %}
+{% load hosts %}
+{% block hidesearch %}d-none{% endblock  %}
 {% block content %}
 <div class="container">
     <h1>Welcome, {% if user.first_name != None %}{{ user.first_name }}{% else %}{{user.username}}{% endif %}</h1>
-    <p>Your account has been successfully created!</p>
+    <div class="col-md-12 col-sm-12 ">
+        <div class="text-block">
+            <object height="300px" width="100%" data="{% static 'css/svg-img/login-views/welcome.svg' %}" type="image/svg+xml"></object>
+            <div class="card-body">
+                <h4 class="card-title">Your account has been successfully created!</h4>
+                <p class="card-text"></p>
+                <a href="{% host_url 'business:homepage' host 'www' %}" class="btn btn-info">Go to the Gibele Homepage</a>
+            </div>
+        </div>
+    </div>
     <hr>
 </div>
 {% endblock %}

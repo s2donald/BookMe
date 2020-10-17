@@ -167,6 +167,13 @@
                     </div>
                     <div class="col-md-6">
                         <label for="" class="font-weight-bold d-flex justify-content-center pr-1">Business Categories <a data-toggle="tooltip" data-placement="top" title="Select as many subcategories your business offers services in"> <i class="fas fa-question-circle licolor"></i></a></label>
+                        {% comment %} <div id="div_id_addcompany-subcategory" class="form-group">
+                            <div>
+                                <select name="addcompany-subcategory" class="selectcolor selectpicker show-tick form-control selectmultiple form-control" multiple data-size="5" data-dropdown-align-right="true" title="Subcategories" required id="id_addcompany-subcategory">
+                                    <option value="" selected>---------</option>
+                                </select>
+                            </div>
+                        </div> {% endcomment %}
                         {{ biz_form.subcategory|as_crispy_field }}
                     </div>
                     <div class="col-md-12">
@@ -473,6 +480,22 @@
           </div>
 
         <script>
+        $('#id_addcompany-category').change(function(){
+            var categoryId = $(this).val();
+            console.log(categoryId)
+            $.ajax({
+                url: '{% host_url "ajax_load_subcategories" host "bizadmin" %}',
+                data: {
+                    'category': categoryId
+                },
+                success: function(data){
+                    $('#id_addcompany-subcategory').empty()
+                    $('#id_addcompany-subcategory').append(data)
+                    $('#id_addcompany-subcategory').selectpicker('refresh')
+                }
+            });
+        });
+
         demo = {
             initNowUiWizard: function() {
     // Code for the Validator

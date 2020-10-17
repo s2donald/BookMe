@@ -109,26 +109,26 @@ SOCIAL_AUTH_USERNAME_IS_FULL_EMAIL = True
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
 # Prod database
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.contrib.gis.db.backends.postgis',
-#         'NAME': 'dbpgb03n2p28n7',
-#         'USER': 'u1p3uutbam4gj6',
-#         'PASSWORD': 'pb478bac72f7afb6faa38d4236cdca1d49405e9b48585cf226ff06cb4cc26795b',
-#         'HOST':'ec2-3-232-39-206.compute-1.amazonaws.com',
-#         'POST':'5432',
-#     }
-# }
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
-        'NAME': 'gibele1',
-        'USER': 'sdonald',
-        'PASSWORD': 'Kingston36227',
+        'NAME': 'dbpgb03n2p28n7',
+        'USER': 'u1p3uutbam4gj6',
+        'PASSWORD': 'pb478bac72f7afb6faa38d4236cdca1d49405e9b48585cf226ff06cb4cc26795b',
+        'HOST':'ec2-3-232-39-206.compute-1.amazonaws.com',
         'POST':'5432',
     }
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.contrib.gis.db.backends.postgis',
+#         'NAME': 'gibele1',
+#         'USER': 'sdonald',
+#         'PASSWORD': 'Kingston36227',
+#         'POST':'5432',
+#     }
+# }
 
 
 AUTH_USER_MODEL = 'account.Account'

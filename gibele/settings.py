@@ -128,7 +128,7 @@ DATABASES = {
 #         'PASSWORD': 'Kingston36227',
 #         'POST':'5432',
 #     }
-}
+# }
 
 
 AUTH_USER_MODEL = 'account.Account'

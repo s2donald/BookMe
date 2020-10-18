@@ -78,7 +78,9 @@ def completeViews(request):
         return render(request, 'account/bussignup.html', {'user_form':user_form})
     email = request.user.email
     user = get_object_or_404(Account, email=email)
-    
+    biz_form = AddCompanyForm()
+    service_form = AddServiceForm()
+    booking_form = BookingSettingForm()
     if user.on_board:
         return redirect(reverse('home', host='bizadmin')) 
     if request.method == 'POST':
@@ -96,7 +98,7 @@ def completeViews(request):
             interval = booking_form.cleaned_data.get('interval')
             notes = booking_form.cleaned_data.get('notes')
             cancellation = booking_form.cleaned_data.get('cancellation')
-            subdomain = request.POST.get('subdomain',company.slug)
+            subdomain = request.POST.get('subdomain', company.slug)
             returning = request.POST.get('returning', False)
             sun_from = request.POST['sunOpenHour']
             sun_to = request.POST['sunCloseHour']
@@ -134,6 +136,7 @@ def completeViews(request):
             company.notes = notes
             company.cancellation = cancellation
             if subdomain != company.slug:
+                print('name')
                 company.slug = slugify(subdomain)
             company.save()
             user.on_board = True
@@ -180,9 +183,6 @@ def completeViews(request):
         else:
             print(biz_form.errors)
 
-    biz_form = AddCompanyForm()
-    service_form = AddServiceForm()
-    booking_form = BookingSettingForm()
     subcategories = SubCategory.objects.all()
     company = Company.objects.get(user=user)
     services = Services.objects.filter(business=company)
@@ -1097,7 +1097,7 @@ def compinfoViews(request):
     company = Company.objects.get(user=user)
     subcategory = company.subcategory.all()
     s = [x.id for x in subcategory]
-    initialVal = {'business_name':company.business_name,'email':company.email,'category':company.category, 'description':company.description,
+    initialVal = {'business_name':company.business_name,'slug':company.slug,'email':company.email,'category':company.category, 'description':company.description,
                     'subcategory':s, 'address':company.address, 'postal':company.postal, 'city':company.city, 'state':company.state,
                     'fb_link':company.fb_link,'twitter_link':company.twitter_link,'instagram_link':company.instagram_link,'website_link':company.website_link,'phone':company.phone}
     updateform = UpdateCompanyForm(initial=initialVal)
@@ -1290,7 +1290,7 @@ class getBooking(View):
         if booking.user:
             htmlString = render_to_string('bizadmin/dashboard/schedule/bookingInfo.html',{'user':booking.user})
         else:
-            guest = booking.guest
+            htmlString = render_to_string('bizadmin/dashboard/schedule/bookingInfo.html',{'user':booking.guest})
         return JsonResponse({'html_string':htmlString})
 
 class addRequestedViews(View):

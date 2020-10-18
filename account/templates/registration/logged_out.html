@@ -5,8 +5,9 @@
 
 <div class="container my-3 text-center">
     <h1>You have successfully logged out.</h1>
+    <object height="300px" width="100%" data="{% static 'css/svg-img/login-views/logout-home.svg' %}" type="image/svg+xml"></object>
     <p>Thank you for using Gibele booking system.</p> 
-    </p>Your feedback is very important to us, so please send us an email at support@gibele.com on how we can make this experience better for you!</p>
+    </p>Your feedback is very important to us, so please send us an email at <a class="licolor" href="mailto:support@gibele.com">support@gibele.com</a> on how we can make this experience better for you!</p>
     <p>You can <a class="licolor" href="{% url 'login' %}">log-in again</a>.</p>
 </div>
 {% endblock %}

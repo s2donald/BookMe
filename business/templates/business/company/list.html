@@ -95,6 +95,8 @@
             </div>
             {{ sea }}
             {% empty %}
+
+                <object height="300px" width="100%" id="barber-svg-id" data="{% static 'css/svg-img/emptypage.svg' %}" type="image/svg+xml"></object>
                 <h1>We could not find what you were searching for..</h1>
             {% endfor %}
         </div>

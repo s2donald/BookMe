@@ -51,8 +51,8 @@
                 events:[
                 {% for booking in bookings %}
                     {
-                        title: 'Service:{{ booking.service.name }} Client: {{ booking.user.first_name}}',
-                        description: '{{ booking.slug }}',
+                        title: 'Service:{{ booking.service.name }} ||| Client: {{ booking.user.first_name}}',
+                        description: '{{ booking.user.firstname }}',
                         start: '{{ booking.start|date:"Y-m-d" }}'+'T'+'{{ booking.start|date:"H:i:s" }}',
                         end: '{{ booking.end|date:"Y-m-d" }}'+'T'+'{{ booking.end|date:"H:i:s" }}',
                         id: '{{ booking.id }}',
@@ -76,13 +76,19 @@
                         success: function(data){
                             var name ='S'
                             Swal.fire({
-                                title: info.event.title,
+
+                                title: info.event.description,
                                 html: data.html_string,
                                 showCancelButton: true,
+                                showDenyButton: true,
                                 customClass:{
                                     confirmButton: 'btn btn-primary',
                                     cancelButton: 'btn btn-danger',
+                                    denyButton: 'btn btn-danger',
                                 },
+                                confirmButtonText: `Change Booking Date`,
+                                denyButtonText: `Delete Booking`,
+                                cancelButtonText: 'Go Back',
                                 buttonsStyling: false,
                             });
                         },

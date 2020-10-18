@@ -78,6 +78,7 @@ class MainPhoto(forms.ModelForm):
 class UpdateCompanyForm(forms.ModelForm):
     business_name = forms.CharField(label='', max_length=30, widget=forms.TextInput(attrs={'class':'form-control'}))
     email = forms.EmailField(label='', required=True)
+    slug = forms.SlugField(label='', required=True)
     category = forms.ModelChoiceField(queryset=Category.objects.all(),label='', empty_label=None, widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control','title':'Category'}))
     subcategory = forms.ModelMultipleChoiceField(queryset=SubCategory.objects.all(),label='', widget=forms.SelectMultiple(attrs={'class':'selectcolor selectpicker show-tick form-control','multiple':'', 'data-size':'5', 'data-dropdown-align-right':'true', 'title':'Subcategories'}))
     description = forms.CharField(label='', max_length=500,required=False, widget=forms.Textarea(attrs={'rows':4,'cols':20}))
@@ -95,7 +96,7 @@ class UpdateCompanyForm(forms.ModelForm):
     prefix = 'updatecompany'
     class Meta:
         model = Company
-        fields = ('business_name','phone','category', 'description', 'address', 'postal', 'state', 'city', 'fb_link','twitter_link', 'instagram_link', 'website_link')
+        fields = ('business_name','phone','category', 'slug','description', 'address', 'postal', 'state', 'city', 'fb_link','twitter_link', 'instagram_link', 'website_link')
     def save(self):
         company = super().save(commit=False)
         company.save()

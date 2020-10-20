@@ -14,12 +14,19 @@
     </div>
 
     <div class="wrapper">
-    <nav id="sidebar" class="">
-
+    <nav id="sidebar" class="text-center">
+            <button class="navbar-toggler order-0 collapsed justify-content-center mt-3" id="sidebarCollapse" type="button" data-toggle="active" data-target="#sidebar" aria-controls="navbarResponsive" aria-expanded="true" aria-label="Toggle navigation">
+                <span class="icon-bar top-bar"></span>
+                <span class="icon-bar middle-bar"></span>
+                <span class="icon-bar bottom-bar"></span>
+                <span class="sr-only">Toggle navigation</span>
+            </button>
             <div class="sidebar-header text-center justify-content-center">
                 {% with user=request.user %}
                 {% if user.avatar %}
-                    <img class="d-block avatar avatar-lg text-center" src=" {% if user.avatar %}{{user.avatar.url}}{% else %}https://epicattorneymarketing.com/wp-content/uploads/2016/07/Headshot-Placeholder-1.png{% endif %} " alt="{{ user.first_name }} {{ user.last_name }}">
+                    <h3>{{ user.first_name }} {{user.last_name}}</h3>
+                    <strong>GB</strong>
+                    {% comment %} <img class="d-block avatar avatar-lg text-center" src=" {% if user.avatar %}{{user.avatar.url}}{% else %}https://epicattorneymarketing.com/wp-content/uploads/2016/07/Headshot-Placeholder-1.png{% endif %} " alt="{{ user.first_name }} {{ user.last_name }}"> {% endcomment %}
                 {% else %}
                     <h3>{{ user.first_name }} {{user.last_name}}</h3>
                     <strong>GB</strong>
@@ -35,13 +42,13 @@
                     </a>
                 </li>
                 <li class="{% block favactive %}{% endblock  %}">
-                    <a href="{% url 'account:booking_consumer' %}">
+                    <a href="{% url 'account:favourite' %}">
                         <i class="fas fa-heart"></i>
                         Favourite
                     </a>
                 </li>
                 <li class="{% block revactive %}{% endblock  %}">
-                    <a href="{% url 'account:booking_consumer' %}">
+                    <a href="{% url 'account:reviews' %}">
                         <i class="fas fa-newspaper"></i>
                         Reviews
                     </a>
@@ -71,11 +78,11 @@
 
     <div class="container mt-5">
     <div class="row">
+        <button type="button" class="btn btn-info d-md-none" id="sidecollapsedd">
+            <i class="fas fa-align-left"></i>
+            <span>Toggle Sidebar</span>
+        </button>
         <div class="col-md-12">
-            <button type="button" id="sidebarCollapse" class="btn btn-info">
-                <i class="fas fa-align-left"></i>
-                <span>Toggle Sidebar</span>
-            </button>
             {% block information %}
             {% endblock information %}
         </div>
@@ -88,6 +95,9 @@
     <script>
       $(document).ready(function () {
         $('#sidebarCollapse').on('click', function () {
+            $('#sidebar').toggleClass('active');
+        });
+        $('#sidecollapsedd').on('click', function () {
             $('#sidebar').toggleClass('active');
         });
       });

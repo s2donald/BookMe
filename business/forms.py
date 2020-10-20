@@ -90,10 +90,10 @@ cancellationtime = (
 )
 
 class SearchForm(forms.Form):
-    Search = forms.CharField(label='Search Business or Service',widget=forms.TextInput(attrs={'class':'form-control border','placeholder':'Search Business or Service'}))
+    Search = forms.CharField(label='Search Business',widget=forms.TextInput(attrs={'class':'form-control border','placeholder':'Search Business or Service'}))
     
 class homeSearchForm(forms.Form):
-    Search = forms.CharField(label='Search Business or Service',widget=forms.TextInput(attrs={'class':'form-control border','placeholder':'Search Business or Service'}))
+    Search = forms.CharField(label='Search Business',widget=forms.TextInput(attrs={'class':'form-control border','placeholder':''}))
     Location = forms.CharField(required=False, label='Location',widget=forms.TextInput(attrs={'class':'form-control border','placeholder':'Location'}))
 
 class AddServiceForm(forms.ModelForm):

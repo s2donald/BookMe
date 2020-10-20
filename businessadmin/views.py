@@ -136,8 +136,8 @@ def completeViews(request):
             company.notes = notes
             company.cancellation = cancellation
             if subdomain != company.slug:
-                print('name')
-                company.slug = slugify(subdomain)
+                if not Company.objects.filter(slug=subdomain).exists():
+                    company.slug = slugify(subdomain)
             company.save()
             user.on_board = True
             user.save()
@@ -1131,11 +1131,15 @@ class saveCompanyDetail(View):
             company.category = form.cleaned_data.get('category')
             subcategory = form.cleaned_data.get('subcategory')
             email = form.cleaned_data.get('email')
+            subdomain = request.POST.get('subdomain', company.slug)
             if not email==company.email:
                 company.email = email
             phone = form.cleaned_data.get('phone')
             if not phone == company.phone:
                 company.phone = phone
+            if subdomain != company.slug:
+                if not Company.objects.filter(slug=subdomain).exists():
+                    company.slug = slugify(subdomain)
             company.description = form.cleaned_data.get('description')
             company.address = form.cleaned_data.get('address')
             company.postal = form.cleaned_data.get('postal')

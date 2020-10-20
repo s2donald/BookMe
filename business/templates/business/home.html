@@ -9,7 +9,7 @@
           <div class="col-xl-12 mt-4">
             <div class="text-center text-white text-lg-left">
               {% comment %} <p class="subtitle letter-spacing-4 mb-2 text-secondary text-shadow">The best services on Gibele</p> {% endcomment %}
-              <h1 class="header-font font-weight-bold text-shadow">LIFE IS FOR SERVICE</h1>
+              <h1 class="header-font font-weight-bold text-shadow" id="demo">LIFE IS FOR SERVICES</h1>
             </div>
             <div class="search-bar bg-white bg-home">
               <form action="{% url 'business:bizsearch' %}" method="GET" width="100%">
@@ -21,7 +21,7 @@
                         {{ search.Location }}
                     </div>
                     <div class="col-lg-3 d-flex align-items-center form-group no-divider mt-lg-1">
-                        <select name="category" class="selectcolor selectpicker show-tick form-control"  data-size="5" data-dropdown-align-right="true" title="Categories">
+                        <select id="id_cats" name="category" class="selectcolor selectpicker show-tick form-control"  data-size="5" data-dropdown-align-right="true" title="Categories">
                             <option class="selectcolor" value="">All Services</option>
                             {% for c in categories %}
                                 
@@ -96,4 +96,38 @@
             </div>
         </div>
     </div>
+
+    <script>
+        $(document).ready(function(e){
+            setTimeout(typeWriter, 1000)
+        });
+        var i = 0;
+        var txt = ['Search for any service', 'Find auto detailers', 'Search for hairstylists' , 'Get your nails done', 'Schedule house cleaning', 'Book your appointments today'];
+        var speed = 100;
+        var count = 0
+        function typeWriter() {
+            if (i < txt[count].length) {
+                document.getElementById("id_Search").placeholder += txt[count].charAt(i);
+                i++;
+                if (i < txt[count].length) {
+                    setTimeout(typeWriter, speed);
+                }
+                else {
+                    setTimeout(typeWriter, 1000);
+                }
+                
+            }
+            else {
+                document.getElementById("id_Search").placeholder = '';
+                i = 0;
+                if (count==5){
+                    count = 0;
+                }
+                else {
+                    count++;
+                }
+                setTimeout(typeWriter, 1000);
+            }
+        }
+    </script>
 {% endblock %}

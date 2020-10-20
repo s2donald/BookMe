@@ -7,7 +7,7 @@ def bizaddedEmailSent(user_id):
     acct = Account.objects.get(id=user_id)
     firstname = acct.first_name
     email = acct.email
-    subject = f'Your business page has been added!'
+    subject = f'Thank you for joining Gibele!'
     message = f'Hello '+ firstname +',\n\n'\
         f'Your business page has been created! Now you must add services to your business page, post some pictures on your gallary and start booking in some clients!\n\n'\
 
@@ -17,3 +17,4 @@ def bizaddedEmailSent(user_id):
                             [email], 
                             fail_silently=False)
     return mail_sent
+

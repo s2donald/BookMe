@@ -18,7 +18,7 @@ import json, geocoder
 from django.views import View
 from django.contrib.gis.geos import GEOSGeometry, Point
 from django.contrib.gis.db.models.functions import Distance, GeometryDistance
-
+from django.contrib.postgres.search import TrigramSimilarity
 
 def privacyViews(request):
     category = None
@@ -76,9 +76,12 @@ def allsearch(request):
                     loc = 'me'
             # results = Company.objects.annotate(search=SearchVector('business_name','description'),).filter(search=Search)
             #This may need to ge optimized
-            results = Services.objects.annotate(search=SearchVector('name'),).filter(search=Search)
+            results = Services.objects.annotate(similarity=TrigramSimilarity('name', Search),).filter(similarity__gt=0.1).order_by('-similarity')
             ids = results.values_list('business', flat=True).distinct()
-            results = Company.objects.filter(id__in=ids)|Company.objects.annotate(search=SearchVector('business_name','description'),).filter(search=Search)
+            searchvector = SearchVector('business_name', weight='A') + SearchVector('description', weight='B')
+            searchquery = SearchQuery(Search)
+            
+            results = Company.objects.filter(id__in=ids)|Company.objects.annotate(similarity=TrigramSimilarity('business_name', Search),).filter(similarity__gt=0.1).order_by('-similarity')
             
             
             results = results.filter(status='published')

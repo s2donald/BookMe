@@ -180,9 +180,14 @@
                                             </div>
                                             <div class="form-row">
                                                 <div class="form-group col-md-6">
-                                                    <label for="">Business Website Link</label>
-                                                    {{ updateform.slug|as_crispy_field }}
-                                                    <div class="invalid_web m-0 p-0" style="display:none; color:red!important;"></div>
+                                                    <label for="">Personalized Booking Link</label>
+                                                    <div class="input-group justify-content-center mb-3" id="id_subdomain">
+                                                        <input type="text" class="form-control" id="subdomain" name="subdomain" placeholder="Enter a Subdomain, must only contain letters, numbers and hyphens. No spaces are allowed." aria-label="Users's subdomain" aria-describedby="basic-addon2" value="{{ company.slug }}">
+                                                        <div class="input-group-append">
+                                                            <span class="input-group-text" id="basic-addon2">.gibele.com</span>
+                                                        </div>
+                                                        <div class="invalid_subdomain m-0 p-0" style="display:none; color:red!important;"></div>
+                                                    </div>
                                                 </div>
                                                 <div class="form-group col-md-6">
                                                     <label for="">Business Website Link</label>
@@ -299,6 +304,39 @@
                     else {
                         businessname.classList.remove("has-danger");
                         feedBackName.style.display="none";
+                    }
+
+                },
+            });
+        
+    });
+
+    const feedBackreasubdomain = document.querySelector(".invalid_subdomain")
+    const subdomainField = document.querySelector("#id_subdomain");
+
+    subdomainField.addEventListener('keyup', (e) =>{
+        const subdomainVal = e.target.value;
+        subdomainField.classList.remove("has-danger");
+        subdomainField.classList.add("has-success");
+        feedBackreasubdomain.style.display="none";
+            $.ajax({
+                url: "{% host_url 'subdomain' host 'bizadmin' %}",
+                data: JSON.stringify({subdomain: subdomainVal}),
+                type: "POST",
+                dataType: 'json',
+                headers:{
+                    "X-CSRFToken": csrftoken
+                },
+                success: function (data) {
+                    if (data.email_error) {
+                        subdomainField.classList.remove("has-success");
+                        subdomainField.classList.add("has-danger");
+                        feedBackreasubdomain.style.display="block";
+                        feedBackreasubdomain.innerHTML=`<p style="color:red!">${data.email_error}</p>`
+                    }
+                    else {
+                        subdomainField.classList.remove("has-danger");
+                        feedBackreasubdomain.style.display="none";
                     }
 
                 },

@@ -23,6 +23,8 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .serializers import AccountSerializer
 import re
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from consumer.models import Reviews
 # Create your views here.
 
 def ConsumerRegistrationView(request):
@@ -61,43 +63,11 @@ def ConsumerRegistrationView(request):
         context['consumer_registration_form'] = user_form
     return render(request, 'account/signup.html', {'user_form':user_form, 'category':category, 'categories':categories ,'companies':results, 'form':form})
 
-
-# def BusinessRegistrationView(request):
-#     context = {}
-#     category = None
-#     categories = Category.objects.all()
-#     form = SearchForm()
-#     Search = None
-#     results = []
-#     if 'Search' in request.GET:
-#         form = SearchForm(request.GET)
-#         if form.is_valid():
-#             Search = form.cleaned_data['Search']
-#             results = Company.objects.annotate(search=SearchVector('user','description'),).filter(search=Search)
-#             return render(request,'business/company/list.html',{'category':category, 'categories':categories ,'companies':results, 'form':form})
-
-#     if request.method == 'POST':
-#         user_form = BusinessRegistrationForm(request.POST)
-#         if user_form.is_valid():
-#             user_form.save()
-#             email = user_form.cleaned_data.get('email')
-#             raw_pass = user_form.cleaned_data.get('password1')
-#             account = authenticate(email=email, password=raw_pass)
-#             login(request, account)
-#             return redirect('account:registered')
-#         else:
-#             context['business_registration_form'] = user_form
-            
-#     else:
-#         user_form = BusinessRegistrationForm()
-#         context['business_registration_form'] = user_form
-#     return render(request, 'account//business/registration.html', {'user_form':user_form, 'category':category, 'categories':categories ,'companies':results, 'form':form})
 @login_required
 def AccountSummaryView(request):
     acct = get_object_or_404(Account, email=request.user.email)
     category = None
     categories = Category.objects.all()
-    companies = Company.objects.all().filter(user=request.user)
     form = SearchForm()
     context={}
 
@@ -145,7 +115,7 @@ def AccountSummaryView(request):
     context['update_personal_form'] = personal_form
     context['update_address_form'] = address_form
 
-    return render(request, 'account/cons_account_information.html', {'personal_form':personal_form,'address_form':address_form,'acct':acct,'my_companies':companies, 'category':category, 'categories':categories , 'form':form})
+    return render(request, 'account/cons_account_information.html', {'personal_form':personal_form,'address_form':address_form,'acct':acct, 'category':category, 'categories':categories , 'form':form})
 
 def RegisteredAccountView(request):
     return render(request, 'account/register_done.html')
@@ -240,3 +210,29 @@ class personalValidationView(View):
         if not (result):
             return JsonResponse({'phone_error':'Please enter a valid phone number.'}, status=409)
         return JsonResponse({'email_valid':True})
+
+def favouriteViews(request):
+    companies = request.user.companies_liked.all()
+    form = SearchForm()
+    paginator = Paginator(companies, 6)
+    page = request.GET.get('page')
+    try:
+        companies = paginator.page(page)
+    except PageNotAnInteger:
+        companies = paginator.page(1)
+    except EmptyPage:
+        companies = paginator.page(paginator.num_pages)
+    return render(request, 'account/favorite.html', {'companies':companies, 'page':page, 'form':form})
+
+def reviewsViews(request):
+    reviews = Reviews.objects.filter(reviewer=request.user)
+    form = SearchForm()
+    paginator = Paginator(reviews, 6)
+    page = request.GET.get('page')
+    try:
+        reviews = paginator.page(page)
+    except PageNotAnInteger:
+        reviews = paginator.page(1)
+    except EmptyPage:
+        reviews = paginator.page(paginator.num_pages)
+    return render(request, 'account/reviews.html', {'reviews':reviews, 'page':page, 'form':form})

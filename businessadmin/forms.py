@@ -78,7 +78,6 @@ class MainPhoto(forms.ModelForm):
 class UpdateCompanyForm(forms.ModelForm):
     business_name = forms.CharField(label='', max_length=30, widget=forms.TextInput(attrs={'class':'form-control'}))
     email = forms.EmailField(label='', required=True)
-    slug = forms.SlugField(label='', required=True)
     category = forms.ModelChoiceField(queryset=Category.objects.all(),label='', empty_label=None, widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control','title':'Category'}))
     subcategory = forms.ModelMultipleChoiceField(queryset=SubCategory.objects.all(),label='', widget=forms.SelectMultiple(attrs={'class':'selectcolor selectpicker show-tick form-control','multiple':'', 'data-size':'5', 'data-dropdown-align-right':'true', 'title':'Subcategories'}))
     description = forms.CharField(label='', max_length=500,required=False, widget=forms.Textarea(attrs={'rows':4,'cols':20}))
@@ -96,7 +95,7 @@ class UpdateCompanyForm(forms.ModelForm):
     prefix = 'updatecompany'
     class Meta:
         model = Company
-        fields = ('business_name','phone','category', 'slug','description', 'address', 'postal', 'state', 'city', 'fb_link','twitter_link', 'instagram_link', 'website_link')
+        fields = ('business_name','phone','category','description', 'address', 'postal', 'state', 'city', 'fb_link','twitter_link', 'instagram_link', 'website_link')
     def save(self):
         company = super().save(commit=False)
         company.save()
@@ -106,14 +105,14 @@ from business.models import Clients
 
 class AddClientForm(forms.ModelForm):
     first_name = forms.CharField(label='',max_length=30, required=True)
-    last_name = forms.CharField(label='',max_length=30, required=True, widget=forms.TextInput(attrs={'style':'color:black;'}))
+    last_name = forms.CharField(label='',max_length=30, required=True, widget=forms.TextInput(attrs={}))
     phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$', message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
-    phone = forms.CharField(label='Phone Number',required=False, validators=[phone_regex], max_length=30,widget=forms.TextInput(attrs={'style':'color:black;'}))
-    email = forms.EmailField(label='',required=False, widget=forms.TextInput(attrs={'style':'color:black;'}))
-    address = forms.CharField(label='', required=False,max_length=35,widget=forms.TextInput(attrs={'style':'color:black;'}))
-    province = forms.CharField(label='', required=False,max_length=35,widget=forms.TextInput(attrs={'style':'color:black;'}))
-    postal = forms.CharField(label='', required=False,max_length=35,widget=forms.TextInput(attrs={'style':'color:black;'}))
-    city = forms.CharField(label='', required=False,max_length=35,widget=forms.TextInput(attrs={'style':'color:black;'}))
+    phone = forms.CharField(label='Phone Number',required=False, validators=[phone_regex], max_length=30,widget=forms.TextInput(attrs={}))
+    email = forms.EmailField(label='',required=False, widget=forms.TextInput(attrs={}))
+    address = forms.CharField(label='', required=False,max_length=35,widget=forms.TextInput(attrs={}))
+    province = forms.CharField(label='', required=False,max_length=35,widget=forms.TextInput(attrs={}))
+    postal = forms.CharField(label='', required=False,max_length=35,widget=forms.TextInput(attrs={}))
+    city = forms.CharField(label='', required=False,max_length=35,widget=forms.TextInput(attrs={}))
     class Meta:
         model = Clients
         fields = ('first_name','last_name','phone','email','address','province','postal','city')

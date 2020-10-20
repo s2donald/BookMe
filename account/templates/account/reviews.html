@@ -1,0 +1,121 @@
+{% extends 'account/user_sidebar.html' %}
+{% load static %}
+{% load hosts %}
+{% load business_tags %}
+{% block revactive %}active{% endblock %}
+{% block information %}
+<section class="py-5">
+      <div class="container text-center">
+        <h1 class="hero-heading mb-4">The companies you have reviewed</h1>
+        {% for review in reviews %}
+            {% with company=review.company %}
+            <div class="col-sm-12 mb-5 hover-animate">
+              <div class="card h-100 border-0 shadow">
+                <div class="card-body">
+                <div class=" d-flex justify-content-between">
+                      ({{company.company_reviews.all|length}})</p>
+                      <div >
+                      {% with users_like=company.users_like.all %}
+                            {% if request.user in users_like %}
+                            <a class="card-fav-icon position-relative z-40 like" href="#" id="{{ company.id }}" data-id="{{ company.id }}" data-action="unlike"> 
+                            <svg class="svg-icon text-danger" style="opacity: 1 !important;">
+                                <use xlink:href="#heart-liked"></use>
+                            </svg>
+                            </a>
+                            {% else %}
+                            <a class="card-fav-icon position-relative z-40 like" href="#" id="{{ company.id }}" data-id="{{ company.id }}" data-action="like"> 
+                            <svg class="svg-icon text-white">
+                                <use xlink:href="#heart-unliked"> </use>
+                            </svg>
+                            </a>
+                            {% endif %}
+                        {% endwith %}
+                      </div>
+                  </div>
+                  <h3 class="text-shadow">{{ company }}</h3>
+                  <p class="text-sm text-muted mb-3">{{ company.description }}</p>
+                </div>
+                <div class="card-body text-center">
+                    <a class="btn rounded-pill btn-warning" href="{% host_url 'bookingurls' host 'bookingurl' slug=company.slug %}">Change Review</a>
+                </div>
+                <div class="card-body text-center">
+                    <a class="btn rounded-pill btn-info" href="{% host_url 'bookingurls' host 'bookingurl' slug=company.slug %}">Book Appointment</a>
+                </div>
+              </div>
+            </div>
+            {% endwith %}
+        {% empty %}
+            <p class="text-muted mb-2">You have not written any reviews on any company yet.</p>
+            <p class="text-muted mb-5">Book a service with any service provider then within one month of the booking, submit a review on the company. You may be eligible to receive reward points when Gibele's loyalty program is released in the near future!</p>
+        {% endfor %}
+        {% include 'account/pagination/pagination.html' with page=reviews %}
+        
+      </div>
+    </section>
+{% endblock %}
+{% block ajaxscripts %}
+    <script>
+      function getCookie(name) {
+                            let cookieValue = null;
+                            if (document.cookie && document.cookie !== '') {
+                                const cookies = document.cookie.split(';');
+                                for (let i = 0; i < cookies.length; i++) {
+                                    const cookie = cookies[i].trim();
+                                    // Does this cookie string begin with the name we want?
+                                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                                        break;
+                                    }
+                                }
+                            }
+                                return cookieValue;
+                            }
+                            const csrftoken = getCookie('csrftoken');
+                            
+      $(document).ready(function(){
+        $('a.like').click(function(e){
+          e.preventDefault()
+          var elem = $(this)
+          var company = elem.attr("data-id")
+          var actions = elem.attr("data-action")
+          var inside = document.getElementById(company)
+          $.ajax({
+                url: "{% host_url 'business:company_like' host 'www' %}",
+                data: JSON.stringify({company_id: company, action: actions}),
+                type: "POST",
+                dataType: 'json',
+                headers:{
+                    "X-CSRFToken": csrftoken
+                },
+                success: function (data) {
+                    if (!data.good){
+                      location.href='{% host_url "login" host "www" %}'
+                    }
+                    else{
+                      if (actions == 'like'){
+                        elem.attr("data-action", 'unlike')
+                      }
+                      else{
+                        elem.attr("data-action", 'like')
+                      }
+                      inside.innerHTML= data.hearts
+                    }
+                },
+            });
+        });
+        function checkWidth(){
+          var windowWidth = $(window).width();
+          if (windowWidth <= 560){
+            $('.swiper-button-next').hide()
+            $('.swiper-button-prev').hide()
+          }
+          else{
+            $('.swiper-button-next').show()
+            $('.swiper-button-prev').show()
+          }
+        }
+        checkWidth();
+        $(window).resize(checkWidth);
+      });
+    </script>
+{% endblock  %}

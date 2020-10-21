@@ -3,7 +3,8 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from business.models import Company, SubCategory, Category
 from .models import Bookings
-from datetime import datetime
+# from datetime import datetime
+from django.utils import timezone
 from business.forms import SearchForm
 from django.http import JsonResponse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -11,12 +12,12 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 @login_required
 def FutPastBooking(request):
-    today = datetime.today()
+    today = timezone.now()
     categories = Category.objects.all()
     subcategories = SubCategory.objects.all()
     futureBookings = Bookings.objects.filter(user=request.user, end__gt=today)
-    pastBookings = Bookings.objects.filter(user=request.user, end__lte=today)
-
+    pastBookings = Bookings.objects.filter(user=request.user, end__lte=today).order_by('-end')
+    
     paginator = Paginator(futureBookings, 3)
     page = request.GET.get('page')
     try:

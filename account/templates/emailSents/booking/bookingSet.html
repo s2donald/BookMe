@@ -1,0 +1,13 @@
+{% extends 'emailSents/account/baseEmail.html' %}
+
+{% block emailcontent %}
+<h2>Hello {{ acct.first_name }},</h2>
+<p>Your appointment has been confirmed with {{ company.business_name }} for a <strong>{{ service.name }}</strong>.</p>
+<p>Your appointment will be held at {{ booking.start|date:'g:i A' }} on {{ booking.start|date:'l, F j, Y' }}.</p>
+
+{% if service.checkintime > 0 %}
+    <p><strong>NOTE:</strong>Please arrive {{ service.checkintime }} minutes before your service starts to check in.</p>
+{% endif %}
+<p>Booking ID: {{ booking.slug }}</p>
+<h3>Thanks!</h3>
+{% endblock %}

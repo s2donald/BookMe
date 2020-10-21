@@ -5621,26 +5621,6 @@ fieldset[disabled]
   .icon-xl i, .icon-xl svg {
     font-size: 4.25rem; }
 
-.icon-xl + .icon-text {
-  width: calc(100% - $icon-size-xl - 1); }
-
-.icon-lg {
-  width: 3.6rem;
-  height: 3.6rem; }
-  .icon-lg i, .icon-lg svg {
-    font-size: 2.85rem; }
-
-.icon-lg + .icon-text {
-  width: calc(100% - $icon-size-lg - 1); }
-
-.icon-sm {
-  width: 1.875rem;
-  height: 1.875rem; }
-  .icon-sm i, .icon-sm svg {
-    font-size: 1.125rem; }
-
-.icon-sm + .icon-text {
-  width: calc(100% - $icon-size-sm - 1); }
 
 .icon-shape {
   padding: 12px;

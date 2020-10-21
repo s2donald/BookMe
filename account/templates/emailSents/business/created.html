@@ -1,0 +1,16 @@
+{% extends 'emailSents/account/baseEmail.html' %}
+
+{% block emailcontent %}
+<h2>Hello {{ acct.first_name }},</h2>
+<p>Thanks for joining Gibele Business! We are excited to help you grow your business, {{ company.business_name }}!</p>
+<h5>You can now:</h5>
+    <ul>
+        <li>Offer services which consumers can book according to the availability of your schedule</li>
+        <li>Upload pictures to your gallary to grow your portfolio</li>
+        <li>Only accept returning clients to your booking page</li>
+        <li>Share your booking url to your clients so there is no back and forth trying to find the best suitable time.</li>
+        <li>Accept or decline requests to add new clients to use your booking url.</li>
+        <li>View your schedule and add appointments in yourself or cancel upcoming appointments.</li>
+    </ul>
+<h3>Lets get booking!</h3>
+{% endblock %}

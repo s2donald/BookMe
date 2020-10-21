@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>{% block emailSubject %}{% endblock %}</title>
+    </head>
+    <body style="margin: 0; padding: 0;">
+        {% comment %} <img src="{% static "/img/favicon/logo/GibeleLogo.svg" %}"> {% endcomment %}
+        <h1 style="color: #854fee;">gibele</h1>
+        <hr>
+        {% block emailcontent %}
+        {% endblock %}
+    </body>
+</html>

@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from business.models import Company, SubCategory, OpeningHours, Services, Gallary, Amenities, Clients, CompanyReq
 from account.models import Account
 from account.forms import UpdatePersonalForm
-from account.tasks import bizaddedEmailSent
+from account.tasks import bizCreatedEmailSent, consumerCreatedEmailSent
 from consumer.models import Bookings, Reviews
 from account.forms import AccountAuthenticationForm
 from django.contrib.auth import authenticate, login, logout
@@ -17,7 +17,7 @@ from django.views import View
 from slugify import slugify
 from .forms import MainPhoto
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-
+from businessadmin.tasks import addedOnCompanyList, requestToBeClient
 # Create your views here.
 def businessadmin(request):
     user = request.user
@@ -177,7 +177,7 @@ def completeViews(request):
             OpeningHours.objects.bulk_update(objs,['is_closed','from_hour','to_hour'])
             for s in subcategory:
                 company.subcategory.add(s)
-
+            bizCreatedEmailSent.delay(user.id)
             return redirect(reverse('home', host='bizadmin'))
         
         else:
@@ -329,7 +329,6 @@ class updateEmailSetting(View):
     def post(self, request):
         data = json.loads(request.body)
         email = data['emailReminder']
-        print(email)
         company = get_object_or_404(Company, user=request.user)
         if email == True:
             company.emailReminders = True
@@ -1272,7 +1271,7 @@ def requestListViews(request):
     if not user.on_board:
         return redirect(reverse('completeprofile', host='bizadmin'))
     company = Company.objects.get(user=user)
-    requested = CompanyReq.objects.filter(company=company).order_by('created_at')
+    requested = CompanyReq.objects.filter(company=company).order_by('-created_at')
 
     paginator = Paginator(requested, 10)
     page = request.GET.get('page')
@@ -1304,17 +1303,38 @@ class addRequestedViews(View):
         company = get_object_or_404(Company, user= request.user)
         Clients.objects.create(company=company, user=user, first_name=user.first_name, last_name=user.last_name, email=user.email,phone=user.phone,
                                 city=user.city,postal=user.postal,province=user.province,address=user.address)
+        addedOnCompanyList.delay(user.id, company.id)
         req.delete()
-        
+        requested = company.reqclients.all()
+        paginator = Paginator(requested, 10)
+        page = request.GET.get('page')
+        try:
+            requested = paginator.page(page)
+        except PageNotAnInteger:
+            requested = paginator.page(1)
+        except EmptyPage:
+            requested = paginator.page(paginator.num_pages)
+        html_string = render_to_string('bizadmin/dashboard/request/partial/partial_request.html', {'requested':requested, 'page':page})
 
-        return JsonResponse({'added':'We have added ' + user.first_name + ' to your client list.'})
+        return JsonResponse({'added':'We have added ' + user.first_name + ' to your client list.','html_string':html_string})
 
 class deleteRequestedViews(View):
     def post(self, request, pk):
         req = get_object_or_404(CompanyReq, id=pk)
         user = req.user
         req.delete()
+        company = get_object_or_404(Company, user= request.user)
+        requested = company.reqclients.all()
+        paginator = Paginator(requested, 10)
+        page = request.GET.get('page')
+        try:
+            requested = paginator.page(page)
+        except PageNotAnInteger:
+            requested = paginator.page(1)
+        except EmptyPage:
+            requested = paginator.page(paginator.num_pages)
+        html_string = render_to_string('bizadmin/dashboard/request/partial/partial_request.html', {'requested':requested, 'page':page})
 
-        return JsonResponse({'deleted':'We have rejected ' + user.first_name + '\'s request to join your client list.'})
+        return JsonResponse({'deleted':'We have rejected ' + user.first_name + '\'s request to join your client list.','html_string':html_string})
 
     

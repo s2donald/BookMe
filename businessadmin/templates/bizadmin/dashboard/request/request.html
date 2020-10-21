@@ -94,6 +94,8 @@
                         "X-CSRFToken": csrftoken
                     },
                 success: function(data){
+                    var el = document.querySelector('#service-t');
+                    el.innerHTML = data.html_string
                     Swal.fire({
                         title: data.added,
                         icon: 'success',
@@ -118,6 +120,8 @@
                         "X-CSRFToken": csrftoken
                     },
                 success: function(data){
+                    var el = document.querySelector('#service-t');
+                    el.innerHTML = data.html_string
                     Swal.fire({
                         title: data.deleted,
                         icon: 'success',

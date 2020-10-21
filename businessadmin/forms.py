@@ -1,6 +1,5 @@
 from account.models import Account
 from business.models import Company
-from account.tasks import bizaddedEmailSent
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
 from django.core.validators import RegexValidator

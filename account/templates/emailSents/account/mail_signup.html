@@ -1,0 +1,17 @@
+{% extends 'emailSents/account/baseEmail.html' %}
+
+{% block emailcontent %}
+<h2>Hello {{ acct.first_name }},</h2>
+<p>Thanks for joining Gibele! We are excited to help you discover the best services that are local to your area!</p>
+<h5>You can now:</h5>
+<ul>
+    <li>Book appointments for any service provided by one of many partners</li>
+    <li>Reschedule or cancel appointments without having to contact the businss directly</li>
+    <li>View all the different businesses and individuals offering services that are local to you</li>
+    <li>Pick a time that works best for you without having to contact the service provider</li>
+    <li>Favourite these businesses to be the first to access discounts and deals when they are offered by the business</li>
+    <li>Request to be added onto business client lists if they only accept returning clients.</li>
+    <li>Write a review for any service provider that you have completed a service with.</li>
+</ul>
+<h3>Lets get booking!</h3>
+{% endblock %}

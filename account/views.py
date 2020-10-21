@@ -1,4 +1,4 @@
-from .tasks import bizaddedEmailSent
+from .tasks import bizCreatedEmailSent, consumerCreatedEmailSent
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import  ConsumerRegistrationForm, AccountAuthenticationForm, UpdatePersonalForm, UpdateHomeAddressForm
 from django.contrib.auth import authenticate, login, logout
@@ -54,6 +54,8 @@ def ConsumerRegistrationView(request):
             if not rmrme:
                 request.session.set_expiry(0)
             
+            consumerCreatedEmailSent.delay(account.id)
+
             return redirect('account:registered')
         else:
             context['consumer_registration_form'] = user_form
@@ -118,6 +120,7 @@ def AccountSummaryView(request):
     return render(request, 'account/cons_account_information.html', {'personal_form':personal_form,'address_form':address_form,'acct':acct, 'category':category, 'categories':categories , 'form':form})
 
 def RegisteredAccountView(request):
+
     return render(request, 'account/register_done.html')
 
 def LogoutView(request):

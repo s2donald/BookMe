@@ -7,11 +7,13 @@ from django.views import View
 import json
 from django.core import serializers
 import datetime, pytz
+from django.utils import timezone
 from account.forms import UpdatePersonalForm, AccountAuthenticationForm
 from django.contrib.auth import authenticate, login
+from account.tasks import reminderEmail, confirmedEmail, consumerCreatedEmailSent
+from businessadmin.tasks import requestToBeClient
 # from account.models import Account
 # Create your views here.
-
 
 def get_companyslug(request, slug):
     request.viewing_company = get_object_or_404(Company, slug=slug)
@@ -76,6 +78,9 @@ class bookingTimes(View):
         #We need to add the service time and validate whether the service can be fit in the timeslot
         b_open = open_hours.from_hour
         b_close = open_hours.to_hour
+        # print(b_open.hour)
+        naive = datetime.datetime(year, month, day, b_open.hour, b_open.minute)
+        print(timezone.localtime(timezone.make_aware(naive)))
         interval= company.interval
         duration_hour = Services.objects.get(pk=s_id).duration_hour
         duration_minute = Services.objects.get(pk=s_id).duration_minute
@@ -127,8 +132,9 @@ class createAppointment(View):
         starttime = datetime.datetime.strptime(time,'%I:%M %p').time()
         start = datetime.datetime.combine(startdate, starttime)
         end = start + datetime.timedelta(hours=service.duration_hour,minutes=service.duration_minute)
+        start = timezone.localtime(timezone.make_aware(start))
+        end = timezone.localtime(timezone.make_aware(end))
         if user.is_authenticated:
-            print(user)
             # email = user.email
             # first_name = user.first_name
             # last_name = user.last_name
@@ -149,6 +155,9 @@ class createAppointment(View):
                     guest = Clients.objects.get(company=company, email=user.email, first_name=user.first_name,last_name=user.last_name,phone=user.phone)
                     booking = Bookings.objects.create(user=user,guest=guest,service=service, company=company,start=start, end=end, price=price)
                     booking.save()
+                confirmedEmail.delay(booking.id)
+                startTime = start - datetime.timedelta(minutes=15)
+                reminderEmail.apply_async(args=[booking.id], eta=startTime)
                 good = True
             else:
                 good = False
@@ -173,6 +182,10 @@ class createAppointment(View):
                 booking = Bookings.objects.create(user=user,service=service, company=company,
                                                 start=start, end=end, price=price)
                 booking.save()
+
+                confirmedEmail.delay(booking.id)
+                startTime = start - datetime.timedelta(minutes=15)
+                reminderEmail.apply_async(args=[booking.id], eta=startTime)
                 good = True
             else:
                 good = False
@@ -189,7 +202,6 @@ class LoginView(View):
                 login(request, user)
                 return JsonResponse({'result':True})
             else:
-                print('false')
                 return JsonResponse({'result':False})
         else:
             return JsonResponse({'result':False})
@@ -213,6 +225,7 @@ class requestSpot(View):
         if not requestUser:
             requestUser = CompanyReq.objects.create(user=user, company=company, add_to_list=True)
             requestUser.save()
+            requestToBeClient.delay(requestUser.id)
         return JsonResponse({'data':'good'})
 
 class checkIfClientView(View):
@@ -250,6 +263,7 @@ class createAccountView(View):
             acct.last_name=last
             acct.is_consumer=True
             acct.save()
+            consumerCreatedEmailSent.delay(acct.id)
             account = authenticate(email=email, password=pw)
             login(request, account)
         return JsonResponse({'good':'good'})

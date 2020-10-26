@@ -24,6 +24,21 @@
         }
     });
         document.addEventListener('DOMContentLoaded', function(){
+                function getCookie(name) {
+                    let cookieValue = null;
+                    if (document.cookie && document.cookie !== '') {
+                        const cookies = document.cookie.split(';');
+                        for (let i = 0; i < cookies.length; i++) {
+                            const cookie = cookies[i].trim();
+                            // Does this cookie string begin with the name we want?
+                            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                                break;
+                            }
+                        }
+                    }
+                        return cookieValue;
+                }
                 function gcd (a, b) {
                     return (b == 0) ? a : gcd (b, a%b);
                 }
@@ -56,6 +71,41 @@
                         confirmButtonText: 'Yes, Cancel',
                         showDenyButton: true,
                         denyButtonText: `No, I changed my mind`,
+                    }).then(function(e){
+                        const b_id = id
+                        if (e.isConfirmed){
+                            const csrftoken = getCookie('csrftoken');
+                            $.ajax({
+                                type: 'POST',
+                                url: '{% host_url "delete_booking" host "bizadmin" %}',
+                                data:{booking_id:b_id},
+                                headers:{
+                                    "X-CSRFToken": csrftoken
+                                },
+                                success: function(data){
+                                    Swal.fire({
+                                        customClass:{
+                                            confirmButton: 'btn btn-primary',
+                                            denyButton: 'btn btn-danger',
+                                        },
+                                        buttonsStyling: false,
+                                        icon:'success',
+                                        title:'This Booking has successfully been removed from your calendar.',
+                                        html: 'We have informed your client about the cancellation.',
+                                    });
+                                },
+                            });
+                        }
+                        else {
+                            Swal.fire({
+                                customClass:{
+                                    confirmButton: 'btn btn-primary',
+                                    denyButton: 'btn btn-danger',
+                                },
+                                buttonsStyling: false,
+                                title:'We left your appointment alone.',
+                            });
+                        }
                     });
                 }
 
@@ -119,7 +169,7 @@
                 events:[
                 {% for booking in bookings %}
                     {
-                        title: 'Client: {{ booking.user.first_name}} <br> Name',
+                        title: 'Client: {{ booking.user.first_name}} Service: {{ booking.service.name }}',
                         start: '{{ booking.start|date:"Y-m-d" }}'+'T'+'{{ booking.start|date:"H:i:s" }}',
                         end: '{{ booking.end|date:"Y-m-d" }}'+'T'+'{{ booking.end|date:"H:i:s" }}',
                         id: '{{ booking.id }}',
@@ -134,15 +184,9 @@
                     },
                 {% endfor %}
                 ],
-                eventRender: function(eventObj, $el) {
-                    $el.popover({
-                        title: eventObj.title,
-                        content: eventObj.description,
-                        trigger: 'hover',
-                        html: true,
-                        placement: 'top',
-                        container: 'body'
-                    });
+                eventRender: function(event, element) {                                          
+                    element.find('span.fc-event-title').html(element.find('span.fc-event-title').text());                   
+
                 },
                 eventClick: function(info) {
                     const serv_id = info.event.id

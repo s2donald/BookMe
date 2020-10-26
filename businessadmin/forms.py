@@ -137,7 +137,4 @@ class ImagesForm(forms.ModelForm):
         widgets = {
             'photos':forms.HiddenInput
         }
-    def clean_photos(self):
-        url = self.cleaned_data['image']
-        valid_extensions = ['jpg', 'png', 'jpeg']
-        extension = url.rsplit('.',1)[1].lower()
+    

@@ -17,7 +17,7 @@ from django.views import View
 from slugify import slugify
 from .forms import MainPhoto
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from businessadmin.tasks import addedOnCompanyList, requestToBeClient
+from businessadmin.tasks import addedOnCompanyList, requestToBeClient, appointmentCancelled
 # Create your views here.
 def businessadmin(request):
     user = request.user
@@ -1377,4 +1377,9 @@ class deleteRequestedViews(View):
 
         return JsonResponse({'deleted':'We have rejected ' + user.first_name + '\'s request to join your client list.','html_string':html_string})
 
-    
+class deleteBookingAPI(View):
+    def post(self, request):
+        booking_id = request.POST.get('booking_id')
+        booking = get_object_or_404(Bookings, id=booking_id)
+        appointmentCancelled.delay(booking.id)
+        return JsonResponse({'':''})

@@ -23,7 +23,7 @@ def bookingurl(request):
     company = request.viewing_company
     services = Services.objects.filter(business=company)
     if user.is_authenticated:
-        returnClient = company.clients.filter(user=user).exists() or company.clients.filter(phone=user.phone).exists() or company.clients.filter(email=user.email).exists()
+        returnClient = company.clients.filter(user=user,first_name=user.first_name).exists() or company.clients.filter(phone=user.phone,first_name=user.first_name,).exists() or company.clients.filter(email=user.email,first_name=user.first_name).exists()
     else:
         returnClient = False
     return render(request, 'bookingpage/home.html', {'returnClient':returnClient,'user': user, 'company':company, 'services':services})
@@ -137,35 +137,47 @@ class createAppointment(View):
         if user.is_authenticated:
             if Bookings.objects.filter(company=company, start=start, end=end).count()<1:
                 #Check if the user is already a client
-                if company.clients.filter(user=user).exists():
-                    guest = company.clients.get(user=user, first_name)
+                if company.clients.filter(user=user, first_name=user.first_name).exists():
+                    guest = company.clients.get(user=user, first_name=user.first_name)
+                    guest.last_name = user.last_name
+                    guest.email = user.email
+                    guest.phone = user.phone
+                    guest.save()
+
                 #Check if the client object was already created by the company
-                elif company.clients.filter(phone=user.phone, first=user.first_name).exists() or company.clients.filter(email=user.email, first=user.first_name).exists():
-                    pass
-                if not company.clients.filter(user=user).exists() or company.clients.filter(phone=user.phone).exists() or company.clients.filter(email=user.email).exists():
+                elif company.clients.filter(phone=user.phone, first=user.first_name).exists():
+                    guest = company.clients.filter(phone=user.phone, first_name=user.first_name).first()
+                    guest.user = user
+                    guest.email = user.email
+                    guest.last_name = user.last_name
+                    guest.save()
+                elif company.clients.filter(email=user.email, first=user.first_name).exists():
+                    guest = company.clients.filter(email=user.email, first=user.first_name).first()
+                    guest.user = user
+                    guest.phone = user.phone
+                    guest.last_name = user.last_name
+                    guest.save()
+                else:
                     guest = Clients.objects.create(company=company, user=user, first_name=user.first_name,last_name=user.last_name,phone=user.phone,email=user.email)
                     guest.save()
                     company.clients.add(guest)
                     company.save()
-                    booking = Bookings.objects.create(user=user,guest=guest,service=service, company=company,start=start, end=end, price=price)
-                    booking.save()
-                else:
-                    guest = Clients.objects.get(company=company, email=user.email, first_name=user.first_name,last_name=user.last_name,phone=user.phone)
-                    booking = Bookings.objects.create(user=user,guest=guest,service=service, company=company,start=start, end=end, price=price)
-                    booking.save()
+                booking = Bookings.objects.create(user=user,guest=guest,service=service, company=company,start=start, end=end, price=price)
+                booking.save()
                 confirmedEmail.delay(booking.id)
                 startTime = start - datetime.timedelta(minutes=15)
-                reminderEmail.apply_async(args=[booking.id], eta=startTime)
+                reminderEmail.apply_async(args=[booking.id], eta=startTime, task_id=booking.slug)
                 good = True
             else:
                 good = False
+
         else:
             email = data['email']
             first_name = data['first_name']
             last_name = data['last_name']
             phone = data['phone']
             if Bookings.objects.filter(company=company, start=start, end=end).count()<1:
-                if not Clients.objects.filter(email=email, first_name=first_name,last_name=last_name,phone=phone, company=company).exists():
+                if not Clients.objects.filter(email=email, first_name=first_name,last_name=last_name, phone=phone, company=company).exists():
                     guest = Clients.objects.create(company=company,first_name=first_name,last_name=last_name,phone=phone,email=email)
                     guest.save()
                     company.clients.add(guest)
@@ -237,19 +249,19 @@ class checkIfClientView(View):
         company = get_object_or_404(Company, id=company_id)
 
         #Check if the user object is on the client list
-        requestUser = company.clients.filter(user=user, company=company).exists()
+        requestUser = company.clients.filter(user=user, first_name=user.first_name, company=company).exists()
         if requestUser:
             return JsonResponse({'good':'good'})
             
         #Check if the user email is on the client list
         email = user.email
-        requestUser = company.clients.filter(email=email, company=company).exists()
+        requestUser = company.clients.filter(email=email, first_name=user.first_name, company=company).exists()
         if requestUser:
             return JsonResponse({'good':'good'})
 
         #Check if the users phone number is on the client list
         phone = user.phone
-        requestUser = company.clients.filter(phone=phone, company=company).exists()
+        requestUser = company.clients.filter(phone=phone, first_name=user.first_name, company=company).exists()
         if requestUser:
             return JsonResponse({'good':'good'})
 

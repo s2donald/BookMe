@@ -35,6 +35,11 @@ a.licolor:hover, a.licolor:focus {
   color: #d52ecd !important;
 }
 
+
+div.card-header.colorblack {
+  color:black;
+}
+
 #my-slug-container {
   display: inline-block;
   position: relative;
@@ -43,6 +48,11 @@ a.licolor:hover, a.licolor:focus {
 
 #my-slug {
   font: inherit;
+}
+
+.sidebar-wrapper::-webkit-scrollbar {
+  width: 0px;
+  background: transparent; /* make scrollbar transparent */
 }
 
 #my-suffix {
@@ -5554,17 +5564,6 @@ fieldset[disabled]
   .has-danger.input-group-focus .input-group-append .input-group-text:focus {
     background-color: transparent; }
 
-.has-success:after,
-.has-danger:after {
-  font-family: 'nucleo';
-  content: "\ea1b";
-  display: inline-block;
-  position: absolute;
-  right: 20px;
-  top: 13px;
-  color: #00f2c3;
-  font-size: 11px; }
-
 .has-success.form-control-lg:after,
 .has-danger.form-control-lg:after {
   font-size: 13px;
@@ -5582,9 +5581,6 @@ fieldset[disabled]
 .has-danger.form-check .form-check-label {
   color: #00f2c3; }
 
-.has-danger:after {
-  content: "\ea48";
-  color: #ec250d; }
 
 .has-danger.form-check .form-check-label {
   color: #ec250d; }

@@ -85,6 +85,7 @@ def AccountSummaryView(request):
                     'province':acct.province,
                     'city':acct.city,
                     'postal':acct.postal}
+                    
     if request.method=='POST':
         if request.POST.get("form_type") == 'personalForm':
             personal_form = UpdatePersonalForm(request.POST, instance=request.user)

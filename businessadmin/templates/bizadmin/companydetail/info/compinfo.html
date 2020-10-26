@@ -28,9 +28,9 @@
                                     $image.cropper("destroy");
                                     $image.cropper({
                                         viewMode: 1,
-                                        aspectRatio: 1910/1000,
-                                        minCropBoxWidth: 1910,
-                                        minCropBoxHeight: 1000,
+                                        aspectRatio: 400/400,
+                                        minCropBoxWidth: 100,
+                                        minCropBoxHeight: 100,
                                         ready: function () {
                                             $image.cropper("setCanvasData", canvasData);
                                             $image.cropper("setCropBoxData", cropBoxData);
@@ -96,7 +96,7 @@
                                     <div class="card-header">Main Company Header Photo</div>
                                     <div class="card-body text-center">
                                         <!-- Profile picture image-->
-                                        <img class="img-account-profile mb-2" src="{% if company.image %}{{ company.image.url }}{% else %}https://epicattorneymarketing.com/wp-content/uploads/2016/07/Headshot-Placeholder-1.png{% endif %}" alt="300x300" />
+                                        <img class="img-account-profile mb-2" src="{% if company.image %}{{ company.image.url }}{% else %}https://epicattorneymarketing.com/wp-content/uploads/2016/07/Headshot-Placeholder-1.png{% endif %}" alt="{{ company.business_name }} Main Image" />
                                         <!-- Profile picture help block-->
                                         <div class="small font-italic text-muted mb-4">JPG or PNG no larger than 5 MB</div>
                                         <!-- Profile picture upload button -->

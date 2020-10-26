@@ -9,6 +9,8 @@ from django.utils import timezone
 from django.db.models.signals import pre_save, post_save
 from gibele.utils import unique_slug_generator, unique_slug_generator_services
 import geocoder
+import pytz
+ALL_TIMEZONES = sorted((item, item) for item in pytz.all_timezones)
 # This category holds our different types of services such as
 #   automotive services, health and wellness services, home services, etc
 #   These should not be modified by the user
@@ -181,6 +183,8 @@ class Company(models.Model):
     website_link = models.URLField(max_length=200, blank=True, null=True)
     tags = TaggableManager(blank=True)
     location = models.PointField(blank=True, null=True)
+    tz = models.CharField(choices=ALL_TIMEZONES, max_length=64, default="America/Toronto")
+
     class Meta:
         ordering = ('-updated',)
         verbose_name = 'company'
@@ -273,7 +277,6 @@ class Gallary(models.Model):
     company = models.ForeignKey(Company, on_delete=models.CASCADE,related_name='gallary')
     photos = models.ImageField(upload_to='companies/gallary/photos')
 
-
 class Services(models.Model):
     name = models.CharField(max_length=200, db_index=True)
     description = models.TextField(max_length=250, db_index=True)
@@ -282,7 +285,7 @@ class Services(models.Model):
     price_type = models.CharField(max_length=10, choices=price_choices, default='fixed')
     price = models.DecimalField(max_digits=10, decimal_places=2)
     duration_hour = models.IntegerField(choices=hours_choices,default=0)
-    duration_minute = models.IntegerField(choices=minute_choices,default=5)
+    duration_minute = models.IntegerField(choices=minute_choices,default=30)
     checkintime = models.IntegerField(choices=minute_choices,default=0)
     paddingtime_hour = models.IntegerField(choices=hours_choices,default=0)
     paddingtime_minute = models.IntegerField(choices=minute_choices,default=0)

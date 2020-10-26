@@ -3,6 +3,8 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, Abstra
 from django.core.validators import RegexValidator
 from django.utils.text import slugify
 from django.shortcuts import reverse
+import pytz
+ALL_TIMEZONES = sorted((item, item) for item in pytz.all_timezones)
 # from business.models import Company
 # Create your models here.
 
@@ -43,6 +45,7 @@ class Account(AbstractBaseUser):
     province = models.CharField(max_length=35)
     city = models.CharField(max_length=35)
     avatar = models.ImageField(upload_to='users/profilepic/', blank=True)
+    tz = models.CharField(choices=ALL_TIMEZONES, max_length=64, default="America/Toronto")
 
     is_business= models.BooleanField(default=False)
     on_board= models.BooleanField(default=False)

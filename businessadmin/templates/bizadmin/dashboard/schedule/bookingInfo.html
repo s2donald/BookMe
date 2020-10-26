@@ -1,5 +1,17 @@
-<div class="card p-4">
-    <div class="card-header">
-        <p class="licolorblack">{{ user.first_name }} {{ user.last_name }}</p>
+<div class="card-light p-4">
+    <div class="card-header white-content">
+        <ul class="list-unstyled text-left">
+            {% with service=booking.service %}
+            <li class="mb-1"><strong>Date:</strong> {{ booking.start|date:"D, M d,Y" }}</li>
+            <li class="mb-1"><strong>Time:</strong> {{ booking.start|date:"P" }}-{{ booking.end|date:"P"}}</li>
+            {% with cust=booking.user %}
+            <li class="mb-1"><strong>Customer:</strong> {{ cust.first_name }} {{ cust.last_name }}</li>
+            <li class="mb-1"><strong>Contact Info:</strong> {{ cust.email }} {{ cust.phone }}</li>
+            {% endwith %}
+            <li class="mb-1"><strong>Service:</strong> {{ service.name }}</li>
+            <li class="mb-1"><strong>Cost:</strong> ${{ booking.price }}</li>
+            {% endwith %}
+        </ul>
+        
     </div>
 </div>

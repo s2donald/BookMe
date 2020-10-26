@@ -167,13 +167,6 @@
                     </div>
                     <div class="col-md-6">
                         <label for="" class="font-weight-bold d-flex justify-content-center pr-1">Business Categories <a data-toggle="tooltip" data-placement="top" title="Select as many subcategories your business offers services in"> <i class="fas fa-question-circle licolor"></i></a></label>
-                        {% comment %} <div id="div_id_addcompany-subcategory" class="form-group">
-                            <div>
-                                <select name="addcompany-subcategory" class="selectcolor selectpicker show-tick form-control selectmultiple form-control" multiple data-size="5" data-dropdown-align-right="true" title="Subcategories" required id="id_addcompany-subcategory">
-                                    <option value="" selected>---------</option>
-                                </select>
-                            </div>
-                        </div> {% endcomment %}
                         {{ biz_form.subcategory|as_crispy_field }}
                     </div>
                     <div class="col-md-12">
@@ -250,24 +243,24 @@
                         <div class="col-md-12 mt-1">
                         <div class="justify-content-center my-auto align-items-center text-center mx-auto">
                             <strong for="">Sunday Business Hours</strong>
+                            {% comment %} {{ sundayform.is_closed|as_crispy_field }} {% endcomment %}
                             <input type="checkbox" name="sunOpen" {% if sunday.is_closed %}{% else %}checked{% endif %} class="bootstrap-switch bootstrap-switch-red my-0" id="sunOpen" data-on-label="OPEN" data-off-label=""/>
                         </div>
                             <div class="row justify-content-center" id="sundaytimes">
                                 <div class="col-sm-6 col-lg-4 col-lg-2">
-                                <div class="input-group justify-content-center mb-3">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text">Open Time</span>
-                                    </div>
-                                    <input type="text" class="datetimepicker form-control text-center" name="sunOpenHour" id="sunOpenHour" value="{{ sunday.from_hour }}"/>
-                                </div>
+                                    
+                                        <label class="font-weight-bold d-flex justify-content-center pr-1">Open Time</label>
+                                        {{ sundayform.dayfrom|as_crispy_field }}
+                                    
+                                    {% comment %} <input type="text" class="datetimepicker form-control text-center" name="sunOpenHour" id="sunOpenHour" value="{{ sunday.from_hour }}"/> {% endcomment %}
+                            
                                 </div>
                                 <div class="col-sm-6 col-lg-4 col-lg-2">
-                                <div class="input-group justify-content-center mb-3">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text">Close Time</span>
-                                    </div>
-                                    <input type="text" class="datetimepicker form-control text-center" name="sunCloseHour" id="sunCloseHour" value="{{ sunday.to_hour }}"/>
-                                </div>
+                                        <label class="font-weight-bold d-flex justify-content-center pr-1">Close Time</label>
+                                        {{ sundayform.dayto|as_crispy_field }}
+                                    
+                                    {% comment %} <input type="text" class="datetimepicker form-control text-center" name="sunCloseHour" id="sunCloseHour" value="{{ sunday.to_hour }}"/> {% endcomment %}
+                            
                                 </div>
                             </div>
                     
@@ -276,22 +269,21 @@
                             <strong for="">Monday Business Hours</strong>
                             <input name="monOpen" {% if monday.is_closed %}{% else %}checked{% endif %} type="checkbox" class="bootstrap-switch bootstrap-switch-red my-0" data-on-label="OPEN" data-off-label=""/>
                         </div>
-                            <div class="row justify-content-center">
+                            <div class="row justify-content-center" id="sundaytimes">
                                 <div class="col-sm-6 col-lg-4 col-lg-2">
-                                <div class="input-group justify-content-center mb-3">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text">Open Time</span>
-                                    </div>
-                                    <input type="text" class="datetimepicker form-control text-center" name="monOpenHour" id="monOpenHour" value="{{ monday.from_hour }}"/>
-                                </div>
+                                    
+                                        <label class="font-weight-bold d-flex justify-content-center pr-1">Open Time</label>
+                                        {{ mondayform.dayfrom|as_crispy_field }}
+                                    
+                                    {% comment %} <input type="text" class="datetimepicker form-control text-center" name="sunOpenHour" id="sunOpenHour" value="{{ sunday.from_hour }}"/> {% endcomment %}
+                            
                                 </div>
                                 <div class="col-sm-6 col-lg-4 col-lg-2">
-                                <div class="input-group justify-content-center mb-3">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text">Close Time</span>
-                                    </div>
-                                    <input type="text" class="datetimepicker form-control text-center" name="monCloseHour" id="monCloseHour" value="{{ monday.to_hour }}"/>
-                                </div>
+                                        <label class="font-weight-bold d-flex justify-content-center pr-1">Close Time</label>
+                                        {{ mondayform.dayto|as_crispy_field }}
+                                    
+                                    {% comment %} <input type="text" class="datetimepicker form-control text-center" name="sunCloseHour" id="sunCloseHour" value="{{ sunday.to_hour }}"/> {% endcomment %}
+                            
                                 </div>
                             </div>
                     </div>
@@ -300,22 +292,21 @@
                             <strong for="">Tuesday Business Hours</strong>
                             <input name="tuesOpen" {% if tuesday.is_closed %}{% else %}checked{% endif %} type="checkbox" class="bootstrap-switch bootstrap-switch-red my-0" data-on-label="OPEN" data-off-label=""/>
                         </div>
-                            <div class="row justify-content-center">
+                            <div class="row justify-content-center" id="sundaytimes">
                                 <div class="col-sm-6 col-lg-4 col-lg-2">
-                                <div class="input-group justify-content-center mb-3">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text">Open Time</span>
-                                    </div>
-                                    <input type="text" class="datetimepicker form-control text-center" name="tuesOpenHour" id="tuesOpenHour" value="{{ tuesday.from_hour }}"/>
-                                </div>
+                                    
+                                        <label class="font-weight-bold d-flex justify-content-center pr-1">Open Time</label>
+                                        {{ tuesdayform.dayfrom|as_crispy_field }}
+                                    
+                                    {% comment %} <input type="text" class="datetimepicker form-control text-center" name="sunOpenHour" id="sunOpenHour" value="{{ sunday.from_hour }}"/> {% endcomment %}
+                            
                                 </div>
                                 <div class="col-sm-6 col-lg-4 col-lg-2">
-                                <div class="input-group justify-content-center mb-3">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text">Close Time</span>
-                                    </div>
-                                    <input type="text" class="datetimepicker form-control text-center" name="tuesCloseHour" id="tuesCloseHour" value="{{ tuesday.to_hour }}"/>
-                                </div>
+                                        <label class="font-weight-bold d-flex justify-content-center pr-1">Close Time</label>
+                                        {{ tuesdayform.dayto|as_crispy_field }}
+                                    
+                                    {% comment %} <input type="text" class="datetimepicker form-control text-center" name="sunCloseHour" id="sunCloseHour" value="{{ sunday.to_hour }}"/> {% endcomment %}
+                            
                                 </div>
                             </div>
                     </div>
@@ -324,22 +315,21 @@
                             <strong for="">Wednesday Business Hours</strong>
                             <input name="wedOpen" {% if wednesday.is_closed %}{% else %}checked{% endif %} type="checkbox" class="bootstrap-switch bootstrap-switch-red my-0" data-on-label="OPEN" data-off-label=""/>
                         </div>
-                            <div class="row justify-content-center">
+                            <div class="row justify-content-center" id="sundaytimes">
                                 <div class="col-sm-6 col-lg-4 col-lg-2">
-                                <div class="input-group justify-content-center mb-3">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text">Open Time</span>
-                                    </div>
-                                    <input type="text" class="datetimepicker form-control text-center" name="wedOpenHour" id="wedOpenHour" value="{{ wednesday.from_hour }}"/>
-                                </div>
+                                    
+                                        <label class="font-weight-bold d-flex justify-content-center pr-1">Open Time</label>
+                                        {{ wednesdayform.dayfrom|as_crispy_field }}
+                                    
+                                    {% comment %} <input type="text" class="datetimepicker form-control text-center" name="sunOpenHour" id="sunOpenHour" value="{{ sunday.from_hour }}"/> {% endcomment %}
+                            
                                 </div>
                                 <div class="col-sm-6 col-lg-4 col-lg-2">
-                                <div class="input-group justify-content-center mb-3">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text">Close Time</span>
-                                    </div>
-                                    <input type="text" class="datetimepicker form-control text-center" name="wedCloseHour" id="wedCloseHour" value="{{ wednesday.to_hour }}"/>
-                                </div>
+                                        <label class="font-weight-bold d-flex justify-content-center pr-1">Close Time</label>
+                                        {{ wednesdayform.dayto|as_crispy_field }}
+                                    
+                                    {% comment %} <input type="text" class="datetimepicker form-control text-center" name="sunCloseHour" id="sunCloseHour" value="{{ sunday.to_hour }}"/> {% endcomment %}
+                            
                                 </div>
                             </div>
                     </div>
@@ -348,22 +338,21 @@
                             <strong for="">Thursday Business Hours</strong>
                             <input name="thursOpen" {% if thursday.is_closed %}{% else %}checked{% endif %} type="checkbox" class="bootstrap-switch bootstrap-switch-red my-0" data-on-label="OPEN" data-off-label=""/>
                         </div>
-                            <div class="row justify-content-center">
+                            <div class="row justify-content-center" id="sundaytimes">
                                 <div class="col-sm-6 col-lg-4 col-lg-2">
-                                <div class="input-group justify-content-center mb-3">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text">Open Time</span>
-                                    </div>
-                                    <input type="text" class="datetimepicker form-control text-center" name="thursOpenHour" id="thursOpenHour" value="{{ thursday.from_hour }}"/>
-                                </div>
+                                    
+                                        <label class="font-weight-bold d-flex justify-content-center pr-1">Open Time</label>
+                                        {{ thursdayform.dayfrom|as_crispy_field }}
+                                    
+                                    {% comment %} <input type="text" class="datetimepicker form-control text-center" name="sunOpenHour" id="sunOpenHour" value="{{ sunday.from_hour }}"/> {% endcomment %}
+                            
                                 </div>
                                 <div class="col-sm-6 col-lg-4 col-lg-2">
-                                <div class="input-group justify-content-center mb-3">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text">Close Time</span>
-                                    </div>
-                                    <input type="text" class="datetimepicker form-control text-center" name="thursCloseHour" id="thursCloseHour" value="{{ thursday.to_hour }}"/>
-                                </div>
+                                        <label class="font-weight-bold d-flex justify-content-center pr-1">Close Time</label>
+                                        {{ thursdayform.dayto|as_crispy_field }}
+                                    
+                                    {% comment %} <input type="text" class="datetimepicker form-control text-center" name="sunCloseHour" id="sunCloseHour" value="{{ sunday.to_hour }}"/> {% endcomment %}
+                            
                                 </div>
                             </div>
                     </div>
@@ -372,22 +361,21 @@
                             <strong for="">Friday Business Hours</strong>
                             <input name="friOpen" {% if friday.is_closed %}{% else %}checked{% endif %} type="checkbox" class="bootstrap-switch bootstrap-switch-red my-0" data-on-label="OPEN" data-off-label=""/>
                         </div>
-                            <div class="row justify-content-center">
+                            <div class="row justify-content-center" id="sundaytimes">
                                 <div class="col-sm-6 col-lg-4 col-lg-2">
-                                <div class="input-group justify-content-center mb-3">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text">Open Time</span>
-                                    </div>
-                                    <input type="text" class="datetimepicker form-control text-center" name="friOpenHour" id="friOpenHour" value="{{ friday.from_hour }}"/>
-                                </div>
+                                    
+                                        <label class="font-weight-bold d-flex justify-content-center pr-1">Open Time</label>
+                                        {{ fridayform.dayfrom|as_crispy_field }}
+                                    
+                                    {% comment %} <input type="text" class="datetimepicker form-control text-center" name="sunOpenHour" id="sunOpenHour" value="{{ sunday.from_hour }}"/> {% endcomment %}
+                            
                                 </div>
                                 <div class="col-sm-6 col-lg-4 col-lg-2">
-                                <div class="input-group justify-content-center mb-3">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text">Close Time</span>
-                                    </div>
-                                    <input type="text" class="datetimepicker form-control text-center" name="friCloseHour" id="friCloseHour" value="{{ friday.to_hour }}"/>
-                                </div>
+                                        <label class="font-weight-bold d-flex justify-content-center pr-1">Close Time</label>
+                                        {{ fridayform.dayto|as_crispy_field }}
+                                    
+                                    {% comment %} <input type="text" class="datetimepicker form-control text-center" name="sunCloseHour" id="sunCloseHour" value="{{ sunday.to_hour }}"/> {% endcomment %}
+                            
                                 </div>
                             </div>
                     </div>
@@ -396,22 +384,21 @@
                             <strong for="">Saturday Business Hours</strong>
                             <input name="satOpen" {% if saturday.is_closed %}{% else %}checked{% endif %} type="checkbox" class="bootstrap-switch bootstrap-switch-red my-0" data-on-label="OPEN" data-off-label=""/>
                         </div>
-                            <div class="row justify-content-center">
+                            <div class="row justify-content-center" id="sundaytimes">
                                 <div class="col-sm-6 col-lg-4 col-lg-2">
-                                <div class="input-group justify-content-center mb-3">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text">Open Time</span>
-                                    </div>
-                                    <input type="text" class="datetimepicker form-control text-center" name="satOpenHour" id="satOpenHour" value="{{ saturday.from_hour }}"/>
-                                </div>
+                                    
+                                        <label class="font-weight-bold d-flex justify-content-center pr-1">Open Time</label>
+                                        {{ saturdayform.dayfrom|as_crispy_field }}
+                                    
+                                    {% comment %} <input type="text" class="datetimepicker form-control text-center" name="sunOpenHour" id="sunOpenHour" value="{{ sunday.from_hour }}"/> {% endcomment %}
+                            
                                 </div>
                                 <div class="col-sm-6 col-lg-4 col-lg-2">
-                                <div class="input-group justify-content-center mb-3">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text">Close Time</span>
-                                    </div>
-                                    <input type="text" class="datetimepicker form-control text-center" name="satCloseHour" id="satCloseHour" value="{{ saturday.to_hour }}"/>
-                                </div>
+                                        <label class="font-weight-bold d-flex justify-content-center pr-1">Close Time</label>
+                                        {{ saturdayform.dayto|as_crispy_field }}
+                                    
+                                    {% comment %} <input type="text" class="datetimepicker form-control text-center" name="sunCloseHour" id="sunCloseHour" value="{{ sunday.to_hour }}"/> {% endcomment %}
+                            
                                 </div>
                             </div>
                     </div>

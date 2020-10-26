@@ -1,5 +1,5 @@
 from account.models import Account
-from business.models import Company
+from business.models import Company, OpeningHours, Gallary
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
 from django.core.validators import RegexValidator
@@ -8,6 +8,7 @@ from django.db import models
 from business.models import Company, Category, SubCategory
 
 class CreateSmallBizForm(forms.Form):
+    business_name = forms.CharField(label='', max_length=30, widget=forms.TextInput(attrs={'class':'form-control'}))
     email = forms.EmailField(label='Business Email', required=True)
     phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$', message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
     phone = forms.CharField(label='Business Phone Number', validators=[phone_regex], required=True, max_length=30,)
@@ -122,3 +123,21 @@ class AddNotesForm(forms.ModelForm):
         model = Company
         fields = ('notes',)
 
+class AddHoursForm(forms.ModelForm):
+    dayto = forms.TimeField(label='', required=True, widget=forms.TextInput(attrs={'class':'datetimepicker form-control text-center'}))
+    dayfrom = forms.TimeField(label='', required=True, widget=forms.TextInput(attrs={'class':'datetimepicker form-control text-center'}))
+    class Meta:
+        model = OpeningHours
+        fields = ('from_hour', 'to_hour')
+
+class ImagesForm(forms.ModelForm):
+    class Meta:
+        model = Gallary
+        fields = ('photos',)
+        widgets = {
+            'photos':forms.HiddenInput
+        }
+    def clean_photos(self):
+        url = self.cleaned_data['image']
+        valid_extensions = ['jpg', 'png', 'jpeg']
+        extension = url.rsplit('.',1)[1].lower()

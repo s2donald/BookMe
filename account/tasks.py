@@ -39,7 +39,7 @@ def reminderEmail(booking_id):
     service = booking.service
     email = acct.email
     subject = f'REMINDER: You have an upcoming appointment with ' + company.business_name + '!'
-    html_message = render_to_string('emailSents/booking/bookingSet.html', {'acct':acct,'company':company,'service':service, 'booking':booking})
+    html_message = render_to_string('emailSents/booking/reminder.html', {'acct':acct,'company':company,'service':service, 'booking':booking})
     plain_message = strip_tags(html_message)
 
     mail_sent = send_mail(subject, plain_message, 'Gibele <noreply@gibele.com>', [email], html_message=html_message, fail_silently=False)

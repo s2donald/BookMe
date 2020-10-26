@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .forms import BusinessRegistrationForm, UpdateCompanyForm, AddClientForm, AddNotesForm, CreateSmallBizForm
+from .forms import BusinessRegistrationForm, AddHoursForm, UpdateCompanyForm, AddClientForm, AddNotesForm, CreateSmallBizForm
 from django.contrib.auth.decorators import login_required
 from business.models import Company, SubCategory, OpeningHours, Services, Gallary, Amenities, Clients, CompanyReq
 from account.models import Account
@@ -45,7 +45,7 @@ def createNewBusiness(request):
         if user_form.is_valid():
             email = user_form.cleaned_data.get('email')
             phone = user_form.cleaned_data.get('phone')
-            bname = request.POST.get('bname', '')
+            bname = user_form.cleaned_data.get('business_name')
             company = Company.objects.create(user=user,business_name=bname,email=email,phone=phone,
                                                 description='',address='',postal='',
                                                 state='',city='',status='draft')
@@ -80,14 +80,36 @@ def completeViews(request):
     user = get_object_or_404(Account, email=email)
     biz_form = AddCompanyForm()
     service_form = AddServiceForm()
+    company = Company.objects.get(user=user)
+    sunday = OpeningHours.objects.get(company=company, weekday=0)
+    monday = OpeningHours.objects.get(company=company, weekday=1)
+    tuesday = OpeningHours.objects.get(company=company, weekday=2)
+    wednesday = OpeningHours.objects.get(company=company, weekday=3)
+    thursday = OpeningHours.objects.get(company=company, weekday=4)
+    friday = OpeningHours.objects.get(company=company, weekday=5)
+    saturday = OpeningHours.objects.get(company=company, weekday=6)
     booking_form = BookingSettingForm()
+    sundayform = AddHoursForm(initial={'dayfrom':sunday.from_hour, 'dayto':sunday.to_hour}, prefix='sun')
+    mondayform = AddHoursForm(initial={'dayfrom':monday.from_hour, 'dayto':monday.to_hour},prefix='mon')
+    tuesdayform = AddHoursForm(initial={'dayfrom':tuesday.from_hour, 'dayto':tuesday.to_hour},prefix='tues')
+    wednesdayform = AddHoursForm(initial={'dayfrom':wednesday.from_hour, 'dayto':wednesday.to_hour},prefix='wed')
+    thursdayform = AddHoursForm(initial={'dayfrom':thursday.from_hour, 'dayto':thursday.to_hour},prefix='thurs')
+    fridayform = AddHoursForm(initial={'dayfrom':friday.from_hour, 'dayto':friday.to_hour},prefix='fri')
+    saturdayform = AddHoursForm(initial={'dayfrom':saturday.from_hour, 'dayto':saturday.to_hour},prefix='sat')
     if user.on_board:
         return redirect(reverse('home', host='bizadmin')) 
     if request.method == 'POST':
         biz_form = AddCompanyForm(request.POST)
         booking_form = BookingSettingForm(request.POST)
+        sundayform = AddHoursForm(request.POST,prefix='sun')
+        mondayform = AddHoursForm(request.POST,prefix='mon')
+        tuesdayform = AddHoursForm(request.POST,prefix='tues')
+        wednesdayform = AddHoursForm(request.POST, prefix='wed')
+        thursdayform = AddHoursForm(request.POST,prefix='thurs')
+        fridayform = AddHoursForm(request.POST,prefix='fri')
+        saturdayform = AddHoursForm(request.POST,prefix='sat')
         if biz_form.is_valid() and booking_form.is_valid():
-            company = Company.objects.get(user=user)
+            print(sundayform)
             category = biz_form.cleaned_data.get('category')
             subcategory = biz_form.cleaned_data.get('subcategory')
             description = biz_form.cleaned_data.get('description')
@@ -100,26 +122,26 @@ def completeViews(request):
             cancellation = booking_form.cleaned_data.get('cancellation')
             subdomain = request.POST.get('subdomain', company.slug)
             returning = request.POST.get('returning', False)
-            sun_from = request.POST['sunOpenHour']
-            sun_to = request.POST['sunCloseHour']
+            sun_from = request.POST.get('sun-dayfrom')
+            sun_to = request.POST.get('sun-dayto')
             sun_closed = not request.POST.get('sunOpen', False)
-            mon_from = request.POST['monOpenHour']
-            mon_to = request.POST['monCloseHour']
+            mon_from = request.POST.get('mon-dayfrom')
+            mon_to = request.POST.get('mon-dayto')
             mon_closed = not request.POST.get('monOpen', False)
-            tues_from = request.POST['tuesOpenHour']
-            tues_to = request.POST['tuesCloseHour']
+            tues_from = request.POST.get('tues-dayfrom')
+            tues_to = request.POST.get('tues-dayto')
             tues_closed = not request.POST.get('tuesOpen', False)
-            wed_from = request.POST['wedOpenHour']
-            wed_to = request.POST['wedCloseHour']
+            wed_from = request.POST.get('wed-dayfrom')
+            wed_to = request.POST.get('wed-dayto')
             wed_closed = not request.POST.get('wedOpen', False)
-            thurs_from = request.POST['thursOpenHour']
-            thurs_to = request.POST['thursCloseHour']
+            thurs_from = request.POST.get('thurs-dayfrom')
+            thurs_to = request.POST.get('thurs-dayto')
             thurs_closed = not request.POST.get('thursOpen', False)
-            fri_from = request.POST['friOpenHour']
-            fri_to = request.POST['friCloseHour']
+            fri_from = request.POST.get('fri-dayfrom')
+            fri_to = request.POST.get('fri-dayto')
             fri_closed = not request.POST.get('friOpen', False)
-            sat_from = request.POST['satOpenHour']
-            sat_to = request.POST['satCloseHour']
+            sat_from = request.POST.get('sat-dayfrom')
+            sat_to = request.POST.get('sat-dayto')
             sat_closed = not request.POST.get('satOpen', False)
 
             status = 'published'
@@ -181,21 +203,15 @@ def completeViews(request):
             return redirect(reverse('home', host='bizadmin'))
         
         else:
-            print(biz_form.errors)
+            print(sundayform.errors)
 
     subcategories = SubCategory.objects.all()
     company = Company.objects.get(user=user)
     services = Services.objects.filter(business=company)
-    sunday = OpeningHours.objects.get(company=company, weekday=0)
-    monday = OpeningHours.objects.get(company=company, weekday=1)
-    tuesday = OpeningHours.objects.get(company=company, weekday=2)
-    wednesday = OpeningHours.objects.get(company=company, weekday=3)
-    thursday = OpeningHours.objects.get(company=company, weekday=4)
-    friday = OpeningHours.objects.get(company=company, weekday=5)
-    saturday = OpeningHours.objects.get(company=company, weekday=6)
+    
 
-    return render(request, 'bizadmin/dashboard/profile/addcompany.html', {'booking_form':booking_form,'sunday':sunday,'monday':monday,'tuesday':tuesday,'wednesday':wednesday,'thursday':thursday,'friday':friday,'saturday':saturday,
-                                                                                'biz_form':biz_form, 'service_form':service_form,'subcategories':subcategories,'company':company,
+    return render(request, 'bizadmin/dashboard/profile/addcompany.html', {'sundayform':sundayform,'saturdayform':saturdayform,'mondayform':mondayform,'tuesdayform':tuesdayform,'wednesdayform':wednesdayform,'thursdayform':thursdayform,'fridayform':fridayform,
+                                                                                'booking_form':booking_form,'biz_form':biz_form, 'service_form':service_form,'subcategories':subcategories,'company':company,
                                                                                 'services':services})
 
 def load_subcat(request):
@@ -480,10 +496,9 @@ class createclientAPI(View):
             elif phone:
                 if Account.objects.filter(phone=phone).exists():
                     user = Account.objects.filter(phone=phone).first()
-                
+            
             Clients.objects.create(user=user, company=company, first_name=first_name, last_name=last_name, email=email,phone=phone,
                                 city=city,postal=postal,province=province,address=address)
-
             clients = company.clients.all()
             data['form_is_valid'] = True
             data['view'] = 'Your client has been added!'
@@ -892,11 +907,16 @@ def headerImageUpload(request):
         y = Decimal(request.POST.get('y'))
         w = Decimal(request.POST.get('width'))
         h = Decimal(request.POST.get('height'))
+        valid_extensions = ['jpg', 'png', 'jpeg']
+        extension = img.name.rsplit('.',1)[1].lower()
+        if extension not in valid_extensions:
+            return redirect(reverse('information', host='bizadmin'))
         if img:
             image = Image.open(img)
+            image.filename = img.name
             box = (x, y, w+x, h+y)
             cropped_image = image.crop(box)
-            resized_image = cropped_image.resize((1910,1000),Image.ANTIALIAS)
+            resized_image = cropped_image.resize((2048,2048),Image.ANTIALIAS)
             thumb_io = BytesIO()
             resized_image.save(thumb_io, image.format)
             company.image.save(image.filename, ContentFile(thumb_io.getvalue()), save=False)
@@ -913,11 +933,17 @@ def profileImageUpload(request):
         y = Decimal(request.POST.get('y'))
         w = Decimal(request.POST.get('width'))
         h = Decimal(request.POST.get('height'))
+
+        valid_extensions = ['jpg', 'png', 'jpeg']
+        extension = img.name.rsplit('.',1)[1].lower()
+        if extension not in valid_extensions:
+            return redirect(reverse('profile', host='bizadmin'))
         if img:
             image = Image.open(img)
+            image.filename = img.name
             box = (x, y, w+x, h+y)
             cropped_image = image.crop(box)
-            resized_image = cropped_image.resize((200,200),Image.ANTIALIAS)
+            resized_image = cropped_image.resize((2048,2048),Image.ANTIALIAS)
             thumb_io = BytesIO()
             resized_image.save(thumb_io, image.format)
             user.avatar.save(image.filename, ContentFile(thumb_io.getvalue()), save=False)
@@ -935,11 +961,16 @@ def headerImageUploads(request):
         y = Decimal(request.POST.get('y'))
         w = Decimal(request.POST.get('width'))
         h = Decimal(request.POST.get('height'))
+        valid_extensions = ['jpg', 'png', 'jpeg']
+        extension = img.name.rsplit('.',1)[1].lower()
+        if extension not in valid_extensions:
+            return redirect(reverse('photos', host='bizadmin'))
         if img:
             image = Image.open(img)
+            image.filename = img.name
             box = (x, y, w+x, h+y)
             cropped_image = image.crop(box)
-            resized_image = cropped_image.resize((1910,1000),Image.ANTIALIAS)
+            resized_image = cropped_image.resize((2048,2048),Image.ANTIALIAS)
             thumb_io = BytesIO()
             resized_image.save(thumb_io, image.format)
             company.image.save(image.filename, ContentFile(thumb_io.getvalue()), save=False)
@@ -955,19 +986,25 @@ def galImageUpload(request):
         y = Decimal(request.POST.get('ys'))
         w = Decimal(request.POST.get('widths'))
         h = Decimal(request.POST.get('heights'))
+        valid_extensions = ['jpg', 'png', 'jpeg']
+        extension = img.name.rsplit('.',1)[1].lower()
+        if extension not in valid_extensions:
+            return redirect(reverse('photos', host='bizadmin'))
         if img:
             image = Image.open(img)
+            image.filename = img.name
             box = (x, y, w+x, h+y)
             cropped_image = image.crop(box)
-            resized_image = cropped_image.resize((1600,900),Image.ANTIALIAS)
+            resized_image = cropped_image.resize((2048,2048),Image.ANTIALIAS)
             thumb_io = BytesIO()
-            resized_image.save(thumb_io, image.format)
+            resized_image.save(thumb_io, format=image.format)
             gallary = Gallary.objects.create(company=company)
             gallary.photos.save(image.filename, ContentFile(thumb_io.getvalue()), save=False)
             gallary.save()
     
     return redirect(reverse('photos', host='bizadmin'))
 
+from .forms import ImagesForm
 ##Business Page Views
 @login_required
 def businessPhotoView(request):
@@ -1291,9 +1328,12 @@ class getBooking(View):
         booking = Bookings.objects.get(id=booking_id)
         service = booking.service
         if booking.user:
-            htmlString = render_to_string('bizadmin/dashboard/schedule/bookingInfo.html',{'user':booking.user})
+            user = booking.user
+            htmlString = render_to_string('bizadmin/dashboard/schedule/bookingInfo.html',{'user':user, 'booking':booking})
+            first_name = user.first_name
+            last_name = user.last_name
         else:
-            htmlString = render_to_string('bizadmin/dashboard/schedule/bookingInfo.html',{'user':booking.guest})
+            htmlString = render('bizadmin/dashboard/schedule/bookingInfo.html',{'user':booking.guest})
         return JsonResponse({'html_string':htmlString})
 
 class addRequestedViews(View):

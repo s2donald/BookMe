@@ -81,6 +81,12 @@
                     <span class="sidebar-normal"> Company Info </span>
                   </a>
                 </li>
+                <li class=''>
+                  <a href="{% host_url 'hours' host 'bizadmin'%}">
+                    <span class="sidebar-mini-icon"><i class="fas fa-clock"></i></span>
+                    <span class="sidebar-normal"> Business Hours</span>
+                  </a>
+                </li>
                 <li>
                   <a href="{% host_url 'service_detail' host 'bizadmin' %}">
                     <span class="sidebar-mini-icon"><i class="fas fa-concierge-bell"></i></span>
@@ -117,12 +123,6 @@
                   <a href="{% host_url 'amenities' host 'bizadmin'%}">
                     <span class="sidebar-mini-icon"><i class="fas fa-tags"></i></span>
                     <span class="sidebar-normal"> Amenities and Tags</span>
-                  </a>
-                </li>
-                <li class=''>
-                  <a href="{% host_url 'hours' host 'bizadmin'%}">
-                    <span class="sidebar-mini-icon"><i class="fas fa-clock"></i></span>
-                    <span class="sidebar-normal"> Business Hours</span>
                   </a>
                 </li>
               </ul>
@@ -232,13 +232,13 @@
           <div class="collapse navbar-collapse" id="navigation">
             <ul class="navbar-nav ml-auto">
               <li class="dropdown nav-item">
-                <a href="javascript:void(0)" class="dropdown-toggle nav-link" data-toggle="dropdown">
+                {% comment %} <a href="javascript:void(0)" class="dropdown-toggle nav-link" data-toggle="dropdown">
                   <div class="notification d-none d-lg-block d-xl-block"></div>
                   <i class="fas fa-bell"></i>
                   <p class="d-lg-none">
                     Notifications
                   </p>
-                </a>
+                </a> {% endcomment %}
                 <ul class="dropdown-menu dropdown-menu-right dropdown-navbar">
                   <li class="nav-link">
                     <a href="#" class="nav-item dropdown-item">A quick notification</a>
@@ -262,10 +262,13 @@
                 </a>
                 <ul class="dropdown-menu dropdown-navbar">
                   <li class="nav-link">
-                    <a href="{% host_url 'profile' host 'bizadmin'%}" class="nav-item dropdown-item">Profile</a>
+                    <a href="{% host_url 'profile' host 'bizadmin'%}" class="nav-item dropdown-item">Company Details</a>
                   </li>
                   <li class="nav-link">
-                    <a href="javascript:void(0)" class="nav-item dropdown-item">Settings</a>
+                    <a href="{% host_url 'profile' host 'bizadmin'%}" class="nav-item dropdown-item">Account Settings</a>
+                  </li>
+                  <li class="nav-link">
+                    <a href="{% host_url 'bookingSetting' host 'bizadmin'%}" class="nav-item dropdown-item">Booking Settings</a>
                   </li>
                   <li class="dropdown-divider"></li>
                   <li class="nav-link">
@@ -297,7 +300,7 @@
         <script src="{% static 'js/vendor/moment.min.js' %}"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.18/js/bootstrap-select.min.js" ></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.2.3/flatpickr.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
         <script src="{% static 'js/vendor/bootstrap-switch.js' %}"></script>
         <script src="{% static 'js/vendor/bootstrap-datetimepicker.js' %}"></script>
         <script src="{% static 'js/vendor/dropzone.min.js' %}"></script>

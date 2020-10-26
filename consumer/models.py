@@ -64,6 +64,22 @@ class Reviews(models.Model):
         verbose_name = 'Review'
         verbose_name_plural = 'Reviews'
 
+def get_booking_folder(instance, filename):
+    return "booking/extrainfo/".format(instance.booking.id, filename)
+
+class extraInformation(models.Model):
+    booking = models.OneToOneField(Bookings, on_delete=models.CASCADE)
+    description = models.TextField(max_length=500, blank=True, null=True)
+    photo = models.ImageField(upload_to=get_booking_folder, blank=True, null=True)
+    #For car services only
+    car_make = models.CharField(max_length=30, blank=True, null=True)
+    car_model = models.CharField(max_length=30, blank=True, null=True)
+    car_year = models.IntegerField(blank=True, null=True)
+
+
+    
+
+
 
 
 

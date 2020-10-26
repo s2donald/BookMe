@@ -104,9 +104,9 @@ class AddServiceForm(forms.ModelForm):
     duration_hour = forms.ChoiceField(label='Duration Hour',choices=hours_choices, widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control', 'data-size':'5'}))
     duration_minute = forms.ChoiceField(label='Duration Minute',choices=minute_choices_no_zero,initial= '5', widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control', 'data-size':'5'}))
     checkintime = forms.ChoiceField(label='Check In Time',choices=minute_choices, widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control', 'data-size':'5'}))
-    padding = forms.ChoiceField(label='Buffer',choices=beforeafter, widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control', 'data-size':'5'}))
-    paddingtime_hour = forms.ChoiceField(label='Buffer Hour',choices=hours_choices, widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control', 'data-size':'5'}))
-    paddingtime_minute = forms.ChoiceField(label='Buffer Minute',choices=minute_choices, widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control', 'data-size':'5'}))
+    padding = forms.ChoiceField(label='Buffer', choices=beforeafter, widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control', 'data-size':'5'}))
+    paddingtime_hour = forms.ChoiceField(label='Buffer Hour', choices=hours_choices, widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control', 'data-size':'5'}))
+    paddingtime_minute = forms.ChoiceField(label='Buffer Minute', choices=minute_choices, widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control', 'data-size':'5'}))
     class Meta:
         model = Services
         fields = ('name','description','price_type','price','available','duration_hour',
@@ -162,13 +162,6 @@ class AddCompanyForm(forms.ModelForm):
                 pass
         elif self.instance.pk:
             self.fields['subcategory'].queryset = self.instance.category.subcategory.order_by('name')
-
-
-
-class AddHoursForm(forms.ModelForm):
-    sundayto = forms.TimeField(label='To', required=True)
-    sundayfrom = forms.TimeField(label='From', required=True)
-    sundayclosed = forms.BooleanField(label='Closed', required=False)
 
 
     

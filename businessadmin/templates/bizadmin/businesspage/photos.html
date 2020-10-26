@@ -36,9 +36,9 @@
                                     $image.cropper("destroy");
                                     $image.cropper({
                                         viewMode: 1,
-                                        aspectRatio: 1910/1000,
-                                        minCropBoxWidth: 1910,
-                                        minCropBoxHeight: 1000,
+                                        aspectRatio: 1000/1000,
+                                        minCropBoxWidth: 100,
+                                        minCropBoxHeight: 100,
                                         ready: function () {
                                             $image.cropper("setCanvasData", canvasData);
                                             $image.cropper("setCropBoxData", cropBoxData);
@@ -54,9 +54,9 @@
                                     $images.cropper("destroy");
                                     $images.cropper({
                                         viewMode: 1,
-                                        aspectRatio: 1910/1000,
-                                        minCropBoxWidth: 1910,
-                                        minCropBoxHeight: 1000,
+                                        aspectRatio: 2048/2048,
+                                        minCropBoxWidth: 100,
+                                        minCropBoxHeight: 100,
                                         ready: function () {
                                             $images.cropper("setCanvasData", canvasData);
                                             $images.cropper("setCropBoxData", cropBoxData);
@@ -97,7 +97,6 @@
                                 /* SCRIPT TO COLLECT THE DATA AND POST TO THE SERVER */
                                 $(".js-crop-and-uploads").click(function () {
                                     var cropDatas = $images.cropper("getData");
-                                    console.log(cropDatas)
                                     $("#idd_x").val(cropDatas["x"]);
                                     $("#idd_y").val(cropDatas["y"]);
                                     $("#idd_height").val(cropDatas["height"]);

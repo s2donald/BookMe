@@ -23,7 +23,7 @@ def bookingurl(request):
     company = request.viewing_company
     services = Services.objects.filter(business=company)
     if user.is_authenticated:
-        returnClient = company.clients.filter(user=user).exists()
+        returnClient = company.clients.filter(user=user).exists() or company.clients.filter(phone=user.phone).exists() or company.clients.filter(email=user.email).exists()
     else:
         returnClient = False
     return render(request, 'bookingpage/home.html', {'returnClient':returnClient,'user': user, 'company':company, 'services':services})
@@ -35,7 +35,7 @@ def bookingServiceView(request, pk):
     personal_form = UpdatePersonalForm()
     gibele_form = AccountAuthenticationForm()
     if user.is_authenticated:
-        returnClient = company.clients.filter(user=user).exists()
+        returnClient = company.clients.filter(user=user).exists() or company.clients.filter(phone=user.phone).exists() or company.clients.filter(email=user.email).exists()
     else:
         returnClient = False
     return render(request, 'bookingpage/testBookingPage.html', {'returnClient':returnClient,'user': user, 'company':company, 'service':service, 'personal_form':personal_form, 'gibele_form':gibele_form})
@@ -135,17 +135,15 @@ class createAppointment(View):
         start = timezone.localtime(timezone.make_aware(start))
         end = timezone.localtime(timezone.make_aware(end))
         if user.is_authenticated:
-            # email = user.email
-            # first_name = user.first_name
-            # last_name = user.last_name
-            # phone = user.phone
-            # address = user.address
-            # postal = user.postal
-            # province = user.province
-            # city = user.city
             if Bookings.objects.filter(company=company, start=start, end=end).count()<1:
-                if not Clients.objects.filter(company=company,email=user.email, first_name=user.first_name,last_name=user.last_name,phone=user.phone).exists():
-                    guest = Clients.objects.create(company=company, first_name=user.first_name,last_name=user.last_name,phone=user.phone,email=user.email)
+                #Check if the user is already a client
+                if company.clients.filter(user=user).exists():
+                    guest = company.clients.get(user=user, first_name)
+                #Check if the client object was already created by the company
+                elif company.clients.filter(phone=user.phone, first=user.first_name).exists() or company.clients.filter(email=user.email, first=user.first_name).exists():
+                    pass
+                if not company.clients.filter(user=user).exists() or company.clients.filter(phone=user.phone).exists() or company.clients.filter(email=user.email).exists():
+                    guest = Clients.objects.create(company=company, user=user, first_name=user.first_name,last_name=user.last_name,phone=user.phone,email=user.email)
                     guest.save()
                     company.clients.add(guest)
                     company.save()
@@ -235,11 +233,27 @@ class checkIfClientView(View):
         else:
             return JsonResponse({'data':"You must be signed in. Please try again later"})
         company_id = request.POST.get('company_id')
+
         company = get_object_or_404(Company, id=company_id)
+
+        #Check if the user object is on the client list
         requestUser = company.clients.filter(user=user, company=company).exists()
-        if not requestUser:
-            return JsonResponse({'data':'notclient'})
-        return JsonResponse({'good':'good'})
+        if requestUser:
+            return JsonResponse({'good':'good'})
+            
+        #Check if the user email is on the client list
+        email = user.email
+        requestUser = company.clients.filter(email=email, company=company).exists()
+        if requestUser:
+            return JsonResponse({'good':'good'})
+
+        #Check if the users phone number is on the client list
+        phone = user.phone
+        requestUser = company.clients.filter(phone=phone, company=company).exists()
+        if requestUser:
+            return JsonResponse({'good':'good'})
+
+        return JsonResponse({'data':'notclient'})
 
 from django.core.validators import validate_email
 from django import forms

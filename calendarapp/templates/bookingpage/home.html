@@ -24,8 +24,10 @@
                     <p class="text-muted">{{ s.description }}</p>
                 </div>
                 <div class="col-md-6 pt-0 mt-0">
-                    <p class="font-weight-bold mt-1">${{ s.price }}</p>
+                    {% with type=s.price_type  %}
+                    <p class="mt-1">{% if type == "fixed" %}Fixed price of{% elif type == 'start' %}Prices start at{% elif type == 'variable' %}<strong>Prices Varies</strong>{% endif %}{% if type == 'variable' %}{% elif type == 'free' %}<strong>Free</strong> {% elif type == 'dont' %}{% else %} <strong>${{ s.price }}</strong>{% endif %}</p>
                     <a id="serv{{ s.id }}" href="{% host_url 'bookingserviceurls' pk=s.id host 'bookingurl' slug=company.slug %}" class="btn btn-sm btn-outline-primary" style="height:auto;">Book Now</a>
+                    {% endwith %}
                 </div>                 
             </div>
             <hr class="hrwhite">

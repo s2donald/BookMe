@@ -746,7 +746,7 @@ footer {
 
   .detail-slider {
     overflow: hidden;
-    max-height: 300px;
+    max-height: 500px;
   }
   
   .detail-slider img {
@@ -1400,10 +1400,10 @@ figure {
   }
   
   .hero-slider .swiper-slide {
-    height: auto !important;
+    /* height: auto !important; */
     background-repeat: no-repeat;
     background-position: center center;
-    background-size: cover;
+    background-size: contain;
   }
 
 
@@ -1824,7 +1824,7 @@ figure {
   border-radius: 10px;
 }
 
-.btn.btn-danger{
+.btn.btn-success{
   border-radius: 10px;
   background: linear-gradient(90deg, #e14eca 0%, #e14eca 100%);
   background-clip: padding-box;
@@ -1834,13 +1834,13 @@ figure {
   border-color: linear-gradient(90deg, #e14eca 0%, #e14eca 100%);
   
 }
-.btn.btn.btn-danger:hover{
+.btn.btn.btn-success:hover{
   background: whitesmoke;
   background-clip: padding-box;
   color: black;
   border-color: #e14eca;
 }
-.btn.btn-danger::after{
+.btn.btn-success::after{
   position:absolute;
   top:-2px; left:-2px;
   bottom: -2px; right: -2px;
@@ -1850,6 +1850,31 @@ figure {
   border-radius: 10px;
 }
 
+.btn.btn-danger{
+  border-radius: 10px;
+  background: linear-gradient(90deg, #ec250d 0%, #ec250d 100%);
+  background-clip: padding-box;
+  border: 3px solid transparent;
+  color: whitesmoke;
+  transition: background .6 ease;
+  border-color: linear-gradient(90deg, #ec250d 0%, #ec250d 100%);
+  
+}
+.btn.btn.btn-danger:hover{
+  background: whitesmoke;
+  background-clip: padding-box;
+  color: black;
+  border-color: #ec250d;
+}
+.btn.btn-danger::after{
+  position:absolute;
+  top:-2px; left:-2px;
+  bottom: -2px; right: -2px;
+  background: linear-gradient(90deg, #ec250d 0%, #ec250d 100%);
+  content:'';
+  z-index:-1;
+  border-radius: 10px;
+}
 
 .btn.btn-warning{
   border-radius: 10px;

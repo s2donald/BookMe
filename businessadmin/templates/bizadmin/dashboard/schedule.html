@@ -27,14 +27,81 @@
                 function gcd (a, b) {
                     return (b == 0) ? a : gcd (b, a%b);
                 }
+
+                function changeBooking(id) {
+                    Swal.fire({
+                        customClass:{
+                            confirmButton: 'btn btn-primary',
+                            denyButton: 'btn btn-danger',
+                        },
+                        buttonsStyling: false,
+                        allowOutsideClick: false,
+                        title: 'Reschedule service',
+                        confirmButtonText: 'Reschedule',
+                        showDenyButton: true,
+                        denyButtonText: `Nevermind`,
+                    });
+                }
+
+                function deleteBooking(id){
+                    Swal.fire({
+                        customClass:{
+                            confirmButton: 'btn btn-primary',
+                            denyButton: 'btn btn-danger',
+                        },
+                        buttonsStyling: false,
+                        allowOutsideClick: false,
+                        title: 'Are you sure you want to cancel this appointment?',
+                        icon: 'warning',
+                        confirmButtonText: 'Yes, Cancel',
+                        showDenyButton: true,
+                        denyButtonText: `No, I changed my mind`,
+                    });
+                }
+
+                function showBookingDetail(data, id){
+                    Swal.fire({
+                        customClass:{
+                            confirmButton: 'btn btn-primary',
+                            denyButton: 'btn btn-danger',
+                            cancelButton: 'btn',
+                        },
+                        buttonsStyling: false,
+                        showDenyButton: true,
+                        showCancelButton: true,
+                        allowOutsideClick: false,
+                        title: 'Appointment Details',
+                        html: data.html_string,
+                        confirmButtonText: 'Reschedule Appointment',
+                        denyButtonText: `Cancel Booking`,
+                        }).then(function(result){
+                            if (result.isConfirmed){
+                                changeBooking(id);
+                            }
+                            if (result.isDenied){
+                                deleteBooking(id);
+                            }
+                        });
+                }
+
+
                 var w = screen.width;
                 var h = screen.height;
                 var r = gcd (w, h);
                 var aspect = (w/r)/(h/r)/0.8
 
+                if (w>768){
+                    var rightitems = 'dayGridMonth,listWeek,listDay'
+                    var initviewcal = 'dayGridMonth'
+                }
+                else{
+                    var rightitems = 'listWeek,listDay'
+                     var initviewcal = 'listWeek'
+                }
+
                 var leftitems = 'prev,next today'
-                var rightitems = 'listWeek,listDay'
-                var initviewcal = 'listDay'
+                
+               
 
                 
 
@@ -45,52 +112,47 @@
                     buttonText: {
                         listWeek: 'Week',
                         listDay: 'Day',
+                        dayGridMonth: 'Month'
                     },
                     selectable: true,
                 aspectRatio: asprat,
                 events:[
                 {% for booking in bookings %}
                     {
-                        title: 'Service:{{ booking.service.name }} ||| Client: {{ booking.user.first_name}}',
-                        description: '{{ booking.user.firstname }}',
+                        title: 'Client: {{ booking.user.first_name}} <br> Name',
                         start: '{{ booking.start|date:"Y-m-d" }}'+'T'+'{{ booking.start|date:"H:i:s" }}',
                         end: '{{ booking.end|date:"Y-m-d" }}'+'T'+'{{ booking.end|date:"H:i:s" }}',
                         id: '{{ booking.id }}',
-                        {% if forloop.counter|divisibleby:"2" %}
+                        className: 'event-green',
+                        {% comment %} {% if forloop.counter|divisibleby:"2" %}
                             className: 'event-green',
                         {% elif forloop.counter|divisibleby:"3" %}
                             className: 'event-orange',
                         {% else %}
                             className:'event-red',
-                        {% endif %}
+                        {% endif %} {% endcomment %}
                     },
                 {% endfor %}
                 ],
+                eventRender: function(eventObj, $el) {
+                    $el.popover({
+                        title: eventObj.title,
+                        content: eventObj.description,
+                        trigger: 'hover',
+                        html: true,
+                        placement: 'top',
+                        container: 'body'
+                    });
+                },
                 eventClick: function(info) {
-
+                    const serv_id = info.event.id
                     $.ajax({
                         type: 'GET',
                         url: '{% host_url "getBookingId" host "bizadmin" %}',
-                        data:{booking_id:info.event.id},
-                        async:false,
+                        data:{booking_id:serv_id},
                         success: function(data){
                             var name ='S'
-                            Swal.fire({
-
-                                title: info.event.description,
-                                html: data.html_string,
-                                showCancelButton: true,
-                                showDenyButton: true,
-                                customClass:{
-                                    confirmButton: 'btn btn-primary',
-                                    cancelButton: 'btn btn-danger',
-                                    denyButton: 'btn btn-danger',
-                                },
-                                confirmButtonText: `Change Booking Date`,
-                                denyButtonText: `Delete Booking`,
-                                cancelButtonText: 'Go Back',
-                                buttonsStyling: false,
-                            });
+                            showBookingDetail(data, serv_id)
                         },
                     })
                 },

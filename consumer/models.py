@@ -11,14 +11,6 @@ class Bookings(models.Model):
     #The user's information name who booked
     user = models.ForeignKey(Account, on_delete=models.CASCADE, null=True, blank=True)
     guest = models.ForeignKey(Clients, on_delete=models.CASCADE, null=True, blank=True)
-    # first_name = models.CharField(verbose_name="First Name", max_length=30, unique=False,null=True, blank=True)
-    # last_name = models.CharField(verbose_name="Last Name", max_length=30, unique=False, null=True, blank=True)
-    # phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$', message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
-    # phone = models.CharField(verbose_name="Phone Number",validators=[phone_regex], max_length=17, null=True, blank=True)
-    # address = models.CharField(max_length=200, null=True, blank=True)
-    # postal = models.CharField(max_length=35, null=True, blank=True)
-    # province = models.CharField(max_length=35, null=True, blank=True)
-    # city = models.CharField(max_length=35, null=True, blank=True)
     slug = models.SlugField(max_length=200, db_index=True, blank=True, unique=True)
     #The service booked (also contains the company the service is with)
     service = models.ForeignKey(Services, on_delete=models.CASCADE, related_name='bookings', related_query_name="bookings")
@@ -29,7 +21,10 @@ class Bookings(models.Model):
     price_paid = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     #The price of the booking
     price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    is_cancelled = models.BooleanField(default=False)
+    #company cancelled booking
+    is_cancelled_company = models.BooleanField(default=False)
+    #user cancelled booking
+    is_cancelled_user = models.BooleanField(default=False)
     #We must also create a receipt model to handle the reciepts and link to the booking
     start = models.DateTimeField(default=timezone.now)
     end = models.DateTimeField(default=timezone.now)

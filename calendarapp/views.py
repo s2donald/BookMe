@@ -151,6 +151,7 @@ class createAppointment(View):
                     guest.email = user.email
                     guest.last_name = user.last_name
                     guest.save()
+
                 elif company.clients.filter(email=user.email, first=user.first_name).exists():
                     guest = company.clients.filter(email=user.email, first=user.first_name).first()
                     guest.user = user
@@ -170,25 +171,27 @@ class createAppointment(View):
                 good = True
             else:
                 good = False
-
         else:
             email = data['email']
             first_name = data['first_name']
             last_name = data['last_name']
             phone = data['phone']
             if Bookings.objects.filter(company=company, start=start, end=end).count()<1:
-                if not Clients.objects.filter(email=email, first_name=first_name,last_name=last_name, phone=phone, company=company).exists():
+                if Account.objects.filter(email=email, is_guest=False).exists():
+                    return JsonResponse({'time':time, 's_id':s_id,'start':start,'date':date,'time':time, 'good':good, 'emailerr':'The email you have provided has already been used to create an account. Please sign into Gibele then try booking again later.'})
+                
+                if Clients.objects.filter(email=email, user=None,first_name=first_name, last_name=last_name,phone=phone, company=company).exists():
+                    guest = Clients.objects.get(company=company, email=email, first_name=first_name,last_name=last_name,phone=phone)
+                else:
                     guest = Clients.objects.create(company=company,first_name=first_name,last_name=last_name,phone=phone,email=email)
                     guest.save()
                     company.clients.add(guest)
                     company.save()
-                else:
-                    guest = Clients.objects.get(company=company, email=email, first_name=first_name,last_name=last_name,phone=phone)
                 
-                if Account.objects.filter(email=email, is_guest=False).exists():
-                    return JsonResponse({'time':time, 's_id':s_id,'start':start,'date':date,'time':time, 'good':good, 'emailerr':'The email you have provided has already been used to create an account. Please sign into Gibele then try booking again later.'})
+                
                 elif Account.objects.filter(email=email, is_guest=True).exists():
                     user = Account.objects.get(email=email, is_guest=True)
+
                 booking = Bookings.objects.create(user=user,service=service, company=company,
                                                 start=start, end=end, price=price)
                 booking.save()

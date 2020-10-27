@@ -1,7 +1,7 @@
 {% extends 'bizadmin/index.html' %}
 {% load static %}
 {% load hosts %}
-{% block bpageact%}active{%endblock%}
+{% block activecompinfo %}active{%endblock%}
 {% block businessadmin %}
 <!-- Main page content-->
     <div class="content">
@@ -22,9 +22,11 @@
                 </header>
                 <!-- Account page navigation-->
                 <nav class="nav nav-borders">
-                    <a class="nav-link  ml-0" href="{% host_url 'photos' host 'bizadmin'%}">Photo and Gallery</a>
-                    <a class="nav-link" href="{% host_url 'amenities' host 'bizadmin'%}">Amenities and Tags</a>
+                    <a class="nav-link ml-0" href="{% host_url 'information' host 'bizadmin'%}">Company Info</a>
                     <a class="nav-link activate" href="{% host_url 'hours' host 'bizadmin'%}">Business Hours</a>
+                    <a class="nav-link" href="{% host_url 'service_detail' host 'bizadmin' %}">Services</a>
+                    <a class="nav-link" href="{% host_url 'client_list' host 'bizadmin' %}">Clients</a>
+                    {% comment %} <a class="nav-link" href="#">Staff Members</a> {% endcomment %}
                 </nav>
                 <hr class="mt-0 mb-4" />
                 <form method="POST" id="subhour">

@@ -19,7 +19,7 @@ urlpatterns = [
     url(r'update/emailinfo/$', views.updateEmailSetting.as_view(), name='emailUpdate'),
     url(r'update/notes/$', views.notesUpdate.as_view(), name='notesUpdate'),
 
-    url(r'delete/booking/$', views.deleteBookingAPI.as_view(), name='delete_booking'),
+    url(r'delete/booking/$', views.deleteBookingByCompAPI.as_view(), name='delete_booking'),
 
     url(r'detail/info/$', views.compinfoViews, name='information'),
     url(r'detail/service/$', views.servicesDetailView, name='service_detail'),

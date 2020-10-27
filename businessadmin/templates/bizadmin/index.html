@@ -45,10 +45,10 @@
     <div class="sidebar">
       <div class="sidebar-wrapper">
         <div class="logo">
-          <a href="javascript:void(0)" class="simple-text logo-mini">
+          <a class="simple-text logo-mini">
             {{ company.business_name.0 }}
           </a>
-          <a href="javascript:void(0)" class="simple-text logo-normal">
+          <a class="simple-text logo-normal">
             {{ company.business_name }}
           </a>
         </div>
@@ -239,11 +239,11 @@
                     Notifications
                   </p>
                 </a> {% endcomment %}
-                <ul class="dropdown-menu dropdown-menu-right dropdown-navbar">
+                {% comment %} <ul class="dropdown-menu dropdown-menu-right dropdown-navbar">
                   <li class="nav-link">
                     <a href="#" class="nav-item dropdown-item">A quick notification</a>
                   </li>
-                </ul>
+                </ul> {% endcomment %}
               </li>
               <li class="dropdown nav-item">
                 <a href="{% host_url 'bizadminlogout' host 'bizadmin' %}" class="dropdown-toggle nav-link" data-toggle="dropdown">
@@ -262,13 +262,17 @@
                 </a>
                 <ul class="dropdown-menu dropdown-navbar">
                   <li class="nav-link">
-                    <a href="{% host_url 'profile' host 'bizadmin'%}" class="nav-item dropdown-item">Company Details</a>
+                    <a href="{% host_url 'information' host 'bizadmin'%}" class="nav-item dropdown-item">Company Details</a>
                   </li>
                   <li class="nav-link">
                     <a href="{% host_url 'profile' host 'bizadmin'%}" class="nav-item dropdown-item">Account Settings</a>
                   </li>
                   <li class="nav-link">
                     <a href="{% host_url 'bookingSetting' host 'bizadmin'%}" class="nav-item dropdown-item">Booking Settings</a>
+                  </li>
+                  <li class="dropdown-divider"></li>
+                  <li class="nav-link">
+                    <a href="{% host_url 'business:company_detail' slug=company.slug id=company.id host 'www' %}" class="nav-item dropdown-item">Your Business Page</a>
                   </li>
                   <li class="dropdown-divider"></li>
                   <li class="nav-link">

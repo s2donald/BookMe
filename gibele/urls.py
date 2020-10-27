@@ -24,7 +24,7 @@ urlpatterns = [
     path('login', acct_views.LoginView, name='login'),
     path('logout/', acct_views.LogoutView, name='logout'),
     path('account/', include('account.urls', namespace='account')),
-    path('admin/', admin.site.urls),
+    path('adminpagefordjangosuuwoop/', admin.site.urls),
     path('social-auth/',include('social_django.urls',namespace='social')),
     path('',include('business.urls', namespace='business')),
 

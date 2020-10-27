@@ -377,7 +377,7 @@ def scheduleView(request):
     if user.is_authenticated and user.is_business:
         if user.on_board:
             company = Company.objects.get(user=user)
-            bookings = Bookings.objects.filter(company=company)
+            bookings = Bookings.objects.filter(company=company, is_cancelled_user=False, is_cancelled_company=False)
             return render(request, 'bizadmin/dashboard/schedule.html', {'company':company, 'bookings':bookings})
         else:
             return redirect(reverse('completeprofile', host='bizadmin'))
@@ -1377,9 +1377,11 @@ class deleteRequestedViews(View):
 
         return JsonResponse({'deleted':'We have rejected ' + user.first_name + '\'s request to join your client list.','html_string':html_string})
 
-class deleteBookingAPI(View):
+class deleteBookingByCompAPI(View):
     def post(self, request):
         booking_id = request.POST.get('booking_id')
         booking = get_object_or_404(Bookings, id=booking_id)
         appointmentCancelled.delay(booking.id)
+        #Dont delete the object, we instead have it on file and change it to cancelled appt
+        booking.is_cancelled_company = True
         return JsonResponse({'':''})

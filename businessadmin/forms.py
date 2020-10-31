@@ -155,7 +155,10 @@ class UpdateCompanyForm(forms.ModelForm):
         company.save()
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['subcategory'].queryset = SubCategory.objects.filter(category_id=self.initial['category'].id)
+        try:
+            self.fields['subcategory'].queryset = SubCategory.objects.filter(category_id=self.initial['category'].id)
+        except AttributeError:
+            pass
 
         if 'category' in self.data:
             try:

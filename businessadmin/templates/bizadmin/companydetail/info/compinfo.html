@@ -283,14 +283,13 @@
     }
         return cookieValue;
     }
-    const csrftoken = getCookie('csrftoken');
 
     document.getElementById('btnimage').addEventListener('click', openDialog);
 
     function openDialog() {
         document.getElementById('inputimage').click();
     }
-
+    
     const businessname = document.querySelector("#id_updatecompany-business_name");
     const businessemail = document.querySelector("#id_updatecompany-email");
     const businessphone = document.querySelector("#id_updatecompany-phone");
@@ -303,6 +302,7 @@
         businessname.classList.remove("has-danger");
         businessname.classList.add("has-success");
         feedBackName.style.display="none";
+        var csrftoken = getCookie('csrftoken');
             $.ajax({
                 url: "{% host_url 'updateform' host 'bizadmin' %}",
                 data: JSON.stringify({name: businessnameVal, email:'test'}),
@@ -336,6 +336,7 @@
         subdomainField.classList.remove("has-danger");
         subdomainField.classList.add("has-success");
         feedBackreasubdomain.style.display="none";
+        var csrftoken = getCookie('csrftoken');
             $.ajax({
                 url: "{% host_url 'subdomain' host 'bizadmin' %}",
                 data: JSON.stringify({subdomain: subdomainVal}),
@@ -366,6 +367,7 @@
         businessphone.classList.remove("has-danger");
         businessphone.classList.add("has-success");
         feedBackEmail.style.display="none";
+        var csrftoken = getCookie('csrftoken');
             $.ajax({
                 url: "{% host_url 'updateform' host 'bizadmin' %}",
                 data: JSON.stringify({email: businessemailVal, name:'test'}),
@@ -393,12 +395,16 @@
 
     category = document.querySelector('#id_updatecompany-category')
     subcategory = document.querySelector('#id_updatecompany-subcategory')
-
+    
     submitBtn.addEventListener('click', (e)=>{
+        var csrftoken = getCookie('csrftoken');
         $.ajax({
             data: $('#updatedform').serialize(),
             type: "post",
             url: "{% host_url 'saveDetailForm' host 'bizadmin' %}",
+            headers:{
+                    "X-CSRFToken": csrftoken
+                },
             success: function(data){
                 if(data.errors){
                     Swal.fire({

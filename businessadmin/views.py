@@ -1186,7 +1186,8 @@ class updateCompanyDetail(View):
 
 class saveCompanyDetail(View):
     def post(self, request):
-        form = UpdateCompanyForm(request.POST)
+        category_id = request.POST.get('id_updatecompany-category')
+        form = UpdateCompanyForm(request.POST, initial={'category':category_id})
         context = {}
         if form.is_valid():
             company = Company.objects.get(user=request.user)

@@ -28,8 +28,12 @@ DEBUG = False
 TIME_INPUT_FORMATS = ['%I:%M %p',]
 
 ALLOWED_HOSTS = ['pure-fjord-45840.herokuapp.com','.pure-fjord-45840.herokuapp.com','gibele.com', '.gibele.com','.gibele.ca','gibele.ca']
-SESSION_COOKIE_DOMAIN= 'gibele.com'
-DOMAIN_NAME= 'gibele.com'
+if DEBUG:
+    SESSION_COOKIE_DOMAIN= 'gibele.ca'
+    DOMAIN_NAME= 'gibele.ca'
+else:
+    SESSION_COOKIE_DOMAIN= 'gibele.com'
+    DOMAIN_NAME= 'gibele.com'
 
 # Application definition
 
@@ -109,26 +113,27 @@ SOCIAL_AUTH_USERNAME_IS_FULL_EMAIL = True
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
 # Prod database
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.contrib.gis.db.backends.postgis',
-        'NAME': 'dbpgb03n2p28n7',
-        'USER': 'u1p3uutbam4gj6',
-        'PASSWORD': 'pb478bac72f7afb6faa38d4236cdca1d49405e9b48585cf226ff06cb4cc26795b',
-        'HOST':'ec2-3-232-39-206.compute-1.amazonaws.com',
-        'POST':'5432',
+if not DEBUG:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.contrib.gis.db.backends.postgis',
+            'NAME': 'dbpgb03n2p28n7',
+            'USER': 'u1p3uutbam4gj6',
+            'PASSWORD': 'pb478bac72f7afb6faa38d4236cdca1d49405e9b48585cf226ff06cb4cc26795b',
+            'HOST':'ec2-3-232-39-206.compute-1.amazonaws.com',
+            'POST':'5432',
+        }
     }
-}
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.contrib.gis.db.backends.postgis',
-#         'NAME': 'gibele1',
-#         'USER': 'sdonald',
-#         'PASSWORD': 'Kingston36227',
-#         'POST':'5432',
-#     }
-# }
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.contrib.gis.db.backends.postgis',
+            'NAME': 'gibele1',
+            'USER': 'sdonald',
+            'PASSWORD': 'Kingston36227',
+            'POST':'5432',
+        }
+    }
 
 
 AUTH_USER_MODEL = 'account.Account'
@@ -165,80 +170,38 @@ USE_L10N = True
 
 USE_TZ = True
 
+if not DEBUG:
+    AWS_STORAGE_BUCKET_NAME = 'django-gibele'
+    AWS_S3_REGION_NAME = 'us-east-1'  # e.g. us-east-2
+    AWS_ACCESS_KEY_ID = 'AKIA5YCTBN72JSC3D4WZ'
+    AWS_SECRET_ACCESS_KEY = 'RIBukj+HMffN2oWSeR+BosSPz0tlLve+XVAxpBKc'
+    AWS_DEFAULT_ACL = None
+    STATICFILES_LOCATION = 'static'
+    STATICFILES_STORAGE = 'gibele.storage_backends.StaticStorage'
+    MEDIAFILES_LOCATION = 'media'
+    DEFAULT_FILE_STORAGE = 'gibele.storage_backends.MediaStorage'
+    STATIC_URL = '/static/'
+    # Tell django-storages the domain to use to refer to static files.
+    AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/3.0/howto/static-files/
-# USE_S3 = os.getenv('USE_S3') == 'TRUE'
-
-# if USE_S3:
-#     # aws settings
-#     AWS_ACCESS_KEY_ID = os.getenv('AKIA5YCTBN72JSC3D4WZ')
-#     AWS_SECRET_ACCESS_KEY = os.getenv('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')
-#     AWS_STORAGE_BUCKET_NAME = os.getenv('django-gibele')
-#     AWS_DEFAULT_ACL = None
-#     AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
-#     AWS_S3_OBJECT_PARAMETERS = {'CacheControl': 'max-age=86400'}
-#     # s3 static settings
-#     STATIC_LOCATION = 'static'
-#     STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{STATIC_LOCATION}/'
-#     STATICFILES_STORAGE = 'gibele.storage_backends.StaticStorage'
-#     # s3 public media settings
-#     PUBLIC_MEDIA_LOCATION = 'media'
-#     MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{PUBLIC_MEDIA_LOCATION}/'
-#     DEFAULT_FILE_STORAGE = 'gibele.storage_backends.PublicMediaStorage'
-# else:
-#     STATIC_URL = '/staticfiles/'
-#     STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-#     MEDIA_URL = '/mediafiles/'
-#     MEDIA_ROOT = os.path.join(BASE_DIR, 'mediafiles')
-
-# STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
+    # Tell the staticfiles app to use S3Boto3 storage when writing the collected static files (when
+    # you run `collectstatic`).
+    STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+else:
+    STATIC_URL = '/static/'
+    STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
 
 
-# AWS_STORAGE_BUCKET_NAME = 'django-gibele'
-# AWS_ACCESS_KEY_ID = 'AKIA5YCTBN72JSC3D4WZ'
-# AWS_SECRET_ACCESS_KEY = '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'
-# AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
-# AWS_S3_OBJECT_PARAMETERS = {
-#     'CacheControl': 'max-age=86400',
-# }
-# AWS_LOCATION = 'static'
 
-# STATICFILES_DIRS = [
-#     os.path.join(BASE_DIR, 'business/static'),
-# ]
-# STATIC_URL = 'https://%s/%s/' % (AWS_S3_CUSTOM_DOMAIN, AWS_LOCATION)
-# STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+    MEDIA_URL ='/media/'
+    MEDIA_ROOT=os.path.join(BASE_DIR,'media/')
 
-# DEFAULT_FILE_STORAGE = 'gibele.storage_backends.MediaStorage'
-
-AWS_STORAGE_BUCKET_NAME = 'django-gibele'
-AWS_S3_REGION_NAME = 'us-east-1'  # e.g. us-east-2
-AWS_ACCESS_KEY_ID = 'AKIA5YCTBN72JSC3D4WZ'
-AWS_SECRET_ACCESS_KEY = 'RIBukj+HMffN2oWSeR+BosSPz0tlLve+XVAxpBKc'
-AWS_DEFAULT_ACL = None
-STATICFILES_LOCATION = 'static'
-STATICFILES_STORAGE = 'gibele.storage_backends.StaticStorage'
-MEDIAFILES_LOCATION = 'media'
-DEFAULT_FILE_STORAGE = 'gibele.storage_backends.MediaStorage'
-STATIC_URL = '/static/'
-# Tell django-storages the domain to use to refer to static files.
-AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
-
-# Tell the staticfiles app to use S3Boto3 storage when writing the collected static files (when
-# you run `collectstatic`).
-STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-
-
-# STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
-# STATIC_URL = '/static/'
-
-# STATICFILES_DIRS = (
-#     os.path.join(BASE_DIR, 'static'),
-# )
-# STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-# MEDIA_URL ='/media/'
-# MEDIA_ROOT=os.path.join(BASE_DIR,'media/')
+    #Just the above not the stuff between
+    # STATICFILES_DIRS = (
+    #     os.path.join(BASE_DIR, 'static'),
+    # )
+    # STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+    #Not above between the first comment
 
 LOGIN_REDIRECT_URL = 'business:homepage'
 
@@ -250,9 +213,10 @@ EMAIL_HOST_PASSWORD = 'vEK97wFvxY27jTEhqQY8Qv6L!'
 EMAIL_USE_TLS = False
 EMAIL_USE_SSL = True
 
-CELERY_BROKER_URL = 'amqps://dtkacyby:r-kSQJMm0h2BksbAYs4l1PgXWlqSrYdo@grouse.rmq.cloudamqp.com/dtkacyby'
+if not DEBUG:
+    CELERY_BROKER_URL = 'amqps://dtkacyby:r-kSQJMm0h2BksbAYs4l1PgXWlqSrYdo@grouse.rmq.cloudamqp.com/dtkacyby'
 
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
-SECURE_SSL_REDIRECT=True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SECURE_SSL_REDIRECT=True
 

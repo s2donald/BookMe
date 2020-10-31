@@ -145,14 +145,14 @@ class createAppointment(View):
                     guest.save()
 
                 #Check if the client object was already created by the company
-                elif company.clients.filter(phone=user.phone, first=user.first_name).exists():
+                elif company.clients.filter(phone=user.phone, first_name=user.first_name).exists():
                     guest = company.clients.filter(phone=user.phone, first_name=user.first_name).first()
                     guest.user = user
                     guest.email = user.email
                     guest.last_name = user.last_name
                     guest.save()
 
-                elif company.clients.filter(email=user.email, first=user.first_name).exists():
+                elif company.clients.filter(email=user.email, first_name=user.first_name).exists():
                     guest = company.clients.filter(email=user.email, first=user.first_name).first()
                     guest.user = user
                     guest.phone = user.phone

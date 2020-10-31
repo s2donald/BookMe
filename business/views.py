@@ -11,7 +11,7 @@ from django.urls import reverse_lazy, reverse
 from django.views import generic
 from django.http import JsonResponse
 from django.template.loader import render_to_string
-from consumer.models import Reviews
+from consumer.models import Reviews, Bookings
 from django.db.models import Count
 from django.db.models import F
 import json, geocoder
@@ -312,3 +312,12 @@ class company_like(View):
         data['good'] = True
         return JsonResponse(data)
     
+class cancelAppointmentAjax(View):
+    def post(self, request):
+        booking_id = request.POST.get('booking_id')
+        bookings = Bookings.objects.get(pk=booking_id)
+        if request.user == bookings.user:
+            bookings.is_cancelled_user = True
+            bookings.save()
+            #We need to send an email to the company saying the client cancelled the appointment
+        return JsonResponse({'':''})

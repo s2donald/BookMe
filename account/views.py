@@ -85,7 +85,7 @@ def AccountSummaryView(request):
                     'province':acct.province,
                     'city':acct.city,
                     'postal':acct.postal}
-                    
+
     if request.method=='POST':
         if request.POST.get("form_type") == 'personalForm':
             personal_form = UpdatePersonalForm(request.POST, instance=request.user)
@@ -240,3 +240,5 @@ def reviewsViews(request):
     except EmptyPage:
         reviews = paginator.page(paginator.num_pages)
     return render(request, 'account/reviews.html', {'reviews':reviews, 'page':page, 'form':form})
+
+

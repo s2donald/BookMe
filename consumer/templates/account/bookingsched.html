@@ -1,6 +1,7 @@
 {% extends 'account/user_sidebar.html' %}
 {% load static %}
 {% load hosts %}
+{% load business_tags %}
 {% block bookingactive %}active{% endblock  %}
 {% block information %}
 <section class="py-5">
@@ -20,7 +21,9 @@
                 </div>
                 <div class="card-body text-center">
                     <a class="btn rounded-pill btn-warning" href="{% host_url 'bookingurls' host 'bookingurl' slug=company.slug %}">Book Again</a>
-                    <a class="btn btn-danger">Cancel Appointment</a>
+                    {% if company.id|incancellationperiod:future.id %}
+                      <a class="btn btn-danger" id="cancelAppt" data-id="{{ future.id }}">Cancel Appointment</a>
+                    {% endif %}
                 </div>
                 {% endwith %}
               </div>
@@ -29,7 +32,6 @@
             <p class="text-muted mb-5">You have no upcoming appointments.</p>
         {% endfor %}
         {% include 'account/pagination/pagination.html' with page=futureBookings %}
-        <p class="mb-6"> <img class="img-fluid" src="img/illustration/undraw_trip_dv9f.svg" alt="" style="width: 400px;"></p>
 
         {% if pastBookings %}
             <h2 class="mb-5" id="pbookings">Your past bookings</h2>
@@ -45,7 +47,9 @@
                         <p class="text-sm text-muted mb-3"> Appointment Time: {{ past.start }}</p>
                         </div>
                         <div class="card-body text-center">
-                            <a class="btn btn-outline-primary">Write a review</a>
+                            {% if company.id|inonemonth:past.id %}
+                              <a class="btn btn-outline-primary">Write a review</a>
+                            {% endif %}
                             <a class="btn rounded-pill btn-warning" href="{% host_url 'bookingurls' host 'bookingurl' slug=company.slug %}">Book Again</a>
                         </div>
                         {% endwith %}
@@ -61,5 +65,88 @@
         {% endif %}
         
       </div>
+
     </section>
+    <script>
+        function getCookie(name) {
+          let cookieValue = null;
+          if (document.cookie && document.cookie !== '') {
+              const cookies = document.cookie.split(';');
+              for (let i = 0; i < cookies.length; i++) {
+                  const cookie = cookies[i].trim();
+                  // Does this cookie string begin with the name we want?
+                  if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                      cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                      break;
+                  }
+              }
+          }
+              return cookieValue;
+          }
+
+        $('#cancelAppt').on('click', function(e){
+          var booking_id = $(this).data("id")
+          Swal.fire({
+            customClass:{
+              confirmButton: 'btn btn-info',
+              denyButton: 'btn btn-link licolorblue',
+              cancelButton: 'btn btn-danger',
+            },
+            confirmButtonText: 'Yes, cancel this appointment',
+            cancelButtonText: `No, keep me booked in`,
+            buttonsStyling: false,
+            showDenyButton: false,
+            showCancelButton: true,
+            allowOutsideClick: false,
+            title:'Are you sure you want to cancel this appointment?',
+            icon: 'warning',
+          }).then((result) => {
+            if (result.isConfirmed){
+              var csrftoken = getCookie('csrftoken');
+              $.ajax({
+                type:'POST',
+                url: '{% host_url 'business:cancelAppointment' host 'www' %}',
+                async: false,
+                headers:{
+                  "X-CSRFToken": csrftoken
+                },
+                data:{
+                  booking_id: booking_id
+                },
+                success: function(data){
+                  Swal.fire({
+                    customClass:{
+                      confirmButton: 'btn btn-info'
+                    },
+                    buttonsStyling: false,
+                    title: 'We have cancelled your appointment.',
+                    icon:'success'
+                  });
+                },
+                error: function(e){
+                  Swal.fire({
+                    customClass:{
+                      confirmButton: 'btn btn-info'
+                    },
+                    buttonsStyling: false,
+                    title: 'There was an error.',
+                    icon:'error'
+                  });
+                }
+              });
+            }
+            else {
+              Swal.fire({
+                customClass:{
+                  confirmButton: 'btn btn-info'
+                },
+                buttonsStyling: false,
+                title: 'We have not cancelled your appointment.',
+                icon:'error'
+              });
+            }
+            
+          })
+        })
+    </script>
 {% endblock %}

@@ -13,9 +13,8 @@
               <div class="card h-100 border-0 shadow">
                 <div class="card-body">
                 <div class=" d-flex justify-content-between">
-                      ({{company.company_reviews.all|length}})</p>
                       <div >
-                      {% with users_like=company.users_like.all %}
+                        {% with users_like=company.users_like.all %}
                             {% if request.user in users_like %}
                             <a class="card-fav-icon position-relative z-40 like" href="#" id="{{ company.id }}" data-id="{{ company.id }}" data-action="unlike"> 
                             <svg class="svg-icon text-danger" style="opacity: 1 !important;">
@@ -33,14 +32,22 @@
                       </div>
                   </div>
                   <h3 class="text-shadow">{{ company }}</h3>
+                  <p class="mb-0">Company Rating:<div>{% for x in '12345' %}<i class="fas fa-star {% if forloop.counter|avg_reviews:company.id %}text-warning{% else %}text-gray-300{% endif %}"></i>{% endfor %}
+                      ({{company.company_reviews.all|length}})</div></p>
                   <p class="text-sm text-muted mb-3">{{ company.description }}</p>
                 </div>
-                <div class="card-body text-center">
-                    <a class="btn rounded-pill btn-warning" href="{% host_url 'bookingurls' host 'bookingurl' slug=company.slug %}">Change Review</a>
+                <div class="text-body px-1">
+                    <h2>Your review</h2>
+                    <p class="mb-0">Your Rating: <div>{% for x in '12345' %}<i class="fas fa-star {% if forloop.counter <= review.star %}text-warning{% else %}text-gray-300{% endif %}"></i>{% endfor %}</div></p>
+                    <p>{{ review.review }}</p>
                 </div>
-                <div class="card-body text-center">
-                    <a class="btn rounded-pill btn-info" href="{% host_url 'bookingurls' host 'bookingurl' slug=company.slug %}">Book Appointment</a>
-                </div>
+
+              <div class="card-footer text-center">
+                {% if company.id|changeonemonth:review.id %}
+                    <a class="btn btn-warning" href="{% host_url 'bookingurls' host 'bookingurl' slug=company.slug %}">Change Review</a>
+                {% endif %}
+                <a class="btn btn-info" href="{% host_url 'bookingurls' host 'bookingurl' slug=company.slug %}">Book an Appointment</a>
+              </div>
               </div>
             </div>
             {% endwith %}
@@ -49,73 +56,6 @@
             <p class="text-muted mb-5">Book a service with any service provider then within one month of the booking, submit a review on the company. You may be eligible to receive reward points when Gibele's loyalty program is released in the near future!</p>
         {% endfor %}
         {% include 'account/pagination/pagination.html' with page=reviews %}
-        
       </div>
     </section>
 {% endblock %}
-{% block ajaxscripts %}
-    <script>
-      function getCookie(name) {
-                            let cookieValue = null;
-                            if (document.cookie && document.cookie !== '') {
-                                const cookies = document.cookie.split(';');
-                                for (let i = 0; i < cookies.length; i++) {
-                                    const cookie = cookies[i].trim();
-                                    // Does this cookie string begin with the name we want?
-                                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                                        break;
-                                    }
-                                }
-                            }
-                                return cookieValue;
-                            }
-                            const csrftoken = getCookie('csrftoken');
-                            
-      $(document).ready(function(){
-        $('a.like').click(function(e){
-          e.preventDefault()
-          var elem = $(this)
-          var company = elem.attr("data-id")
-          var actions = elem.attr("data-action")
-          var inside = document.getElementById(company)
-          $.ajax({
-                url: "{% host_url 'business:company_like' host 'www' %}",
-                data: JSON.stringify({company_id: company, action: actions}),
-                type: "POST",
-                dataType: 'json',
-                headers:{
-                    "X-CSRFToken": csrftoken
-                },
-                success: function (data) {
-                    if (!data.good){
-                      location.href='{% host_url "login" host "www" %}'
-                    }
-                    else{
-                      if (actions == 'like'){
-                        elem.attr("data-action", 'unlike')
-                      }
-                      else{
-                        elem.attr("data-action", 'like')
-                      }
-                      inside.innerHTML= data.hearts
-                    }
-                },
-            });
-        });
-        function checkWidth(){
-          var windowWidth = $(window).width();
-          if (windowWidth <= 560){
-            $('.swiper-button-next').hide()
-            $('.swiper-button-prev').hide()
-          }
-          else{
-            $('.swiper-button-next').show()
-            $('.swiper-button-prev').show()
-          }
-        }
-        checkWidth();
-        $(window).resize(checkWidth);
-      });
-    </script>
-{% endblock  %}

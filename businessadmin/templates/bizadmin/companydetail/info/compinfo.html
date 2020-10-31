@@ -252,6 +252,22 @@
                             </div>
                         </div>
                         <script>
+
+                        $('#id_updatecompany-category').change(function(){
+            var categoryId = $(this).val();
+            $.ajax({
+                url: '{% host_url "ajax_load_subcategories" host "bizadmin" %}',
+                data: {
+                    'category': categoryId
+                },
+                success: function(data){
+                    $('#id_updatecompany-subcategory').empty()
+                    $('#id_updatecompany-subcategory').append(data)
+                    $('#id_updatecompany-subcategory').selectpicker('refresh')
+                }
+            });
+        });
+
     function getCookie(name) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {

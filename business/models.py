@@ -251,7 +251,7 @@ class CompanyReq(models.Model):
     add_to_list = models.BooleanField(default=False)
 
     #To be implemented in the near future, the client can add a description and an image to requested
-    description = models.CharField(max_length=200,blank=True)
+    description = models.CharField(max_length=400,blank=True)
     image = models.ImageField(upload_to=get_user_image_folder, blank=True)
     class Meta:
         ordering = ('created_at',)

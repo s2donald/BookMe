@@ -80,7 +80,7 @@ class bookingTimes(View):
         b_close = open_hours.to_hour
         # print(b_open.hour)
         naive = datetime.datetime(year, month, day, b_open.hour, b_open.minute)
-        print(timezone.localtime(timezone.make_aware(naive)))
+        # print(timezone.localtime(timezone.make_aware(naive)))
         interval= company.interval
         duration_hour = Services.objects.get(pk=s_id).duration_hour
         duration_minute = Services.objects.get(pk=s_id).duration_minute
@@ -187,10 +187,6 @@ class createAppointment(View):
                     guest.save()
                     company.clients.add(guest)
                     company.save()
-                
-                
-                elif Account.objects.filter(email=email, is_guest=True).exists():
-                    user = Account.objects.get(email=email, is_guest=True)
 
                 booking = Bookings.objects.create(user=user,service=service, company=company,
                                                 start=start, end=end, price=price)

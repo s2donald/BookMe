@@ -5,6 +5,7 @@ urlpatterns = [
     path('', views.homepage, name='homepage'),
     path('privacy/', views.privacyViews, name='privacy'),
     path('terms/', views.tosViews, name='terms'),
+    path('ajax/cancelAppt/', views.cancelAppointmentAjax.as_view(), name='cancelAppointment'),
     path('services/<int:id>/<slug:slug>/', views.ManageServiceListView,name='manage_service_list'),
     path('create/<int:pk>/<slug:slug>/', views.CreateServiceView, name='create_service'),
     path('delete/<int:pk>/<int:pks>/<slug:slug>/', views.DeleteServiceView, name='delete_service'),

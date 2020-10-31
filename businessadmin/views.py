@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .forms import BusinessRegistrationForm, AddHoursForm, UpdateCompanyForm, AddClientForm, AddNotesForm, CreateSmallBizForm
+from .forms import BusinessRegistrationForm, AddHoursForm, UpdateCompanyForm, AddClientForm, AddNotesForm, CreateSmallBizForm, AddBookingForm
 from django.contrib.auth.decorators import login_required
 from business.models import Company, SubCategory, OpeningHours, Services, Gallary, Amenities, Clients, CompanyReq
 from account.models import Account
@@ -18,6 +18,7 @@ from slugify import slugify
 from .forms import MainPhoto
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from businessadmin.tasks import addedOnCompanyList, requestToBeClient, appointmentCancelled
+from account.tasks import reminderEmail, confirmedEmail, consumerCreatedEmailSent
 # Create your views here.
 def businessadmin(request):
     user = request.user
@@ -109,7 +110,6 @@ def completeViews(request):
         fridayform = AddHoursForm(request.POST,prefix='fri')
         saturdayform = AddHoursForm(request.POST,prefix='sat')
         if biz_form.is_valid() and booking_form.is_valid():
-            print(sundayform)
             category = biz_form.cleaned_data.get('category')
             subcategory = biz_form.cleaned_data.get('subcategory')
             description = biz_form.cleaned_data.get('description')
@@ -203,7 +203,7 @@ def completeViews(request):
             return redirect(reverse('home', host='bizadmin'))
         
         else:
-            print(sundayform.errors)
+            # print(sundayform.errors)
 
     subcategories = SubCategory.objects.all()
     company = Company.objects.get(user=user)
@@ -361,7 +361,7 @@ class notesUpdate(View):
         company  = get_object_or_404(Company, user=request.user)
         notes = data['notes']
         company.notes = notes
-        print(notes)
+        # print(notes)
         if notesShow:
             company.shownotes = True
         else:
@@ -377,8 +377,13 @@ def scheduleView(request):
     if user.is_authenticated and user.is_business:
         if user.on_board:
             company = Company.objects.get(user=user)
+            day = datetime.today().weekday() + 1
+            if day >= 7:
+                day = 0
+            openhour = OpeningHours.objects.get(company=company, weekday=day).from_hour
             bookings = Bookings.objects.filter(company=company, is_cancelled_user=False, is_cancelled_company=False)
-            return render(request, 'bizadmin/dashboard/schedule.html', {'company':company, 'bookings':bookings})
+            addbooking = AddBookingForm(initial={'company':company, 'timepick':openhour, 'datepick':datetime.today().strftime('%m/%d/%Y')})
+            return render(request, 'bizadmin/dashboard/schedule.html', {'company':company, 'bookings':bookings, 'addbooking':addbooking})
         else:
             return redirect(reverse('completeprofile', host='bizadmin'))
     else:
@@ -754,15 +759,26 @@ import pytz
 from datetime import timedelta, datetime
 from django.db.models import Sum
 from decimal import Decimal
+from taggit.models import Tag
 @login_required
 def homepageViews(request):
     user = request.user
     if user.is_authenticated and user.is_business:
         if user.on_board:
             company = Company.objects.get(user=user)
+            #Percentage for business page photos
             bpp = 0
+            #Client added to the database percentage
             cdb = 0
+            #Services added to the database percentage
             sdb = 0
+            #Tags add to the database
+            tpp = 0
+
+            #Total Basic Account Setup
+            if company.tags.all(): 
+                tpp = 100
+            
             if company.image:
                 bpp = bpp + 25
             gallary = Gallary.objects.filter(company=company)
@@ -784,6 +800,8 @@ def homepageViews(request):
                 if sdb >= 100:
                     sdb = 100
                     break
+            
+            ttpp = int((bpp/4) + (cdb/4)+ (sdb/4) + (tpp/4))
 
             week = timezone.now() - timedelta(days=7)
             twoweek = week - timedelta(days=7)
@@ -886,7 +904,7 @@ def homepageViews(request):
 
             month = [int(month12),int(month11),int(month10),int(month9),int(month8),int(month7),int(month6),int(month5),int(month4),int(month3),int(month2),int(month1),]
             monthlabel = [labelM11,labelM10,labelM9,labelM8,labelM7,labelM6,labelM5,labelM4,labelM3,labelM2,labelM1,labelM0]
-            return render(request,'bizadmin/home/home.html', {'sdb':sdb,'cdb':cdb,'company':company, 'week':week, 'weeklabel':weeklabel, 'month':month, 'monthlabel':monthlabel, 'bpp':bpp})
+            return render(request,'bizadmin/home/home.html', {'ttpp':ttpp,'tpp':tpp,'sdb':sdb,'cdb':cdb,'company':company, 'week':week, 'weeklabel':weeklabel, 'month':month, 'monthlabel':monthlabel, 'bpp':bpp})
         else:
             return redirect(reverse('completeprofile', host='bizadmin'))
     else:
@@ -1010,6 +1028,15 @@ from .forms import ImagesForm
 def businessPhotoView(request):
     company = Company.objects.get(user=request.user)
     photos = Gallary.objects.filter(company=company)
+    paginator = Paginator(photos, 6)
+    page = request.GET.get('page')
+    try:
+        photos = paginator.page(page)
+    except PageNotAnInteger:
+        photos = paginator.page(1)
+    except EmptyPage:
+        photos = paginator.page(paginator.num_pages)
+
     return render(request,'bizadmin/businesspage/photos.html',{'company':company, 'photos':photos})
 
 @login_required
@@ -1131,7 +1158,7 @@ def compinfoViews(request):
         return redirect(reverse('completeprofile', host='bizadmin'))
 
     company = Company.objects.get(user=user)
-    subcategory = company.subcategory.all()
+    subcategory = company.subcategory.filter(category=company.category)
     s = [x.id for x in subcategory]
     initialVal = {'business_name':company.business_name,'slug':company.slug,'email':company.email,'category':company.category, 'description':company.description,
                     'subcategory':s, 'address':company.address, 'postal':company.postal, 'city':company.city, 'state':company.state,
@@ -1376,7 +1403,7 @@ class deleteRequestedViews(View):
         html_string = render_to_string('bizadmin/dashboard/request/partial/partial_request.html', {'requested':requested, 'page':page})
 
         return JsonResponse({'deleted':'We have rejected ' + user.first_name + '\'s request to join your client list.','html_string':html_string})
-
+import celery
 class deleteBookingByCompAPI(View):
     def post(self, request):
         booking_id = request.POST.get('booking_id')
@@ -1384,4 +1411,96 @@ class deleteBookingByCompAPI(View):
         appointmentCancelled.delay(booking.id)
         #Dont delete the object, we instead have it on file and change it to cancelled appt
         booking.is_cancelled_company = True
+        booking.save()
         return JsonResponse({'':''})
+
+from django.core.exceptions import ObjectDoesNotExist
+class addBooking(View):
+    def post(self, request):
+        company = Company.objects.get(user=request.user)
+        bform = AddBookingForm(request.POST,initial={'company':company})
+        if bform.is_valid():
+            first_name = bform.cleaned_data.get('first_name')
+            last_name = bform.cleaned_data.get('last_name')
+            email = bform.cleaned_data.get('email')
+            phone = bform.cleaned_data.get('phone')
+            service = bform.cleaned_data.get('service')
+            dur_hour = int(bform.cleaned_data.get('duration_hour'))
+            dur_min = int(bform.cleaned_data.get('duration_minute'))
+            price = bform.cleaned_data.get('price')
+            date = bform.cleaned_data.get('datepick')
+            time = bform.cleaned_data.get('timepick')
+            start = timezone.localtime(timezone.make_aware(datetime.combine(date, time)))
+            end = start + timedelta(hours=dur_hour, minutes=dur_min)
+
+            try: 
+                guest = company.clients.get(first_name=first_name,last_name=last_name,email=email,phone=phone)
+            except ObjectDoesNotExist:
+                guest = Clients.objects.create(company=company, first_name=first_name,last_name=last_name, phone=phone, email=email)
+
+            try:
+                user = guest.user
+            except ObjectDoesNotExist:
+                user = None
+
+            booking = Bookings.objects.create(user=user, guest=guest,service=service, company=company,start=start, end=end, price=price)
+            booking.save()
+            confirmedEmail.delay(booking.id)
+            startTime = start - timedelta(minutes=15)
+            reminderEmail.apply_async(args=[booking.id], eta=startTime, task_id=booking.slug)
+            #Create the booking and then send an email to customer and company
+        else:
+            day = datetime.today().weekday() + 1
+            if day >= 7:
+                day = 0
+            openhour = OpeningHours.objects.get(company=company, weekday=day).from_hour
+            bookings = Bookings.objects.filter(company=company, is_cancelled_user=False, is_cancelled_company=False)
+            return render(request, 'bizadmin/dashboard/schedule.html', {'company':company, 'bookings':bookings, 'addbooking':bform, 'errorshow':True})
+        return redirect(reverse('schedule', host='bizadmin'))
+
+def load_duration(request):
+    service_id = request.GET.get('service_id')
+    if service_id:
+        service = Services.objects.get(id=service_id)
+        hour = service.duration_hour
+        mins = service.duration_minute
+        price = service.price
+    else:
+        hour = 1
+        mins = 0
+        price = 0
+    return JsonResponse({'hour':hour,'mins':mins, 'price':price})
+
+def load_client(request):
+    client_id = request.GET.get('client_id')
+    if client_id:
+        client = Clients.objects.get(id=client_id)
+        first_name = client.first_name
+        last_name = client.last_name
+        email = client.email
+        phone = client.phone
+    else:
+        first_name = None
+        last_name = None
+        email = None
+        phone = None
+    return JsonResponse({'first_name':first_name,'last_name':last_name, 'email':email,'phone':phone})
+
+#Load the schedule
+class load_events(View):
+    def get(self, request):
+        start = request.GET.get('start')
+        end = request.GET.get('end')
+        company= Company.objects.get(user=request.user)
+        bookings = Bookings.objects.filter(start__gte=start, end__lte=end, company=company, is_cancelled_user=False, is_cancelled_company=False).values()
+        bookings_list = list(bookings)
+
+        return JsonResponse(bookings_list, safe=False)
+
+class load_service(View):
+    def get(self, request):
+        service_id = request.GET.get('service_id')
+        services = Services.objects.get(pk=service_id)
+        name = services.name
+        someStr = 'Service: ' + name
+        return JsonResponse({'servName':someStr})

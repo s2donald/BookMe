@@ -40,7 +40,12 @@ urlpatterns = [
     url(r'reviews/$', views.reviewListView, name='reviewlist'),
     url(r'privatetoggle/$', views.changePrivateView.as_view(), name='changePrivate'),
 
-    url(r'path/loadsubcategories', views.load_subcat, name='ajax_load_subcategories'),
+    url(r'path/loadsubcategories/$', views.load_subcat, name='ajax_load_subcategories'),
+    url(r'ajax/hourmindur/$', views.load_duration, name='ajax_load_duration'),
+    url(r'ajax/client/$', views.load_client, name='ajax_load_client'),
+    url(r'ajax/loadevents/$', views.load_events.as_view(), name='ajax_load_events'),
+    url(r'ajax/loadservices/$', views.load_service.as_view(), name='ajax_load_servName'),
+
     url(r'onboarding/check/subdomain/$', views.subdomainCheck.as_view(), name='subdomain'),
     url(r'onboarding/$', views.completeViews, name='completeprofile'),
     url(r'^updatecompanyform/$',views.updateCompanyDetail.as_view(), name='updateform'),
@@ -63,6 +68,8 @@ urlpatterns = [
     url(r'login/$', views.loginViews, name='bizadminlogin'),
 
     url(r'^faq/$', views.faqBusinessViews, name='faqbusiness'),
+
+    url(r'addbooking/', views.addBooking.as_view(), name='add_booking'),
 
     url(r'requests/', views.requestListViews, name='requestList'),
     url(r'requestedAdd/(?P<pk>\d+)/$', views.addRequestedViews.as_view(), name='addRequested'),

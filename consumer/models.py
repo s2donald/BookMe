@@ -6,6 +6,47 @@ from django.db.models.signals import pre_save
 from gibele.utils import unique_slug_generator_booking
 from django.core.exceptions import ValidationError
 # Create your models here.
+hours_choices = (
+    (0,'0 Hours'),
+    (1, '1 Hour'),
+    (2, '2 Hours'),
+    (3, '3 Hours'),
+    (4, '4 Hours'),
+    (5, '5 Hours'),
+    (6, '6 Hours'),
+    (7, '7 Hours'),
+    (8, '8 Hours'),
+    (9, '9 Hours'),
+    (10, '10 Hours'),
+    (11, '11 Hours'),
+    (12, '12 Hours'),
+    (13, '13 Hours'),
+    (14, '14 Hours'),
+    (15, '15 Hours'),
+    (16, '16 Hours'),
+    (17, '17 Hours'),
+    (18, '18 Hours'),
+    (19, '19 Hours'),
+    (20, '20 Hours'),
+    (21, '21 Hours'),
+    (22, '22 Hours'),
+    (23, '23 Hours')
+ )
+
+minute_choices = (
+    (0, '0 Minutes'),
+    (5, '5 Minutes'),
+    (10, '10 Minutes'),
+    (15, '15 Minutes'),
+    (20, '20 Minutes'),
+    (25, '25 Minutes'),
+    (30, '30 Minutes'),
+    (35, '35 Minutes'),
+    (40, '40 Minutes'),
+    (45, '45 Minutes'),
+    (50, '50 Minutes'),
+    (55, '55 Minutes')
+ )
 
 class Bookings(models.Model):
     #The user's information name who booked
@@ -47,9 +88,9 @@ def slug_generator(sender, instance, *args, **kwargs):
 pre_save.connect(slug_generator, sender=Bookings)
 
 class Reviews(models.Model):
-    reviewer = models.ForeignKey(Account, on_delete=models.CASCADE)
+    reviewer = models.ForeignKey(Account, on_delete=models.CASCADE, related_name='user_reviews')
     company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name='company_reviews')
-    review = models.TextField(max_length=200)
+    review = models.TextField(max_length=500)
     star = models.IntegerField(validators=[MinValueValidator(1),MaxValueValidator(5)])
     created = models.DateTimeField(auto_now_add=True)
     class Meta:

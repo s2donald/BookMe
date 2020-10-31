@@ -1,6 +1,8 @@
 {% extends 'bizadmin/index.html' %}
 {% load static %}
 {% load hosts %}
+{% load business_tags %}
+{% load crispy_forms_tags %}
 {% block linkscript %}
     <link rel="stylesheet" href="{% static "css/calendarmain.css"%}">
     <script src="{% static "js/calendarmain.js" %}"></script>
@@ -10,19 +12,6 @@
 {% block businessadmin %}
 
 <script>
-    $('.datetimepicker').datetimepicker({
-        format: 'LT',
-        icons: {
-        time: "fas fa-clock",
-        up: "fa fa-chevron-up",
-        down: "fa fa-chevron-down",
-        previous: 'tim-icons icon-minimal-left',
-        next: 'tim-icons icon-minimal-right',
-        today: 'fa fa-screenshot',
-        clear: 'fa fa-trash',
-        close: 'fa fa-remove'
-        }
-    });
         document.addEventListener('DOMContentLoaded', function(){
                 function getCookie(name) {
                     let cookieValue = null;
@@ -75,6 +64,7 @@
                         const b_id = id
                         if (e.isConfirmed){
                             const csrftoken = getCookie('csrftoken');
+                            
                             $.ajax({
                                 type: 'POST',
                                 url: '{% host_url "delete_booking" host "bizadmin" %}',
@@ -83,6 +73,8 @@
                                     "X-CSRFToken": csrftoken
                                 },
                                 success: function(data){
+                                    var event = calendar.getEventById(b_id)
+                                    event.remove()
                                     Swal.fire({
                                         customClass:{
                                             confirmButton: 'btn btn-primary',
@@ -166,28 +158,38 @@
                     },
                     selectable: true,
                 aspectRatio: asprat,
-                events:[
-                {% for booking in bookings %}
-                    {
-                        title: 'Client: {{ booking.user.first_name}} Service: {{ booking.service.name }}',
-                        start: '{{ booking.start|date:"Y-m-d" }}'+'T'+'{{ booking.start|date:"H:i:s" }}',
-                        end: '{{ booking.end|date:"Y-m-d" }}'+'T'+'{{ booking.end|date:"H:i:s" }}',
-                        id: '{{ booking.id }}',
-                        className: 'event-green',
-                        {% comment %} {% if forloop.counter|divisibleby:"2" %}
-                            className: 'event-green',
-                        {% elif forloop.counter|divisibleby:"3" %}
-                            className: 'event-orange',
-                        {% else %}
-                            className:'event-red',
-                        {% endif %} {% endcomment %}
-                    },
-                {% endfor %}
-                ],
-                eventRender: function(event, element) {                                          
-                    element.find('span.fc-event-title').html(element.find('span.fc-event-title').text());                   
 
+                events: function(start, successCallback, failureCallback) {
+                    
+                    $.ajax({
+                        url: '{% host_url "ajax_load_events" host "bizadmin" %}',
+                        data: {start:start.startStr , end: start.endStr},
+                        success: function(data){
+                            var events = [];
+                            $.map(data, function(r){
+                                var servName = 'Click to view service'
+                                $.ajax({
+                                    url: '{% host_url "ajax_load_servName" host "bizadmin" %}',
+                                    data: {service_id:r.service_id},
+                                    async: false,
+                                    success: function(dat){
+                                        servName = dat.servName
+                                    }
+                                });
+                                events.push({
+                                    id: r.id,
+                                    title: servName,
+                                    start: r.start,
+                                    end: r.end,
+                                    className: 'event-green'
+                                });
+                            });
+                            successCallback(events)
+                        }
+                    })
                 },
+                
+
                 eventClick: function(info) {
                     const serv_id = info.event.id
                     $.ajax({
@@ -213,19 +215,19 @@
             });
             calendar.render()
         });
-        
-        $('body').on('click', 'button.fc-prev-button', function() {
-            
-        });
     </script>
         <!-- Main page content-->
+        
         <div class="content">
         <div class="row">
         <div class="col-md-12 ml-auto mr-auto">
+            
             <div class="card mx-auto">
             <div class="card-header">Schedule Manager</div>
             <div class="card-body">
-                <button class="btn btn-primary" id="addbooking">Add A Booking</button>
+                <button type="button" id="addbooking" class="btn btn-primary" data-toggle="modal" data-target="#add-booking" data-backdrop="static" data-keyboard="false" data-url="{% host_url 'add_booking' host 'bizadmin' %}">
+                Add A Booking
+            </button>
             </div>
 
             <div class="card-body">
@@ -244,18 +246,242 @@
             </div>
           </div>
         </div>
+        <div class="modal fade" id="add-booking" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content card">
+                <div class="modal-header text-white">
+                    <h5 class="modal-title text-white" id="exampleModalLabel">Add your booking</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                <form method="POST" action="{% host_url 'add_booking' host 'bizadmin' %}">
+                    {% csrf_token %}
+                    <div class="form-row" id="addBookingForm">
+                        <nav class="nav nav-borders">
+                            <a class="nav-link activate bookingform ml-0" href="#">Booking Details</a>
+                            <a class="nav-link clientform" href="#">Client Info</a>
+                            {% comment %} <a class="nav-link" href="#">Staff Members</a> {% endcomment %}
+                        </nav>
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    {{ addbooking.service|as_crispy_field }}
+                                </div>
+                                <div class="col-md-12 form-row">
+                                    <div class="col-6">
+                                        {{ addbooking.duration_hour|as_crispy_field }}
+                                    </div>
+                                    <div class="col-6">
+                                        {{ addbooking.duration_minute|as_crispy_field }}
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    {{ addbooking.price|as_crispy_field }}
+                                </div>
+                                <div class="col-md-12 form-row">
+                                    <div class="col-md-6">
+                                        {{ addbooking.datepick|as_crispy_field }}
+                                    </div>
+                                    <div class="col-md-6">
+                                        {{ addbooking.timepick|as_crispy_field }}
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                        
+                        </div>
+                    </div>
+
+                    <div class="form-row d-none" id="ClientInfoForm">
+                        <nav class="nav nav-borders">
+                            <a class="nav-link bookingform ml-0" href="#">Booking Details</a>
+                            <a class="nav-link activate clientform" href="#">Client Info</a>
+                            {% comment %} <a class="nav-link" href="#">Staff Members</a> {% endcomment %}
+                        </nav>
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    {{ addbooking.clients|as_crispy_field }}
+                                </div>
+                                <hr class="text-white" style="color:white;">
+                                <div class="col-md-12 form-row text-center justify-content-center">
+                                    <button type="button" class="btn btn-primary btn-addclient">Add a new client</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-row d-none" id="ClientDetailForm">
+                        <nav class="nav nav-borders">
+                            <a class="nav-link bookingform ml-0" href="#">Booking Details</a>
+                            <a class="nav-link activate clientform" href="#">Client Info</a>
+                            {% comment %} <a class="nav-link" href="#">Staff Members</a> {% endcomment %}
+                        </nav>
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-6">
+                                    {{ addbooking.first_name|as_crispy_field }}
+                                </div>
+                                <div class="col-6">
+                                    {{ addbooking.last_name|as_crispy_field }}
+                                </div>
+                                <div class="col-6">
+                                    {{ addbooking.email|as_crispy_field }}
+                                </div>
+                                <div class="col-6">
+                                    {{ addbooking.phone|as_crispy_field }}
+                                </div>
+                                <div class="col-md-12 form-row text-center">
+                                    <button type="button" class="btn btn-secondary btn-goback">Go Back</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary btn-next">Continue</button>
+                        <button type="submit" class="btn btn-primary d-none btnformsub">Add Booking</button>
+                    </div>
+                </form>
+                </div>
+            </div>
+        </div>
       </div>
       <script>
-        $(document).ready(function(e){
-            $('#addbooking').on('click', function(){
-                Swal.fire({
-                    title: 'Add a booking',
-                    html: `<p>Hello</p>`,
-
-                }).then(function(e){
-                    
-                });
+        $('#id_service').change(function(){
+            service_id = $(this).val()
+            $.ajax({
+                url: '{% host_url "ajax_load_duration" host "bizadmin" %}',
+                data: {
+                    'service_id': service_id
+                },
+                success: function(data){
+                    $('#id_duration_hour').selectpicker('val', data.hour)
+                    $('#id_duration_minute').selectpicker('val', data.mins)
+                    $('#id_duration_hour').selectpicker('refresh')
+                    $('#id_duration_minute').selectpicker('refresh')
+                    $('#id_price').val(data.price)
+                }
             });
         });
+
+        $('#id_clients').change(function(){
+            client_id = $(this).val()
+            $.ajax({
+                url: '{% host_url "ajax_load_client" host "bizadmin" %}',
+                data: {
+                    'client_id': client_id
+                },
+                success: function(data){
+                    $('#id_clients').selectpicker('val','')
+                    $('#id_clients').selectpicker('refresh')
+                    $('#id_first_name').val(data.first_name)
+                    $('#id_last_name').val(data.last_name)
+                    $('#id_email').val(data.email)
+                    $('#id_phone').val(data.phone)
+                    $('#ClientDetailForm').removeClass('d-none');
+                    $('#ClientInfoForm').addClass('d-none');
+                    $('.btn-next').addClass("d-none");
+                    $('.btnformsub').removeClass('d-none');
+                }
+            });
+        });
+
+        $(document).on('click', '.btn-addclient', function () { 
+            $('#ClientDetailForm').removeClass('d-none');
+            $('#ClientInfoForm').addClass('d-none');
+            $('.btn-next').addClass("d-none");
+            $('.btnformsub').removeClass('d-none');
+            $('#id_first_name').val('')
+            $('#id_last_name').val('')
+            $('#id_email').val('')
+            $('#id_phone').val('')
+        });
+
+        $(document).on('click', '.btn-goback', function () { 
+            $('#ClientInfoForm').removeClass('d-none');
+            $('#addBookingForm').addClass('d-none');
+            $('#ClientDetailForm').addClass('d-none');
+            $('.btn-next').addClass("d-none");
+            $('.btnformsub').removeClass('d-none');
+        });
+
+        $(document).on('click', '.clientform', function () { 
+            $('#ClientInfoForm').removeClass('d-none');
+            $('#addBookingForm').addClass('d-none');
+            $('#ClientDetailForm').addClass('d-none');
+            $('.btn-next').addClass("d-none");
+            $('.btnformsub').removeClass('d-none');
+        });
+        {% comment %} From booking detail to client selection {% endcomment %}
+        $(document).on('click', '.btn-next', function () { 
+            $('#ClientInfoForm').removeClass('d-none');
+            $('#addBookingForm').addClass('d-none');
+            $('#ClientDetailForm').addClass('d-none');
+            $('.btn-next').addClass("d-none");
+            $('.btnformsub').removeClass('d-none');
+        });
+        {% comment %}  {% endcomment %}
+        $(document).on('click', '.bookingform', function () { 
+            $('#ClientInfoForm').addClass('d-none');
+            $('#addBookingForm').removeClass('d-none');
+            $('#ClientDetailForm').addClass('d-none');
+            $('.btn-next').removeClass("d-none");
+            $('.btnformsub').addClass('d-none');
+        });
+        {% if errorshow %}
+            $('#add-booking').modal()
+        {% endif %}
+
+        $('.datepicker').datetimepicker({
+            format: 'MM/DD/YYYY',
+            icons: {
+                time: "fas fa-clock",
+                up: "fa fa-chevron-up",
+                down: "fa fa-chevron-down",
+                previous: 'tim-icons fas fa-arrow-left ',
+                next: 'tim-icons fas fa-arrow-right',
+                today: 'fa fa-screenshot',
+                clear: 'fa fa-trash',
+                close: 'fa fa-remove'
+            }
+        });
+        $('.timepicker').datetimepicker({
+            format: 'LT',
+            icons: {
+                time: "fas fa-clock",
+                up: "fa fa-chevron-up",
+                down: "fa fa-chevron-down",
+                previous: 'tim-icons fas fa-arrow-left',
+                next: 'tim-icons fas fa-arrow-right',
+                today: 'fa fa-screenshot',
+                clear: 'fa fa-trash',
+                close: 'fa fa-remove'
+            }
+        });
+        {% comment %} 
+                events:[
+                {% for booking in bookings %}
+                    {
+                        title: 'Client: {{ booking.user.first_name}} Service: {{ booking.service.name }}',
+                        start: '{{ booking.start|date:"Y-m-d" }}'+'T'+'{{ booking.start|date:"H:i:s" }}',
+                        end: '{{ booking.end|date:"Y-m-d" }}'+'T'+'{{ booking.end|date:"H:i:s" }}',
+                        id: '{{ booking.id }}',
+                        className: 'event-green',
+                         {% if forloop.counter|divisibleby:"2" %}
+                            className: 'event-green',
+                        {% elif forloop.counter|divisibleby:"3" %}
+                            className: 'event-orange',
+                        {% else %}
+                            className:'event-red',
+                        {% endif %}
+                    },
+                {% endfor %}
+                ], 
+                {% endcomment %}
+
       </script>
 {% endblock %}

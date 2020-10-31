@@ -906,7 +906,7 @@ textarea.form-control {
   width: 100%;
   margin-top: 0.25rem;
   font-size: 80%;
-  color: #ff8d72; }
+  color: #ff8d72 !important; }
 
 .invalid-tooltip {
   position: absolute;
@@ -13674,20 +13674,21 @@ Copyright (c) 2015 Daniel Eden
  */
 .bootstrap-tagsinput {
   display: inline-block;
+  border: none!important;
   padding: 4px 6px;
-  max-width: 100%;
+  width: 100%;
   line-height: 22px;
   vertical-align: middle;
   background-color: #1e1e2f !important;
   cursor: text; }
   .bootstrap-tagsinput input {
     border: none;
-    color: #9A9A9A;
+    color: #fafafa;
     box-shadow: none;
     outline: none;
     padding: 0 6px;
     margin: 0;
-    width: auto;
+    width: 100%;
     max-width: inherit; }
     .bootstrap-tagsinput input:focus {
       border: none;
@@ -13724,6 +13725,5 @@ Copyright (c) 2015 Daniel Eden
       opacity: 0;
       background-color: transparent; }
     .bootstrap-tagsinput .tag [data-role="remove"]:after {
-      font-family: 'Nucleo';
       content: "\ea48";
       padding: 0px 2px; }

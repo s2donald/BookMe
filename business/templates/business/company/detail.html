@@ -151,7 +151,7 @@
                       {% if mon_hour.is_closed %}
                         <td class="pr-0 text-right border-0">Closed</td>
                       {% else %}
-                        <td class="pr-0 text-right border-0">{{ mon_hour.from_hour|date:"g:i a" }} - {{ mon_hour.to_hour|date:"g:i a" }}</td>
+                        <td class="pr-0 text-right border-0">{{ mon_hour.from_hour|date:"P" }} - {{ mon_hour.to_hour|date:"P" }}</td>
                       {% endif %}
                     </tr>
                     <tr>
@@ -159,7 +159,7 @@
                       {% if tues_hour.is_closed %}
                         <td class="pr-0 text-right border-0">Closed</td>
                       {% else %}
-                        <td class="pr-0 text-right border-0">{{ tues_hour.from_hour|date:"g:i a" }} - {{ tues_hour.to_hour|date:"g:i a" }}</td>
+                        <td class="pr-0 text-right border-0">{{ tues_hour.from_hour|date:"P" }} - {{ tues_hour.to_hour|date:"P" }}</td>
                       {% endif %}
                     </tr>
                     <tr>
@@ -167,7 +167,7 @@
                       {% if wed_hour.is_closed %}
                         <td class="pr-0 text-right border-0">Closed</td>
                       {% else %}
-                        <td class="pr-0 text-right border-0">{{ wed_hour.from_hour|date:"g:i a" }} - {{ wed_hour.to_hour|date:"g:i a" }}</td>
+                        <td class="pr-0 text-right border-0">{{ wed_hour.from_hour|date:"P" }} - {{ wed_hour.to_hour|date:"P" }}</td>
                       {% endif %}
                     </tr>
                     <tr>
@@ -175,15 +175,15 @@
                       {% if thur_hour.is_closed %}
                         <td class="pr-0 text-right border-0">Closed</td>
                       {% else %}
-                        <td class="pr-0 text-right border-0">{{ thur_hour.from_hour|date:"g:i a" }} - {{ thur_hour.to_hour|date:"g:i a" }}</td>
+                        <td class="pr-0 text-right border-0">{{ thur_hour.from_hour|date:"P" }} - {{ thur_hour.to_hour|date:"P" }}</td>
                       {% endif %}
                     </tr>
                     <tr>
                       <th class="pl-0">Friday</th>
                       {% if fri_hour.is_closed %}
-                        <td class="pl-0 text-right border-0">Closed</td>
+                        <td class="pr-0 text-right border-0">Closed</td>
                       {% else %}
-                        <td class="pr-0 text-right border-0">{{ fri_hour.from_hour|date:"g:i a" }} - {{ fri_hour.to_hour|date:"g:i a" }}</td>
+                        <td class="pr-0 text-right border-0">{{ fri_hour.from_hour|date:"P" }} - {{ fri_hour.to_hour|date:"P" }}</td>
                       {% endif %}
                     </tr>
                     <tr>

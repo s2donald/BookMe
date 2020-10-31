@@ -159,9 +159,9 @@
                                     {% csrf_token %}
                                     <input type="hidden" name="xs" id="idd_x"><input type="hidden" name="ys" id="idd_y"><input type="hidden" name="widths" id="idd_width"><input type="hidden" name="heights" id="idd_height">
                                     <input type="file" id="inputtimage" name="gallaryFile" class="btn btn-primary" accept="image/*" hidden >
-                                    <button type="button" id="btnnimage" name="gallaryFile" class="btn btn-primary">Add a photo to your gallery</button>        
+                                    <button type="button" id="btnnimage" name="gallaryFile" class="btn btn-primary mb-3">Add a photo to your gallery</button>        
                                 </form>
-                                <div class="row" id="galphotos">
+                                <div class="row text-center justify-content-center" id="galphotos">
                                 {% for p in photos %}
                                     <div class="col-sm-12 col-md-6 col-lg-4 mt-2">
                                         <div class="card hover-animate justify-content-center align-self-center show-image" id="{{ p.id }}">
@@ -171,6 +171,9 @@
                                     </div>
                                 {% endfor %}
                                 </div>
+
+                                <br>
+                                {% include 'bizadmin/dashboard/reviews/pagination.html' with page=photos%}
                             </div>
                         </div>
                     </div>

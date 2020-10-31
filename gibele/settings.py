@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'b3+j2=q*i#mg^c!2ndq#00y5bobz6*xq&v#7^^7&+$73_#e=8e'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 TIME_INPUT_FORMATS = ['%I:%M %p',]
 
@@ -195,8 +195,8 @@ USE_TZ = True
 # STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
 
 
-AWS_ACCESS_KEY_ID = 'AKIA5YCTBN72FMLDSXOJ'
-AWS_SECRET_ACCESS_KEY = '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'
+AWS_ACCESS_KEY_ID = 'AKIA5YCTBN72JSC3D4WZ'
+AWS_SECRET_ACCESS_KEY = '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'
 AWS_STORAGE_BUCKET_NAME = 'django-gibele'
 AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
 AWS_S3_OBJECT_PARAMETERS = {
@@ -210,6 +210,10 @@ STATICFILES_DIRS = [
 STATIC_URL = 'https://%s/%s/' % (AWS_S3_CUSTOM_DOMAIN, AWS_LOCATION)
 STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
+
+
+DEFAULT_FILE_STORAGE = 'gibele.storage_backends.MediaStorage'
+
 # STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
 # STATIC_URL = '/static/'
 
@@ -217,9 +221,6 @@ STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 #     os.path.join(BASE_DIR, 'static'),
 # )
 # STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-
-DEFAULT_FILE_STORAGE = 'gibele.storage_backends.MediaStorage'
-
 # MEDIA_URL ='/media/'
 # MEDIA_ROOT=os.path.join(BASE_DIR,'media/')
 

@@ -202,8 +202,8 @@ def completeViews(request):
             bizCreatedEmailSent.delay(user.id)
             return redirect(reverse('home', host='bizadmin'))
         
-        else:
-            # print(sundayform.errors)
+        # else:
+        #     print(sundayform.errors)
 
     subcategories = SubCategory.objects.all()
     company = Company.objects.get(user=user)

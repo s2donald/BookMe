@@ -218,10 +218,10 @@ AWS_ACCESS_KEY_ID = 'AKIA5YCTBN72JSC3D4WZ'
 AWS_SECRET_ACCESS_KEY = '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'
 AWS_DEFAULT_ACL = None
 STATICFILES_LOCATION = 'static'
-STATICFILES_STORAGE = 'storage_backends.StaticStorage'
+STATICFILES_STORAGE = 'gibele.storage_backends.StaticStorage'
 MEDIAFILES_LOCATION = 'media'
-DEFAULT_FILE_STORAGE = 'storage_backends.MediaStorage'
-
+DEFAULT_FILE_STORAGE = 'gibele.storage_backends.MediaStorage'
+STATIC_URL = '/static/'
 # Tell django-storages the domain to use to refer to static files.
 AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
 
@@ -250,9 +250,9 @@ EMAIL_HOST_PASSWORD = 'vEK97wFvxY27jTEhqQY8Qv6L!'
 EMAIL_USE_TLS = False
 EMAIL_USE_SSL = True
 
-CELERY_BROKER_URL = 'amqps://dtkacyby:r-kSQJMm0h2BksbAYs4l1PgXWlqSrYdo@grouse.rmq.cloudamqp.com/dtkacyby'
+# CELERY_BROKER_URL = 'amqps://dtkacyby:r-kSQJMm0h2BksbAYs4l1PgXWlqSrYdo@grouse.rmq.cloudamqp.com/dtkacyby'
 
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
-SECURE_SSL_REDIRECT=True
+# SESSION_COOKIE_SECURE = True
+# CSRF_COOKIE_SECURE = True
+# SECURE_SSL_REDIRECT=True
 

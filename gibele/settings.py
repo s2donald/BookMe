@@ -172,8 +172,8 @@ USE_TZ = True
 
 # if USE_S3:
 #     # aws settings
-#     AWS_ACCESS_KEY_ID = os.getenv('AKIA5YCTBN72FMLDSXOJ')
-#     AWS_SECRET_ACCESS_KEY = os.getenv('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')
+#     AWS_ACCESS_KEY_ID = os.getenv('AKIA5YCTBN72JSC3D4WZ')
+#     AWS_SECRET_ACCESS_KEY = os.getenv('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')
 #     AWS_STORAGE_BUCKET_NAME = os.getenv('django-gibele')
 #     AWS_DEFAULT_ACL = None
 #     AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
@@ -195,24 +195,40 @@ USE_TZ = True
 # STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
 
 
+# AWS_STORAGE_BUCKET_NAME = 'django-gibele'
+# AWS_ACCESS_KEY_ID = 'AKIA5YCTBN72JSC3D4WZ'
+# AWS_SECRET_ACCESS_KEY = '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'
+# AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
+# AWS_S3_OBJECT_PARAMETERS = {
+#     'CacheControl': 'max-age=86400',
+# }
+# AWS_LOCATION = 'static'
+
+# STATICFILES_DIRS = [
+#     os.path.join(BASE_DIR, 'business/static'),
+# ]
+# STATIC_URL = 'https://%s/%s/' % (AWS_S3_CUSTOM_DOMAIN, AWS_LOCATION)
+# STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+
+# DEFAULT_FILE_STORAGE = 'gibele.storage_backends.MediaStorage'
+
+AWS_STORAGE_BUCKET_NAME = 'django-gibele'
+AWS_S3_REGION_NAME = 'us-east-1'  # e.g. us-east-2
 AWS_ACCESS_KEY_ID = 'AKIA5YCTBN72JSC3D4WZ'
 AWS_SECRET_ACCESS_KEY = 'RIBukj+HMffN2oWSeR+BosSPz0tlLve+XVAxpBKc'
-AWS_STORAGE_BUCKET_NAME = 'django-gibele'
-AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
-AWS_S3_OBJECT_PARAMETERS = {
-    'CacheControl': 'max-age=86400',
-}
-AWS_LOCATION = 'static'
+AWS_DEFAULT_ACL = None
+STATICFILES_LOCATION = 'static'
+STATICFILES_STORAGE = 'storage_backends.StaticStorage'
+MEDIAFILES_LOCATION = 'media'
+DEFAULT_FILE_STORAGE = 'storage_backends.MediaStorage'
 
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'business/static'),
-]
-STATIC_URL = 'https://%s/%s/' % (AWS_S3_CUSTOM_DOMAIN, AWS_LOCATION)
+# Tell django-storages the domain to use to refer to static files.
+AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
+
+# Tell the staticfiles app to use S3Boto3 storage when writing the collected static files (when
+# you run `collectstatic`).
 STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
-
-
-DEFAULT_FILE_STORAGE = 'gibele.storage_backends.MediaStorage'
 
 # STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
 # STATIC_URL = '/static/'

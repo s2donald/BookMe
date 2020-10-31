@@ -42,13 +42,13 @@
                       <!-- Slides-->
                         {% with cate=company.category.name %}
                         {% if cate == 'Automotive Services' %}
-                              <div class="swiper-slide"><img class="img-fluid center" style="width:100%; position: center;" src="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/automotive-noimage1.jpg" %}{% endif %}" alt="Header Image"></div>
+                              <div class="swiper-slide"><img class="img-fluid center" style="width:100%; position: center;" src="{% if company.image %}{{ company.image.url }}{% else %}{% static "img/automotive-noimage1.jpg" %}{% endif %}" alt="Header Image"></div>
                         {% endif %}
                         {% if cate == 'Personal Care' %}
-                              <div class="swiper-slide"><img class="img-fluid center" style="width:100%; position: center;" src="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/beauty-noimage1.jpg" %}{% endif %}" alt="Header Image"></div>
+                              <div class="swiper-slide"><img class="img-fluid center" style="width:100%; position: center;" src="{% if company.image %}{{ company.image.url }}{% else %}{% static "img/beauty-noimage1.jpg" %}{% endif %}" alt="Header Image"></div>
                         {% endif %}
                         {% if cate == 'Home Services' %}
-                              <div class="swiper-slide"><img class="img-fluid center" style="width:100%; position: center;" src="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/home-noimage1.jpg" %}{% endif %}" alt="Header Image"></div>
+                              <div class="swiper-slide"><img class="img-fluid center" style="width:100%; position: center;" src="{% if company.image %}{{ company.image.url }}{% else %}{% static "img/home-noimage1.jpg" %}{% endif %}" alt="Header Image"></div>
                         {% endif %}
                         {% endwith %}
                           {% for p in gal %}
@@ -63,7 +63,7 @@
                   </div>
                       {% else %}
                       {% with cate=company.category.name %}
-                        <img style="width:100%;" src="{% if company.image %}{{ company.image.url }}{% elif cate == 'Automotive Services' %}{% static "/img/automotive-noimage1.jpg" %}{% elif cate == 'Personal Care' %}{% static "/img/beauty-noimage1.jpg" %}{% else %}{% static "/img/home-noimage1.jpg" %}{% endif %}" alt="">
+                        <img style="width:100%;" src="{% if company.image %}{{ company.image.url }}{% elif cate == 'Automotive Services' %}{% static "/img/automotive-noimage1.jpg" %}{% elif cate == 'Personal Care' %}{% static "img/beauty-noimage1.jpg" %}{% else %}{% static "img/home-noimage1.jpg" %}{% endif %}" alt="">
                       {% endwith %}
                       {% endif %}
                       {% endwith %}

@@ -6,7 +6,7 @@
 {% block content %}
     <!-- Hero Section-->
     {% with categoryname=company.category.name %}
-    <section class="pt-7 d-flex align-items-end dark-overlay bg-cover" {% if not photos %}style="background-image: url('{% if company.image %}{{ company.image.url }}{% else %} {% if categoryname == 'Automotive Services' %}{% static "/img/automotive-noimage1.jpg" %}{% elif categoryname == 'Personal Care' %}{% static "img/beauty-noimage1.jpg" %}{% else %}{% static "img/home-noimage1.jpg" %} {% endif %}{% endif %}'); height:400px; background-repeat:no-repeat; background-size: fit;"{% endif %}>
+    <section class="pt-7 d-flex align-items-end dark-overlay bg-cover" {% if not photos %}style="background-image: url('{% if company.image %}{{ company.image.url }}{% else %} {% if categoryname == 'Automotive Services' %}{% static "img/automotive-noimage1.jpg" %}{% elif categoryname == 'Personal Care' %}{% static "img/beauty-noimage1.jpg" %}{% else %}{% static "img/home-noimage1.jpg" %} {% endif %}{% endif %}'); height:400px; background-repeat:no-repeat; background-size: fit;"{% endif %}>
       <!-- Slider main container-->
       {% if photos %}
       <div class="swiper-container detail-slider slider-gallery">
@@ -14,10 +14,10 @@
         <div class="swiper-wrapper">
           <!-- Slides-->
           {% if categoryname == 'Automotive Services' %}
-                <div class="swiper-slide"><a href="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/automotive-noimage1.jpg" %}{% endif %}" data-toggle="gallery-top" title="Header Image"><img class="img-fluid center" style="width:100%;" src="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/automotive-noimage1.jpg" %}{% endif %}" alt="Header Image"></a></div>
+                <div class="swiper-slide"><a href="{% if company.image %}{{ company.image.url }}{% else %}{% static "img/automotive-noimage1.jpg" %}{% endif %}" data-toggle="gallery-top" title="Header Image"><img class="img-fluid center" style="width:100%;" src="{% if company.image %}{{ company.image.url }}{% else %}{% static "img/automotive-noimage1.jpg" %}{% endif %}" alt="Header Image"></a></div>
           {% endif %}
           {% if categoryname == 'Personal Care' %}
-                <div class="swiper-slide"><a href="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/beauty-noimage1.jpg" %}{% endif %}" data-toggle="gallery-top" title="Header Image"><img class="img-fluid center" style="width:100%; position: center;" src="{% if company.image %}{{ company.image.url }}{% else %}{% static "/img/beauty-noimage1.jpg" %}{% endif %}" alt="Header Image"></a></div>
+                <div class="swiper-slide"><a href="{% if company.image %}{{ company.image.url }}{% else %}{% static "img/beauty-noimage1.jpg" %}{% endif %}" data-toggle="gallery-top" title="Header Image"><img class="img-fluid center" style="width:100%; position: center;" src="{% if company.image %}{{ company.image.url }}{% else %}{% static "img/beauty-noimage1.jpg" %}{% endif %}" alt="Header Image"></a></div>
           {% endif %}
           {% if categoryname == 'Home Services' %}
             <div class="swiper-slide"><a href="{% if company.image %}{{ company.image.url }}{% else %}{% static "img/home-noimage1.jpg" %}{% endif %}" data-toggle="gallery-top" title="Header Image"><img class="img-fluid center" style="width:100%; position: center;" src="{% if company.image %}{{ company.image.url }}{% else %}{% static "img/home-noimage1.jpg" %}{% endif %}" alt="Header Image"></a></div>
@@ -287,7 +287,7 @@
                 <div class="w-100 h-100">
                   <div class="card h-100 border-0 shadow">
                     <div class="card-img-top overflow-hidden dark-overlay bg-cover"><a class="tile-link" href="{{ sim_comp.get_absolute_url }}"></a>
-                      <img style="width:100%; max-height:250px;" src="{% if sim_comp.image %}{{ sim_comp.image.url }}{% elif company.category.name == 'Automotive Services' %}{% static "/img/automotive-noimage1.jpg" %}{% elif company.category.name == 'Personal Care' %}{% static "/img/beautynoimage1.jpg" %}{% endif %}" alt="">
+                      <img style="width:100%; max-height:250px;" src="{% if sim_comp.image %}{{ sim_comp.image.url }}{% elif company.category.name == 'Automotive Services' %}{% static "img/automotive-noimage1.jpg" %}{% elif company.category.name == 'Personal Care' %}{% static "img/beautynoimage1.jpg" %}{% endif %}" alt="">
                       <div class="card-img-overlay-top d-flex justify-content-between align-items-center">
                       {% with users_like=sim_comp.users_like.all %}
                         {% if request.user in users_like %}

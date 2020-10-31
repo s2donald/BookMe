@@ -53,6 +53,20 @@ class AccountAuthenticationForm(forms.ModelForm):
         if not authenticate(email=email, password=password):
             raise forms.ValidationError("Please enter a valid Email and Password. Fields are case-sensitive.")
 
+class AccountAuthenticationFormId(forms.ModelForm):
+    password = forms.CharField(label='Password', widget=forms.PasswordInput)
+    email = forms.EmailField(label='Email', widget=forms.TextInput(attrs={'class':'form-control','id':'emails'}))
+    
+    class Meta:
+        model = Account
+        fields = ('email', 'password')
+
+    def clean(self):
+        email = self.cleaned_data['email']
+        password = self.cleaned_data['password']
+        if not authenticate(email=email, password=password):
+            raise forms.ValidationError("Please enter a valid Email and Password. Fields are case-sensitive.")
+
 class UpdatePersonalForm(forms.ModelForm):
     first_name = forms.CharField(label='First Name',max_length=30)
     last_name = forms.CharField(label='Last Name',max_length=30)

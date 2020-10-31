@@ -8,7 +8,7 @@ import json
 from django.core import serializers
 import datetime, pytz
 from django.utils import timezone
-from account.forms import UpdatePersonalForm, AccountAuthenticationForm
+from account.forms import UpdatePersonalForm, AccountAuthenticationForm, AccountAuthenticationFormId
 from django.contrib.auth import authenticate, login
 from account.tasks import reminderEmail, confirmedEmail, consumerCreatedEmailSent
 from businessadmin.tasks import requestToBeClient
@@ -33,7 +33,7 @@ def bookingServiceView(request, pk):
     company = request.viewing_company
     service = get_object_or_404(Services, id=pk)
     personal_form = UpdatePersonalForm()
-    gibele_form = AccountAuthenticationForm()
+    gibele_form = AccountAuthenticationFormId()
     if user.is_authenticated:
         returnClient = company.clients.filter(user=user).exists() or company.clients.filter(phone=user.phone).exists() or company.clients.filter(email=user.email).exists()
     else:
@@ -177,7 +177,7 @@ class createAppointment(View):
             last_name = data['last_name']
             phone = data['phone']
             if Bookings.objects.filter(company=company, start=start, end=end).count()<1:
-                if Account.objects.filter(email=email, is_guest=False).exists():
+                if Account.objects.filter(email=email).exists():
                     return JsonResponse({'time':time, 's_id':s_id,'start':start,'date':date,'time':time, 'good':good, 'emailerr':'The email you have provided has already been used to create an account. Please sign into Gibele then try booking again later.'})
                 
                 if Clients.objects.filter(email=email, user=None,first_name=first_name, last_name=last_name,phone=phone, company=company).exists():
@@ -188,7 +188,7 @@ class createAppointment(View):
                     company.clients.add(guest)
                     company.save()
 
-                booking = Bookings.objects.create(user=user,service=service, company=company,
+                booking = Bookings.objects.create(guest=guest,service=service, company=company,
                                                 start=start, end=end, price=price)
                 booking.save()
 

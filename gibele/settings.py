@@ -28,8 +28,8 @@ DEBUG = True
 TIME_INPUT_FORMATS = ['%I:%M %p',]
 
 ALLOWED_HOSTS = ['pure-fjord-45840.herokuapp.com','.pure-fjord-45840.herokuapp.com','gibele.com', '.gibele.com','.gibele.ca','gibele.ca']
-SESSION_COOKIE_DOMAIN= 'gibele.ca'
-DOMAIN_NAME= 'gibele.ca'
+SESSION_COOKIE_DOMAIN= 'gibele.com'
+DOMAIN_NAME= 'gibele.com'
 
 # Application definition
 
@@ -109,26 +109,26 @@ SOCIAL_AUTH_USERNAME_IS_FULL_EMAIL = True
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
 # Prod database
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.contrib.gis.db.backends.postgis',
-#         'NAME': 'dbpgb03n2p28n7',
-#         'USER': 'u1p3uutbam4gj6',
-#         'PASSWORD': 'pb478bac72f7afb6faa38d4236cdca1d49405e9b48585cf226ff06cb4cc26795b',
-#         'HOST':'ec2-3-232-39-206.compute-1.amazonaws.com',
-#         'POST':'5432',
-#     }
-# }
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
-        'NAME': 'gibele1',
-        'USER': 'sdonald',
-        'PASSWORD': 'Kingston36227',
+        'NAME': 'dbpgb03n2p28n7',
+        'USER': 'u1p3uutbam4gj6',
+        'PASSWORD': 'pb478bac72f7afb6faa38d4236cdca1d49405e9b48585cf226ff06cb4cc26795b',
+        'HOST':'ec2-3-232-39-206.compute-1.amazonaws.com',
         'POST':'5432',
     }
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.contrib.gis.db.backends.postgis',
+#         'NAME': 'gibele1',
+#         'USER': 'sdonald',
+#         'PASSWORD': 'Kingston36227',
+#         'POST':'5432',
+#     }
+# }
 
 
 AUTH_USER_MODEL = 'account.Account'
@@ -195,32 +195,33 @@ USE_TZ = True
 # STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
 
 
-# AWS_ACCESS_KEY_ID = 'AKIA5YCTBN72FMLDSXOJ'
-# AWS_SECRET_ACCESS_KEY = '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'
-# AWS_STORAGE_BUCKET_NAME = 'django-gibele'
-# AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
-# AWS_S3_OBJECT_PARAMETERS = {
-#     'CacheControl': 'max-age=86400',
-# }
-# AWS_LOCATION = 'static'
+AWS_ACCESS_KEY_ID = 'AKIA5YCTBN72FMLDSXOJ'
+AWS_SECRET_ACCESS_KEY = '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'
+AWS_STORAGE_BUCKET_NAME = 'django-gibele'
+AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
+AWS_S3_OBJECT_PARAMETERS = {
+    'CacheControl': 'max-age=86400',
+}
+AWS_LOCATION = 'static'
 
-# STATICFILES_DIRS = [
-#     os.path.join(BASE_DIR, 'business/static'),
-# ]
-# STATIC_URL = 'https://%s/%s/' % (AWS_S3_CUSTOM_DOMAIN, AWS_LOCATION)
-# STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'business/static'),
+]
+STATIC_URL = 'https://%s/%s/' % (AWS_S3_CUSTOM_DOMAIN, AWS_LOCATION)
+STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
-STATIC_URL = '/static/'
+# STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
+# STATIC_URL = '/static/'
+
 # STATICFILES_DIRS = (
 #     os.path.join(BASE_DIR, 'static'),
 # )
 # STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-# DEFAULT_FILE_STORAGE = 'gibele.storage_backends.MediaStorage'
+DEFAULT_FILE_STORAGE = 'gibele.storage_backends.MediaStorage'
 
-MEDIA_URL ='/media/'
-MEDIA_ROOT=os.path.join(BASE_DIR,'media/')
+# MEDIA_URL ='/media/'
+# MEDIA_ROOT=os.path.join(BASE_DIR,'media/')
 
 LOGIN_REDIRECT_URL = 'business:homepage'
 
@@ -232,9 +233,9 @@ EMAIL_HOST_PASSWORD = 'vEK97wFvxY27jTEhqQY8Qv6L!'
 EMAIL_USE_TLS = False
 EMAIL_USE_SSL = True
 
-# CELERY_BROKER_URL = 'amqps://dtkacyby:r-kSQJMm0h2BksbAYs4l1PgXWlqSrYdo@grouse.rmq.cloudamqp.com/dtkacyby'
+CELERY_BROKER_URL = 'amqps://dtkacyby:r-kSQJMm0h2BksbAYs4l1PgXWlqSrYdo@grouse.rmq.cloudamqp.com/dtkacyby'
 
-# SESSION_COOKIE_SECURE = True
-# CSRF_COOKIE_SECURE = True
-# SECURE_SSL_REDIRECT=True
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+SECURE_SSL_REDIRECT=True
 

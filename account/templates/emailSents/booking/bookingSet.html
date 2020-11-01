@@ -8,6 +8,9 @@
 {% if service.checkintime > 0 %}
     <p><strong>NOTE:</strong>Please arrive {{ service.checkintime }} minutes before your service starts to check in.</p>
 {% endif %}
+
+<p>Company Email: {{ company.email }}</p>
+<p>Company Phone Number: {{ company.phone }}</p>
 <p>Booking ID: {{ booking.slug }}</p>
 <h3>Thanks!</h3>
 {% endblock %}

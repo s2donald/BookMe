@@ -110,12 +110,14 @@
                         },
                         buttonsStyling: false,
                         showDenyButton: true,
+                        showConfirmButton: false,
                         showCancelButton: true,
                         allowOutsideClick: false,
                         title: 'Appointment Details',
                         html: data.html_string,
                         confirmButtonText: 'Reschedule Appointment',
                         denyButtonText: `Cancel Booking`,
+                        cancelButtonText: `Close`,
                         }).then(function(result){
                             if (result.isConfirmed){
                                 changeBooking(id);

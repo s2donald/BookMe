@@ -167,7 +167,7 @@ class Company(models.Model):
     slug = models.SlugField(max_length=200, db_index=True, blank=True, unique=True)
     notes = models.TextField(max_length=250, blank=True, null=True)
     returning = models.BooleanField(default=False)
-    cancellation = models.IntegerField(choices=cancellationtime,default='0')
+    cancellation = models.IntegerField(choices=cancellationtime, default='0')
     interval = models.IntegerField(choices=INTERVAL, default=1)
     image = models.ImageField(upload_to=get_user_image_folder, blank=True)
     emailReminders = models.BooleanField(default=True)
@@ -222,7 +222,6 @@ def location_update(sender, instance, *args, **kwargs):
     lat = g.latlng[0]
     lng = g.latlng[1]
     instance.location = "POINT(" + str(lng) + " " + str(lat) +")"
-    print(instance.location)
     
 pre_save.connect(slug_generator, sender=Company)
 pre_save.connect(location_update, sender=Company)

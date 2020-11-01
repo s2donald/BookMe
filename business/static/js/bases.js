@@ -112,7 +112,6 @@ $(document).ready(function (){
         spaceBetween: 0,
         centeredSlides: true,
         loop: true,
-        speed: 1500,
         parallax: true,
         /*
         autoplay: {

@@ -138,7 +138,6 @@
           var company = elem.attr("data-id")
           var actions = elem.attr("data-action")
           var csrftoken = getCookie('csrftoken');
-          console.log(csrftoken)
           var inside = document.getElementById(company)
           $.ajax({
                 url: "{% host_url 'business:company_like' host 'www' %}",

@@ -22,7 +22,7 @@
                 <div class="card-body text-center">
                     <a class="btn rounded-pill btn-warning" href="{% host_url 'bookingurls' host 'bookingurl' slug=company.slug %}">Book Again</a>
                     {% if company.id|incancellationperiod:future.id %}
-                      <a class="btn btn-danger" id="cancelAppt" data-id="{{ future.id }}">Cancel Appointment</a>
+                      <a class="btn btn-danger cancelAppt" data-id="{{ future.id }}">Cancel Appointment</a>
                     {% endif %}
                 </div>
                 {% endwith %}
@@ -48,7 +48,7 @@
                         </div>
                         <div class="card-body text-center">
                             {% if company.id|inonemonth:past.id %}
-                              <a class="btn btn-outline-primary">Write a review</a>
+                              <a class="btn btn-outline-primary writereview" data-id="{{ company.id }}">Write a review</a>
                             {% endif %}
                             <a class="btn rounded-pill btn-warning" href="{% host_url 'bookingurls' host 'bookingurl' slug=company.slug %}">Book Again</a>
                         </div>
@@ -84,7 +84,7 @@
               return cookieValue;
           }
 
-        $('#cancelAppt').on('click', function(e){
+        $('.cancelAppt').on('click', function(e){
           var booking_id = $(this).data("id")
           Swal.fire({
             customClass:{
@@ -121,6 +121,8 @@
                     buttonsStyling: false,
                     title: 'We have cancelled your appointment.',
                     icon:'success'
+                  }).then((result) => {
+                    window.location.href='{% host_url 'account:booking_consumer' host 'www' %}'
                   });
                 },
                 error: function(e){
@@ -147,6 +149,16 @@
             }
             
           })
-        })
+        });
+        $('.writereview').on('click', function(e){
+          var company_id = $(this).data("id")
+          Swal.fire({
+            title:'Write a review on this ' + company_id,
+            customClass:{
+              confirmButton: 'btn btn-info'
+            },
+            buttonsStyling: false,
+          });
+        });
     </script>
 {% endblock %}

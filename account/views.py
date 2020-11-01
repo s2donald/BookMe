@@ -48,13 +48,12 @@ def ConsumerRegistrationView(request):
             email = user_form.cleaned_data.get('email')
             raw_pass = user_form.cleaned_data.get('password1')
             rmrme = request.POST.get('rememberPasswordCheck')
-            
             account = authenticate(email=email, password=raw_pass)
             login(request, account)
             if not rmrme:
                 request.session.set_expiry(0)
-            
-            consumerCreatedEmailSent.delay(account.id)
+            print(account.email)
+            consumerCreatedEmailSent.delay(user_id=account.id)
 
             return redirect('account:registered')
         else:

@@ -83,7 +83,7 @@
                       <tr>
                         {% with prctype=service.price_type prc=service.price %}
                         <th class="font-weight-normal py-2">{% if prctype == 'free' %}Free Service{% elif prctype == 'dont' %}Contact {{ company.business_name}} for pricing {% elif prctype == 'variable' %}Prices Varies From {% elif prctype == 'fixed' %}Fixed Price of {% else %}{{ prctype }}{% endif %}</th>
-                        <td class="text-right py-2">{% if prctype == 'free' %}Free{% else %}${{ prc }}{% endif %}</td>
+                        <td class="text-right py-2">{% if prctype == 'free' %}{% elif prctype == 'dont' %}{% elif prctype == 'variable' %}${{ prc }}{% elif prctype == 'fixed' %}${{ prc }}{% endif %}</td>
                       </tr>
                       {% comment %} <tr>
                         <th class="font-weight-normal pt-2 pb-3">Service fee</th>
@@ -104,8 +104,31 @@
                 <div class="media align-items-center">
                   <div class="media-body">
                     <p class="text-sm text-warning opacity-8 mb-0">Taxes and other charges may apply. Payment is collected in person.</p>
-                    <h6 class="licolor"> {% if service.cancellation == 0 %}Flexible cancellation policy{% endif %}</h6>
-                    <p class="text-sm text-info opacity-8 mb-0">Appointments can be cancelled {% if service.cancellation > 0 %}within {{ service.cancellation }} hours of {% else %}anytime before the{% endif %} appointment.</p>
+                    <h6 class="licolor"> {% if company.cancellation == 0 %}Flexible cancellation policy{% endif %}</h6>
+                    {% if company.cancellation == 10000 %}
+                        <p class="text-sm text-info opacity-8 mb-0">You are unable to cancel this appointment once booked. For urgent cancellations, please contact the service provider.</p>
+                    {% elif company.cancellation == 168 %}
+                        <p class="text-sm text-info opacity-8 mb-0">Appointments can be cancelled within 1 week of the appointment.</p>
+                    {% elif company.cancellation == 72 %}
+                        <p class="text-sm text-info opacity-8 mb-0">Appointments can be cancelled within 3 days of the appointment.</p>
+                    {% elif company.cancellation == 48 %}
+                        <p class="text-sm text-info opacity-8 mb-0">Appointments can be cancelled within 2 days of the appointment.</p>
+                    {% elif company.cancellation == 24 %}
+                        <p class="text-sm text-info opacity-8 mb-0">Appointments can be cancelled within 1 days of the appointment.</p>
+                    {% elif company.cancellation == 12 %}
+                        <p class="text-sm text-info opacity-8 mb-0">Appointments can be cancelled within 12 hours of the appointment.</p>
+                    {% elif company.cancellation == 8 %}
+                        <p class="text-sm text-info opacity-8 mb-0">Appointments can be cancelled within 8 hours of the appointment.</p>
+                    {% elif company.cancellation == 6 %}
+                        <p class="text-sm text-info opacity-8 mb-0">Appointments can be cancelled within 6 hours of the appointment.</p>
+                    {% elif company.cancellation == 3 %}
+                        <p class="text-sm text-info opacity-8 mb-0">Appointments can be cancelled within 3 hours of the appointment.</p>
+                    {% elif company.cancellation == 1 %}
+                        <p class="text-sm text-info opacity-8 mb-0">Appointments can be cancelled within 1 hour of the appointment.</p>
+                    {% else %}
+                        <p class="text-sm text-info opacity-8 mb-0">Appointments can be cancelled anytime before the appointment.</p>
+                    {% endif %}
+                    
                   </div>
                 </div>
               </div>

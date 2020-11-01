@@ -11790,6 +11790,9 @@ be a descendant of the grid when it is being dragged.
   border-top-color: transparent;
   border-bottom-color: transparent; }
 
+  #subdomain{
+    text-align: right;
+  }
 
 /**
   * bootstrap-switch - Turn checkboxes and radio buttons into toggle switches.
@@ -13686,10 +13689,11 @@ Copyright (c) 2015 Daniel Eden
     color: #fafafa;
     box-shadow: none;
     outline: none;
+    text-align: left;
+    vertical-align: middle;
     padding: 0 6px;
     margin: 0;
-    width: 100%;
-    max-width: inherit; }
+    width: 100%; }
     .bootstrap-tagsinput input:focus {
       border: none;
       box-shadow: none; }

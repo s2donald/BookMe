@@ -42,26 +42,47 @@ def bookingServiceView(request, pk):
 
 def time_slots(start_time, end_time, interval, duration_hour, duration_minute, year, month, day, company):
     t = start_time
-    servDate = datetime.datetime(year,month,day).astimezone(pytz.timezone("UTC"))
+    servDate = timezone.localtime(timezone.make_aware(datetime.datetime(year,month,day)))
+    if timezone.now().date() == servDate.date():
+        while timezone.localtime(timezone.now()).time()>t:
+            print(timezone.now().time())
+            t = timezone.localtime((datetime.datetime.combine(datetime.date.today(), t) +
+             datetime.timedelta(minutes=interval)).astimezone(pytz.timezone("UTC"))).time()
     availableDay = []
     while t < end_time:
-        begTime = t
-        servStart = datetime.datetime.combine(servDate, t).astimezone(pytz.timezone("UTC"))
-        endTime = (datetime.datetime.combine(servDate, t) +
-                    datetime.timedelta(hours=duration_hour,minutes=duration_minute)).astimezone(pytz.timezone("UTC"))
-        objects = Bookings.objects.filter(company=company)
-        objlength = len(objects)
+        servStart = timezone.localtime(datetime.datetime.combine(servDate, t).astimezone(pytz.timezone("UTC")))
+        endTime = timezone.localtime((datetime.datetime.combine(servDate, t) +
+                    datetime.timedelta(hours=duration_hour,minutes=duration_minute)).astimezone(pytz.timezone("UTC")))
+        objects = Bookings.objects.filter(company=company, start__gte=servDate, end__lte=servDate + datetime.timedelta(days=1))
+        # objlength = len(objects)
         count = 0
-        for i in range(objlength):
-            if (objects[i].start.date() == servStart.date()):
-                s = objects[i].start.time()
-                g = objects[i].end.time()
+        for obj in objects:
+            if (obj.start.date() == servStart.date()):
+                #Check the buffer option that applies to this booking
+                # buffer = obj.service.padding
+                # before_durhour = 0
+                # before_durmin =0
+                # after_durhour = 0
+                # after_durmin = 0
+                # if buffer == 'bf':
+                #     before_durhour = obj.service.paddingtime_hour
+                #     before_durmin = obj.service.paddingtime_minute
+                #     after_durhour = obj.service.paddingtime_hour
+                #     after_durmin = obj.service.paddingtime_minute
+                # elif buffer == 'before':
+                #     before_durhour = obj.service.paddingtime_hour
+                #     before_durmin = obj.service.paddingtime_minute
+                # elif buffer == 'after':
+                #     after_durhour = obj.service.paddingtime_hour
+                #     after_durmin = obj.service.paddingtime_minute
+                s = obj.start.time()
+                g = obj.end.time()
                 if((servStart.time()<=s<endTime.time()) or (servStart.time()<g<endTime.time())):
                     count = 1
         if count==0:
             availableDay.append(t.strftime("%I:%M %p"))
-        t = (datetime.datetime.combine(datetime.date.today(), t) +
-             datetime.timedelta(minutes=interval)).time()
+        t = timezone.localtime((datetime.datetime.combine(datetime.date.today(), t) +
+             datetime.timedelta(minutes=interval)).astimezone(pytz.timezone("UTC"))).time()
     return availableDay
 
 class bookingTimes(View):
@@ -80,10 +101,14 @@ class bookingTimes(View):
         b_close = open_hours.to_hour
         # print(b_open.hour)
         naive = datetime.datetime(year, month, day, b_open.hour, b_open.minute)
-        # print(timezone.localtime(timezone.make_aware(naive)))
+        # timezone.localtime(timezone.make_aware(naive))
         interval= company.interval
         duration_hour = Services.objects.get(pk=s_id).duration_hour
         duration_minute = Services.objects.get(pk=s_id).duration_minute
+        #Check buffer before and after
+        beforeafter = Services.objects.get(pk=s_id).padding
+        buffer_durhour = Services.objects.get(pk=s_id).paddingtime_hour
+        buffer_durmin = Services.objects.get(pk=s_id).paddingtime_minute
         is_auth = request.user.is_authenticated
         if open_hours.is_closed==False:
             slist = list(time_slots(b_open,b_close,interval, duration_hour, duration_minute, year, month, day, company))

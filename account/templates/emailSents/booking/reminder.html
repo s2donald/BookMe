@@ -4,6 +4,12 @@
 <h2>Hello {{ acct.first_name }},</h2>
 <p>Just a reminder, you have an appointment with {{ company.business_name }} for a <strong>{{ service.name }}</strong>.</p>
 <p>Your appointment will be held at <strong>{{ booking.start|date:'g:i A' }}</strong> on <strong>{{ booking.start|date:'l, F j, Y' }}</strong>.</p>
+{% if service.checkintime > 0 %}
+    <p><strong>NOTE:</strong>Please arrive {{ service.checkintime }} minutes before your service starts to check in.</p>
+{% endif %}
+<p>Company Email: {{ company.email }}</p>
+<p>Company Phone Number: {{ company.phone }}</p>
+<p>Booking ID: {{ booking.slug }}</p>
 <p>Booking ID: {{ booking.slug }}</p>
 <h3>Thanks!</h3>
 {% endblock %}

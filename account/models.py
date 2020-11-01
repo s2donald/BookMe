@@ -49,7 +49,7 @@ class Account(AbstractBaseUser):
 
     is_business= models.BooleanField(default=False)
     on_board= models.BooleanField(default=False)
-    is_consumer= models.BooleanField(default=False)
+    is_consumer= models.BooleanField(default=True)
     is_guest=models.BooleanField(default=False)
 
     date_joined = models.DateTimeField(verbose_name='date joined', auto_now_add=True)

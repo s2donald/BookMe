@@ -45,7 +45,7 @@ urlpatterns = [
     url(r'ajax/client/$', views.load_client, name='ajax_load_client'),
     url(r'ajax/loadevents/$', views.load_events.as_view(), name='ajax_load_events'),
     url(r'ajax/loadservices/$', views.load_service.as_view(), name='ajax_load_servName'),
-
+    
     url(r'onboarding/check/subdomain/$', views.subdomainCheck.as_view(), name='subdomain'),
     url(r'onboarding/$', views.completeViews, name='completeprofile'),
     url(r'^updatecompanyform/$',views.updateCompanyDetail.as_view(), name='updateform'),

@@ -152,13 +152,77 @@
         });
         $('.writereview').on('click', function(e){
           var company_id = $(this).data("id")
-          Swal.fire({
-            title:'Write a review on this ' + company_id,
-            customClass:{
-              confirmButton: 'btn btn-info'
-            },
-            buttonsStyling: false,
+          $.ajax({
+            url: '{% host_url 'business:get_company' host 'www' %}',
+            data:{company_id: company_id},
+            success: function(e){
+              Swal.fire({
+                title:'Write a review on this ' + e.companyname,
+                customClass:{
+                  confirmButton: 'btn btn-info'
+                },
+                html: `<p>Submit your review</p>
+                      <div class="m-0">
+                        <label class="licolorblue pb-0 mb-0">Enter a rating between 1 and 5:</label>
+                        <input type="number" style="width:75px;" id="starReview" class="swal2-input pt-0" placeholder="Number of stars">
+                      </div>
+                      <div class="m-0">
+                        <label class="licolorblue pb-0 mb-0">Tell us about your experience at `+ e.companyname +`.</label>
+                        <textarea type="text" style="height:150px;" id="wordReview" class="swal2-input" placeholder="Enter your review"></textarea>
+                      </div>
+                        `,
+                buttonsStyling: false,
+                preConfirm: () => {
+                  const starReview = Swal.getPopup().querySelector('#starReview').value
+                  const wordReview = Swal.getPopup().querySelector('#wordReview').value
+                  var res = false
+                  csrftoken = getCookie('csrftoken');
+                  if (starReview < 1 || starReview>5){
+                    Swal.showValidationMessage(`The rating should be between 1 and 5`)
+                  }
+                  else if (!starReview || !wordReview) {
+                    Swal.showValidationMessage(`Please enter the review`)
+                  }
+                  $.ajax({
+                    type:'POST',
+                    url: '{% host_url 'business:add_review' host 'www' %}',
+                    async: false,
+                    headers:{
+                      "X-CSRFToken": csrftoken
+                    },
+                    data:{
+                      company_id: company_id,
+                      starReview: starReview,
+                      wordReview: wordReview
+                    },
+                    success: function(data){
+                      if(data.savedReview){
+                        return true
+                      }
+                      else{
+                        Swal.showValidationMessage(`Incorrect email or password`)
+                        return false
+                      }
+                    }
+                  });
+                }
+              }).then((result) => {
+                if (result.isConfirmed){
+                  Swal.fire({
+                    title:`Review Submitted`,
+                    icon:'success',
+                    customClass:{
+                      confirmButton: 'btn btn-info'
+                    },
+                    buttonsStyling: false,
+                  }).then((result) => {
+                    window.location.href='{% host_url 'account:booking_consumer' host 'www' %}'
+                  });
+                }
+              });
+            }
           });
+          
         });
     </script>
 {% endblock %}

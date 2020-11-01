@@ -405,12 +405,16 @@ function getCookie(name) {
                             const confheader3 = document.querySelector(".confheader3")
                             if (data.emailerr){
                                 confheader3.innerHTML = 'Unable to book service as a guest.'
-                                bookingtimes.innerHTML = `<p style="font-size:25px;">The email you have provided is already associated with an account. Please sign into Gibele and try booking again.</p>`
-                                msg.innerHTML = `<a class="btn btn-outline-primary" href="{% host_url 'business:homepage' host 'www' %}">Go to Gibele Website!</a>`
+                                if (data.notonclientlist) {
+                                    bookingtimes.innerHTML = `<p style="font-size:25px;">Unfortunately you are not a returning client for this company. Please create an account with Gibele and request to be added on the client list.</p>`
+                                }
+                                else {
+                                    bookingtimes.innerHTML = `<p style="font-size:25px;">The email you have provided is already associated with an account. Please sign into Gibele and try booking again.</p>`
+                                }
+                                msg.innerHTML = `<a class="btn btn-outline-primary mt-1" href="{% host_url 'business:homepage' host 'www' %}">Go to Gibele Website</a>`
                                 const loader = document.querySelector(".sk-folding-cube").classList.add("d-none")
                             }
-                            if (data.good){
-                                
+                            else if (data.good){
                                 confheader3.innerHTML = 'Confirmed Booking!'
                                 bookingtimes.innerHTML = `<p style="font-size:25px;">Thank you for setting an appointment with us! Your appointment with <strong>{{ company.business_name }}</strong> will take place on <strong>`+ data.date +`</strong> at <strong>`+data.time+`</strong> for a <strong>{{ service.name }}</strong>.</p><p style="font-size:25px;">We have sent the additional details of your service to your email.</p>`
                                 msg.innerHTML = `<a class="btn btn-outline-primary" href="{% host_url 'bookingurls' host 'bookingurl' slug=company.slug %}">Book another service</a>`
@@ -442,11 +446,16 @@ function getCookie(name) {
                 feedbackConf.classList.remove("d-none");
                 if (data.emailerr){
                     confheader3.innerHTML = 'Unable to book service as a guest.'
-                    bookingtimes.innerHTML = `<p style="font-size:25px;">The email you have provided is already associated with an account. Please sign into Gibele and try booking again.</p>`
+                    if (data.notonclientlist) {
+                        bookingtimes.innerHTML = `<p style="font-size:25px;">Unfortunately you are not a returning client for this company. Please create an account with Gibele and request to be added on the client list.</p>`
+                    }
+                    else {
+                        bookingtimes.innerHTML = `<p style="font-size:25px;">The email you have provided is already associated with an account. Please sign into Gibele and try booking again.</p>`
+                    }
                     msg.innerHTML = `<a class="btn btn-outline-primary mt-1" href="{% host_url 'business:homepage' host 'www' %}">Go to Gibele Website</a>`
                     const loader = document.querySelector(".sk-folding-cube").classList.add("d-none")
                 }
-                            if (data.good){
+                            else if (data.good){
                                 
                                 confheader3.innerHTML = 'Confirmed Booking!'
                                 bookingtimes.innerHTML = `<p style="font-size:25px;">Thank you for setting an appointment with us! Your appointment with <strong>{{ company.business_name }}</strong> will take place on <strong>`+ data.date +`</strong> at <strong>`+data.time+`</strong> for a <strong>{{ service.name }}</strong>.</p><p style="font-size:25px;">We have sent the additional details of your service to your email.</p>`
@@ -463,8 +472,8 @@ function getCookie(name) {
             });
     }
 
-
-    {% if company.returning %}
+        function authenticationWithSwal(){
+            {% if company.returning %}
                 {% if returnClient %}
                 {% else %}
                     {% if user.is_authenticated %}
@@ -770,6 +779,8 @@ function getCookie(name) {
                 {% endif %}
                 
             {% endif %}
+            }
+            authenticationWithSwal();
         });
 
 

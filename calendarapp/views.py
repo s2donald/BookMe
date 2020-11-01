@@ -53,7 +53,7 @@ def time_slots(start_time, end_time, interval, duration_hour, duration_minute, y
         servStart = timezone.localtime(datetime.datetime.combine(servDate, t).astimezone(pytz.timezone("UTC")))
         endTime = timezone.localtime((datetime.datetime.combine(servDate, t) +
                     datetime.timedelta(hours=duration_hour,minutes=duration_minute)).astimezone(pytz.timezone("UTC")))
-        objects = Bookings.objects.filter(company=company, start__gte=servDate, end__lte=servDate + datetime.timedelta(days=1))
+        objects = Bookings.objects.filter(company=company, start__gte=servDate, end__lte=servDate + datetime.timedelta(days=1), is_cancelled_user=False, is_cancelled_company=False)
         # objlength = len(objects)
         count = 0
         for obj in objects:
@@ -75,8 +75,8 @@ def time_slots(start_time, end_time, interval, duration_hour, duration_minute, y
                 # elif buffer == 'after':
                 #     after_durhour = obj.service.paddingtime_hour
                 #     after_durmin = obj.service.paddingtime_minute
-                s = obj.start.time()
-                g = obj.end.time()
+                s = timezone.localtime(obj.start).time()
+                g = timezone.localtime(obj.end).time()
                 if((servStart.time()<=s<endTime.time()) or (servStart.time()<g<endTime.time())):
                     count = 1
         if count==0:
@@ -116,7 +116,6 @@ class bookingTimes(View):
         else:
             slist = []
         services = Services.objects.filter(id=s_id)
-
         # com = serializers.serialize("json",open_hours)
         
         
@@ -160,6 +159,9 @@ class createAppointment(View):
         start = timezone.localtime(timezone.make_aware(start))
         end = timezone.localtime(timezone.make_aware(end))
         if user.is_authenticated:
+            if company.returning:
+                if not company.clients.filter(user=user).exists():
+                    return JsonResponse({'time':time, 's_id':s_id,'start':start,'date':date,'time':time, 'emailerr':True, 'notonclientlist':True})
             if Bookings.objects.filter(company=company, start=start, end=end).count()<1:
                 #Check if the user is already a client
                 if company.clients.filter(user=user, first_name=user.first_name).exists():
@@ -201,9 +203,11 @@ class createAppointment(View):
             first_name = data['first_name']
             last_name = data['last_name']
             phone = data['phone']
+            if company.returning:
+                return JsonResponse({'time':time, 's_id':s_id,'start':start,'date':date,'time':time, 'emailerr':True, 'notonclientlist':True})
             if Bookings.objects.filter(company=company, start=start, end=end).count()<1:
                 if Account.objects.filter(email=email).exists():
-                    return JsonResponse({'time':time, 's_id':s_id,'start':start,'date':date,'time':time, 'good':good, 'emailerr':'The email you have provided has already been used to create an account. Please sign into Gibele then try booking again later.'})
+                    return JsonResponse({'time':time, 's_id':s_id,'start':start,'date':date,'time':time, 'good':False, 'emailerr':'The email you have provided has already been used to create an account. Please sign into Gibele then try booking again later.'})
                 
                 if Clients.objects.filter(email=email, user=None,first_name=first_name, last_name=last_name,phone=phone, company=company).exists():
                     guest = Clients.objects.get(company=company, email=email, first_name=first_name,last_name=last_name,phone=phone)

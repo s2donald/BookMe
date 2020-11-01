@@ -4,7 +4,7 @@
             {% with service=booking.service %}
             <li class="mb-1"><strong>Date:</strong> {{ booking.start|date:"D, M d,Y" }}</li>
             <li class="mb-1"><strong>Time:</strong> {{ booking.start|date:"P" }}-{{ booking.end|date:"P"}}</li>
-            {% with cust=booking.user %}
+            {% with cust=user %}
             <li class="mb-1"><strong>Customer:</strong> {{ cust.first_name }} {{ cust.last_name }}</li>
             <li class="mb-1"><strong>Contact Info:</strong> {{ cust.email }} {{ cust.phone }}</li>
             {% endwith %}

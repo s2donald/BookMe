@@ -1361,7 +1361,7 @@ class getBooking(View):
             first_name = user.first_name
             last_name = user.last_name
         else:
-            htmlString = render('bizadmin/dashboard/schedule/bookingInfo.html',{'user':booking.guest})
+            htmlString = render_to_string('bizadmin/dashboard/schedule/bookingInfo.html',{'user':booking.guest, 'booking':booking})
         return JsonResponse({'html_string':htmlString})
 
 class addRequestedViews(View):

@@ -321,3 +321,19 @@ class cancelAppointmentAjax(View):
             bookings.save()
             #We need to send an email to the company saying the client cancelled the appointment
         return JsonResponse({'':''})
+
+def getCompanyName(request):
+    name = ''
+    if request.GET:
+        company = Company.objects.get(id=request.GET.get('company_id'))
+        name = company.business_name
+    return JsonResponse({'companyname':name})
+
+def addReviewView(request):
+    if request.POST:
+        if request.user.is_authenticated:
+            company = Company.objects.get(id=request.POST.get('company_id'))
+            review = request.POST.get('wordReview')
+            star = request.POST.get('starReview')
+            reviews = Reviews.objects.create(company=company, reviewer=request.user, review=review, star=star)
+            reviews.save()

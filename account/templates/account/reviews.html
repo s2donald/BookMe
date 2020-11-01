@@ -43,9 +43,9 @@
                 </div>
 
               <div class="card-footer text-center">
-                {% if company.id|changeonemonth:review.id %}
+                {% comment %} {% if company.id|changeonemonth:review.id %}
                     <a class="btn btn-warning" href="{% host_url 'bookingurls' host 'bookingurl' slug=company.slug %}">Change Review</a>
-                {% endif %}
+                {% endif %} {% endcomment %}
                 <a class="btn btn-info" href="{% host_url 'bookingurls' host 'bookingurl' slug=company.slug %}">Book an Appointment</a>
               </div>
               </div>

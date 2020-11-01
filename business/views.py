@@ -338,4 +338,4 @@ def addReviewView(request):
             reviews = Reviews.objects.create(company=company, reviewer=request.user, review=review, star=star)
             reviews.save()
             #now send the email to the user
-    return JsonResponse('savedReview':True)
+    return JsonResponse({'savedReview':True})

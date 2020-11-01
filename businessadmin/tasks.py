@@ -34,7 +34,10 @@ def requestToBeClient(req_id):
 @task
 def appointmentCancelled(booking_id):
     booking = Bookings.objects.get(id=booking_id)
-    client = booking.user
+    if booking.user:
+        client = booking.user
+    else:
+        client = booking.guest
     company = booking.company
     service = booking.service
     email = client.email
@@ -47,7 +50,11 @@ def appointmentCancelled(booking_id):
 @task
 def appointmentCancelledCompany(booking_id):
     booking = Bookings.objects.get(id=booking_id)
-    client = booking.user
+    if booking.user:
+        client = booking.user
+    else:
+        client = booking.guest
+
     company = booking.company
     service = booking.service
     email = client.email

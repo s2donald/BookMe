@@ -52,7 +52,6 @@ def ConsumerRegistrationView(request):
             login(request, account)
             if not rmrme:
                 request.session.set_expiry(0)
-            print(account.email)
             consumerCreatedEmailSent.delay(user_id=account.id)
 
             return redirect('account:registered')

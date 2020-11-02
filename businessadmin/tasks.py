@@ -57,9 +57,9 @@ def appointmentCancelledCompany(booking_id):
 
     company = booking.company
     service = booking.service
-    email = client.email
+    email = company.email
     subject = f'Appointment Cancelled: Your appointment with ' + client.first_name + ' has been cancelled.'
-    html_message = render_to_string('bizadmin/home/emails/cancellationEmailToCompany.html', {'client':client, 'booking':booking , 'company':company})
+    html_message = render_to_string('bizadmin/home/emails/cancelEmailToCompany.html', {'client':client, 'booking':booking , 'company':company})
     plain_message = strip_tags(html_message)
     mail_sent = send_mail(subject, plain_message, 'Gibele <noreply@gibele.com>', [email], html_message=html_message, fail_silently=False)
     return mail_sent

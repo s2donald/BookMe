@@ -19,7 +19,7 @@ from django.views import View
 from django.contrib.gis.geos import GEOSGeometry, Point
 from django.contrib.gis.db.models.functions import Distance, GeometryDistance
 from django.contrib.postgres.search import TrigramSimilarity
-
+from businessadmin.tasks import appointmentCancelledCompany
 def privacyViews(request):
     category = None
     categories = Category.objects.all()
@@ -319,6 +319,7 @@ class cancelAppointmentAjax(View):
         if request.user == bookings.user:
             bookings.is_cancelled_user = True
             bookings.save()
+            appointmentCancelledCompany.delay(bookings.id)
             #We need to send an email to the company saying the client cancelled the appointment
         return JsonResponse({'':''})
 

@@ -10,7 +10,7 @@ import datetime, pytz
 from django.utils import timezone
 from account.forms import UpdatePersonalForm, AccountAuthenticationForm, AccountAuthenticationFormId
 from django.contrib.auth import authenticate, login
-from account.tasks import reminderEmail, confirmedEmail, consumerCreatedEmailSent
+from account.tasks import reminderEmail, confirmedEmail, consumerCreatedEmailSent, confirmedEmailCompany
 from businessadmin.tasks import requestToBeClient
 # from account.models import Account
 # Create your views here.
@@ -43,7 +43,7 @@ def bookingServiceView(request, pk):
 def time_slots(start_time, end_time, interval, duration_hour, duration_minute, year, month, day, company):
     t = start_time
     servDate = timezone.localtime(timezone.make_aware(datetime.datetime(year,month,day)))
-    if timezone.now().date() == servDate.date():
+    if timezone.localtime(timezone.now()).date() == servDate.date():
         while timezone.localtime(timezone.now()).time()>t:
             print(timezone.now().time())
             t = timezone.localtime((datetime.datetime.combine(datetime.date.today(), t) +
@@ -162,7 +162,7 @@ class createAppointment(View):
             if company.returning:
                 if not company.clients.filter(user=user).exists():
                     return JsonResponse({'time':time, 's_id':s_id,'start':start,'date':date,'time':time, 'emailerr':True, 'notonclientlist':True})
-            if Bookings.objects.filter(company=company, start=start, end=end).count()<1:
+            if Bookings.objects.filter(company=company, start=start, end=end, is_cancelled_user=False,is_cancelled_company=False).count()<1:
                 #Check if the user is already a client
                 if company.clients.filter(user=user, first_name=user.first_name).exists():
                     guest = company.clients.get(user=user, first_name=user.first_name)
@@ -193,7 +193,8 @@ class createAppointment(View):
                 booking = Bookings.objects.create(user=user,guest=guest,service=service, company=company,start=start, end=end, price=price)
                 booking.save()
                 confirmedEmail.delay(booking.id)
-                startTime = start - datetime.timedelta(minutes=15)
+                confirmedEmailCompany.delay(booking.id)
+                startTime = start - datetime.timedelta(minutes=company.confirmation_minutes)
                 reminderEmail.apply_async(args=[booking.id], eta=startTime, task_id=booking.slug)
                 good = True
             else:
@@ -205,7 +206,7 @@ class createAppointment(View):
             phone = data['phone']
             if company.returning:
                 return JsonResponse({'time':time, 's_id':s_id,'start':start,'date':date,'time':time, 'emailerr':True, 'notonclientlist':True})
-            if Bookings.objects.filter(company=company, start=start, end=end).count()<1:
+            if Bookings.objects.filter(company=company, start=start, end=end, is_cancelled_user=False,is_cancelled_company=False).count()<1:
                 if Account.objects.filter(email=email).exists():
                     return JsonResponse({'time':time, 's_id':s_id,'start':start,'date':date,'time':time, 'good':False, 'emailerr':'The email you have provided has already been used to create an account. Please sign into Gibele then try booking again later.'})
                 
@@ -220,8 +221,9 @@ class createAppointment(View):
                 booking = Bookings.objects.create(guest=guest,service=service, company=company,
                                                 start=start, end=end, price=price)
                 booking.save()
-
-                confirmedEmail.delay(booking.id)
+                if email:
+                    confirmedEmail.delay(booking.id)
+                    confirmedEmailCompany.delay(booking.id)
                 startTime = start - datetime.timedelta(minutes=15)
                 reminderEmail.apply_async(args=[booking.id], eta=startTime)
                 good = True

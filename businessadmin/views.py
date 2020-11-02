@@ -1409,7 +1409,15 @@ class deleteBookingByCompAPI(View):
     def post(self, request):
         booking_id = request.POST.get('booking_id')
         booking = get_object_or_404(Bookings, id=booking_id)
-        appointmentCancelled.delay(booking.id)
+        try:
+            email = booking.user.email
+            appointmentCancelled.delay(booking.id)
+        except AttributeError:
+            email = booking.guest.email
+            appointmentCancelled.delay(booking.id)
+        except AttributeError:
+            email = ''
+            
         #Dont delete the object, we instead have it on file and change it to cancelled appt
         booking.is_cancelled_company = True
         booking.save()
@@ -1447,7 +1455,7 @@ class addBooking(View):
             booking = Bookings.objects.create(user=user, guest=guest,service=service, company=company,start=start, end=end, price=price)
             booking.save()
             confirmedEmail.delay(booking.id)
-            startTime = start - timedelta(minutes=15)
+            startTime = start - timedelta(minutes=company.confirmation_minutes)
             reminderEmail.apply_async(args=[booking.id], eta=startTime, task_id=booking.slug)
             #Create the booking and then send an email to customer and company
         else:

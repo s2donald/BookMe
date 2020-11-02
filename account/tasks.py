@@ -28,6 +28,7 @@ def consumerCreatedEmailSent(user_id):
     mail_sent = send_mail(subject, plain_message, 'Gibele <noreply@gibele.com>', [email], html_message=html_message, fail_silently=False)
     return mail_sent
 
+#This is for the user to remind them of an appointment they have
 @task
 def reminderEmail(booking_id):
     booking = Bookings.objects.get(id=booking_id)
@@ -38,13 +39,18 @@ def reminderEmail(booking_id):
     company = booking.company
     service = booking.service
     email = acct.email
-    subject = f'REMINDER: You have an upcoming appointment with ' + company.business_name + '!'
-    html_message = render_to_string('emailSents/booking/reminder.html', {'acct':acct,'company':company,'service':service, 'booking':booking})
+    if booking.is_cancelled_user or booking.is_cancelled_company:
+        subject = f'Book some '+ company.category +' on Gibele!'
+        html_message = render_to_string('emailSents/booking/budge.html', {'acct':acct,'company':company,'service':service, 'booking':booking})
+    else:
+        subject = f'REMINDER: You have an upcoming appointment with ' + company.business_name + '!'
+        html_message = render_to_string('emailSents/booking/reminder.html', {'acct':acct,'company':company,'service':service, 'booking':booking})
     plain_message = strip_tags(html_message)
 
     mail_sent = send_mail(subject, plain_message, 'Gibele <noreply@gibele.com>', [email], html_message=html_message, fail_silently=False)
     return mail_sent
 
+#This is for the user to confirm the appointment they have
 @task
 def confirmedEmail(booking_id):
     booking = Bookings.objects.get(id=booking_id)
@@ -62,3 +68,21 @@ def confirmedEmail(booking_id):
     mail_sent = send_mail(subject, plain_message, 'Gibele <noreply@gibele.com>', [email], html_message=html_message, fail_silently=False)
     return mail_sent
 
+
+#This is for the company to confirm the appointment the users have made
+@task
+def confirmedEmailCompany(booking_id):
+    booking = Bookings.objects.get(id=booking_id)
+    if booking.user:
+        acct = booking.user
+    else:
+        acct = booking.guest
+    company = booking.company
+    service = booking.service
+    email = company.email
+    subject = f'You have a new appointment!'
+    html_message = render_to_string('emailSents/booking/companyReminder.html', {'acct':acct,'company':company,'service':service, 'booking':booking})
+    plain_message = strip_tags(html_message)
+
+    mail_sent = send_mail(subject, plain_message, 'Gibele <noreply@gibele.com>', [email], html_message=html_message, fail_silently=False)
+    return mail_sent

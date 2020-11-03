@@ -50,6 +50,7 @@ def createNewBusiness(request):
             company = Company.objects.create(user=user,business_name=bname,email=email,phone=phone,
                                                 description='',address='',postal='',
                                                 state='',city='',status='draft')
+            company.save()
             biz_hours = OpeningHours.objects.bulk_create([
                 OpeningHours(company=company, weekday=0,is_closed=True),
                 OpeningHours(company=company, weekday=1,is_closed=False),
@@ -252,6 +253,7 @@ def signupViews(request):
             company = Company.objects.create(user=account,business_name=bname,email=email,phone=phone,
                                                 description='',address='',postal='',
                                                 state='',city='',status='draft')
+            company.save()
             biz_hours = OpeningHours.objects.bulk_create([
                 OpeningHours(company=company, weekday=0,is_closed=True),
                 OpeningHours(company=company, weekday=1,is_closed=False),

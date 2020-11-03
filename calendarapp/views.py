@@ -80,8 +80,8 @@ def time_slots(start_time, end_time, interval, duration_hour, duration_minute, y
                     count = 1
         if count==0:
             availableDay.append(t.strftime("%I:%M %p"))
-        t = timezone.localtime((datetime.datetime.combine(datetime.date.today(), t) +
-             datetime.timedelta(minutes=interval)).astimezone(pytz.timezone("UTC"))).time()
+        t = timezone.localtime(timezone.make_aware(datetime.datetime.combine(datetime.date.today(), t) +
+             datetime.timedelta(minutes=interval))).time()
     return availableDay
 
 class bookingTimes(View):

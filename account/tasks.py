@@ -40,7 +40,7 @@ def reminderEmail(booking_id):
     service = booking.service
     email = acct.email
     if booking.is_cancelled_user or booking.is_cancelled_company:
-        subject = f'Book some '+ company.category +' on Gibele!'
+        subject = f'Book some '+ company.category.name +' on Gibele!'
         html_message = render_to_string('emailSents/booking/budge.html', {'acct':acct,'company':company,'service':service, 'booking':booking})
     else:
         subject = f'REMINDER: You have an upcoming appointment with ' + company.business_name + '!'

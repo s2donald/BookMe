@@ -45,19 +45,18 @@ def time_slots(start_time, end_time, interval, duration_hour, duration_minute, y
     servDate = timezone.localtime(timezone.make_aware(datetime.datetime(year,month,day)))
     if timezone.localtime(timezone.now()).date() == servDate.date():
         while timezone.localtime(timezone.now()).time()>t:
-            print(timezone.now().time())
-            t = timezone.localtime((datetime.datetime.combine(datetime.date.today(), t) +
-             datetime.timedelta(minutes=interval)).astimezone(pytz.timezone("UTC"))).time()
+            t = timezone.localtime(timezone.make_aware(datetime.datetime.combine(datetime.date.today(), t) +
+             datetime.timedelta(minutes=interval))).time()
     availableDay = []
     while t < end_time:
-        servStart = timezone.localtime(datetime.datetime.combine(servDate, t).astimezone(pytz.timezone("UTC")))
-        endTime = timezone.localtime((datetime.datetime.combine(servDate, t) +
-                    datetime.timedelta(hours=duration_hour,minutes=duration_minute)).astimezone(pytz.timezone("UTC")))
+        servStart = timezone.localtime(timezone.make_aware(datetime.datetime.combine(servDate, t)))
+        endTime = timezone.localtime(timezone.make_aware(datetime.datetime.combine(servDate, t) +
+                    datetime.timedelta(hours=duration_hour,minutes=duration_minute)))
         objects = Bookings.objects.filter(company=company, start__gte=servDate, end__lte=servDate + datetime.timedelta(days=1), is_cancelled_user=False, is_cancelled_company=False)
         # objlength = len(objects)
         count = 0
         for obj in objects:
-            if (obj.start.date() == servStart.date()):
+            if (timezone.localtime(obj.start).date() == timezone.localtime(servStart).date()):
                 #Check the buffer option that applies to this booking
                 # buffer = obj.service.padding
                 # before_durhour = 0
@@ -160,7 +159,14 @@ class createAppointment(View):
         end = timezone.localtime(timezone.make_aware(end))
         if user.is_authenticated:
             if company.returning:
-                if not company.clients.filter(user=user).exists():
+                if company.clients.filter(user=user, first_name=user.first_name).exists():
+                    pass
+                #Check if the client object was already created by the company
+                elif company.clients.filter(phone=user.phone, first_name=user.first_name).exists():
+                    pass
+                elif company.clients.filter(email=user.email, first_name=user.first_name).exists():
+                    pass
+                else:
                     return JsonResponse({'time':time, 's_id':s_id,'start':start,'date':date,'time':time, 'emailerr':True, 'notonclientlist':True})
             if Bookings.objects.filter(company=company, start=start, end=end, is_cancelled_user=False,is_cancelled_company=False).count()<1:
                 #Check if the user is already a client

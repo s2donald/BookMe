@@ -1413,10 +1413,11 @@ class deleteBookingByCompAPI(View):
             email = booking.user.email
             appointmentCancelled.delay(booking.id)
         except AttributeError:
-            email = booking.guest.email
-            appointmentCancelled.delay(booking.id)
-        except AttributeError:
-            email = ''
+            try:
+                email = booking.guest.email
+                appointmentCancelled.delay(booking.id)
+            except AttributeError:
+                email = ''
             
         #Dont delete the object, we instead have it on file and change it to cancelled appt
         booking.is_cancelled_company = True
@@ -1440,8 +1441,11 @@ class addBooking(View):
             date = bform.cleaned_data.get('datepick')
             time = bform.cleaned_data.get('timepick')
             start = timezone.localtime(timezone.make_aware(datetime.combine(date, time)))
-            end = start + timedelta(hours=dur_hour, minutes=dur_min)
-
+            end = timezone.localtime(start + timedelta(hours=dur_hour, minutes=dur_min))
+            if not email:
+                email = None
+            if not phone:
+                phone = None
             try: 
                 guest = company.clients.get(first_name=first_name,last_name=last_name,email=email,phone=phone)
             except ObjectDoesNotExist:

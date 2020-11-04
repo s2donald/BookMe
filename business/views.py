@@ -96,6 +96,12 @@ def allsearch(request):
                 lng = ip[1]
                 pnt = Point(lng,lat, srid=4326)
                 results = results.annotate(distance=GeometryDistance("location", pnt)).order_by("distance")
+                if cat:
+                    results = results.filter(category=cat).order_by('business_name')
+                if subcat:
+                    results = results.filter(subcategory=subcat).order_by('business_name')
+                if not cat and not subcat:    
+                    results = results.order_by('business_name')
             else:
                 if cat:
                     results = results.filter(category=cat).order_by('business_name')

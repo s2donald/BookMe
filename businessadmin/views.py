@@ -5,7 +5,7 @@ from business.models import Company, SubCategory, OpeningHours, Services, Gallar
 from account.models import Account
 from account.forms import UpdatePersonalForm
 from account.tasks import bizCreatedEmailSent, consumerCreatedEmailSent
-from consumer.models import Bookings, Reviews
+from consumer.models import Bookings, Reviews, extraInformation
 from account.forms import AccountAuthenticationForm
 from django.contrib.auth import authenticate, login, logout
 from django_hosts.resolvers import reverse
@@ -1356,14 +1356,18 @@ class getBooking(View):
         company = get_object_or_404(Company, user=request.user)
         booking_id = request.GET.get('booking_id')
         booking = Bookings.objects.get(id=booking_id)
+        try:
+            extra = extraInformation.objects.get(booking=booking)
+        except:
+            extra = None
         service = booking.service
         if booking.user:
             user = booking.user
-            htmlString = render_to_string('bizadmin/dashboard/schedule/bookingInfo.html',{'user':user, 'booking':booking})
+            htmlString = render_to_string('bizadmin/dashboard/schedule/bookingInfo.html',{'user':user, 'booking':booking, 'extra':extra, 'company':company})
             first_name = user.first_name
             last_name = user.last_name
         else:
-            htmlString = render_to_string('bizadmin/dashboard/schedule/bookingInfo.html',{'user':booking.guest, 'booking':booking})
+            htmlString = render_to_string('bizadmin/dashboard/schedule/bookingInfo.html',{'user':booking.guest, 'booking':booking, 'extra':extra, 'company':company})
         return JsonResponse({'html_string':htmlString})
 
 class addRequestedViews(View):

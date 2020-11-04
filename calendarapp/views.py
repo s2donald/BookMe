@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from account.models import Account
 from business.models import Company, Services, OpeningHours, Clients, CompanyReq
-from consumer.models import Bookings
+from consumer.models import Bookings, extraInformation
 from django.http import JsonResponse
 from django.views import View
 import json
@@ -12,6 +12,7 @@ from account.forms import UpdatePersonalForm, AccountAuthenticationForm, Account
 from django.contrib.auth import authenticate, login
 from account.tasks import reminderEmail, confirmedEmail, consumerCreatedEmailSent, confirmedEmailCompany
 from businessadmin.tasks import requestToBeClient
+from business.forms import VehicleMakeModelForm, AddressForm
 # from account.models import Account
 # Create your views here.
 
@@ -38,7 +39,12 @@ def bookingServiceView(request, pk):
         returnClient = company.clients.filter(user=user).exists() or company.clients.filter(phone=user.phone).exists() or company.clients.filter(email=user.email).exists()
     else:
         returnClient = False
-    return render(request, 'bookingpage/testBookingPage.html', {'returnClient':returnClient,'user': user, 'company':company, 'service':service, 'personal_form':personal_form, 'gibele_form':gibele_form})
+
+    if company.category.name == 'Automotive Services':
+        extra_info_form = VehicleMakeModelForm()
+    elif company.category.name == 'Home Services':
+        extra_info_form = AddressForm()
+    return render(request, 'bookingpage/testBookingPage.html', {'extra_info_form':extra_info_form,'returnClient':returnClient,'user': user, 'company':company, 'service':service, 'personal_form':personal_form, 'gibele_form':gibele_form})
 
 def time_slots(start_time, end_time, interval, duration_hour, duration_minute, year, month, day, company):
     t = start_time
@@ -50,11 +56,12 @@ def time_slots(start_time, end_time, interval, duration_hour, duration_minute, y
     availableDay = []
     while t < end_time:
         servStart = timezone.localtime(timezone.make_aware(datetime.datetime.combine(servDate, t)))
-        endTime = timezone.localtime(timezone.make_aware(datetime.datetime.combine(servDate, t) +
-                    datetime.timedelta(hours=duration_hour,minutes=duration_minute)))
-        objects = Bookings.objects.filter(company=company, start__gte=servDate, end__lte=servDate + datetime.timedelta(days=1), is_cancelled_user=False, is_cancelled_company=False)
+        endTime = timezone.localtime(timezone.make_aware(datetime.datetime.combine(servDate, t) + datetime.timedelta(hours=duration_hour,minutes=duration_minute)))
+        objects = Bookings.objects.filter(company=company, start__gte=servDate, end__lte=timezone.localtime(servDate + datetime.timedelta(days=1)), is_cancelled_user=False, is_cancelled_company=False)
         # objlength = len(objects)
         count = 0
+        if endTime.time() <= t:
+            endTime = timezone.localtime(timezone.make_aware(datetime.datetime.combine(servDate, datetime.time(23,59,59))))
         for obj in objects:
             if (timezone.localtime(obj.start).date() == timezone.localtime(servStart).date()):
                 #Check the buffer option that applies to this booking
@@ -74,9 +81,10 @@ def time_slots(start_time, end_time, interval, duration_hour, duration_minute, y
                 # elif buffer == 'after':
                 #     after_durhour = obj.service.paddingtime_hour
                 #     after_durmin = obj.service.paddingtime_minute
+                
                 s = timezone.localtime(obj.start).time()
                 g = timezone.localtime(obj.end).time()
-                if((servStart.time()<=s<endTime.time()) or (servStart.time()<g<endTime.time())):
+                if((servStart.time()<=s<=endTime.time()) or (servStart.time()<=g<=endTime.time())):
                     count = 1
         if count==0:
             availableDay.append(t.strftime("%I:%M %p"))
@@ -198,6 +206,12 @@ class createAppointment(View):
                     company.save()
                 booking = Bookings.objects.create(user=user,guest=guest,service=service, company=company,start=start, end=end, price=price)
                 booking.save()
+                if company.category.name == 'Automotive Services':
+                    make = data['vehmake']
+                    model = data['vehmodel']
+                    vehyear = data['vehyear']
+                    extraInformation.objects.create(car_make=make, car_model=model, car_year=vehyear, booking=booking)
+
                 confirmedEmail.delay(booking.id)
                 confirmedEmailCompany.delay(booking.id)
                 startTime = start - datetime.timedelta(minutes=company.confirmation_minutes)
@@ -227,6 +241,12 @@ class createAppointment(View):
                 booking = Bookings.objects.create(guest=guest,service=service, company=company,
                                                 start=start, end=end, price=price)
                 booking.save()
+                if company.category.name == 'Automotive Services':
+                    make = data['vehmake']
+                    model = data['vehmodel']
+                    vehyear = data['vehyear']
+                    extraInformation.objects.create(car_make=make, car_model=model, car_year=vehyear, booking=booking)
+                    
                 if email:
                     confirmedEmail.delay(booking.id)
                     confirmedEmailCompany.delay(booking.id)

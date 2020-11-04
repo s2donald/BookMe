@@ -29,6 +29,7 @@
             </form>
             
         <form class="sform d-none row" method="post">
+            {% csrf_token %}
           <div class="col-lg-7 text-center">
             <p class="subtitle text-white">Book your service with {{ company.business_name }}</p>
             <h1 class="h2 mb-2"> Confirm To Secure Spot <span class="text-muted float-right"></span>      </h1>
@@ -47,6 +48,20 @@
                 </div>
               </div>
             </div>
+            
+            <div class="row form-block flex-column flex-sm-row">
+              <div class="col-12 text-center text-sm-left">
+                {% if company.category.name == 'Automotive Services' %}
+                    <label for="">Please fill out the form</label>
+                    {{ extra_info_form|crispy }}
+                    <p class="text-sm mb-0 text-left d-none" id="invalid-vehinfo">Please enter your vehicle information</p>
+                {% comment %} {% elif company.category.name == 'Home Services' %}
+                    <label for="">Please fill out the form</label>
+                    {{ extra_info_form|crispy }} {% endcomment %}
+                {% endif %}
+              </div>
+              <div class="col text-center text-sm-right"><a class="btn btn-outline-primary px-3 confbtn"> Confirm and Secure Spot<i class="fa-chevron-right fa ml-2"></i></a></div>
+            </div>
             <div class="text-block">
               <h5 class="mb-4">Things to keep in mind</h5>
               <ul class="list-unstyled">
@@ -57,11 +72,6 @@
                   </div>
                 </li>
               </ul>
-            </div>
-            <div class="row form-block flex-column flex-sm-row">
-              <div class="col text-center text-sm-left">
-              </div>
-              <div class="col text-center text-sm-right"><a class="btn btn-outline-primary px-3 confbtn"> Confirm and Secure Spot<i class="fa-chevron-right fa ml-2"></i></a></div>
             </div>
           </div>
           <div class="col-lg-5 pl-xl-5">
@@ -142,7 +152,7 @@
                                     <div class="sk-cube4 sk-cube"></div>
                                     <div class="sk-cube3 sk-cube"></div>
                                 </div>
-                        <h3 class="confheader3">Appointment Confirmed!</h3>
+                        <h3 class="confheader3">Booking is Processing..</h3>
                         <div class="text-block appoints"></div>
                         <div class="text-block message"></div>
                     </div>
@@ -323,9 +333,42 @@ function getCookie(name) {
             
     });
 
+    var vehmake = ''
+    var vehmodel = ''
+    var vehyear = 0
+
     const lconf = document.querySelector(".confbtn")
-    lconf.addEventListener('click', addBooking, {once:true});
-            
+    lconf.addEventListener('click', checkextraInfo);
+    
+    function checkextraInfo(){
+        {% if company.category.name == 'Automotive Services' %}
+            console.log('hello')
+            var vehdata = $('.sform').serializeArray()
+            vehmake = vehdata[1].value
+            vehmodel = vehdata[2].value
+            vehyear = parseInt(vehdata[3].value)
+            if (vehmake=='' || vehmodel=='' || vehyear=='' ){
+                const vehinfo = document.querySelector("#invalid-vehinfo")
+                vehinfo.classList.remove('d-none')
+            }
+            else if (!(Number.isInteger(vehyear))){
+                const vehinfo = document.querySelector("#invalid-vehinfo")
+                vehinfo.classList.remove('d-none')
+            }
+            else if (!(/^[0-9]{4}$/).test(vehyear)){
+                const vehinfo = document.querySelector("#invalid-vehinfo")
+                vehinfo.classList.remove('d-none')
+            }
+            else {
+                const vehinfo = document.querySelector("#invalid-vehinfo")
+                vehinfo.classList.add('d-none')
+                addBooking()
+            }
+        {% else %}
+            addBooking()
+        {% endif %}
+    }
+
     function addBooking(){
         secform.classList.add("d-none");
         const loginGibele = document.querySelector('#loginGibeleForm')
@@ -393,7 +436,7 @@ function getCookie(name) {
                         fetch("{% host_url 'creatingBooking' host 'bookingurl' slug=company.slug %}", {
                             body: JSON.stringify({time:booktime, date:bookingdate.toDateString(), month:bookingdate.getMonth(),
                                                     day:bookingdate.getDate(), year:bookingdate.getFullYear(), s_id:serv_id, first_name:first_name.value, 
-                                                    last_name:last_name.value, phone:phoneGuest.value, email:emailGuest.value }),
+                                                    last_name:last_name.value, phone:phoneGuest.value, email:emailGuest.value, vehmake:vehmake, vehmodel:vehmodel,vehyear:vehyear }),
                             method: 'POST',
                             headers:{
                                 'Content-type':'application/json',
@@ -433,7 +476,7 @@ function getCookie(name) {
     function bookingCreation(){
             csrftoken = getCookie('csrftoken');
             fetch("{% host_url 'creatingBooking' host 'bookingurl' slug=company.slug %}", {
-                body: JSON.stringify({time:booktime, date:bookingdate.toDateString(), month:bookingdate.getMonth(),day:bookingdate.getDate(),year:bookingdate.getFullYear(), s_id:serv_id }),
+                body: JSON.stringify({time:booktime, date:bookingdate.toDateString(), month:bookingdate.getMonth(),day:bookingdate.getDate(),year:bookingdate.getFullYear(), s_id:serv_id, vehmake:vehmake, vehmodel:vehmodel,vehyear:vehyear }),
                 method: 'POST',
                 headers:{
                     'Content-type':'application/json',

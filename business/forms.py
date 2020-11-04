@@ -164,6 +164,19 @@ class AddCompanyForm(forms.ModelForm):
             self.fields['subcategory'].queryset = self.instance.category.subcategory.order_by('name')
 
 
+class AddressForm(forms.Form):
+    address = forms.CharField(label='Address', max_length=200, widget=forms.TextInput(attrs={'class':'form-control'}))
+    postal_regex = RegexValidator(regex=r"^[ABCEGHJKLMNPRSTVXY]{1}\d{1}[A-Z]{1} *\d{1}[A-Z]{1}\d{1}$")
+    postal = forms.CharField(max_length=10, validators=[postal_regex], label='', error_messages={'invalid': 'Enter a valid Postal Code or ZIP Code.'}, widget=forms.TextInput(attrs={'class':'form-control'}))
+    state = forms.CharField(max_length=2, label='State', widget=forms.TextInput(attrs={'class':'form-control'}))
+    city = forms.CharField(max_length=30,label='City', widget=forms.TextInput(attrs={'class':'form-control'}))
+
+class VehicleMakeModelForm(forms.Form):
+    make = forms.CharField(label='Vehicle Make',required=True,max_length=50,widget=forms.TextInput(attrs={'class':'form-control'}))
+    model = forms.CharField(label='Vehicle Model',required=True,max_length=50,widget=forms.TextInput(attrs={'class':'form-control'}))
+    year = forms.DecimalField(label='Vehicle Year',required=True,max_digits=4,decimal_places=0,widget=forms.TextInput(attrs={'class':'form-control'}))
+
+
     
         
         

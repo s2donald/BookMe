@@ -805,107 +805,107 @@ def homepageViews(request):
             
             ttpp = int((bpp/4) + (cdb/4)+ (sdb/4) + (tpp/4))
 
-            week = timezone.now() - timedelta(days=7)
+            week = timezone.localtime(timezone.now() - timedelta(days=7))
             twoweek = week - timedelta(days=7)
             threeweek = twoweek - timedelta(days=7)
             fourweek = threeweek - timedelta(days=7)
-            week1 = Bookings.objects.filter(company=company, end__gte=week, end__lte=timezone.now()).aggregate(Sum('price')).get('price__sum',0)
+            week1 = Bookings.objects.filter(company=company, end__gte=week, end__lte=timezone.now(),is_cancelled_user=False, is_cancelled_company=False).aggregate(Sum('price')).get('price__sum',0)
             if not week1:
                 week1 = 0
             start1 = (week - timedelta(days=week.weekday())).strftime("%b-%d-%Y")
             
-            week2 = Bookings.objects.filter(company=company, end__gte=twoweek, end__lte=week).aggregate(Sum('price')).get('price__sum',0)
+            week2 = Bookings.objects.filter(company=company, end__gte=twoweek, end__lte=week,is_cancelled_user=False, is_cancelled_company=False).aggregate(Sum('price')).get('price__sum',0)
             if not week2:
                 week2 = 0
             start2 = (twoweek - timedelta(days=twoweek.weekday())).strftime("%b-%d-%Y")
 
-            week3 = Bookings.objects.filter(company=company, end__gte=threeweek, end__lte=twoweek).aggregate(Sum('price')).get('price__sum',0)
+            week3 = Bookings.objects.filter(company=company, end__gte=threeweek, end__lte=twoweek,is_cancelled_user=False, is_cancelled_company=False).aggregate(Sum('price')).get('price__sum',0)
             if not week3:
                 week3 = 0
             start3 = (threeweek - timedelta(days=threeweek.weekday())).strftime("%b-%d-%Y")
 
-            week4 = Bookings.objects.filter(company=company, end__gte=fourweek, end__lte=threeweek).aggregate(Sum('price')).get('price__sum',0)
+            week4 = Bookings.objects.filter(company=company, end__gte=fourweek, end__lte=threeweek,is_cancelled_user=False, is_cancelled_company=False).aggregate(Sum('price')).get('price__sum',0)
             if not week4:
                 week4 = 0
             start4 = (fourweek - timedelta(days=fourweek.weekday())).strftime("%b-%d-%Y")
             week = [int(week4), int(week3), int(week2), int(week1)]
             weeklabel = [start4, start3, start2, start1]
 
-            month = timezone.now() - timedelta(days=30)
-            month1 = Bookings.objects.filter(company=company, end__gte=month, end__lte=timezone.now()).aggregate(Sum('price')).get('price__sum',0)
+            month = timezone.localtime(timezone.now() - timedelta(days=30))
+            month1 = Bookings.objects.filter(company=company, end__gte=month, end__lte=timezone.now(),is_cancelled_user=False, is_cancelled_company=False).aggregate(Sum('price')).get('price__sum',0)
             if not month1:
                 month1 = 0
             labelM0 = timezone.now().strftime("%b-%Y")
             labelM1 = month.strftime("%b-%Y")
 
             twomonth = month - timedelta(days=30)
-            month2 = Bookings.objects.filter(company=company, end__gte=twomonth, end__lte=month).aggregate(Sum('price')).get('price__sum',0)
+            month2 = Bookings.objects.filter(company=company, end__gte=twomonth, end__lte=month,is_cancelled_user=False, is_cancelled_company=False).aggregate(Sum('price')).get('price__sum',0)
             if not month2:
                 month2 = 0
             labelM2 = twomonth.strftime("%b-%Y")
 
             threemonth = twomonth - timedelta(days=30)
-            month3 = Bookings.objects.filter(company=company, end__gte=threemonth, end__lte=twomonth).aggregate(Sum('price')).get('price__sum',0)
+            month3 = Bookings.objects.filter(company=company, end__gte=threemonth, end__lte=twomonth,is_cancelled_user=False, is_cancelled_company=False).aggregate(Sum('price')).get('price__sum',0)
             if not month3:
                 month3 = 0
             labelM3 = threemonth.strftime("%b-%Y")
 
             fourmonth = threemonth - timedelta(days=30)
-            month4 = Bookings.objects.filter(company=company, end__gte=fourmonth, end__lte=threemonth).aggregate(Sum('price')).get('price__sum',0)
+            month4 = Bookings.objects.filter(company=company, end__gte=fourmonth, end__lte=threemonth,is_cancelled_user=False, is_cancelled_company=False).aggregate(Sum('price')).get('price__sum',0)
             if not month4:
                 month4 = 0
             labelM4 = fourmonth.strftime("%b-%Y")
 
             fivemonth = fourmonth - timedelta(days=30)
-            month5 = Bookings.objects.filter(company=company, end__gte=fivemonth, end__lte=fourmonth).aggregate(Sum('price')).get('price__sum',0)
+            month5 = Bookings.objects.filter(company=company, end__gte=fivemonth, end__lte=fourmonth,is_cancelled_user=False, is_cancelled_company=False).aggregate(Sum('price')).get('price__sum',0)
             if not month5:
                 month5 = 0
             labelM5 = fivemonth.strftime("%b-%Y")
 
             sixmonth = fivemonth - timedelta(days=30)
-            month6 = Bookings.objects.filter(company=company, end__gte=sixmonth, end__lte=fivemonth).aggregate(Sum('price')).get('price__sum',0)
+            month6 = Bookings.objects.filter(company=company, end__gte=sixmonth, end__lte=fivemonth,is_cancelled_user=False, is_cancelled_company=False).aggregate(Sum('price')).get('price__sum',0)
             if not month6:
                 month6 = 0
             labelM6 = sixmonth.strftime("%b-%Y")
 
             sevenmonth = sixmonth - timedelta(days=30)
-            month7 = Bookings.objects.filter(company=company, end__gte=sevenmonth, end__lte=sixmonth).aggregate(Sum('price')).get('price__sum',0)
+            month7 = Bookings.objects.filter(company=company, end__gte=sevenmonth, end__lte=sixmonth,is_cancelled_user=False, is_cancelled_company=False).aggregate(Sum('price')).get('price__sum',0)
             if not month7:
                 month7 = 0
             labelM7 = sevenmonth.strftime("%b-%Y")
 
             eightmonth = sevenmonth - timedelta(days=30)
-            month8 = Bookings.objects.filter(company=company, end__gte=eightmonth, end__lte=sevenmonth).aggregate(Sum('price')).get('price__sum',0)
+            month8 = Bookings.objects.filter(company=company, end__gte=eightmonth, end__lte=sevenmonth,is_cancelled_user=False, is_cancelled_company=False).aggregate(Sum('price')).get('price__sum',0)
             if not month8:
                 month8 = 0
             labelM8 = eightmonth.strftime("%b-%Y")
 
             ninemonth = eightmonth - timedelta(days=30)
-            month9 = Bookings.objects.filter(company=company, end__gte=ninemonth, end__lte=eightmonth).aggregate(Sum('price')).get('price__sum',0)
+            month9 = Bookings.objects.filter(company=company, end__gte=ninemonth, end__lte=eightmonth,is_cancelled_user=False, is_cancelled_company=False).aggregate(Sum('price')).get('price__sum',0)
             if not month9:
                 month9 = 0
             labelM9 = ninemonth.strftime("%b-%Y")
 
             tenmonth = ninemonth - timedelta(days=30)
-            month10 = Bookings.objects.filter(company=company, end__gte=tenmonth, end__lte=ninemonth).aggregate(Sum('price')).get('price__sum',0)
+            month10 = Bookings.objects.filter(company=company, end__gte=tenmonth, end__lte=ninemonth,is_cancelled_user=False, is_cancelled_company=False).aggregate(Sum('price')).get('price__sum',0)
             if not month10:
                 month10 = 0
             labelM10 = tenmonth.strftime("%b-%Y")
 
             elevenmonth = tenmonth - timedelta(days=30)
-            month11 = Bookings.objects.filter(company=company, end__gte=elevenmonth, end__lte=tenmonth).aggregate(Sum('price')).get('price__sum',0)
+            month11 = Bookings.objects.filter(company=company, end__gte=elevenmonth, end__lte=tenmonth,is_cancelled_user=False, is_cancelled_company=False).aggregate(Sum('price')).get('price__sum',0)
             if not month11:
                 month11 = 0
             labelM11 = elevenmonth.strftime("%b-%Y")
 
             twelvemonth = elevenmonth - timedelta(days=30)
-            month12 = Bookings.objects.filter(company=company, end__gte=twelvemonth, end__lte=elevenmonth).aggregate(Sum('price')).get('price__sum',0)
+            month12 = Bookings.objects.filter(company=company, end__gte=twelvemonth, end__lte=elevenmonth,is_cancelled_user=False, is_cancelled_company=False).aggregate(Sum('price')).get('price__sum',0)
             if not month12:
                 month12 = 0
             labelM12 = twelvemonth.strftime("%b-%Y")
 
             month = [int(month12),int(month11),int(month10),int(month9),int(month8),int(month7),int(month6),int(month5),int(month4),int(month3),int(month2),int(month1),]
-            monthlabel = [labelM11,labelM10,labelM9,labelM8,labelM7,labelM6,labelM5,labelM4,labelM3,labelM2,labelM1,labelM0]
+            monthlabel = [labelM12,labelM11,labelM10,labelM9,labelM8,labelM7,labelM6,labelM5,labelM4,labelM3,labelM2,labelM1]
             return render(request,'bizadmin/home/home.html', {'ttpp':ttpp,'tpp':tpp,'sdb':sdb,'cdb':cdb,'company':company, 'week':week, 'weeklabel':weeklabel, 'month':month, 'monthlabel':monthlabel, 'bpp':bpp})
         else:
             return redirect(reverse('completeprofile', host='bizadmin'))
@@ -1411,16 +1411,20 @@ class deleteRequestedViews(View):
 
         return JsonResponse({'deleted':'We have rejected ' + user.first_name + '\'s request to join your client list.','html_string':html_string})
 import celery
+from celery import app
 class deleteBookingByCompAPI(View):
     def post(self, request):
         booking_id = request.POST.get('booking_id')
         booking = get_object_or_404(Bookings, id=booking_id)
         try:
             email = booking.user.email
+            app.control.revoke(task_id=booking.slug, terminate=True)
             appointmentCancelled.delay(booking.id)
+            
         except AttributeError:
             try:
                 email = booking.guest.email
+                app.control.revoke(task_id=booking.slug, terminate=True)
                 appointmentCancelled.delay(booking.id)
             except AttributeError:
                 email = ''

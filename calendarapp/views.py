@@ -214,7 +214,7 @@ class createAppointment(View):
 
                 confirmedEmail.delay(booking.id)
                 confirmedEmailCompany.delay(booking.id)
-                startTime = start - datetime.timedelta(minutes=company.confirmation_minutes)
+                startTime = timezone.localtime(start - datetime.timedelta(minutes=company.confirmation_minutes))
                 reminderEmail.apply_async(args=[booking.id], eta=startTime, task_id=booking.slug)
                 good = True
             else:
@@ -250,8 +250,8 @@ class createAppointment(View):
                 if email:
                     confirmedEmail.delay(booking.id)
                     confirmedEmailCompany.delay(booking.id)
-                startTime = start - datetime.timedelta(minutes=15)
-                reminderEmail.apply_async(args=[booking.id], eta=startTime)
+                    startTime = start - datetime.timedelta(minutes=company.confirmation_minutes)
+                    reminderEmail.apply_async(args=[booking.id], eta=startTime)
                 good = True
             else:
                 good = False

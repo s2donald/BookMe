@@ -7,6 +7,11 @@
 
     <p>Client Email: {{ acct.email }}</p>
     <p>Client Phone Number: {{ acct.phone }}</p>
+    {% if company.category.name == 'Automotive Services' %}
+        {% if extra %}
+            <p><strong>Vehicle Make:</strong>{{ extra.car_make }} <strong>Vehicle Model:</strong>{{ extra.car_model }} <strong>Vehicle Year:</strong>{{ extra.car_year }}</p>
+        {% endif %}
+    {% endif %}
     <p>Booking ID: {{ booking.slug }}</p>
     <h3>Thanks!</h3>
 {% endblock %}

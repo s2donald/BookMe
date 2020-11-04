@@ -2,7 +2,7 @@ from celery import task
 from django.core.mail import send_mail
 from .models import Account
 from business.models import Company
-from consumer.models import Bookings
+from consumer.models import Bookings, extraInformation
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 
@@ -80,8 +80,12 @@ def confirmedEmailCompany(booking_id):
     company = booking.company
     service = booking.service
     email = company.email
+    try:
+        extra = extraInformation.objects.get(booking=booking)
+    except:
+        extra = None
     subject = f'You have a new appointment!'
-    html_message = render_to_string('emailSents/booking/companyReminder.html', {'acct':acct,'company':company,'service':service, 'booking':booking})
+    html_message = render_to_string('emailSents/booking/companyReminder.html', {'acct':acct,'company':company,'service':service, 'booking':booking, 'extra':extra})
     plain_message = strip_tags(html_message)
 
     mail_sent = send_mail(subject, plain_message, 'Gibele <noreply@gibele.com>', [email], html_message=html_message, fail_silently=False)

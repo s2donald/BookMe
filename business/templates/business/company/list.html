@@ -6,13 +6,13 @@
   <form action="" hidden> {% csrf_token %}</form>
     <div class="container">
         {% if category %}
-            <h1 class="text-center">{{ category.name }}({{total}})</h1>
+            <h1 class="text-center">{{ category.name }}</h1>
         {% else %}
-            <h1 class="text-center">{% if name %}Results for {{ name }}{% else %}No Results Found{% endif %}</h1>
+            {% comment %} <h1 class="text-center">{% if name %}Results for {{ name }}{% else %}No Results Found{% endif %}</h1> {% endcomment %}
         {% endif %}
         <div class="d-flex justify-content-between align-items-center flex-column flex-md-row my-3 col-md-12">
               <div class="mr-3">
-                <p class="mb-3 mb-md-0"><strong>{{ total }}</strong> results found</p>
+                <p class="mb-3 mb-md-0"><strong>{{ total }}</strong> results found {% if name %}for {{ name }}{% endif %}</p>
               </div>
               <div>
                 <label class="form-label mr-2" for="sortCompany">Sort by</label>

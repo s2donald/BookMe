@@ -63,10 +63,8 @@ def allsearch(request):
 
         if form.is_valid():
             Search = form.cleaned_data['Search']
-
             if q == 1:
                 loc = form.cleaned_data['Location']
-            
             if not loc:
                 if not request.user.is_authenticated:
                     loc = 'me'
@@ -77,15 +75,12 @@ def allsearch(request):
             # results = Company.objects.annotate(search=SearchVector('business_name','description'),).filter(search=Search)
             #This may need to ge optimized
             results = Services.objects.annotate(similarity=TrigramSimilarity('name', Search),).filter(similarity__gt=0.1).order_by('-similarity')
-            ids = results.values_list('business', flat=True).distinct()
+            ids = results.values_list('business', flat=True)
             searchvector = SearchVector('business_name', weight='A') + SearchVector('description', weight='B')
             searchquery = SearchQuery(Search)
-            
-            results = Company.objects.filter(id__in=ids)|Company.objects.annotate(similarity=TrigramSimilarity('business_name', Search),).filter(similarity__gt=0.1).order_by('-similarity')
-            
-            
-            results = results.filter(status='published')
-
+            results = Company.objects.none()
+            for word in Search.split():
+                results = results|Company.objects.filter(tags__name__icontains=word)|Company.objects.filter(id__in=ids)|Company.objects.annotate(similarity=TrigramSimilarity('business_name', word),).filter(similarity__gt=0.1).order_by('-similarity')
             if loc=='me':
                 ip = geocoder.ipinfo('me').latlng
             else:
@@ -100,16 +95,13 @@ def allsearch(request):
                     results = results.filter(category=cat).order_by('business_name')
                 if subcat:
                     results = results.filter(subcategory=subcat).order_by('business_name')
-                if not cat and not subcat:    
-                    results = results.order_by('business_name')
             else:
                 if cat:
                     results = results.filter(category=cat).order_by('business_name')
                 if subcat:
                     results = results.filter(subcategory=subcat).order_by('business_name')
-                if not cat and not subcat:    
-                    results = results.order_by('business_name')
 
+            results = results.filter(status='published').distinct()
             total = results.count()
             paginator = Paginator(results, 6)
             page = request.GET.get('page')

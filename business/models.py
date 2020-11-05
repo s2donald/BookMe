@@ -185,7 +185,7 @@ class Company(models.Model):
     tags = TaggableManager(blank=True)
     location = models.PointField(blank=True, null=True)
     tz = models.CharField(choices=ALL_TIMEZONES, max_length=64, default="America/Toronto")
-
+    showAddress = models.BooleanField(default=True)
     class Meta:
         ordering = ('-updated',)
         verbose_name = 'company'

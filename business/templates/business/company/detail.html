@@ -90,7 +90,7 @@
                 {% for a in amenities %}
                 <li class="list-inline-item mb-3">
                   <div class="d-flex align-items-center">
-                    <div class="icon-circle bg-secondary mr-2"><i class="fa fa-check"></i></div><span class="text-uppercase">{{ a.amenity }}</span>
+                    <div class="icon-circle bg-secondary mr-2"><i class="fa fa-check"></i></div><span class="text-capitalize">{{ a.amenity }}</span>
                   </div>
                 </li>
                 {% endfor %}
@@ -368,7 +368,7 @@
         }
 
         function geocodeAddress(geocoder, resultsMap) {
-            var address = '{{ company.address }}';
+            var address = '{{ company.address }}, {{ company.state }}, {{ company.city }}, {{ company.postal }}';
             geocoder.geocode({ address: address }, function(results, status) {
                 if (status === "OK") {
                 resultsMap.setCenter(results[0].geometry.location);
@@ -377,7 +377,7 @@
                     position: results[0].geometry.location
                 });
                 } else {
-                alert("Geocode was not successful for the following reason: " + status);
+
                 }
             });
         }

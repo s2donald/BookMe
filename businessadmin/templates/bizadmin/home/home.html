@@ -19,9 +19,19 @@
                                 </div>
                             </div>
                         </div>
+                        {% comment %} <div class="row align-items-center">
+                                        <div class="col-xl-8 col-xxl-12">
+                                            <div class="text-center px-4 mb-xxl-4 d-block d-inline">
+                                                <h4 class="text-info mb-0 mt-3">Your personalized booking link:
+                                                <p class="text-gray-700 mb-2">{{ company.slug}}.gibele.com</p></h4>
+                                                <button class="btn btn-primary" id="changeLinkModal">Change Booking Link</button>
+                                            </div>
+                                        </div>
+                                    </div> {% endcomment %}
                     </div>
                 </div>
             </div>
+            {% if not ttpp == 100 %}
             <div class="col-12">
                     <div class="row">
                         <div class="col-xl-12 mb-4">
@@ -31,11 +41,11 @@
                                 </div>
                                 <div class="card-body">
                                     {% if not bpp == 100 %}
-                                    <h4 class="small">
-                                        <a href="{% host_url 'photos' host 'bizadmin' %}">Add Business Page Photos</a>
-                                        <span class="float-right font-weight-bold">{{ bpp }}%</span>
-                                    </h4>
-                                    <div class="progress mb-4"><div class="progress-bar" role="progressbar" style="width: {{ bpp }}%;" aria-valuenow="{{ bpp }}" aria-valuemin="0" aria-valuemax="100"></div></div>
+                                      <h4 class="small">
+                                          <a href="{% host_url 'photos' host 'bizadmin' %}">Add Business Page Photos</a>
+                                          <span class="float-right font-weight-bold">{{ bpp }}%</span>
+                                      </h4>
+                                      <div class="progress mb-4"><div class="progress-bar" role="progressbar" style="width: {{ bpp }}%;" aria-valuenow="{{ bpp }}" aria-valuemin="0" aria-valuemax="100"></div></div>
                                     {% endif %}
 
                                     {% if not sdb == 100 %}
@@ -62,17 +72,19 @@
                                     </h4>
                                     <div class="progress mb-4"><div class="progress-bar bg-danger" role="progressbar" style="width: {{ tpp }}%;" aria-valuenow="{{ tpp }}" aria-valuemin="0" aria-valuemax="100"></div></div>
                                     {% endif %}
-
-                                    <h4 class="small">
+                                    {% if not ttpp == 100 %}
+                                      <h4 class="small">
                                         Basic Account Setup
                                         <span class="float-right font-weight-bold">{{ ttpp }}%</span>
-                                    </h4>
-                                    <div class="progress"><div class="progress-bar bg-success" role="progressbar" style="width: {{ ttpp }}%;" aria-valuenow="{{ ttpp }}" aria-valuemin="0" aria-valuemax="100"></div></div>
+                                      </h4>
+                                      <div class="progress"><div class="progress-bar bg-success" role="progressbar" style="width: {{ ttpp }}%;" aria-valuenow="{{ ttpp }}" aria-valuemin="0" aria-valuemax="100"></div></div>
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>
                     </div>
           </div>
+          {% endif %}
 
           <div class="col-12">
             <div class="card card-chart">

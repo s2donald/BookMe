@@ -44,6 +44,8 @@ def bookingServiceView(request, pk):
         extra_info_form = VehicleMakeModelForm()
     elif company.category.name == 'Home Services':
         extra_info_form = AddressForm()
+    else:
+        extra_info_form = AddressForm()
     return render(request, 'bookingpage/testBookingPage.html', {'extra_info_form':extra_info_form,'returnClient':returnClient,'user': user, 'company':company, 'service':service, 'personal_form':personal_form, 'gibele_form':gibele_form})
 
 def time_slots(start_time, end_time, interval, duration_hour, duration_minute, year, month, day, company):

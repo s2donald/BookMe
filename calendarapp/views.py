@@ -1,8 +1,10 @@
 from django.shortcuts import render, get_object_or_404
 from account.models import Account
-from business.models import Company, Services, OpeningHours, Clients, CompanyReq
-from consumer.models import Bookings, extraInformation
+from business.models import Company, Services, OpeningHours, Clients, CompanyReq, Gallary, Category, SubCategory, Amenities
+from consumer.models import Bookings, extraInformation, Reviews
+from django.db.models import Count
 from django.http import JsonResponse
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.views import View
 import json
 from django.core import serializers
@@ -13,6 +15,7 @@ from django.contrib.auth import authenticate, login
 from account.tasks import reminderEmail, confirmedEmail, consumerCreatedEmailSent, confirmedEmailCompany
 from businessadmin.tasks import requestToBeClient
 from business.forms import VehicleMakeModelForm, AddressForm
+import re
 # from account.models import Account
 # Create your views here.
 
@@ -22,12 +25,35 @@ def get_companyslug(request, slug):
 def bookingurl(request):
     user = request.user
     company = request.viewing_company
-    services = Services.objects.filter(business=company)
+    # services = Services.objects.filter(business=company)
     if user.is_authenticated:
         returnClient = company.clients.filter(user=user,first_name=user.first_name).exists() or company.clients.filter(phone=user.phone,first_name=user.first_name,).exists() or company.clients.filter(email=user.email,first_name=user.first_name).exists()
     else:
         returnClient = False
-    return render(request, 'bookingpage/home.html', {'returnClient':returnClient,'user': user, 'company':company, 'services':services})
+    address = company.address
+    category = None
+    categories = Category.objects.all()
+    subcategories = SubCategory.objects.all()
+    services = Services.objects.all().filter(business=company)
+    reviews = Reviews.objects.filter(company=company).order_by('-created')
+    amenities = Amenities.objects.filter(company=company).order_by('amenity')
+    sun_hour = OpeningHours.objects.get(company=company, weekday=0)
+    mon_hour = OpeningHours.objects.get(company=company, weekday=1)
+    tues_hour = OpeningHours.objects.get(company=company, weekday=2)
+    wed_hour = OpeningHours.objects.get(company=company, weekday=3)
+    thur_hour = OpeningHours.objects.get(company=company, weekday=4)
+    fri_hour = OpeningHours.objects.get(company=company, weekday=5)
+    sat_hour = OpeningHours.objects.get(company=company, weekday=6)
+    galPhotos = Gallary.objects.filter(company=company)
+    paginator = Paginator(reviews, 6)
+    page = request.GET.get('page')
+    try:
+        reviews = paginator.page(page)
+    except PageNotAnInteger:
+        reviews = paginator.page(1)
+    except EmptyPage:
+        reviews = paginator.page(paginator.num_pages)
+    return render(request, 'bookingpage/homes.html', {'returnClient':returnClient,'user': user, 'page':page,'photos':galPhotos,'sun_hour':sun_hour,'mon_hour':mon_hour,'tues_hour':tues_hour,'wed_hour':wed_hour,'thur_hour':thur_hour,'fri_hour':fri_hour,'sat_hour':sat_hour,'subcategories':subcategories,'amenities':amenities,'address':address,'company':company,'category':category,'categories':categories, 'services':services, 'reviews':reviews})
 
 def bookingServiceView(request, pk):
     user = request.user
@@ -332,8 +358,19 @@ class createAccountView(View):
         email = request.POST.get('email')
         first = request.POST.get('first')
         last = request.POST.get('last')
-        pw = request.POST.get('password')
-
+        password = request.POST.get('password')
+        # calculating the length
+        length_error = len(password) < 8
+        # searching for digits
+        digit_error = re.search(r"\d", password) is None
+        # searching for uppercase
+        uppercase_error = re.search(r"[A-Z]", password) is None
+        # searching for lowercase
+        lowercase_error = re.search(r"[a-z]", password) is None
+        # searching for symbols
+        symbol_error = re.search(r"[ !#?<>:$%&'()*+,-./[\\\]^_`{|}~"+r'"]', password) is None
+        # overall result
+        password_ok = not ( length_error or digit_error or uppercase_error or lowercase_error or symbol_error )
         try:
             validate_email(email)
         except forms.ValidationError:
@@ -341,14 +378,16 @@ class createAccountView(View):
         
         if Account.objects.filter(email=email).exists():
             return JsonResponse({'error':'taken'})
+        elif not password_ok:
+            return JsonResponse({'error':'notgoodpass'})
         else:
-            acct = Account.objects.create_user(email=email,password=pw)
+            acct = Account.objects.create_user(email=email,password=password)
             acct.first_name = first
             acct.last_name=last
             acct.is_consumer=True
             acct.save()
             consumerCreatedEmailSent.delay(acct.id)
-            account = authenticate(email=email, password=pw)
+            account = authenticate(email=email, password=password)
             login(request, account)
         return JsonResponse({'good':'good'})
 

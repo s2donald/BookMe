@@ -12,22 +12,20 @@
                 <div class="card h-100">
                     <div class="card-body h-100 d-flex flex-column justify-content-center py-5 py-xl-4">
                         <div class="row align-items-center">
-                            <div class="col-xl-8 col-xxl-12">
+                            <div class="col-md-6 col-xxl-12">
                                 <div class="text-center px-4 mb-4 mb-xl-0 mb-xxl-4">
                                     <h1 class="text-primary">Welcome Back!</h1>
                                     <p class="text-gray-700 mb-0">View your <a href="{% host_url 'schedule' host 'bizadmin' %}" >schedule</a> or update your <a href="{% host_url 'profile' host 'bizadmin'%}">account</a> settings.</p>
                                 </div>
                             </div>
+                          <div class="col-md-6 col-xxl-12">
+                            <div class="text-lg-left px-4 mb-xxl-4 d-block d-inline">
+                              <h4 class="text-info mb-0 mt-3">Your personalized booking link:
+                              <p class="text-gray-700 mb-2"><a href="{% host_url 'bookingurls' host 'bookingurl' slug=company.slug %}">{{ company.slug }}.gibele.com</a></p></h4>
+                              {% comment %} <button class="btn btn-primary" id="changeLinkModal">Change Booking Link</button> {% endcomment %}
+                            </div>
+                          </div>
                         </div>
-                        {% comment %} <div class="row align-items-center">
-                                        <div class="col-xl-8 col-xxl-12">
-                                            <div class="text-center px-4 mb-xxl-4 d-block d-inline">
-                                                <h4 class="text-info mb-0 mt-3">Your personalized booking link:
-                                                <p class="text-gray-700 mb-2">{{ company.slug}}.gibele.com</p></h4>
-                                                <button class="btn btn-primary" id="changeLinkModal">Change Booking Link</button>
-                                            </div>
-                                        </div>
-                                    </div> {% endcomment %}
                     </div>
                 </div>
             </div>

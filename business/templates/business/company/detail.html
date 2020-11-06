@@ -143,7 +143,7 @@
                       {% if sun_hour.is_closed %}
                         <td class="pr-0 text-right border-0">Closed</td>
                       {% else %}
-                        <td class="pr-0 text-right border-0">{{ sun_hour.from_hour|date:"g:i a"}} - {{ sun_hour.to_hour|date:"g:i a" }}</td>
+                        <td class="pr-0 text-right border-0">{{ sun_hour.from_hour|date:"P"}} - {{ sun_hour.to_hour|date:"P" }}</td>
                       {% endif %}
                     </tr>
                     <tr>
@@ -191,7 +191,7 @@
                       {% if sat_hour.is_closed %}
                         <td class="pr-0 text-right border-0">Closed</td>
                       {% else %}
-                        <td class="pr-0 text-right border-0">{{ sat_hour.from_hour|date:"g:i a" }} - {{ sat_hour.to_hour|date:"g:i a" }}</td>
+                        <td class="pr-0 text-right border-0">{{ sat_hour.from_hour|date:"P" }} - {{ sat_hour.to_hour|date:"P" }}</td>
                       {% endif %}
                     </tr>
                   </table>

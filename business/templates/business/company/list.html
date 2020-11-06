@@ -42,17 +42,17 @@
                       <!-- Slides-->
                         {% with cate=company.category.name %}
                         {% if cate == 'Automotive Services' %}
-                              <div class="swiper-slide"><img class="img-fluid center" style="width:100%; position: center;" src="{% if company.image %}{{ company.image.url }}{% else %}{% static "img/automotive-noimage1.jpg" %}{% endif %}" alt="Header Image"></div>
+                              <div class="swiper-slide"><img class="img-fluid center" style="width:100%; position: center;" src="{% if company.image %}{{ company.image.url }}{% else %}{% static "img/automotive-noimage1.jpg" %}{% endif %}" alt="{{ company.business_name }}"></div>
                         {% endif %}
                         {% if cate == 'Personal Care' %}
-                              <div class="swiper-slide"><img class="img-fluid center" style="width:100%; position: center;" src="{% if company.image %}{{ company.image.url }}{% else %}{% static "img/beauty-noimage1.jpg" %}{% endif %}" alt="Header Image"></div>
+                              <div class="swiper-slide"><img class="img-fluid center" style="width:100%; position: center;" src="{% if company.image %}{{ company.image.url }}{% else %}{% static "img/beauty-noimage1.jpg" %}{% endif %}" alt="{{ company.business_name }}"></div>
                         {% endif %}
                         {% if cate == 'Home Services' %}
-                              <div class="swiper-slide"><img class="img-fluid center" style="width:100%; position: center;" src="{% if company.image %}{{ company.image.url }}{% else %}{% static "img/home-noimage1.jpg" %}{% endif %}" alt="Header Image"></div>
+                              <div class="swiper-slide"><img class="img-fluid center" style="width:100%; position: center;" src="{% if company.image %}{{ company.image.url }}{% else %}{% static "img/home-noimage1.jpg" %}{% endif %}" alt="{{ company.business_name }}"></div>
                         {% endif %}
                         {% endwith %}
                           {% for p in gal %}
-                            <div class="swiper-slide"><img loading="lazy" class="img-fluid center" style="width:100%; position: center;" src="{{ p.photos.url }}" alt="Images"></div>
+                            <div class="swiper-slide"><img loading="lazy" class="img-fluid center" style="width:100%; position: center;" src="{{ p.photos.url }}" alt="{{ company.business_name }}"></div>
                           {% endfor %}
                         
                     </div>
@@ -63,7 +63,7 @@
                   </div>
                       {% else %}
                       {% with cate=company.category.name %}
-                        <img style="width:100%;" src="{% if company.image %}{{ company.image.url }}{% elif cate == 'Automotive Services' %}{% static "/img/automotive-noimage1.jpg" %}{% elif cate == 'Personal Care' %}{% static "img/beauty-noimage1.jpg" %}{% else %}{% static "img/home-noimage1.jpg" %}{% endif %}" alt="">
+                        <img style="width:100%;" src="{% if company.image %}{{ company.image.url }}{% elif cate == 'Automotive Services' %}{% static "/img/automotive-noimage1.jpg" %}{% elif cate == 'Personal Care' %}{% static "img/beauty-noimage1.jpg" %}{% else %}{% static "img/home-noimage1.jpg" %}{% endif %}" alt="{{ company.business_name }}">
                       {% endwith %}
                       {% endif %}
                       {% endwith %}
@@ -91,7 +91,7 @@
                       ({{company.company_reviews.all|length}})</p>
                       <div class="">{{ company.city}}</div>
                   </div>
-                    <h4 class="text-shadow">{{ company.business_name }}</h4>
+                    <h4 class="text-shadow"><a href="{{ company.get_absolute_url }}" class="licolor">{{ company.business_name }}</a></h4>
                     <p class="text-muted">{{ company.description|slice:"0:50"}}{% if company.description|length|get_digit:"-1" > 49 %}...{% endif %} </p>
                   {% comment %} <p class="text-sm text-muted mb-3"> {{ company.description }}</p> {% endcomment %}
                 </div>

@@ -16,30 +16,32 @@
     <link rel="shortcut icon" type="image/jpg" href="{% static 'img/favicon/logo/gibele57.png'%}"/>
     <link rel="apple-touch-icon" href="{% static 'img/favicon/logo/gibele57.png'%}">
     <meta name="robots" content="index, follow">
-    <meta name="description" content="Book appointments online with Gibele. Search for bookable services offered by our partners across many different industries such as Automotive, Healthcare, Mobile Services, Home Services, Personal Care, and other Professional Services">
+    <meta name="description" content="Book your appointments with {% block companybizname %}{% endblock  %} online using the Gibele booking tool.">
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
     <link rel="stylesheet" href="{% static "css/bases.css" %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.2.3/flatpickr.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.2.3/themes/dark.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.4.1/css/swiper.min.css">
+    <link rel="stylesheet" href="{% static "css/magnific-popup.css"%}">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <title>{{ company.business_name }} - Booking with Gibele</title>
   </head>
   <body class="bg-booking">
+        {% block slideshow %}
+        {% endblock slideshow %}
         <div class="bg-dark inline-block container-fluid ">
             <div class="row justify-content-between ">
                 <a class="my-2 pr-2 ml-2" href="{% host_url 'business:homepage' host 'www' %}"><img width="125px" style="white; border-radius:10px;" src="{% static "img/favicon/logo/GibeleLogo.svg" %}"></a>
-                <p class="font-weight-bold text-white pr-2 mt-1 ml-1">Powered by Gibele</p>
-                
+                <p class="font-weight-bold text-white pr-2 mt-1 ml-1">Appointments Powered by Gibele</p>
             </div>
         </div>
         <div class="container align-items-center text-center text-white mt-2">
-
-            <h4>Select Your Service</h4>
             <div class="d-flex align-items-center justify-content-center">
             <h1><a href="{% host_url 'bookingurls' host 'bookingurl' slug=company.slug %}">{{ company.business_name }}</a></h1>
             </div>
-            <div class="row justify-content-around">
+            <div class="text-block">
+                <p class="text-block"><i class="fa-map-marker-alt fa mr-1 licolor"></i> {{ company.address }}, {{ company.city }}</p>
                 <p>Rating: {% for x in '12345' %}<i class="fas fa-star {% if forloop.counter|avg_reviews:company.id %}text-warning{% else %}text-gray-300{% endif %}"></i>{% endfor %}</p>
             </div>
             <script type="text/javascript" src="https://kit.fontawesome.com/a07c5b9658.js" crossorigin="anonymous"></script>
@@ -48,6 +50,11 @@
             <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
             <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
             <script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.2.3/flatpickr.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.4.1/js/swiper.min.js"></script>
+            <script type="text/javascript" src="{% static 'js/vendor/smooth-scroll.min.js' %}"></script>
+            <script language="JavaScript" type="text/javascript" src="{% static 'js/bases.js' %}"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/object-fit-images/3.2.4/ofi.min.js" integrity="sha512-7taFZYSf0eAWyi1UvMzNrBoPVuvLU7KX6h10e4AzyHVnPjzuxeGWbXYX+ED9zXVVq+r9Xox5WqvABACBSCevmg==" crossorigin="anonymous"></script>
+            <script type="text/javascript" src="{% static 'js/vendor/magnific-popup/jquery.magnific-popup.min.js' %}"></script>
             <div id="fb-root"></div>
             <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v8.0&appId=780700556106489&autoLogAppEvents=1" nonce="gZZ9FWp3"></script>
             {% block booking %}

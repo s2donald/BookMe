@@ -101,8 +101,8 @@ class AddServiceForm(forms.ModelForm):
     description = forms.CharField(label='Details Of Service',max_length=250, required=True, widget=forms.Textarea(attrs={'rows':4, 'cols':20}))
     price_type = forms.ChoiceField(label='Price Type',choices=price_choices, widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control', 'data-size':'5'}))
     price = forms.DecimalField(label='Price ($)',max_digits=10, required=True, widget=forms.TextInput(attrs={'type':'number', 'rows':1, 'cols':20,}))
-    duration_hour = forms.ChoiceField(label='Duration Hour',choices=hours_choices, widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control', 'data-size':'5'}))
-    duration_minute = forms.ChoiceField(label='Duration Minute',choices=minute_choices_no_zero,initial= '30', widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control', 'data-size':'5'}))
+    duration_hour = forms.ChoiceField(label='Duration Hour',choices=hours_choices,initial= '0', widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control', 'data-size':'5'}))
+    duration_minute = forms.ChoiceField(label='Duration Minute',choices=minute_choices,initial= '30', widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control', 'data-size':'5'}))
     checkintime = forms.ChoiceField(label='Check In Time',choices=minute_choices, widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control', 'data-size':'5'}))
     padding = forms.ChoiceField(label='Buffer', choices=beforeafter, widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control', 'data-size':'5'}))
     paddingtime_hour = forms.ChoiceField(label='Buffer Hour', choices=hours_choices, widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control', 'data-size':'5'}))
@@ -111,6 +111,23 @@ class AddServiceForm(forms.ModelForm):
         model = Services
         fields = ('name','description','price_type','price','available','duration_hour',
         'checkintime','padding','paddingtime_hour','paddingtime_minute')
+    # def __init__(self, *args, **kwargs):
+    #     super().__init__(*args, **kwargs)
+    #     if int(self.fields['duration_hour'].initial) > 0:
+    #         self.fields['duration_minute'].choices = minute_choices
+    #     else:
+    #         self.fields['duration_minute'].choices = minute_choices_no_zero
+        
+    #     if 'duration_hour' in self.data:
+    #         try:
+    #             dur_hour = int(self.data.get('duration_hour'))
+    #             print(dur_hour)
+    #             if dur_hour > 0:
+    #                 self.fields['duration_minute'].choices = minute_choices
+    #             else:
+    #                 self.fields['duration_minute'].choices = minute_choices_no_zero
+    #         except (ValueError, TypeError):
+    #             pass
 
 class BookingSettingForm(forms.Form):
     interval = forms.ChoiceField(label='',choices=minute_choices_no_zero,initial= '30', widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control', 'data-size':'5', 'data-dropdown-align-right':'true'}))

@@ -481,7 +481,12 @@ a.licolor:hover, a.licolor:focus {
 .liblack {
     color: black;
 }
-
+.lipurple {
+  color: #854fee;
+}
+.ligrey {
+  color: grey;
+}
 .btn {
     white-space: nowrap;
     text-align: center;

@@ -179,12 +179,12 @@
                     <span class="sidebar-normal"> Notifications </span>
                   </a>
                 </li>
-                <li>
+                {% comment %} <li>
                   <a href="">
                     <span class="sidebar-mini-icon"><i class="fas fa-language"></i></span>
                     <span class="sidebar-normal"> Language &amp; Time Zone </span>
                   </a>
-                </li>
+                </li> {% endcomment %}
                 <li>
                   <a href="{% host_url 'business:privacy' host 'www' %}">
                     <span class="sidebar-mini-icon"><i class="fas fa-user-secret"></i></span>
@@ -272,9 +272,11 @@
                     <a href="{% host_url 'bookingSetting' host 'bizadmin'%}" class="nav-item dropdown-item">Booking Settings</a>
                   </li>
                   <li class="dropdown-divider"></li>
-                  <li class="nav-link">
-                    <a href="{% host_url 'business:company_detail' slug=company.slug id=company.id host 'www' %}" class="nav-item dropdown-item">Your Business Page</a>
-                  </li>
+                  {% if request.user.on_board %}
+                    <li class="nav-link">
+                      <a href="{% host_url 'business:company_detail' slug=company.slug id=company.id host 'www' %}" class="nav-item dropdown-item">Your Business Page</a>
+                    </li>
+                  {% endif %}
                   <li class="dropdown-divider"></li>
                   <li class="nav-link">
                     <a href="{% host_url 'bizadminlogout' host 'bizadmin' %}" class="nav-item dropdown-item">Log out</a>

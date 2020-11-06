@@ -85,7 +85,8 @@ def allsearch(request):
                 ip = geocoder.ipinfo('me').latlng
             else:
                 ip = geocoder.google(loc, key="AIzaSyBaZM_O3d1-xDrecS_fbcbvoT5qDmLmje0").latlng
-            
+                if not ip:
+                    ip = geocoder.ipinfo('me').latlng
             if ip:
                 lat = ip[0]
                 lng = ip[1]

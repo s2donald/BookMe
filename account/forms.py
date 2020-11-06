@@ -6,7 +6,7 @@ from .models import Account
 from business.models import Company
 from django.core.validators import RegexValidator
 from bootstrap_modal_forms.forms import BSModalModelForm
-
+import re
 class ConsumerRegistrationForm(UserCreationForm):
     password1 = forms.CharField(label='Password', widget=forms.PasswordInput)
     password2 = forms.CharField(label='Repeat password', widget=forms.PasswordInput)
@@ -37,6 +37,21 @@ class ConsumerRegistrationForm(UserCreationForm):
         cd = self.cleaned_data
         if cd['password1'] != cd['password2']:
             raise forms.ValidationError('Passwords don\'t match.')
+        password = cd['password1']
+        # calculating the length
+        length_error = len(password) < 8
+        # searching for digits
+        digit_error = re.search(r"\d", password) is None
+        # searching for uppercase
+        uppercase_error = re.search(r"[A-Z]", password) is None
+        # searching for lowercase
+        lowercase_error = re.search(r"[a-z]", password) is None
+        # searching for symbols
+        symbol_error = re.search(r"[ !#?<>:$%&'()*+,-./[\\\]^_`{|}~"+r'"]', password) is None
+        # overall result
+        password_ok = not ( length_error or digit_error or uppercase_error or lowercase_error or symbol_error )
+        if not password_ok:
+            raise forms.ValidationError("Please enter a stronger password. \nPasswords must be atleast 8 characters long that contains atleast 1 digit, a symbol, uppercase and lower case letters.")
         return cd['password2']
 
 class AccountAuthenticationForm(forms.ModelForm):

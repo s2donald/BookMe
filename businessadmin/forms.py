@@ -4,7 +4,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django import forms
 from django.core.validators import RegexValidator
 from django.db import models
-
+import re
 from business.models import Company, Category, SubCategory
 hours_choices = (
         ('0','0 hours'),
@@ -97,7 +97,30 @@ class BusinessRegistrationForm(UserCreationForm):
         cd = self.cleaned_data
         if cd['password1'] != cd['password2']:
             raise forms.ValidationError('Passwords don\'t match.')
+        password = cd['password1']
+        # calculating the length
+        length_error = len(password) < 8
+        # searching for digits
+        digit_error = re.search(r"\d", password) is None
+        # searching for uppercase
+        uppercase_error = re.search(r"[A-Z]", password) is None
+        # searching for lowercase
+        lowercase_error = re.search(r"[a-z]", password) is None
+        # searching for symbols
+        symbol_error = re.search(r"[ !#?<>:$%&'()*+,-./[\\\]^_`{|}~"+r'"]', password) is None
+        # overall result
+        password_ok = not ( length_error or digit_error or uppercase_error or lowercase_error or symbol_error )
+        if not password_ok:
+            raise forms.ValidationError("Please enter a stronger password. \nPasswords must be atleast 8 characters long that contains atleast 1 digit, a symbol, uppercase and lower case letters.")
         return cd['password2']
+
+class BusinessName(forms.Form):
+    business_name = forms.CharField(label='', max_length=30, required=True,widget=forms.TextInput(attrs={'class':'form-control'}))
+    def clean_business_name(self):
+        cd = self.cleaned_data
+        if len(cd['business_name']) > 30:
+            raise forms.ValidationError("Business name must be less than 30 characters long.")
+        return cd['business_name']
 
 from PIL import Image
 from django import forms

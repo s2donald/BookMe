@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .forms import BusinessRegistrationForm, AddHoursForm, UpdateCompanyForm, AddClientForm, AddNotesForm, CreateSmallBizForm, AddBookingForm
+from .forms import BusinessRegistrationForm, AddHoursForm, UpdateCompanyForm, AddClientForm, AddNotesForm, CreateSmallBizForm, AddBookingForm, BusinessName
 from django.contrib.auth.decorators import login_required
 from business.models import Company, SubCategory, OpeningHours, Services, Gallary, Amenities, Clients, CompanyReq
 from account.models import Account
@@ -76,8 +76,9 @@ def completeViews(request):
     if not request.user.is_authenticated:
         context={}
         user_form = BusinessRegistrationForm()
+        biz_name = BusinessName()
         context['business_registration_form'] = user_form
-        return render(request, 'account/bussignup.html', {'user_form':user_form})
+        return render(request, 'account/bussignup.html', {'user_form':user_form, 'biz_name':biz_name})
     email = request.user.email
     user = get_object_or_404(Account, email=email)
     biz_form = AddCompanyForm()
@@ -241,13 +242,13 @@ def signupViews(request):
     context = {}
     if request.method == 'POST':
         user_form = BusinessRegistrationForm(request.POST)
-        
-        if user_form.is_valid():
+        biz_name = BusinessName(request.POST)
+        if user_form.is_valid() and biz_name.is_valid():
             user_form.save()
             email = user_form.cleaned_data.get('email')
             raw_pass = user_form.cleaned_data.get('password1')
             phone = user_form.cleaned_data.get('phone')
-            bname = request.POST.get('bname', '')
+            bname = biz_name.cleaned_data.get('business_name')
             account = authenticate(email=email, password=raw_pass)
             login(request, account)
             company = Company.objects.create(user=account,business_name=bname,email=email,phone=phone,
@@ -266,11 +267,12 @@ def signupViews(request):
             return redirect(reverse('completeprofile', host='bizadmin'))
         else:
             context['business_registration_form'] = user_form
-            
+            context['business'] = biz_name
     else:
         user_form = BusinessRegistrationForm()
+        biz_name = BusinessName()
         context['business_registration_form'] = user_form
-    return render(request, 'account/bussignup.html', {'user_form':user_form, 'none':'d-none'})
+    return render(request, 'account/bussignup.html', {'user_form':user_form, 'biz_name':biz_name,'none':'d-none'})
 
 def loginViews(request):
     context = {}
@@ -335,11 +337,21 @@ def profileBillingViews(request):
 @login_required()
 def profileSecurityViews(request):
     company = get_object_or_404(Company, user=request.user)
+    user=request.user
+    if user.is_business and not user.on_board:
+        return redirect(reverse('completeprofile', host='bizadmin'))
+    elif not user.is_business:
+        loginViews(request)
     return render(request,'bizadmin/dashboard/account/security.html', {'company':company})
 
 @login_required()
 def notifViews(request):
     company = get_object_or_404(Company, user=request.user)
+    user=request.user
+    if user.is_business and not user.on_board:
+        return redirect(reverse('completeprofile', host='bizadmin'))
+    elif not user.is_business:
+        loginViews(request)
     notesForm = AddNotesForm(initial={'notes':company.notes})
     return render(request,'bizadmin/dashboard/account/notification.html', {'company':company, 'notesForm':notesForm})
 
@@ -1029,6 +1041,11 @@ from .forms import ImagesForm
 @login_required
 def businessPhotoView(request):
     company = Company.objects.get(user=request.user)
+    user=request.user
+    if user.is_business and not user.on_board:
+        return redirect(reverse('completeprofile', host='bizadmin'))
+    elif not user.is_business:
+        loginViews(request)
     photos = Gallary.objects.filter(company=company)
     paginator = Paginator(photos, 6)
     page = request.GET.get('page')
@@ -1044,6 +1061,11 @@ def businessPhotoView(request):
 @login_required
 def businessAmenitiesView(request):
     company = Company.objects.get(user=request.user)
+    user=request.user
+    if user.is_business and not user.on_board:
+        return redirect(reverse('completeprofile', host='bizadmin'))
+    elif not user.is_business:
+        loginViews(request)
     amenities = Amenities.objects.filter(company=company)
     return render(request,'bizadmin/businesspage/amenities.html',{'company':company, 'amenities':amenities})
 
@@ -1057,6 +1079,11 @@ def businessHoursView(request):
     thursday = OpeningHours.objects.get(company=company, weekday=4)
     friday = OpeningHours.objects.get(company=company, weekday=5)
     saturday = OpeningHours.objects.get(company=company, weekday=6)
+    user=request.user
+    if user.is_business and not user.on_board:
+        return redirect(reverse('completeprofile', host='bizadmin'))
+    elif not user.is_business:
+        loginViews(request)
     return render(request, 'bizadmin/businesspage/hours.html', {'company':company,'sunday':sunday, 'monday':monday, 'tuesday':tuesday,'wednesday':wednesday, 'thursday':thursday, 'friday':friday, 'saturday':saturday})
 
 class addTagAPI(View):
@@ -1090,13 +1117,25 @@ class updatePassword(View):
         
         if not (newPass==confirmPass):
             return JsonResponse({'badresponse':'Your passwords don\'t match.'})
-
-        if len(newPass)<8 or not any(char.isalpha() for char in newPass) or not any(char.isdigit() for char in newPass):
-            return JsonResponse({'badresponse': 'Your password must have atleast 8 characters, 1 digit and 1 letter.'})
+        password = confirmPass
+        length_error = len(password) < 8
+        # searching for digits
+        digit_error = re.search(r"\d", password) is None
+        # searching for uppercase
+        uppercase_error = re.search(r"[A-Z]", password) is None
+        # searching for lowercase
+        lowercase_error = re.search(r"[a-z]", password) is None
+        # searching for symbols
+        symbol_error = re.search(r"[ !#?<>:$%&'()*+,-./[\\\]^_`{|}~"+r'"]', password) is None
+        # overall result
+        password_ok = not ( length_error or digit_error or uppercase_error or lowercase_error or symbol_error )
+        if not password_ok:
+            return JsonResponse({'badresponse': 'Please enter a stronger password. \nPasswords must be atleast 8 characters long contains atleast 1 digit, a symbol, uppercase and lower case letters.'})
         
         user.set_password(newPass)
         user.save()
         update_session_auth_hash(request, user)
+        #Send email to user saying password changed
         return JsonResponse({'good':'We have changed your password successfully!'})
 
 class changePrivateView(View):
@@ -1150,8 +1189,9 @@ def compinfoViews(request):
     if not request.user.is_authenticated:
         context={}
         user_form = BusinessRegistrationForm()
+        biz_name = BusinessName()
         context['business_registration_form'] = user_form
-        return render(request, 'account/bussignup.html', {'user_form':user_form})
+        return render(request, 'account/bussignup.html', {'user_form':user_form,'biz_form':biz_form})
     
     email = request.user.email
     user = get_object_or_404(Account, email=email)
@@ -1226,8 +1266,14 @@ class saveCompanyDetail(View):
         else:
             return JsonResponse({'errors':'Please double check your form. There may be errors.'})
 
+@login_required
 def bookingSettingViews(request):
     company = get_object_or_404(Company, user=request.user)
+    user=request.user
+    if user.is_business and not user.on_board:
+        return redirect(reverse('completeprofile', host='bizadmin'))
+    elif not user.is_business:
+        loginViews(request)
     bookingform = BookingSettingForm(initial={'interval':company.interval, 'cancellation':company.cancellation})
     return render(request, 'bizadmin/dashboard/account/booking.html', {'company':company, 'booking_form':bookingform})
 
@@ -1259,8 +1305,9 @@ def servicesDetailView(request):
     if not request.user.is_authenticated:
         context={}
         user_form = BusinessRegistrationForm()
+        biz_name = BusinessName()
         context['business_registration_form'] = user_form
-        return render(request, 'account/bussignup.html', {'user_form':user_form})
+        return render(request, 'account/bussignup.html', {'user_form':user_form,'biz_form':biz_form})
     email = request.user.email
     user = get_object_or_404(Account, email=email)
     if not user.on_board:
@@ -1285,8 +1332,9 @@ def clientListView(request):
     if not request.user.is_authenticated:
         context={}
         user_form = BusinessRegistrationForm()
+        biz_name = BusinessName()
         context['business_registration_form'] = user_form
-        return render(request, 'account/bussignup.html', {'user_form':user_form})
+        return render(request, 'account/bussignup.html', {'user_form':user_form,'biz_form':biz_form})
     email = request.user.email
     user = get_object_or_404(Account, email=email)
     if not user.on_board:
@@ -1310,6 +1358,7 @@ def reviewListView(request):
     if not request.user.is_authenticated:
         context={}
         user_form = BusinessRegistrationForm()
+        biz_name = BusinessName()
         context['business_registration_form'] = user_form
         return render(request, 'account/bussignup.html', {'user_form':user_form})
     email = request.user.email

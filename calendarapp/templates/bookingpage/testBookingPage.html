@@ -3,7 +3,18 @@
 {% load crispy_forms_tags %}
 {% load business_tags %}
 {% block booking %}
-
+<script>
+    {% if company.shownotes %}
+        Swal.fire({
+            title:'{{ company.notes }}',
+            customClass:{
+                confirmButton: 'btn btn-info',
+                cancelButton: 'btn btn-danger',
+            },
+            buttonsStyling: false,
+        });
+    {% endif %}
+</script>
 <div class="container">
         <div class="row">
             <form method="POST" class="justify-content-center fform" enctype="multipart/form-data">
@@ -738,10 +749,14 @@ function getCookie(name) {
                                                 Swal.showValidationMessage('Please enter a proper email.')
                                                 return false
                                             }
-                                            if (data.error == 'taken' ){
+                                            else if (data.error == 'taken' ){
                                                 Swal.showValidationMessage('Email already in use. Try another email address.')
                                                 return false
-                                            }     
+                                            }
+                                            else if (data.error){
+                                                Swal.showValidationMessage('Please enter a stronger password. Passwords must be atleast 8 characters long that contains atleast 1 digit, a symbol, uppercase and lower case letters.')
+                                                return false
+                                            }
                                         }
                                     })
                                 }

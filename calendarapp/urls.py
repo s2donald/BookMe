@@ -16,3 +16,8 @@ urlpatterns = [
     url(r'^service(?P<pk>\d+)/$', views.bookingServiceView, name='bookingserviceurls'),
     url(r'^$', views.bookingurl, name='bookingurls'),
 ]
+
+from django.conf import settings
+from django.conf.urls.static import static
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

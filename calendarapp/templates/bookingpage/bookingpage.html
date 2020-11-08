@@ -27,23 +27,25 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <title>{{ company.business_name }} - Booking with Gibele</title>
   </head>
-  <body class="bg-booking">
+  <body>
         {% block slideshow %}
         {% endblock slideshow %}
-        <div class="bg-dark inline-block container-fluid ">
+        <div class="bg-light inline-block container-fluid align-items-center justify-content-center">
             <div class="row justify-content-between ">
                 <a class="my-2 pr-2 ml-2" href="{% host_url 'business:homepage' host 'www' %}"><img width="125px" style="white; border-radius:10px;" src="{% static "img/favicon/logo/GibeleLogo.svg" %}"></a>
                 <p class="font-weight-bold text-white pr-2 mt-1 ml-1">Appointments Powered by Gibele</p>
             </div>
-        </div>
-        <div class="container align-items-center text-center text-white mt-2">
             <div class="d-flex align-items-center justify-content-center">
-            <h1><a href="{% host_url 'bookingurls' host 'bookingurl' slug=company.slug %}">{{ company.business_name }}</a></h1>
+              <h1><a class="text-white" href="{% host_url 'bookingurls' host 'bookingurl' slug=company.slug %}">{{ company.business_name }}</a></h1>
             </div>
-            <div class="text-block">
-                <p class="text-block"><i class="fa-map-marker-alt fa mr-1 licolor"></i> {{ company.address }}, {{ company.city }}</p>
-                <p>Rating: {% for x in '12345' %}<i class="fas fa-star {% if forloop.counter|avg_reviews:company.id %}text-warning{% else %}text-gray-300{% endif %}"></i>{% endfor %}</p>
+            <div class="text-block align-items-center justify-content-center text-center">
+                <p class="text-block text-white align-items-center justify-content-center mb-0"><i class="fa-map-marker-alt fa mr-1 licolor"></i> {{ company.address }}, {{ company.city }}</p>
+                <p class="text-block text-white justify-content-center align-items-center pb-3">Rating: {% for x in '12345' %}<i class="fas fa-star {% if forloop.counter|avg_reviews:company.id %}text-warning{% else %}text-gray-300{% endif %}"></i>{% endfor %}</p>
             </div>
+        </div>
+        
+        <div class="container align-items-center text-center text-white mt-2">
+            
             <script type="text/javascript" src="https://kit.fontawesome.com/a07c5b9658.js" crossorigin="anonymous"></script>
             {% comment %} <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script> {% endcomment %}
             <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>

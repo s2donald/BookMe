@@ -42,6 +42,8 @@
                 <form method="GET" class="mr-2 my-auto w-100 d-inline-block order-1" action="{% url 'business:bizsearch' %}">
                     <div class="input-group {% block hidesearch %}{% endblock  %} ">
                         {{ form.Search }}
+                        {{ form.lat.as_hidden }}
+                        {{ form.lon.as_hidden }}
                         <span class="input-group-append">
                             <button class="btn btn-dark border-left-0" type="submit"><i class="fas fa-search"></i></button>
                         </span>

@@ -16,7 +16,7 @@
     <link rel="apple-touch-icon" href="{% static '/img/favicon/logo/gibele57.png'%}">
     <meta name="robots" content="index, follow">
     <meta name="description" content="Book appointments online with Gibele. Search for bookable services offered by our partners across many different industries such as Automotive, Healthcare, Mobile Services, Home Services, Personal Care, and other Professional Services">
-    <link href="http://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/smartwizard@5/dist/css/smart_wizard_all.min.css" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
@@ -313,12 +313,14 @@
         <script src="{% static 'js/vendor/bootstrap-datetimepicker.js' %}"></script>
         <script src="{% static 'js/vendor/dropzone.min.js' %}"></script>
         <script src="{% static 'js/vendor/jquery-cropper.min.js' %}"></script>
+        <script src="{% static 'js/businessAdmin/perfect-scrollbar.jquery.min.js' %}"></script>
         <script src="{% static 'js/vendor/bootstrap-tagsinput.js' %}"></script>
         <script src="{% static 'js/businessAdmin/jquery.validate.min.js' %}"></script>
         <script src="{% static 'js/businessAdmin/jquery.bootstrap-wizard.js' %}"></script>
         <script src="https://cdn.jsdelivr.net/npm/smartwizard@5/dist/js/jquery.smartWizard.min.js" type="text/javascript"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js" type="text/javascript"></script>
         <script src="{% static 'js/businessAdmin/scripts.js' %%}"></script>
+        <script>$('.sidebar .sidebar-wrapper, .main-panel').perfectScrollbar();</script>
         {% block java %}
         {% endblock java %}
         {% block businessadmin %}

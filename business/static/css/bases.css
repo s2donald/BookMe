@@ -461,8 +461,6 @@ a:link{
     background: #854fee !important;
 }
 
-
-
 .bg-purple{
     background-color: #854fee;
 }
@@ -642,8 +640,21 @@ button:active,
     background: linear-gradient(90deg, #ff5f6d 0%,#ffc371 100%);
 }
 .bg-light {
-    background: linear-gradient(90deg, #ff5f6d 0%, #ff5f6d 100%);
+    background: linear-gradient(90deg, #ff5f6d 0%, #ff5f6d 100%) !important;
+    background-color: #ff5f6d;
 }
+
+.nav-pills .nav-link:not(.active) {
+  background-color: #fff;
+  color: black;
+}
+
+/* active*/
+.nav-pills .nav-link.active {
+  background: linear-gradient(90deg, #ff5f6d 0%, #ff5f6d 100%);
+  color: white;
+}
+
 .bg-dark {
     background: #1b1b1b;
 }
@@ -1728,17 +1739,12 @@ figure {
     background-color: rgba(255, 255, 255, 0.8);
   }
   
-  .nav-tabs.search-bar-nav-tabs .nav-link.active,
-  .nav-tabs.search-bar-nav-tabs .nav-item.show .nav-link {
-    color: #9a6ee2;
-    background-color: #fff;
-    border-color: #fff;
-  }
+
 
 
 
   /*
-     Business Admin Views CSS Styles
+     User profile Views CSS Styles
     ------------------------
 */
 

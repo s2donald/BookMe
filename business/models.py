@@ -160,7 +160,7 @@ class Company(models.Model):
     email = models.EmailField(verbose_name='Business Email', max_length=60)
     phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$', message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
     phone = models.CharField("Business Phone Number",validators=[phone_regex], max_length=17)
-    postal_regex = RegexValidator(regex=r"^[ABCEGHJKLMNPRSTVXY]{1}\d{1}[A-Z]{1} *\d{1}[A-Z]{1}\d{1}$", message="A valid postal code/ZIP Code must be entered")
+    postal_regex = RegexValidator(regex=r"^[ABCEGHJKLMNPRSTVXYabcdefghijklmnopqrstuvwxyz]{1}\d{1}[A-Z]{1} *\d{1}[A-Z]{1}\d{1}$", message="A valid postal code/ZIP Code must be entered, letters must be in all caps")
     postal = models.CharField(max_length=10, validators=[postal_regex])
     state = models.CharField(max_length=2)
     city = models.CharField(max_length=30)

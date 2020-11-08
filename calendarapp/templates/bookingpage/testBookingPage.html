@@ -15,7 +15,7 @@
         });
     {% endif %}
 </script>
-<div class="container">
+<div class="container-fluid liblack">
         <div class="row">
             <form method="POST" class="justify-content-center fform" enctype="multipart/form-data">
                         {% csrf_token %}
@@ -39,40 +39,40 @@
                         </div>
             </form>
             
-        <form class="sform d-none row" method="post">
+        <form class="sform d-none" method="post">
             {% csrf_token %}
+            <div class="row">
           <div class="col-lg-7 text-center">
-            <p class="subtitle text-white">Book your service with {{ company.business_name }}</p>
-            <h1 class="h2 mb-2"> Confirm To Secure Spot <span class="text-muted float-right"></span>      </h1>
+            <h1 class="h2 mb-2"> Confirm To Secure Spot <span class="text-muted"></span>      </h1>
             <div class="text-block">
               <h5 class="mb-4">{{ service.name }}</h5>
-              <div class="row mb-3 ">
-                <div class="col-md-6 d-flex align-items-center mb-3 mb-md-0 bg-light rounded">
+              <div class="row mb-3">
+                <div class="col-6 m-1 d-flex align-items-center mb-3 mb-md-0 bg-light rounded text-white">
                   <div class="date-tile mr-3">
                     <div class="text-uppercase"> <span class="text-sm" id="sm-mon">Apr</span><br><strong class="text-lg" id="numdate">17</strong></div>
                   </div>
                   <p class="text-sm mb-0" id="serDate"></p>
                 </div>
-                <div class="col-md-1"></div>
-                <div class="col-md-5 d-flex align-items-left mb-3 mb-md-0 bg-light rounded">
+                <div class="col-5 m-1 d-flex align-items-left mb-3 mb-md-0 bg-light rounded text-white">
                   <p class="text-sm mb-0 text-left" id="serDate"> {% if service.duration_hour > 0 %}{{ service.duration_hour }} hour{% endif %} {% if service.duration_minute > 0 and service.duration_hour > 0 %}and{% endif %} {{ service.duration_minute}} minute service.</p>
                 </div>
               </div>
             </div>
             
             <div class="row form-block flex-column flex-sm-row">
-              <div class="col-12 text-center text-sm-left">
+              <div class="col-12 text-left">
                 {% if company.category.name == 'Automotive Services' %}
-                    <label for="">Please fill out the form</label>
+                    <label class="text-center font-weight-bold" for="">Please fill out the form</label>
                     {{ extra_info_form|crispy }}
-                    <p class="text-sm mb-0 text-left d-none" id="invalid-vehinfo">Please enter your vehicle information</p>
+                    <p class="text-sm font-weight-bold mb-0 text-center d-none" style="color:red;" id="invalid-vehinfo">Please enter your vehicle information</p>
                 {% comment %} {% elif company.category.name == 'Home Services' %}
                     <label for="">Please fill out the form</label>
                     {{ extra_info_form|crispy }} {% endcomment %}
                 {% endif %}
               </div>
-              <div class="col text-center text-sm-right"><a class="btn btn-outline-primary px-3 confbtn"> Confirm and Secure Spot<i class="fa-chevron-right fa ml-2"></i></a></div>
+              <div class="col text-center"><a class="btn btn-outline-primary px-3 confbtn"> Confirm and Secure Spot<i class="fa-chevron-right fa ml-2"></i></a></div>
             </div>
+            {% if company.notes %}
             <div class="text-block">
               <h5 class="mb-4">Things to keep in mind</h5>
               <ul class="list-unstyled">
@@ -84,16 +84,18 @@
                 </li>
               </ul>
             </div>
+            {% endif %}
           </div>
           <div class="col-lg-5 pl-xl-5">
-            <div class="card-dark rounded border-0 shadow">
+            <div class="card rounded border-0 shadow">
+            <div class="card-topcol bg-light"></div>
               <div class="card-body p-4">
                 <div class="text-block pb-3">
                   <div class="media align-items-center">
                     <div class="media-body">
                     <h5><a class="text-reset">{{ company.business_name }}</a></h5>
                       <h6> <a class="text-reset">{{ company.category }}</a></h6>
-                      <p class="text-muted text-sm mb-0">{{ company.description|slice:50 }}</p>
+                      <p class="text-muted text-sm mb-0">{{ company.description }}</p>
                       <div class="mt-n1">{% for x in '12345' %}<i class="fas fa-xs fa-star {% if forloop.counter|avg_reviews:company.id %}text-warning{% else %}text-gray-300{% endif %}"></i>{% endfor %}</div>
                     </div>
                   </div>
@@ -103,8 +105,8 @@
                     <tbody>
                       <tr>
                         {% with prctype=service.price_type prc=service.price %}
-                        <th class="font-weight-normal py-2">{% if prctype == 'free' %}Free Service{% elif prctype == 'dont' %}Contact {{ company.business_name}} for pricing {% elif prctype == 'variable' %}Prices Varies From {% elif prctype == 'fixed' %}Fixed Price of {% else %}{{ prctype }}{% endif %}</th>
-                        <td class="text-right py-2">{% if prctype == 'free' %}{% elif prctype == 'dont' %}{% elif prctype == 'variable' %}${{ prc }}{% elif prctype == 'fixed' %}${{ prc }}{% endif %}</td>
+                        <th class="font-weight-normal py-2">{% if prctype == 'free' %}Free Service{% elif prctype == 'dont' %}Contact {{ company.business_name}} for pricing {% elif prctype == 'variable' %}Prices Varies From {% elif prctype == 'fixed' %}Fixed Price of {% else %}Prices start from {% endif %}</th>
+                        <td class="text-right py-2">{% if prctype == 'free' %}{% elif prctype == 'dont' %}{% elif prctype == 'variable' %}${{ prc }}{% elif prctype == 'fixed' %}${{ prc }}{% else %}${{ prc }}{% endif %}</td>
                       </tr>
                       {% comment %} <tr>
                         <th class="font-weight-normal pt-2 pb-3">Service fee</th>
@@ -113,7 +115,7 @@
                     </tbody>
                     <tfoot>
                       <tr class="border-top">
-                        <th class="pt-3">Total</th>
+                        <th class="pt-3">{% if prctype == 'variable' %}Estimated {% elif prctype == 'start' %}Estimated {% endif %}{% if not prctype == 'dont' %}Total{% endif %}</th>
                         <td class="font-weight-bold text-right pt-3">{% if prctype == 'free' %}Free{% elif prctype == 'dont' %}{% else %}${{ prc }}{% endif %}</td>
                         {% endwith %}
                       </tr>
@@ -121,38 +123,38 @@
                   </table>
                 </div>
               </div>
-              <div class="card-footer bg-primary-light py-4 border-0">
+              <div class="card-footer bg-primary-light pb-4 border-0">
                 <div class="media align-items-center">
                   <div class="media-body">
-                    <p class="text-sm text-warning opacity-8 mb-0">Taxes and other charges may apply. Payment is collected in person.</p>
                     <h6 class="licolor"> {% if company.cancellation == 0 %}Flexible cancellation policy{% endif %}</h6>
                     {% if company.cancellation == 10000 %}
-                        <p class="text-sm text-info opacity-8 mb-0">You are unable to cancel this appointment once booked. For urgent cancellations, please contact the service provider.</p>
+                        <p class="font-weight-bold text-info opacity-8 mb-0">You are unable to cancel this appointment once booked. For urgent cancellations, please contact the service provider.</p>
                     {% elif company.cancellation == 168 %}
-                        <p class="text-sm text-info opacity-8 mb-0">Appointments can be cancelled within 1 week of the appointment.</p>
+                        <p class="font-weight-bold text-info opacity-8 mb-0">Appointments can be cancelled within 1 week of the appointment.</p>
                     {% elif company.cancellation == 72 %}
-                        <p class="text-sm text-info opacity-8 mb-0">Appointments can be cancelled within 3 days of the appointment.</p>
+                        <p class="font-weight-bold text-info opacity-8 mb-0">Appointments can be cancelled within 3 days of the appointment.</p>
                     {% elif company.cancellation == 48 %}
-                        <p class="text-sm text-info opacity-8 mb-0">Appointments can be cancelled within 2 days of the appointment.</p>
+                        <p class="font-weight-bold text-info opacity-8 mb-0">Appointments can be cancelled within 2 days of the appointment.</p>
                     {% elif company.cancellation == 24 %}
-                        <p class="text-sm text-info opacity-8 mb-0">Appointments can be cancelled within 1 days of the appointment.</p>
+                        <p class="font-weight-bold text-info opacity-8 mb-0">Appointments can be cancelled within 1 days of the appointment.</p>
                     {% elif company.cancellation == 12 %}
-                        <p class="text-sm text-info opacity-8 mb-0">Appointments can be cancelled within 12 hours of the appointment.</p>
+                        <p class="font-weight-bold text-info opacity-8 mb-0">Appointments can be cancelled within 12 hours of the appointment.</p>
                     {% elif company.cancellation == 8 %}
-                        <p class="text-sm text-info opacity-8 mb-0">Appointments can be cancelled within 8 hours of the appointment.</p>
+                        <p class="font-weight-bold text-info opacity-8 mb-0">Appointments can be cancelled within 8 hours of the appointment.</p>
                     {% elif company.cancellation == 6 %}
-                        <p class="text-sm text-info opacity-8 mb-0">Appointments can be cancelled within 6 hours of the appointment.</p>
+                        <p class="font-weight-bold text-info opacity-8 mb-0">Appointments can be cancelled within 6 hours of the appointment.</p>
                     {% elif company.cancellation == 3 %}
-                        <p class="text-sm text-info opacity-8 mb-0">Appointments can be cancelled within 3 hours of the appointment.</p>
+                        <p class="font-weight-bold text-info opacity-8 mb-0">Appointments can be cancelled within 3 hours of the appointment.</p>
                     {% elif company.cancellation == 1 %}
-                        <p class="text-sm text-info opacity-8 mb-0">Appointments can be cancelled within 1 hour of the appointment.</p>
+                        <p class="font-weight-bold text-info opacity-8 mb-0">Appointments can be cancelled within 1 hour of the appointment.</p>
                     {% else %}
-                        <p class="text-sm text-info opacity-8 mb-0">Appointments can be cancelled anytime before the appointment.</p>
+                        <p class="font-weight-bold text-info opacity-8 mb-0">Appointments can be cancelled anytime before the appointment.</p>
                     {% endif %}
-                    
+                    <p class="font-weight-bold text-warning opacity-8 mb-0">Taxes and other charges may apply. Payment is collected in person.</p>
                   </div>
                 </div>
               </div>
+            </div>
             </div>
             </form>
           </div>
@@ -176,18 +178,18 @@
                             <div class="col-md-12">
                                 <h3>Submit Your Info</h3>
                             </div>
-                           <div class="col-md-6" id="fname">
+                           <div class="col-md-6 py-0" id="fname">
                                 {{ personal_form.first_name|as_crispy_field }}
                             </div>
-                            <div class="col-md-6" id="lname">
+                            <div class="col-md-6 py-0" id="lname">
                                 {{ personal_form.last_name|as_crispy_field }}
                             </div>
-                            <div class="col-md-6" id="pemail">
-                                {{ personal_form.email|as_crispy_field}}
+                            <div class="col-md-6 py-0" id="pemail">
+                                {{ personal_form.email|as_crispy_field }}
                                 <div class="invalid_feedback m-0 p-0" style="display:none"></div>
                             </div>
-                            <div class="col-md-6" id="pphone">
-                                {{ personal_form.phone|as_crispy_field}}
+                            <div class="col-md-6 py-0" id="pphone">
+                                {{ personal_form.phone|as_crispy_field }}
                                 <div class="invalid_phone m-0 p-0" style="display:none; color:red;"></div>
                             </div>
                             <div class="col-md-12" id="subbtndiv">
@@ -195,7 +197,7 @@
                             </div>
                         </div>
                         <div class="col-md-12" id="pphone">
-                            <a id="loginGibeleForm" class="btn btn-pill btn-warning mb-1">Log into your Gibele Account</a>
+                            <a id="loginGibeleForm" class="btn btn-pill btn-warning mb-1">Log into Gibele</a>
                         </div>
                     </div>
                 </form>
@@ -205,13 +207,13 @@
                     <div class="authver justify-content-center container">
                         <div class="row justify-content-center">
                             <div class="col-sm-12">
-                                <h3>Login using your Gibele Account</h3>
+                                <h3>Book appointment using your Gibele Account</h3>
                             </div>
-                            <div class="col-md-12 justify-content-center d-none errorGib">Incorrect password and email. Please try again</div>
-                            <div class="col-sm-6 justify-content-center">
+                            <div class="col-md-12 p-0 justify-content-center d-none errorGib font-weight-bold" style="color:red">Incorrect password and email. Please try again</div>
+                            <div class="col-sm-6 p-0 justify-content-center">
                                 {{ gibele_form|crispy }}
                             </div>
-                            <div class="col-md-12">
+                            <div class="col-md-12 p-0">
                                 <button id="signInGibeleForm" type="submit" class="btn btn-pill btn-warning mb-1">Login</button>
                             </div>
                            

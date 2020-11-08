@@ -7,7 +7,7 @@
 {% block slideshow %}
     <!-- Hero Section-->
     {% with categoryname=company.category.name %}
-    <section class="pt-7 d-flex align-items-end dark-overlay bg-cover" {% if not photos %}style="background-image: url('{% if company.image %}{{ company.image.url }}{% else %} {% if categoryname == 'Automotive Services' %}{% static "img/automotive-noimage1.jpg" %}{% elif categoryname == 'Personal Care' %}{% static "img/beauty-noimage1.jpg" %}{% else %}{% static "img/home-noimage1.jpg" %} {% endif %}{% endif %}'); height:400px; background-repeat:no-repeat; background-size: fit;"{% endif %}>
+    <section class="pt-7 d-flex align-items-end dark-overlay" {% if not photos %}style="background-image: url('{% if company.image %}{{ company.image.url }}{% else %} {% if categoryname == 'Automotive Services' %}{% static "img/automotive-noimage1.jpg" %}{% elif categoryname == 'Personal Care' %}{% static "img/beauty-noimage1.jpg" %}{% else %}{% static "img/home-noimage1.jpg" %} {% endif %}{% endif %}'); height:400px; background-size: 425px 425px;"{% endif %}>
       <!-- Slider main container-->
       {% if photos %}
       <div class="swiper-container detail-slider slider-gallery">
@@ -41,17 +41,18 @@
 {% block booking %}
     
     <section class="py-0">
-      <div class="container">
+      <div class="container liblack">
         <div class="row">
           <div class="col-lg-7">
-          <hr class="hrwhite">
-            <nav class="nav nav-borders" id="navlink-page">
-                <a class="nav-link lipurple ml-0 service-link" href="#navlink-page" id="aservice">Services</a>
-                <a class="nav-link ligrey about-link" href="#navlink-page" id="aabout">About</a>
-                <a class="nav-link ligrey review-link" href="#navlink-page" id="areview">Reviews</a>
+          <hr>
+            <nav class="navbar nav nav-pills nav-borders" id="navlink-page">
+                <li class="nav-item"><a class="nav-link active ml-0 service-link" href="#navlink-page" id="aservice">Services</a></li>
+                <li class="nav-item"><a class="nav-link about-link" href="#navlink-page" id="aabout">About</a></li>
+                <li class="nav-item"><a class="nav-link review-link" href="#navlink-page" id="areview">Reviews</a></li>
+                {% comment %} <li class="nav-item"><a class="nav-link gallary-link" href="#navlink-page" id="agallary">Gallary</a></li> {% endcomment %}
             </nav>
-            <hr class="hrwhite">
-            <div class="text-block dark-overlay" id="serviceList">
+            <hr>
+            <div class="text-block" id="serviceList">
                 
                 {% if services %}
                     <h2>All Services</h1>
@@ -63,12 +64,12 @@
                         <p>{% if type == "fixed" %}Fixed price of{% elif type == 'start' %}Prices start at{% elif type == 'variable' %}<strong>Prices Varies</strong>{% endif %}{% if type == 'variable' %}{% elif type == 'free' %}<strong>Free</strong> {% elif type == 'dont' %}{% else %} <strong>${{ s.price }}</strong>{% endif %}</p>
                         {% endwith %}
                         <a id="serv{{ s.id }}" href="{% host_url 'bookingserviceurls' pk=s.id host 'bookingurl' slug=company.slug %}" class="btn btn-outline-primary">Book Now</a>
-                        <hr class="hrwhite">
+                        <hr>
                         
                     {% endfor %}
                 {% else %}
                     <h2>No services offered at this time</h2>
-                    <hr class="hrwhite">
+                    <hr>
                 {% endif %}
                 
             </div>
@@ -86,7 +87,7 @@
                     </li>
                     {% endfor %}
                 </ul>
-                <hr class="hrwhite">
+                <hr>
                 </div>
                 {% endif %}
 
@@ -94,14 +95,14 @@
                 {% if company.description %}
                 <h3 class="mb-3">About</h3>
                 <p class="text-muted text-left"> {{ company.description }}</p>
-                <hr class="hrwhite">
+                <hr>
                 {% endif %}
                 </div>
 
                 <div class="text-block">
                     <h3 class="mb-3">Location</h3>
                     <div id="map"></div>
-                    <hr class="hrwhite">
+                    <hr>
                 </div>
             </div>
             
@@ -112,7 +113,7 @@
                 </div>
               {% if reviews %}
               {% for review in reviews %}
-              <hr class="hrwhite">
+              <hr>
               {% with reviewer=review.reviewer %}
               <div class="media d-block d-sm-flex review">
                 <div class="text-md-left mr-4 mr-xl-5"><img class="d-block avatar avatar-xl p-2 mb-2" src="{% if reviewer.avatar %}{{ reviewer.avatar.url }}{% else %}https://epicattorneymarketing.com/wp-content/uploads/2016/07/Headshot-Placeholder-1.png{% endif %} " alt="{{ reviewer.first_name }} {{ reviewer.last_name }}"><span class="text-uppercase text-muted text-sm">{{ review.created|date:"M d, Y"}}</span></div>
@@ -126,10 +127,10 @@
               {% endwith %}
               {% endfor %}
               {% include 'business/company/pagination_review/pagination.html' with page=reviews %}
-              <hr class="hrwhite">
+              <hr>
               {% else %}
                 <h6>Be the first to write a review on this business after you complete a service with them.</h6>
-                <hr class="hrwhite">
+                <hr>
               {% endif %}
             
               
@@ -139,22 +140,22 @@
           <div class="col-lg-5">
             <div class="pl-xl-4">
               <!-- Opening Hours      -->
-              <div class="card card-dark border-0 shadow mb-5">
-                <div class="card-header bg-gray-100 py-4 border-0">
+              <div class="card border-0 shadow mb-5">
+              <div class="card-topcol bg-light"></div>
+                
+                <div class="card-body">
                   <div class="media align-items-center">
                     <div class="media-body">
-                      <h4 class="mb-0 text-white">Business Hours </h4>
+                      <h4 class="mb-0">Business Hours </h4>
                     </div>
                   </div>
-                </div>
-                <div class="card-body">
-                  <table class="table text-white text-sm mb-0">
+                  <table class="table text-sm mb-0">
                     <tr>
                       <th class="pl-0 border-0">Sunday</th>
                       {% if sun_hour.is_closed %}
                         <td class="pr-0 text-right border-0">Closed</td>
                       {% else %}
-                        <td class="pr-0 text-right border-0">{{ sun_hour.from_hour|date:"P"}} - {{ sun_hour.to_hour|date:"P" }}</td>
+                        <td class="pr-0 text-right border-0">{{ sun_hour.from_hour|date:'g:i A'}} - {{ sun_hour.to_hour|date:'g:i A' }}</td>
                       {% endif %}
                     </tr>
                     <tr>
@@ -162,7 +163,7 @@
                       {% if mon_hour.is_closed %}
                         <td class="pr-0 text-right border-0">Closed</td>
                       {% else %}
-                        <td class="pr-0 text-right border-0">{{ mon_hour.from_hour|date:"P" }} - {{ mon_hour.to_hour|date:"P" }}</td>
+                        <td class="pr-0 text-right border-0">{{ mon_hour.from_hour|date:'g:i A' }} - {{ mon_hour.to_hour|date:'g:i A' }}</td>
                       {% endif %}
                     </tr>
                     <tr>
@@ -170,7 +171,7 @@
                       {% if tues_hour.is_closed %}
                         <td class="pr-0 text-right border-0">Closed</td>
                       {% else %}
-                        <td class="pr-0 text-right border-0">{{ tues_hour.from_hour|date:"P" }} - {{ tues_hour.to_hour|date:"P" }}</td>
+                        <td class="pr-0 text-right border-0">{{ tues_hour.from_hour|date:'g:i A' }} - {{ tues_hour.to_hour|date:'g:i A' }}</td>
                       {% endif %}
                     </tr>
                     <tr>
@@ -178,7 +179,7 @@
                       {% if wed_hour.is_closed %}
                         <td class="pr-0 text-right border-0">Closed</td>
                       {% else %}
-                        <td class="pr-0 text-right border-0">{{ wed_hour.from_hour|date:"P" }} - {{ wed_hour.to_hour|date:"P" }}</td>
+                        <td class="pr-0 text-right border-0">{{ wed_hour.from_hour|date:'g:i A' }} - {{ wed_hour.to_hour|date:'g:i A' }}</td>
                       {% endif %}
                     </tr>
                     <tr>
@@ -186,7 +187,7 @@
                       {% if thur_hour.is_closed %}
                         <td class="pr-0 text-right border-0">Closed</td>
                       {% else %}
-                        <td class="pr-0 text-right border-0">{{ thur_hour.from_hour|date:"P" }} - {{ thur_hour.to_hour|date:"P" }}</td>
+                        <td class="pr-0 text-right border-0">{{ thur_hour.from_hour|date:'g:i A' }} - {{ thur_hour.to_hour|date:'g:i A' }}</td>
                       {% endif %}
                     </tr>
                     <tr>
@@ -194,7 +195,7 @@
                       {% if fri_hour.is_closed %}
                         <td class="pr-0 text-right border-0">Closed</td>
                       {% else %}
-                        <td class="pr-0 text-right border-0">{{ fri_hour.from_hour|date:"P" }} - {{ fri_hour.to_hour|date:"P" }}</td>
+                        <td class="pr-0 text-right border-0">{{ fri_hour.from_hour|date:'g:i A' }} - {{ fri_hour.to_hour|date:'g:i A' }}</td>
                       {% endif %}
                     </tr>
                     <tr>
@@ -202,22 +203,21 @@
                       {% if sat_hour.is_closed %}
                         <td class="pr-0 text-right border-0">Closed</td>
                       {% else %}
-                        <td class="pr-0 text-right border-0">{{ sat_hour.from_hour|date:"P" }} - {{ sat_hour.to_hour|date:"P" }}</td>
+                        <td class="pr-0 text-right border-0">{{ sat_hour.from_hour|date:'g:i A' }} - {{ sat_hour.to_hour|date:'g:i A' }}</td>
                       {% endif %}
                     </tr>
                   </table>
                 </div>
               </div>
               <!-- Contact-->
-              <div class="card card-dark border-0 shadow mb-5">
-                <div class="card-header bg-gray-100 py-4 border-0">
+              <div class="card border-0 shadow mb-5">
+                <div class="card-topcol bg-light"></div>
+                <div class="card-body">
                   <div class="media align-items-center">
                     <div class="media-body">
-                      <h4 class="mb-0 text-white">Contact Information</h4>
+                      <h4 class="mb-0">Contact Information</h4>
                     </div>
                   </div>
-                </div>
-                <div class="card-body text-white">
                   <ul class="list-unstyled mb-4">
 
                     <li class="mb-2"> <a rel="nofollow" class="licolor text-sm text-decoration-none" href="tel:{{ company.phone }}"><i class="fa fa-phone mr-3"></i><span class="text-muted">{{ company.phone }}</span></a></li>
@@ -287,27 +287,18 @@
             document.getElementById('serviceList').classList.add('d-none')
             document.getElementById('reviewlist').classList.add('d-none')
 
-            document.getElementById('aabout').classList.remove('ligrey')
-            document.getElementById('aservice').classList.remove('lipurple')
-            document.getElementById('areview').classList.remove('lipurple')
-
-            document.getElementById('aabout').classList.add('lipurple')
-            document.getElementById('aservice').classList.add('ligrey')
-            document.getElementById('areview').classList.add('ligrey')
+            document.getElementById('aabout').classList.add('active')
+            document.getElementById('aservice').classList.remove('active')
+            document.getElementById('areview').classList.remove('active')
         });
         $('.service-link').on('click', function(e){
             document.getElementById('aboutList').classList.add('d-none')
             document.getElementById('serviceList').classList.remove('d-none')
             document.getElementById('reviewlist').classList.add('d-none')
 
-
-            document.getElementById('aabout').classList.remove('lipurple')
-            document.getElementById('aservice').classList.remove('ligrey')
-            document.getElementById('areview').classList.remove('lipurple')
-
-            document.getElementById('aabout').classList.add('ligrey')
-            document.getElementById('aservice').classList.add('lipurple')
-            document.getElementById('areview').classList.add('ligrey')
+            document.getElementById('aabout').classList.remove('active')
+            document.getElementById('aservice').classList.add('active')
+            document.getElementById('areview').classList.remove('active')
 
         });
         $('.review-link').on('click', function(e){
@@ -315,13 +306,10 @@
             document.getElementById('serviceList').classList.add('d-none')
             document.getElementById('reviewlist').classList.remove('d-none')
 
-            document.getElementById('aabout').classList.remove('lipurple')
-            document.getElementById('aservice').classList.remove('lipurple')
-            document.getElementById('areview').classList.remove('ligrey')
+            document.getElementById('aabout').classList.remove('active')
+            document.getElementById('aservice').classList.remove('active')
+            document.getElementById('areview').classList.add('active')
 
-            document.getElementById('aabout').classList.add('ligrey')
-            document.getElementById('aservice').classList.add('ligrey')
-            document.getElementById('areview').classList.add('lipurple')
         });
       })
     </script>

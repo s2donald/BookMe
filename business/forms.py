@@ -91,10 +91,14 @@ cancellationtime = (
 
 class SearchForm(forms.Form):
     Search = forms.CharField(label='Search Business',widget=forms.TextInput(attrs={'class':'form-control border','placeholder':'Search Business or Service'}))
+    lat = forms.DecimalField(max_digits=19, decimal_places=16, required=False)
+    lon = forms.DecimalField(max_digits=19, decimal_places=16, required=False)
     
 class homeSearchForm(forms.Form):
     Search = forms.CharField(label='Search Business',widget=forms.TextInput(attrs={'class':'form-control border','placeholder':''}))
     Location = forms.CharField(required=False, label='Location',widget=forms.TextInput(attrs={'class':'form-control border','placeholder':'Location'}))
+    lat = forms.DecimalField(max_digits=19, decimal_places=16, required=False)
+    lon = forms.DecimalField(max_digits=19, decimal_places=16, required=False)
 
 class AddServiceForm(forms.ModelForm):
     name = forms.CharField(label='Service Name', widget=forms.Textarea(attrs={'rows':1, 'cols':20,}))

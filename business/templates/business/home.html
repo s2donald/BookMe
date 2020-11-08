@@ -12,7 +12,7 @@
               <h1 class="header-font font-weight-bold text-shadow" id="demo">LIFE IS FOR SERVICES</h1>
             </div>
             <div class="search-bar bg-white bg-home">
-              <form action="{% url 'business:bizsearch' %}" method="GET" width="100%">
+              <form action="{% url 'business:bizsearch' %}" method="GET" width="100%" id="fullSearch">
                 <div class="row marg-top padd1 paddquart padd15 form-group">
                     <div class="col-lg-4 d-flex align-items-center">
                         {{ search.Search }}
@@ -39,8 +39,10 @@
                             </optgroup>
                         </select>
                   </div>
+                  {{ search.lat.as_hidden }}
+                  {{ search.lon.as_hidden }}
                   <div class="col-lg-2">
-                    <button type="submit" class="btn btn-outline-primary btn-block h-100">Search</button>
+                    <button type="button" class="btn btn-outline-primary btn-block h-100 searchfull">Search</button>
                   </div>
                 </div>
               </form>
@@ -100,7 +102,18 @@
     <script>
         $(document).ready(function(e){
             setTimeout(typeWriter, 1000)
+            $('.searchfull').click(function(e){
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(showPosition);
+                }
+            });
         });
+        function showPosition(position) {
+            document.getElementById("id_lat").value = position.coords.latitude
+            document.getElementById("id_lon").value = position.coords.longitude
+            $('#fullSearch').submit()
+        }
+
         var i = 0;
         var txt = ['Search for any service', 'Find auto detailers', 'Search for hairstylists' , 'Get your nails done', 'Schedule house cleaning', 'Book your appointments today'];
         var speed = 100;

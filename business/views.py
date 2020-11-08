@@ -49,6 +49,8 @@ def allsearch(request):
     subcat = None
     q = 0
     loc = None
+    lat = None
+    lon = None
     if 'Search' in request.GET:
         form = SearchForm(request.GET)
         if 'Location' in request.GET:
@@ -65,6 +67,12 @@ def allsearch(request):
             Search = form.cleaned_data['Search']
             if q == 1:
                 loc = form.cleaned_data['Location']
+                if not loc:
+                    lat = form.cleaned_data['lat']
+                    lon = form.cleaned_data['lon']
+                if lat and lon:
+                    loc = 'ip'
+                    print('loco')
             if not loc:
                 if not request.user.is_authenticated:
                     loc = 'me'
@@ -83,6 +91,8 @@ def allsearch(request):
                 results = results|Company.objects.filter(tags__name__icontains=word)|Company.objects.filter(id__in=ids)|Company.objects.annotate(similarity=TrigramSimilarity('business_name', word),).filter(similarity__gt=0.1).order_by('-similarity')
             if loc=='me':
                 ip = geocoder.ipinfo('me').latlng
+            elif loc=='ip':
+                ip = [str(lat), str(lon)]
             else:
                 ip = geocoder.google(loc, key="AIzaSyBaZM_O3d1-xDrecS_fbcbvoT5qDmLmje0").latlng
                 if not ip:
@@ -90,7 +100,7 @@ def allsearch(request):
             if ip:
                 lat = ip[0]
                 lng = ip[1]
-                pnt = Point(lng,lat, srid=4326)
+                pnt = GEOSGeometry('POINT('+ str(lng) + ' ' + str(lat) + ')', srid=4326)
                 results = results.annotate(distance=GeometryDistance("location", pnt)).order_by("distance")
                 if cat:
                     results = results.filter(category=cat).order_by('business_name')
@@ -113,7 +123,7 @@ def allsearch(request):
             except EmptyPage:
                 results = paginator.page(paginator.num_pages)
             return render(request, 'business/company/list.html',{'total':total,'page':page,'category':category, 'categories':categories ,'companies':results, 'name': Search,'form':form,'subcategories':subcategories})
-    return render(request, 'business/company/list.html')
+    return render(request, 'business/company/list.html',{'form':form})
 
 # Create your views here.
 def homepage(request):

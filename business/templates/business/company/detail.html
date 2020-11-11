@@ -268,14 +268,15 @@
 
               {% endif %}
           </div> {% endcomment %}
+
           </div>
       </div>
     </section>
   {% if similar_companies %}
     <div class="py-6 bg-gray-100"> 
       <div class="container mt-3">
-        <h5 class="mb-0">Similar places</h5>
-        <p class="subtitle text-sm text-primary mb-4">You may also like</p>
+        <h5 class="mb-0">Similar companies</h5>
+        <p class="subtitle text-sm licolor mb-4">You may also like</p>
         <!-- Slider main container-->
         <div class="swiper-container swiper-container-mx-negative items-slider">
           <!-- Additional required wrapper-->
@@ -287,7 +288,7 @@
                 <div class="w-100 h-100">
                   <div class="card h-100 border-0 shadow">
                     <div class="card-img-top overflow-hidden dark-overlay bg-cover"><a class="tile-link" href="{{ sim_comp.get_absolute_url }}"></a>
-                      <img style="width:100%; max-height:250px;" src="{% if sim_comp.image %}{{ sim_comp.image.url }}{% elif company.category.name == 'Automotive Services' %}{% static "img/automotive-noimage1.jpg" %}{% elif company.category.name == 'Personal Care' %}{% static "img/beautynoimage1.jpg" %}{% endif %}" alt="">
+                      <img style="width:100%;" src="{% if sim_comp.image %}{{ sim_comp.image.url }}{% elif company.category.name == 'Automotive Services' %}{% static "img/automotive-noimage1.jpg" %}{% elif company.category.name == 'Personal Care' %}{% static "img/beautynoimage1.jpg" %}{% endif %}" alt="">
                       <div class="card-img-overlay-top d-flex justify-content-between align-items-center">
                       {% with users_like=sim_comp.users_like.all %}
                         {% if request.user in users_like %}
@@ -299,7 +300,7 @@
                           {% else %}
                           <a class="card-fav-icon position-relative z-40 like" href="#" id="{{ sim_comp.id }}" data-id="{{ sim_comp.id }}" data-action="like"> 
                             <svg class="svg-icon text-white">
-                              <use xlink:href="#heart-unliked"> </use>
+                              <use xlink:href="#heart-unliked"></use>
                             </svg>
                           </a>
                         {% endif %}
@@ -358,13 +359,10 @@
         } {% endcomment %}
         function initMap() {
             var map = new google.maps.Map(document.getElementById("map"), {
-                zoom: 16,
-                center: { lat: 43.790810, lng: -79.166140 }
+                zoom: 14,
             });
             var geocoder = new google.maps.Geocoder();
-
             geocodeAddress(geocoder, map);
-            
         }
 
         function geocodeAddress(geocoder, resultsMap) {
@@ -372,10 +370,18 @@
             geocoder.geocode({ address: address }, function(results, status) {
                 if (status === "OK") {
                 resultsMap.setCenter(results[0].geometry.location);
-                var marker = new google.maps.Marker({
-                    map: resultsMap,
-                    position: results[0].geometry.location
+                var antennasCircle = new google.maps.Circle({
+                  strokeColor: "#854fee",
+                  strokeOpacity: 0.8,
+                  strokeWeight: 2,
+                  fillColor: "#854fee",
+                  fillOpacity: 0.35,
+                  map: resultsMap,
+                  center: {lat: results[0].geometry.location.lat(), lng: results[0].geometry.location.lng()},
+                  radius:  1000
                 });
+
+
                 } else {
 
                 }

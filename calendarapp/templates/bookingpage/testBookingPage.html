@@ -15,6 +15,7 @@
         });
     {% endif %}
 </script>
+<script src='https://www.google.com/recaptcha/api.js'></script>
 <div class="container-fluid liblack">
         <div class="row">
             <form method="POST" class="justify-content-center fform" enctype="multipart/form-data">
@@ -192,6 +193,11 @@
                                 {{ personal_form.phone|as_crispy_field }}
                                 <div class="invalid_phone m-0 p-0" style="display:none; color:red;"></div>
                             </div>
+                            {% comment %} <div class="col-md-12">
+                                <div class="g-recaptcha" style="transform:scale(0.7);transform-origin:0;-webkit-transform:scale(0.7);
+transform:scale(0.7);-webkit-transform-origin:0 0;transform-origin:0 0;" data-sitekey="6LcBkeEZAAAAAEIY0hdIYPWHwof9gJeBZ3hCigA1" data-callback="correctCaptcha"></div>
+                                <div style="color:red;" class="d-none">Invalid Captcha</div>
+                            </div> {% endcomment %}
                             <div class="col-md-12" id="subbtndiv">
                                 <button id="submitGuestForm" type="submit" class="btn btn-outline-primary subbtn">Book as a guest</button>
                             </div>
@@ -213,6 +219,10 @@
                             <div class="col-sm-6 p-0 justify-content-center">
                                 {{ gibele_form|crispy }}
                             </div>
+                            {% comment %} <div class="col-md-12">
+                                <div class="g-recaptcha" data-sitekey="6LcBkeEZAAAAAEIY0hdIYPWHwof9gJeBZ3hCigA1" data-callback="loginCaptcha"></div>
+                                <div style="color:red;">{{ error }}</div>
+                            </div> {% endcomment %}
                             <div class="col-md-12 p-0">
                                 <button id="signInGibeleForm" type="submit" class="btn btn-pill btn-warning mb-1">Login</button>
                             </div>
@@ -612,7 +622,7 @@ function getCookie(name) {
                                 },
                                 data:{
                                     email: login,
-                                    password: password
+                                    password: password,
                                 },
                                 success: function(data){
                                     if(data.result){

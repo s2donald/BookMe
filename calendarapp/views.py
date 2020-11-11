@@ -6,7 +6,7 @@ from django.db.models import Count
 from django.http import JsonResponse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.views import View
-import json
+import json, urllib
 from django.core import serializers
 import datetime, pytz
 from django.utils import timezone
@@ -16,6 +16,7 @@ from account.tasks import reminderEmail, confirmedEmail, consumerCreatedEmailSen
 from businessadmin.tasks import requestToBeClient
 from business.forms import VehicleMakeModelForm, AddressForm
 import re
+from gibele import settings
 # from account.models import Account
 # Create your views here.
 
@@ -174,6 +175,24 @@ class phoneValidationView(View):
             return JsonResponse({'phone_error':'Please enter a valid phone number.'}, status=409)
         return JsonResponse({'email_valid':True})
 
+
+def checkRecaptcha(self, request):
+    recaptcha_response = request.POST.get('g-recaptcha-response')
+    url = 'https://www.google.com/recaptcha/api/siteverify'
+    values = {
+        'secret': settings.GOOGLE_RECAPTCHA_SECRET_KEY,
+        'response': recaptcha_response
+    }
+    data = urllib.parse.urlencode(values).encode()
+    req =  urllib.request.Request(url, data=data)
+    response = urllib.request.urlopen(req)
+    result = json.loads(response.read().decode())
+            
+    if result['success']:
+        return True
+    else:
+        return False
+
 class createAppointment(View):
     def post(self, request):
         data=json.loads(request.body)
@@ -290,15 +309,29 @@ class LoginView(View):
     def post(self, request):
         email = request.POST.get('email')
         password = request.POST.get('password')
-        user = authenticate(email=email, password=password)
-        if user is not None:
-            if user.is_active:
-                login(request, user)
-                return JsonResponse({'result':True})
+        recaptcha_response = request.POST.get('g-recaptcha-response','')
+        url = 'https://www.google.com/recaptcha/api/siteverify'
+        values = {
+            'secret': settings.GOOGLE_RECAPTCHA_SECRET_KEY,
+            'response': recaptcha_response
+        }
+        data = urllib.parse.urlencode(values).encode()
+        req =  urllib.request.Request(url, data=data)
+        response = urllib.request.urlopen(req)
+        result = json.loads(response.read().decode())
+        result['success'] = True
+        if result['success']:
+            user = authenticate(email=email, password=password)
+            if user is not None:
+                if user.is_active:
+                    login(request, user)
+                    return JsonResponse({'result':True})
+                else:
+                    return JsonResponse({'result':False})
             else:
                 return JsonResponse({'result':False})
         else:
-            return JsonResponse({'result':False})
+            return JsonResponse({'recaptcha':False})
         
     def get(self, request):
         return JsonResponse({})

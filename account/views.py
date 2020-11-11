@@ -15,7 +15,7 @@ from bootstrap_modal_forms.generic import (
 from django.views import View
 from django.urls import reverse_lazy
 from django.http import JsonResponse
-import json
+import json, urllib
 from django.template.loader import render_to_string
 from django.http import JsonResponse
 from django.forms.models import model_to_dict
@@ -23,6 +23,8 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .serializers import AccountSerializer
 import re
+from django import forms
+from gibele import settings
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from consumer.models import Reviews
 # Create your views here.
@@ -34,6 +36,7 @@ def ConsumerRegistrationView(request):
     form = SearchForm()
     Search = None
     results = []
+    error = ''
     if 'Search' in request.GET:
         form = SearchForm(request.GET)
         if form.is_valid():
@@ -44,24 +47,37 @@ def ConsumerRegistrationView(request):
     if request.method == 'POST':
         user_form = ConsumerRegistrationForm(request.POST)
         if user_form.is_valid():
-            user_form.save()
-            email = user_form.cleaned_data.get('email')
-            raw_pass = user_form.cleaned_data.get('password1')
-            rmrme = request.POST.get('rememberPasswordCheck')
-            account = authenticate(email=email, password=raw_pass)
-            login(request, account)
-            if not rmrme:
-                request.session.set_expiry(0)
-            consumerCreatedEmailSent.delay(user_id=account.id)
-
-            return redirect('account:registered')
+            recaptcha_response = request.POST.get('g-recaptcha-response')
+            url = 'https://www.google.com/recaptcha/api/siteverify'
+            values = {
+                'secret': settings.GOOGLE_RECAPTCHA_SECRET_KEY,
+                'response': recaptcha_response
+            }
+            data = urllib.parse.urlencode(values).encode()
+            req =  urllib.request.Request(url, data=data)
+            response = urllib.request.urlopen(req)
+            result = json.loads(response.read().decode())
+            
+            if result['success']:
+                user_form.save()
+                email = user_form.cleaned_data.get('email')
+                raw_pass = user_form.cleaned_data.get('password1')
+                rmrme = request.POST.get('rememberPasswordCheck')
+                account = authenticate(email=email, password=raw_pass)
+                login(request, account)
+                if not rmrme:
+                    request.session.set_expiry(0)
+                consumerCreatedEmailSent.delay(user_id=account.id)
+                return redirect('account:registered')
+            else:
+                error = 'Invalid reCAPTCHA. Please try again.'
         else:
             context['consumer_registration_form'] = user_form
             
     else:
         user_form = ConsumerRegistrationForm()
         context['consumer_registration_form'] = user_form
-    return render(request, 'account/signup.html', {'user_form':user_form, 'category':category, 'categories':categories ,'companies':results, 'form':form})
+    return render(request, 'account/signup.html', {'error':error, 'user_form':user_form, 'category':category, 'categories':categories ,'companies':results, 'form':form})
 
 @login_required
 def AccountSummaryView(request):

@@ -46,6 +46,7 @@ $(document).ready(function (){
     // =====================================================
 
     var detailSlider = new Swiper('.detail-slider', {
+        autoHeight: true,
         slidesPerView: 4,
         spaceBetween: 0,
         centeredSlides: true,
@@ -108,6 +109,7 @@ $(document).ready(function (){
     });
 
     var homeSlider = new Swiper('.home-slider', {
+        autoHeight: true,
         slidesPerView: 1,
         spaceBetween: 0,
         centeredSlides: true,

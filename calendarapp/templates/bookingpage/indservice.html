@@ -2,7 +2,14 @@
 {% load hosts %}
 {% load crispy_forms_tags %}
 {% block booking %}
-
+<script>
+  /*global grecaptcha*/
+  grecaptcha.ready(function() {
+      grecaptcha.execute('6LcBkeEZAAAAAAKGHUafGtEV-xiuIWofHGQwSx0j', {action: "/signup/"}).then(function(token) {
+        document.getElementById('g-recaptcha-response').value = token;
+      });
+  });
+</script>
 <div class="text-block dark-overlay justify-content-center align-items-center">
     {% if service %}
         <h2>{{ service.name }}</h2>
@@ -50,6 +57,11 @@
                                 {{ personal_form.phone|as_crispy_field}}
                                 <div class="invalid_phone m-0 p-0" style="display:none; color:red;"></div>
                             </div>
+                            <div class="col-md-12 text-center">
+                                <script src='https://www.google.com/recaptcha/api.js'></script>
+                                <div class="g-recaptcha" data-sitekey="6LcBkeEZAAAAAEIY0hdIYPWHwof9gJeBZ3hCigA1"></div>
+                                <div style="color:red;">{{ error }}</div>
+                            </div>
                             <div class="col-md-12" id="subbtndiv">
                                 <button id="submitGuestForm" type="submit" class="btn btn-outline-primary subbtn">Book as a guest</button>
                             </div>
@@ -70,6 +82,11 @@
                             <div class="col-md-12 justify-content-center d-none errorGib">Incorrect password and email. Please try again</div>
                             <div class="col-sm-6 justify-content-center">
                                 {{ gibele_form|crispy }}
+                            </div>
+                            <div class="col-md-12 text-center">
+                                <script src='https://www.google.com/recaptcha/api.js'></script>
+                                <div id="recaptchaAccount" class="g-recaptcha" data-sitekey="6LcBkeEZAAAAAEIY0hdIYPWHwof9gJeBZ3hCigA1"></div>
+                                <div style="color:red;">{{ error }}</div>
                             </div>
                             <div class="col-md-12">
                                 <button id="signInGibeleForm" type="submit" class="btn btn-pill btn-warning mb-1">Login</button>

@@ -7,7 +7,7 @@
 {% block slideshow %}
     <!-- Hero Section-->
     {% with categoryname=company.category.name %}
-    <section class="pt-7 d-flex align-items-end dark-overlay" {% if not photos %}style="background-image: url('{% if company.image %}{{ company.image.url }}{% else %} {% if categoryname == 'Automotive Services' %}{% static "img/automotive-noimage1.jpg" %}{% elif categoryname == 'Personal Care' %}{% static "img/beauty-noimage1.jpg" %}{% else %}{% static "img/home-noimage1.jpg" %} {% endif %}{% endif %}'); height:400px; background-size: 425px 425px;"{% endif %}>
+    <section class="pt-7 d-flex align-items-end dark-overlay bg-light" >
       <!-- Slider main container-->
       {% if photos %}
       <div class="swiper-container detail-slider slider-gallery">
@@ -219,20 +219,85 @@
                     </div>
                   </div>
                   <ul class="list-unstyled mb-4">
-
-                    <li class="mb-2"> <a rel="nofollow" class="licolor text-sm text-decoration-none" href="tel:{{ company.phone }}"><i class="fa fa-phone mr-3"></i><span class="text-muted">{{ company.phone }}</span></a></li>
-                    <li class="mb-2"> <a rel="nofollow" class="licolor text-sm text-decoration-none" href="mailto:{{ company.email }}"><i class="fa fa-envelope mr-3"></i><span class="text-muted">{{ company.email }}</span></a></li>
+                    <li class="mb-0 pb-0"> 
+                      <a rel="nofollow" class="licolor text-sm text-decoration-none" href="tel:{{ company.phone }}">
+                        <div class="row my-0 py-0">
+                          <div class="col-2 mb-0 pb-0">
+                            <i class="fa fa-phone mr-3"></i>
+                          </div>
+                          <div class="col-10 pb-0 text-left">
+                            <span class="text-muted">{{ company.phone }}</span>
+                          </div>
+                        </div>
+                      </a>
+                    </li>
+                    <li class="mb-2"> 
+                      <a rel="nofollow" class="licolor text-sm text-decoration-none" href="mailto:{{ company.email }}">
+                        <div class="row my-0 py-0">
+                          <div class="col-2 my-0 pb-0">
+                            <i class="fa fa-envelope mr-3"></i>
+                          </div>
+                          <div class="col-10 pb-0 text-left">
+                            <span class="text-muted">{{ company.email }}</span>
+                          </div>
+                        </div>
+                      </a>
+                    </li>
                     {% if company.website_link %}
-                      <li class="mb-2"> <a rel="nofollow" class="licolor text-sm text-decoration-none" href="{{ company.website_link }}"><i class="fa fa-globe mr-3"></i><span class="text-muted">{{ company.website_link }}</span></a></li>
+                      <li class="mb-2"> 
+                        <a rel="nofollow" class="licolor text-sm text-decoration-none" href="{{ company.website_link }}">
+                          <div class="row my-0 py-0">
+                            <div class="col-2 my-0 pb-0">
+                              <i class="fa fa-globe mr-3"></i>
+                            </div>
+                            <div class="col-10 pb-0 text-left">
+                              <span class="text-muted">{{ company.website_link }}</span>
+                            </div>
+                          </div>
+                        </a>
+                      </li>
                     {% endif %}
                     {% if company.fb_link %}
-                      <li class="mb-2"> <a rel="nofollow" class="licolor text-blue text-sm text-decoration-none" href="{{ company.fb_link}}"><i class="fab fa-facebook mr-3"></i><span class="text-muted">Facebook</span></a></li>
+                      <li class="mb-2"> 
+                        <a rel="nofollow" class="licolor text-blue text-sm text-decoration-none" href="{{ company.fb_link}}">
+                          <div class="row my-0 py-0">
+                            <div class="col-2 my-0 pb-0">
+                              <i class="fab fa-facebook mr-3"></i>
+                            </div>
+                            <div class="col-10 pb-0 text-left">
+                              <span class="text-muted">Facebook</span>
+                            </div>
+                          </div>
+                        </a>
+                      </li>
                     {% endif %}
                     {% if company.twitter_link %}
-                      <li class="mb-2"> <a rel="nofollow" class="licolor text-sm text-decoration-none" href="{{ company.twitter_link}}"><i class="fab fa-twitter mr-3"></i><span class="text-muted">Twitter</span></a></li>
+                      <li class="mb-2"> 
+                        <a rel="nofollow" class="licolor text-sm text-decoration-none" href="{{ company.twitter_link}}">
+                          <div class="row my-0 py-0">
+                            <div class="col-2 my-0 pb-0">
+                              <i class="fab fa-twitter mr-3"></i>
+                            </div>
+                            <div class="col-10 pb-0 text-left">
+                              <span class="text-muted">Twitter</span>
+                            </div>
+                          </div>
+                        </a>
+                      </li>
                     {% endif %}
                     {% if company.instagram_link %}
-                      <li class="mb-2"> <a rel="nofollow" class="licolor text-sm text-decoration-none" href="{{ company.instagram_link}}"><i class="fab fa-instagram mr-3"></i><span class="text-muted">Instagram</span></a></li>
+                      <li class="mb-2"> 
+                        <a rel="nofollow" class="licolor text-sm text-decoration-none" href="{{ company.instagram_link}}">
+                          <div class="row my-0 py-0">
+                            <div class="col-2 my-0 pb-0">
+                              <i class="fab fa-instagram licolor mr-3"></i>
+                            </div>
+                            <div class="col-10 pb-0 text-left">
+                              <span class="text-muted">Instagram</span>
+                            </div>
+                          </div>
+                        </a>
+                      </li>
                     {% endif %}
                   </ul>
                 </div>

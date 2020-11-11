@@ -1,8 +1,9 @@
 {% extends 'business/base.html' %}
 {% load static %}
 {% load hosts %}
-{% block content %}
 {% load crispy_forms_tags %}
+{% block content %}
+<script src='https://www.google.com/recaptcha/api.js'></script>
 <div class="container-fluid">
     <div class="row min-vh-100">
         <div class="col-md-8 col-lg-6 col-xl-5 position-relative">
@@ -36,6 +37,11 @@
                             </div>
                             <div class="col-md-6">
                                 {{ user_form.password2|as_crispy_field }}
+                            </div>
+                            <div class="col-md-12 text-center">
+                                <div class="g-recaptcha" style="transform:scale(0.7);transform-origin:0;-webkit-transform:scale(0.7);
+transform:scale(0.7);-webkit-transform-origin:0 0;transform-origin:0 0;" data-sitekey="6LcBkeEZAAAAAEIY0hdIYPWHwof9gJeBZ3hCigA1"></div>
+                                <div style="color:red;">{{ error }}</div>
                             </div>
                         </div>
                         <p class="text-center">By signing up you agree to our <a class="licolorblue" href="{% host_url 'business:terms' host 'www' %}">Terms</a> &amp; <a class="licolorblue" href="{% host_url 'business:privacy' host 'www' %}">Privacy</a> </p>

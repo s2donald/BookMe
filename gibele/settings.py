@@ -22,6 +22,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'b3+j2=q*i#mg^c!2ndq#00y5bobz6*xq&v#7^^7&+$73_#e=8e'
 
+GOOGLE_RECAPTCHA_SECRET_KEY = '6LcBkeEZAAAAAAKGHUafGtEV-xiuIWofHGQwSx0j' #your reCAPTCHA secret key 
+
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
@@ -211,7 +214,6 @@ EMAIL_USE_SSL = True
 
 if not DEBUG:
     CELERY_BROKER_URL = 'amqps://dtkacyby:r-kSQJMm0h2BksbAYs4l1PgXWlqSrYdo@grouse.rmq.cloudamqp.com/dtkacyby'
-
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
     SECURE_SSL_REDIRECT=True

@@ -36,7 +36,7 @@
                                 <form method="POST" enctype="multipart/form-data" id="galUpload">
                                     {% csrf_token %}
                                     <div class="col-12">
-                                        <input id="amenitiestag" type="text" size="20" value="{% for amenity in amenities %}{{ amenity.amenity }},{% endfor %}" class="tagsinput form-control" data-role="tagsinput" data-color="danger">
+                                        <input id="amenitiestag" type="text" size="20" value="{% for amenity in amenities %}{{ amenity.amenity }},{% endfor %}" class="tagsinput textarea form-control" data-role="tagsinput" data-color="danger">
                                     </div>
                                                                     
                                 </form>
@@ -50,7 +50,7 @@
                                 <!-- Gallary upload button -->
                                 <form method="POST" enctype="multipart/form-data" id="galUpload">
                                     {% csrf_token %}
-                                    <input id="taggerinput" size="20" type="text" value="{% for tags in company.tags.all %}{{ tags }},{% endfor %}" class="tagsinput" data-role="tagsinput" data-color="danger">                                
+                                    <input id="taggerinput" size="20" type="text" value="{% for tags in company.tags.all %}{{ tags }},{% endfor %}" class="tagsinput textarea form-control" data-role="tagsinput" data-color="danger">                                
                                 </form>
                             </div>
                         </div>
@@ -80,8 +80,9 @@
         $('#taggerinput').tagsinput({
             maxTags: 25,
             maxChars: 15,
-            confirmKeys: [13, 188, 32],
+            confirmKeys: [13, 188, 32]
         });
+
         $('#taggerinput').on('itemAdded', function(event){
             var tag = event.item;
             $.ajax({

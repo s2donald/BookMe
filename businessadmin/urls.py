@@ -21,6 +21,8 @@ urlpatterns = [
 
     url(r'delete/booking/$', views.deleteBookingByCompAPI.as_view(), name='delete_booking'),
 
+    url('darkmode/', views.changeDarkMode.as_view(), name='changeDarkMode'),
+
     url(r'detail/info/$', views.compinfoViews, name='information'),
     url(r'detail/service/$', views.servicesDetailView, name='service_detail'),
     url(r'detail/clients/$', views.clientListView, name='client_list'),

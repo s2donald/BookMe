@@ -441,7 +441,7 @@ def save_service_form(request, form, template_name):
             data['form_is_valid'] = False
         return JsonResponse(data)
     
-    context = {'service_form':form}
+    context = {'service_form':form, 'company':company}
     data['html_form'] = render_to_string(template_name, context, request=request)
     return JsonResponse(data)
 
@@ -492,7 +492,7 @@ class createserviceAPI(View):
             services = paginator.page(1)
         except EmptyPage:
             services = paginator.page(paginator.num_pages)
-        data['html_service_list'] = render_to_string('bizadmin/companydetail/services/partial/partial_service_list.html', {'page':page,'services':services})
+        data['html_service_list'] = render_to_string('bizadmin/companydetail/services/partial/partial_service_list.html', {'page':page,'services':services, 'company':company})
         return JsonResponse(data)
 
 class createclientAPI(View):
@@ -527,7 +527,7 @@ class createclientAPI(View):
             data['form_is_valid'] = False
             data['view'] = 'Your client was not added. There was an error.'
             data['icon'] = 'error'
-        data['html_service_list'] = render_to_string('bizadmin/companydetail/client/partial/partial_client_list.html', {'clients':clients})
+        data['html_service_list'] = render_to_string('bizadmin/companydetail/client/partial/partial_client_list.html', {'clients':clients, 'company':company})
         return JsonResponse(data)
 
 class deleteclientAPI(View):
@@ -585,7 +585,7 @@ class updateclientAPI(View):
         dat = {'first_name': client.first_name, 'last_name': client.last_name, 'email': client.email,  'phone': client.phone,  'address': client.address,  'province':client.province, 'postal':client.postal, 'city':client.city}
         data=dict()
         form = AddClientForm(initial=dat)
-        context = {'form':form, 'client':client}
+        context = {'form':form, 'client':client,'company':company}
         data['html_form'] = render_to_string('bizadmin/companydetail/client/partial/partial_client_update.html', context, request=request)
         return JsonResponse(data)
 
@@ -677,7 +677,7 @@ class saveBusinessHours(View):
 def updateserviceViews(request, pk):
     service = get_object_or_404(Services, pk=pk)
     company = Company.objects.get(user=request.user)
-    dat = {'name': service.name, 'description': service.description, 'price_type':service.price_type, 'price':service.price, 'available':service.available, 'duration_hour':service.duration_hour, 'duration_minute':service.duration_minute, 'checkintime':service.checkintime, 'padding':service.padding, 'paddingtime_hour':service.paddingtime_hour, 'paddingtime_minute':service.paddingtime_minute}
+    dat = {'name': service.name,'company':company, 'description': service.description, 'price_type':service.price_type, 'price':service.price, 'available':service.available, 'duration_hour':service.duration_hour, 'duration_minute':service.duration_minute, 'checkintime':service.checkintime, 'padding':service.padding, 'paddingtime_hour':service.paddingtime_hour, 'paddingtime_minute':service.paddingtime_minute}
     data=dict()
     if request.method=='POST':
         form = UpdateServiceForm(request.POST)
@@ -714,7 +714,7 @@ def updateserviceViews(request, pk):
         return JsonResponse(data)
     else:
         form = UpdateServiceForm(initial=dat)
-    context = {'service_form':form, 'service':service}
+    context = {'service_form':form,'company':company, 'service':service,}
     data['html_form'] = render_to_string('bizadmin/dashboard/profile/services/partial_service_update.html', context, request=request)
     return JsonResponse(data)
 
@@ -1577,3 +1577,16 @@ class load_service(View):
         name = services.name
         someStr = 'Service: ' + name
         return JsonResponse({'servName':someStr})
+
+
+class changeDarkMode(View):
+    def post(self, request):
+        data=json.loads(request.body)
+        light = data['light']
+        company = Company.objects.get(user=request.user)
+        if light:
+            company.darkmode = False
+        else:
+            company.darkmode = True
+        company.save()
+        return JsonResponse({'':''})

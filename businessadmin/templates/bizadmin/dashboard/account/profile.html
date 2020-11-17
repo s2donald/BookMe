@@ -93,7 +93,7 @@
                         <div class="row">
                             <div class="col-xl-4">
                                 <!-- Profile picture card-->
-                                <div class="card">
+                                <div class="card shadow">
                                     <div class="card-header">Main Profile Photo</div>
                                     <div class="card-body text-center">
                                         <!-- Profile picture image-->
@@ -112,35 +112,59 @@
                             </div>
                             <div class="col-xl-8">
                                 <!-- Account details card-->
-                                <div class="card mb-4">
+                                <div class="card shadow mb-4">
                                     <div class="card-header">Account Details</div>
                                     <div class="card-body">
                                         <form class="text-center" method="POST" id="accountUpdate">
                                           
                                             <!-- Form Row-->
                                             {% csrf_token %}
-                    <div class="row">
-                        <div class="col-md-6 text-left" id="fname">
-                            {{ personal_form.first_name|as_crispy_field }}
-                            
-                        </div>
-                        <div class="col-md-6 text-left" id="lname">
-                            {{ personal_form.last_name|as_crispy_field }}
-                        </div>
-                        <div class="col-md-12 text-left" id="pemail">
-                            {{ personal_form.email|as_crispy_field}}
-                            <div class="invalid_feedback m-0 p-0" style="display:none"></div>
-                        </div>
-                        <div class="col-md-12 text-left" id="pphone">
-                            {{ personal_form.phone|as_crispy_field}}
-                            <div class="invalid_phone m-0 p-0" style="display:none; color:red;"></div>
-                        </div>
-                    </div>
+                                            <div class="row">
+                                                <div class="col-md-6 text-left" id="fname">
+                                                    {{ personal_form.first_name|as_crispy_field }}
+                                                    
+                                                </div>
+                                                <div class="col-md-6 text-left" id="lname">
+                                                    {{ personal_form.last_name|as_crispy_field }}
+                                                </div>
+                                                <div class="col-md-12 text-left" id="pemail">
+                                                    {{ personal_form.email|as_crispy_field}}
+                                                    <div class="invalid_feedback m-0 p-0" style="display:none"></div>
+                                                </div>
+                                                <div class="col-md-12 text-left" id="pphone">
+                                                    {{ personal_form.phone|as_crispy_field}}
+                                                    <div class="invalid_phone m-0 p-0" style="display:none; color:red;"></div>
+                                                </div>
+                                            </div>
                                             <!-- Save changes button-->
                                             <button class="btn btn-primary text-center" type="button" id="savePers">Save changes</button>
                                         </form>
                                     </div>
                                 </div>
+                                
+                                <div class="card shadow">
+                                    <div class="card-header">Enable Dark Mode</div>
+                                    <div class="card-body">
+                                        <form method="POST">
+                                        {% csrf_token %}
+                                            <div class="row">
+                                                <div class="col-6">
+                                                    <div class="custom-control custom-radio">
+                                                        <input class="custom-control-input" id="radioDark" type="radio" name="radioPrivacy" {% if company.darkmode %}checked{% endif %} />
+                                                        <label class="custom-control-label" name="radPublic" for="radioDark">Enable Dark Mode Theme</label>
+                                                        
+                                                    </div>
+                                                    <div class="custom-control custom-radio">
+                                                        <input class="custom-control-input" id="radioLight" type="radio" name="radioPrivacy" {% if not company.darkmode %}checked{% endif %} />
+                                                        <label class="custom-control-label" name="radPrivate" for="radioLight">Enable Light Mode Theme</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+
+
                             </div>
                         </div>
                         <!-- MODAL TO CROP THE IMAGE -->
@@ -302,6 +326,43 @@
                         }
                     });
                     return false;
+                });
+                lightMode = document.querySelector('#radioLight');
+                darkMode = document.querySelector('#radioDark');
+                $(document).ready(function(){
+                    lightMode.addEventListener('click', function(e){
+                        $("body").addClass("white-content");
+                        $('nav').addClass('navbar-transparent')
+                        $.ajax({
+                            url: '{% host_url "changeDarkMode" host "bizadmin" %}',
+                            data: JSON.stringify({light:true}),
+                            type: "POST",
+                            dataType: 'json',
+                            headers:{
+                                "X-CSRFToken": csrftoken
+                            },
+                            success: function(data){
+                                
+                            },
+                        });
+                    });
+
+                    darkMode.addEventListener('click', function(e){
+                        $("body").removeClass("white-content");
+                        $('nav').addClass('navbar-transparent')
+                        $.ajax({
+                            url: '{% host_url "changeDarkMode" host "bizadmin" %}',
+                            data: JSON.stringify({light:false}),
+                            type: "POST",
+                            dataType: 'json',
+                            headers:{
+                                "X-CSRFToken": csrftoken
+                            },
+                            success: function(data){
+                                
+                            },
+                        });
+                    });
                 });
 </script>
 {% endblock %}

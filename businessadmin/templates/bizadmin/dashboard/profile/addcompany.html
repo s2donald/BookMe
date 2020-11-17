@@ -7,7 +7,7 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content card">
       <div class="modal-header">
-        <h5 class="modal-title text-white" id="exampleModalLabel">Are you sure you want to?</h5>
+        <h5 class="modal-title {% if company.darkmode %}text-white{% endif %}" id="exampleModalLabel">Are you sure you want to?</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -29,7 +29,7 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content card">
       <div class="modal-header">
-        <h5 class="modal-title text-white" id="exampleModalLabel">Make some changes to this service</h5>
+        <h5 class="modal-title {% if company.darkmode %}text-white{% endif %}" id="exampleModalLabel">Make some changes to this service</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -52,8 +52,8 @@
 <div class="modal fade" id="modal-service" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content card">
-      <div class="modal-header text-white">
-        <h5 class="modal-title text-white" id="exampleModalLabel">Add your services</h5>
+      <div class="modal-header {% if company.darkmode %}text-white{% endif %}">
+        <h5 class="modal-title {% if company.darkmode %}text-white{% endif %}" id="exampleModalLabel">Add your services</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -200,7 +200,7 @@
                                 <button id="createservice" class="btn btn-primary mb-3 js-create-product justify-content-center" type="button" data-toggle="modal" data-target="#modal-service" >Add Service</button>
                             </div>
                             <div class="table-responsive">
-                                <table id="service-table" class="table table-dark table-hover">
+                                <table id="service-table" class="table {% if company.darkmode %}table-dark{% endif %} table-hover">
                                     <thead>
                                         <tr>
                                         <th class="text-center" scope="col">#</th>
@@ -434,7 +434,7 @@
                     </div>
                     <div class="col-md-12 mx-auto text-center">
                         <label for="" class="font-weight-bold d-flex justify-content-center pr-1">Returning Clients Only<a data-toggle="tooltip" data-placement="top" title="Only accept clients who are on your client list"> <i class="fas fa-question-circle licolor"></i></a></label>
-                        <input name="returning" type="checkbox" class="bootstrap-switch bootstrap-switch-red my-0" data-on-label="True" data-off-label="False"/>
+                        <input name="returning" type="checkbox" class="bootstrap-switch bootstrap-switch-red my-0" data-on-label="True" data-off-label=""/>
                     </div>
                     <div class="col-md-12">
                         <label for="" class="font-weight-bold d-flex justify-content-center pr-1">Notes for customers(Optional) <a data-toggle="tooltip" data-placement="top" title="Display a popup message when clients first enter your booking link."> <i class="fas fa-question-circle licolor"></i></a></label>

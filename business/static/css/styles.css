@@ -12927,7 +12927,11 @@ Copyright (c) 2015 Daniel Eden
   .white-content .progress-container .progress-badge, .white-content .progress-container.progress.sm .progress-badge {
     color: #1d253b; }
   .white-content .bootstrap-select button.dropdown-toggle {
-    border-color: rgba(29, 37, 59, 0.5); }
+    background: transparent;
+    background-position: top right;
+    background-color: transparent;
+    border-color: rgba(250, 250, 250, 0.5);
+    background-color: rgba(222, 222, 222, 0.3); }
     .white-content .bootstrap-select button.dropdown-toggle .filter-option {
       color: #1d253b; }
     .white-content .bootstrap-select button.dropdown-toggle:after {
@@ -12983,6 +12987,17 @@ Copyright (c) 2015 Daniel Eden
       border-left-color: #ffffff; }
   .white-content .card-timeline .timeline:before {
     background-color: #E3E3E3; }
+
+  .white-content .btn, .navbar .navbar-nav > a.btn {
+    background-position: top right;
+    background-color: transparent;
+    transition: all 0.15s ease;
+    box-shadow: none;}
+
+    .white-content .input-group-append .input-group-text, .white-content .input-group-prepend .input-group-text {
+      color: black !important;
+  }
+   
 
 .card {
   background: #27293d;

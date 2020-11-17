@@ -16,11 +16,12 @@
     <link rel="apple-touch-icon" href="{% static '/img/favicon/logo/gibele57.png'%}">
     <meta name="robots" content="index, follow">
     <meta name="description" content="Book appointments online with Gibele. Search for bookable services offered by our partners across many different industries such as Automotive, Healthcare, Mobile Services, Home Services, Personal Care, and other Professional Services">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/smartwizard@5/dist/css/smart_wizard_all.min.css" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
-    <link rel="stylesheet" href="{% static "css/styles.css" %}">
+    <link rel="stylesheet" href="{% static "css/dashboardstyles.css" %}">
     <link rel="stylesheet" href="{% static "css/vendor/dropzone.min.css" %}">
     <link rel="stylesheet" href="{% static 'css/vendor/jquery-cropper.min.css'%}">
     <link rel="stylesheet" href="{% static 'css/vendor/bootstrap-tagsinput.css' %}">
@@ -35,21 +36,15 @@
     {% endblock linkscript %}
     <title>Business - Booking with Gibele</title>
   </head>
-  <body class="sidebar-mini">
+  <body class="sidebar-mini {% if not company.darkmode %}white-content{% endif %}">
     <div class="wrapper">
-        <div class="navbar-minimize-fixed">
-            <button class="minimize-sidebar btn btn-link btn-just-icon">
-                <i class="tim-icons icon-align-center visible-on-sidebar-regular text-muted"></i>
-                <i class="tim-icons icon-bullet-list-67 visible-on-sidebar-mini text-muted"></i>
-            </button>
-        </div>
     <div class="sidebar">
       <div class="sidebar-wrapper">
         <div class="logo">
-          <a class="simple-text logo-mini">
+          <a class="simple-text logo-mini text-white">
             {{ company.business_name.0 }}
           </a>
-          <a class="simple-text logo-normal">
+          <a class="simple-text logo-normal text-white">
             {{ company.business_name }}
           </a>
         </div>
@@ -208,7 +203,7 @@
     </div>
     <div class="main-panel">
       <!-- Navbar -->
-      <nav class="navbar navbar-expand-lg" >
+      <nav class="navbar navbar-expand-lg {% if not company.darkmode %}navbar-transparent{% endif %}">
         <div class="container-fluid">
           <div class="navbar-wrapper">
             <div class="navbar-minimize d-inline">
@@ -301,7 +296,7 @@
         </div>
       </div>
         <script type="text/javascript" src="https://kit.fontawesome.com/a07c5b9658.js" crossorigin="anonymous"></script>
-        <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+        
         <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
         <script src="{% static 'js/vendor/moment.min.js' %}"></script>
@@ -326,9 +321,6 @@
       </div>
         {% block calendarscript %}
         {% endblock %}
-
-        
-        
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
   </body>

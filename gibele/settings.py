@@ -26,14 +26,14 @@ GOOGLE_RECAPTCHA_SECRET_KEY = '6LcBkeEZAAAAAAKGHUafGtEV-xiuIWofHGQwSx0j' #your r
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 TIME_INPUT_FORMATS = ['%I:%M %p',]
 
 ALLOWED_HOSTS = ['pure-fjord-45840.herokuapp.com','.pure-fjord-45840.herokuapp.com','gibele.com', '.gibele.com','.gibele.ca','gibele.ca']
-if not DEBUG:
-    SESSION_COOKIE_DOMAIN= 'gibele.ca'
-    DOMAIN_NAME= 'gibele.ca'
+if DEBUG:
+    SESSION_COOKIE_DOMAIN= 'gibele.com'
+    DOMAIN_NAME= 'gibele.com'
 else:
     SESSION_COOKIE_DOMAIN= 'gibele.com'
     DOMAIN_NAME= 'gibele.com'

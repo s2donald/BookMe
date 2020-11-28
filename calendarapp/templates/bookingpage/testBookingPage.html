@@ -541,7 +541,6 @@ function getCookie(name) {
         function authenticationWithSwal(){
             {% if company.returning %}
                 {% if returnClient %}
-                    console.log('helo')
                 {% else %}
                     {% if user.is_authenticated %}
                     Swal.fire({

@@ -42,6 +42,11 @@
       <div class="container liblack">
         <div class="row">
           <div class="col-lg-7">
+          <h1 class="text-shadow verified">{{ company.business_name }}</h1>
+                <div class="text-block">
+                    <p class="text-block"><i class="fa-map-marker-alt fa mr-1 licolor"></i> {{ company.address }}, {{ company.city }}</p>
+                    <p class="mb-0 d-flex align-items-center">{% for x in '12345' %}<i class="fas fa-star {% if forloop.counter|avg_reviews:company.id %}text-warning{% else %}text-gray-300{% endif %}"></i>{% endfor %}{{ reviews|length }} Reviews</p>
+                </div>
           <hr>
             <nav class="navbar nav nav-pills nav-borders" id="navlink-page">
                 <li class="nav-item"><a class="nav-link active ml-0 service-link" href="#navlink-page" id="aservice">Services</a></li>

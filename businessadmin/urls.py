@@ -31,18 +31,23 @@ urlpatterns = [
     url(r'delete/(?P<pk>\d+)/$', views.deleteserviceViews, name='service_delete'),
     url(r'update/(?P<pk>\d+)/$', views.updateserviceViews, name='service_update'),
 
+    url(r'deletecategory/(?P<pk>\d+)/$', views.deleteCategoryAPI.as_view(), name='category_delete_view'),
+
     url(r'creatings/$', views.createserviceAPI.as_view(), name='createservice'),
+    url(r'creatingserv/(?P<pk>\d+)/$', views.createserviceAPII.as_view(), name='createservices'),
+    url(r'creatingcate/$', views.createcategoryAPI.as_view(), name='createservicecate'),
     url(r'deletes/(?P<pk>\d+)/$', views.deleteserviceAPI.as_view(), name='deleteservice'),
     url(r'updates/(?P<pk>\d+)/$', views.updateserviceAPI.as_view(), name='updateservice'),
 
-    url(r'creatingc/$', views.createclientAPI.as_view(), name='createclient'),
-    url(r'deletec/(?P<pk>\d+)$', views.deleteclientAPI.as_view(), name='deleteclient'),
-    url(r'updatec/(?P<pk>\d+)/$', views.updateclientAPI.as_view(), name='updateclient'),
+    url(r'creatingclient/$', views.createclientAPI.as_view(), name='createclient'),
+    url(r'deleteclient/(?P<pk>\d+)$', views.deleteclientAPI.as_view(), name='deleteclient'),
+    url(r'updateclient/(?P<pk>\d+)/$', views.updateclientAPI.as_view(), name='updateclient'),
 
     url(r'reviews/$', views.reviewListView, name='reviewlist'),
     url(r'privatetoggle/$', views.changePrivateView.as_view(), name='changePrivate'),
 
     url(r'path/loadsubcategories/$', views.load_subcat, name='ajax_load_subcategories'),
+    url(r'path/loadservices/$', views.load_services, name='ajax_load_services'),
     url(r'ajax/hourmindur/$', views.load_duration, name='ajax_load_duration'),
     url(r'ajax/client/$', views.load_client, name='ajax_load_client'),
     url(r'ajax/loadevents/$', views.load_events.as_view(), name='ajax_load_events'),

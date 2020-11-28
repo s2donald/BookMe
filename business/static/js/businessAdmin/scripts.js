@@ -60,15 +60,22 @@ $(document).ready(function(){
           $("#modal-service").modal("hide");
           $("#modal-delete").modal("hide");
           $("#modal-update").modal("hide");
-          Swal.fire({
-            title:data.view,
-            icon:'success',
-            customClass:{
-              confirmButton: 'btn btn-primary',
-              cancelButton: 'btn btn-danger',
-          },
-      buttonsStyling: false,
-          });
+          $.notify({
+            // options
+            message: data.view
+            },{
+                // settings
+                type: 'success'
+            });
+      //     Swal.fire({
+      //       title:data.view,
+      //       icon:'success',
+      //       customClass:{
+      //         confirmButton: 'btn btn-primary',
+      //         cancelButton: 'btn btn-danger',
+      //     },
+      // buttonsStyling: false,
+      //     });
         }
         else {
           $("#modal-service .modal-content").html(data.html_form);
@@ -88,21 +95,27 @@ $(document).ready(function(){
       success: function (data) {
         if (data.form_is_valid) {
           $("#service-table tbody").html(data.html_service_list);
-          console.log(data.html_service_list)
           $('#service-t').html(data.html_service_list)
           $('#client-table').html(data.html_service_list)
           $("#modal-service").modal("hide");
           $("#modal-delete").modal("hide");
           $("#modal-update").modal("hide");
-          Swal.fire({
-            title:data.view,
-            icon:'success',
-            customClass:{
-              confirmButton: 'btn btn-primary',
-              cancelButton: 'btn btn-danger',
-          },
-      buttonsStyling: false,
-          });
+          $.notify({
+            // options
+            message: data.view
+            },{
+                // settings
+                type: 'success'
+            });
+      //     Swal.fire({
+      //       title:data.view,
+      //       icon:'success',
+      //       customClass:{
+      //         confirmButton: 'btn btn-primary',
+      //         cancelButton: 'btn btn-danger',
+      //     },
+      // buttonsStyling: false,
+      //     });
         }
         else {
           $("#modal-update .modal-content").html(data.html_form);
@@ -272,8 +285,8 @@ $(document).ready(function() {
   //    Activate bootstrap-select
   if ($selectpicker.length != 0) {
     $selectpicker.selectpicker({
-      iconBase: "tim-icons",
-      tickIcon: "icon-check-2"
+      iconBase: "fas",
+      tickIcon: "fa-check"
     });
   }
 
@@ -532,7 +545,7 @@ var blackDashboard = {
   showSidebarMessage: function(message) {
     try {
       $.notify({
-        icon: "tim-icons icon-bell-55",
+        icon: "fas fa-bell",
         message: message
       }, {
         type: 'primary',

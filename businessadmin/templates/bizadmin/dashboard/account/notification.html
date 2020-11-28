@@ -131,15 +131,13 @@
                     "X-CSRFToken": csrftoken
                 },
                 success: function(data){
-                    Swal.fire({
-                        title:'We saved your email settings',
-                        icon:'success',
-                        customClass:{
-                                confirmButton: 'btn btn-primary',
-                                cancelButton: 'btn btn-danger',
-                            },
-                        buttonsStyling: false,
-                    })
+                    $.notify({
+                            // options
+                            message: 'We have saved your email settings'
+                        },{
+                            // settings
+                            type: 'success'
+                        });
                 },
             });
         });
@@ -153,15 +151,13 @@
                     "X-CSRFToken": csrftoken
                 },
                 success: function(data){
-                    Swal.fire({
-                        title:'We saved your email settings',
-                        icon:'success',
-                        customClass:{
-                                confirmButton: 'btn btn-primary',
-                                cancelButton: 'btn btn-danger',
-                            },
-                        buttonsStyling: false,
-                    })
+                    $.notify({
+                            // options
+                            message: 'We have saved your email settings'
+                        },{
+                            // settings
+                            type: 'success'
+                        });
                 },
             });
         });
@@ -200,14 +196,12 @@
                         });
                     }
                     else{
-                        Swal.fire({
-                            title: 'We have saved your notes settings',
-                            icon: data.good,
-                            customClass:{
-                                confirmButton: 'btn btn-primary',
-                                cancelButton: 'btn btn-danger',
-                            },
-                        buttonsStyling: false,
+                        $.notify({
+                            // options
+                            message: 'We have saved your notes settings'
+                        },{
+                            // settings
+                            type: 'success'
                         });
                     }
                 },

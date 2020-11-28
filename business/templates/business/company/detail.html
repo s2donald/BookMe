@@ -39,75 +39,154 @@
     {% endwith %}
     
     <section class="py-0">
-      <div class="container">
-
+      <div class="container liblack">
         <div class="row">
           <div class="col-lg-7">
-            <div class="text-block">
-            <div class="d-flex justify-content-between align-items-start flex-column flex-lg-row align-items-lg-end">
-              <div class="text-black mb-4 mb-lg-0">
-                <h1 class="text-shadow verified">{{ company.business_name }}</h1>
-                <div class="text-block">
-                    <p class="text-block"><i class="fa-map-marker-alt fa mr-1 licolor"></i> {{ company.address }}, {{ company.city }}</p>
-                    <p class="mb-0 d-flex align-items-center">{% for x in '12345' %}<i class="fas fa-star {% if forloop.counter|avg_reviews:company.id %}text-warning{% else %}text-gray-300{% endif %}"></i>{% endfor %}{{ reviews|length }} Reviews</p>
+          <hr>
+            <nav class="navbar nav nav-pills nav-borders" id="navlink-page">
+                <li class="nav-item"><a class="nav-link active ml-0 service-link" href="#navlink-page" id="aservice">Services</a></li>
+                <li class="nav-item"><a class="nav-link about-link" href="#navlink-page" id="aabout">About</a></li>
+                <li class="nav-item"><a class="nav-link review-link" href="#navlink-page" id="areview">Reviews</a></li>
+                <li class="nav-item"><a class="nav-link gallary-link" href="#navlink-page" id="agallary">Gallary</a></li>
+            </nav>
+            <hr>
+            <div class="text-block" id="serviceList">
+            <h2>All Services</h2>
+
+              <div id="accordion" role="tablist" aria-multiselectable="true" class="card-collapse">
+                <div class="card card-plain mb-2">
+                {% for categories in company.service_category.all %}
+                  <div class="card-header p-2 mb-2" role="tab" id="heading{{ forloop.counter }}">
+                    <p class="mb-0 text-sm text-left align-items-center justify-content-center">
+                      <a data-toggle="collapse" href="#collapse{{ forloop.counter }}" aria-expanded="false" aria-controls="collapse{{ forloop.counter }}">
+                        {{ categories.name }} Services
+                        <i class="fas fa-chevron-down text-line"></i>
+                      </a>
+                    </p>
+                  </div>
+                  <div id="collapse{{ forloop.counter }}" class="collapse" role="tabpanel" aria-labelledby="heading{{ forloop.counter }}" data-parent="#accordion">
+                    <div class="card-body text-left">
+                      {% for s in categories.services.all %}
+                        {% with hour=s.duration_hour min=s.duration_minute type=s.price_type %}                          
+                          <div class="row p-0 justify-content-between text-left align-self-center">
+                            <div class="col-8 p-0">
+                            <p class="mb-1">{{ s.name }}</p>
+                            <a id="serv{{ s.id }}" href="{% host_url 'bookingserviceurls' pk=s.id host 'bookingurl' slug=company.slug %}" class="btn btn-outline-primary">Book Now</a>
+                            </div>
+                            <div class="col-4 p-0 text-right">
+                              <strong class="text-header m-1">{% if not hour == 0 %}{{ hour }}h{% endif %} {% if not min == 0 and not hour == 0 %}&amp;{% endif %} {% if not min == 0 %}{{ min }} min{% endif %}</strong>
+                              {% if not type == 'dont' %}<p class="m-1">{% if type == "fixed" %}Fixed price of{% elif type == 'start' %}Prices start at{% elif type == 'variable' %}<strong>Prices Varies</strong>{% endif %}{% if type == 'variable' %}{% elif type == 'free' %}<strong>Free</strong> {% else %} <strong>${{ s.price }}</strong>{% endif %}</p>{% endif %}
+                            </div>
+                          </div>
+                          <div class="col-12 p-0 mt-2">
+                            <p class="text-muted">{{ s.description }}</p>
+                          </div>
+                        {% endwith %}  
+                            <hr>
+                      {% endfor %}
+                    </div>
+                  </div>
+                {% endfor %}
+                  <div class="card-header p-2 hover-animate" role="tab" id="headingAll">
+                    <p class="mb-0 text-sm text-left align-items-center justify-content-center">
+                      <a data-toggle="collapse" href="#collapseAll" aria-expanded="false" aria-controls="collapseAll">
+                        All Services
+                        <i class="fas fa-chevron-down text-line"></i>
+                      </a>
+                    </p>
+                  </div>
+                  <div id="collapseAll" class="collapse" role="tabpanel" aria-labelledby="headingAll" data-parent="#accordion">
+                    <div class="card-body text-left">
+                      {% for s in services %}
+                        {% with hour=s.duration_hour min=s.duration_minute type=s.price_type %}                          
+                          <div class="row p-0 justify-content-between text-left align-self-center">
+                            <div class="col-8 p-0">
+                              <p class="mb-1">{{ s.name }}</p>
+                              <a id="serv{{ s.id }}" href="{% host_url 'bookingserviceurls' pk=s.id host 'bookingurl' slug=company.slug %}" class="btn btn-outline-primary">Book Now</a>
+                            </div>
+                            <div class="col-4 p-0 text-right">
+                              <strong class="text-header m-1">{% if not hour == 0 %}{{ hour }}h{% endif %} {% if not min == 0 and not hour == 0 %}&amp;{% endif %} {% if not min == 0 %}{{ min }} min{% endif %}</strong>
+                              {% if not type == 'dont' %}<p class="m-1">{% if type == "fixed" %}Fixed price of{% elif type == 'start' %}Prices start at{% elif type == 'variable' %}<strong>Prices Varies</strong>{% endif %}{% if type == 'variable' %}{% elif type == 'free' %}<strong>Free</strong> {% else %} <strong>${{ s.price }}</strong>{% endif %}</p>{% endif %}
+                            </div>
+                          </div>
+
+                          <div class="col-12 p-0 m-0 text-center">
+                            <p class="text-muted text-left">{{ s.description }}</p>
+                          </div>
+                        {% endwith %}  
+                            <hr>
+                      {% endfor %}
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
-              <hr>
-            <div class="text-block">
+
+{% comment %} 
                 {% if services %}
-                    <h2>Services</h1>
-                    {% for s in services %}
-                        {% with hour=s.duration_hour min=s.duration_minute type=s.price_type %}
-                        <h3 class="mb-3">{{ s.name }}</h3>
-                        <strong class="text-header">{% if not hour == 0 %}{{ hour }} hour {% endif %} {% if not min == 0 and not hour == 0 %}&amp;{% endif %} {% if not min == 0 %}{{ min }} min{% endif %}</strong>
-                        <p class="text-muted">{{ s.description }}</p>
-                        <p>{% if type == "fixed" %}Fixed price of{% elif type == 'start' %}Prices start at{% elif type == 'variable' %}<strong>Prices Varies</strong>{% endif %}{% if type == 'variable' %}{% elif type == 'free' %}<strong>Free</strong> {% elif type == 'dont' %}{% else %} <strong>${{ s.price }}</strong>{% endif %}</p>
-                        {% endwith %}
-                        <a href="{% host_url 'bookingserviceurls' pk=s.id host 'bookingurl' slug=company.slug %}" class="btn btn-outline-primary">Book Now</a>
-                        <hr>
-                        
-                    {% endfor %}
-                {% endif %}
-            </div>
-            {% if company.description %}
-              <h3 class="mb-3">About</h3>
-              <p class="text-muted"> {{ company.description }}</p>
-            {% endif %}
-            <hr>
-            </div>
-            <div class="text-block">
-                <h3 class="mb-3">Location</h3>
-                <div id="map"></div>
-                <hr>
+                    <h2>All Services</h2>
+                      <div class="card pb-2">
+                        {% for s in services %}
+                            {% with hour=s.duration_hour min=s.duration_minute type=s.price_type %}
+                            <h3 class="mb-3">{{ s.name }}</h3>
+                            <strong class="text-header">{% if not hour == 0 %}{{ hour }} hour {% endif %} {% if not min == 0 and not hour == 0 %}&amp;{% endif %} {% if not min == 0 %}{{ min }} min{% endif %}</strong>
+                            <p class="text-muted">{{ s.description }}</p>
+                            <p>{% if type == "fixed" %}Fixed price of{% elif type == 'start' %}Prices start at{% elif type == 'variable' %}<strong>Prices Varies</strong>{% endif %}{% if type == 'variable' %}{% elif type == 'free' %}<strong>Free</strong> {% elif type == 'dont' %}{% else %} <strong>${{ s.price }}</strong>{% endif %}</p>
+                            {% endwith %}
+                            <a id="serv{{ s.id }}" href="{% host_url 'bookingserviceurls' pk=s.id host 'bookingurl' slug=company.slug %}" class="btn btn-outline-primary">Book Now</a>
+                            <hr>
+                        {% endfor %}
+                      </div>
+                {% else %}
+                    <h2>No services offered at this time</h2>
+                    <hr>
+                {% endif %} {% endcomment %}
+                
             </div>
             <!-- Amenities-->
-            {% if amenities %}
-            <hr>
-            <div class="text-block">
-              <h3 class="mb-4">Amenities</h3>
-              <ul class="amenities-list list-inline">
-                {% for a in amenities %}
-                <li class="list-inline-item mb-3">
-                  <div class="d-flex align-items-center">
-                    <div class="icon-circle bg-secondary mr-2"><i class="fa fa-check"></i></div><span class="text-capitalize">{{ a.amenity }}</span>
-                  </div>
-                </li>
-                {% endfor %}
-              </ul>
+            <div class="d-none" id="aboutList">
+                {% if amenities %}
+                <div class="text-block">
+                <h3 class="mb-4">Amenities Offered</h3>
+                <ul class="amenities-list list-inline">
+                    {% for a in amenities %}
+                    <li class="list-inline-item mb-3">
+                    <div class="d-flex align-items-center">
+                        <div class="icon-circle bg-secondary mr-2"><i class="fa fa-check"></i></div><span class="text-capitalize">{{ a.amenity }}</span>
+                    </div>
+                    </li>
+                    {% endfor %}
+                </ul>
+                <hr>
+                </div>
+                {% endif %}
+
+                <div class="text-block">
+                {% if company.description %}
+                <h3 class="mb-3">About</h3>
+                <p class="text-muted text-left"> {{ company.description }}</p>
+                <hr>
+                {% endif %}
+                </div>
+
+                <div class="text-block">
+                    <h3 class="mb-3">Location</h3>
+                    <div id="map"></div>
+                    <hr>
+                </div>
             </div>
-            {% endif %}
-            <hr>
-            <div class="text-block" id="reviewlist">
-                <div class="d-flex justify-content-between">
-                    <h5 class="mb-4 licolor">Reviews</h5>
+            
+            
+            <div class="text-block d-none" id="reviewlist">
+                <div class="d-flex justify-content-center">
+                    <h3 class="mb-3">Reviews</h3>
                 </div>
               {% if reviews %}
               {% for review in reviews %}
+              <hr>
               {% with reviewer=review.reviewer %}
               <div class="media d-block d-sm-flex review">
-                <div class="text-md-center mr-4 mr-xl-5"><img class="d-block avatar avatar-xl p-2 mb-2" src=" {% if reviewer.avatar %}{{reviewer.avatar.url}}{% else %}https://epicattorneymarketing.com/wp-content/uploads/2016/07/Headshot-Placeholder-1.png{% endif %} " alt="{{ reviewer.first_name }} {{ reviewer.last_name }}"><span class="text-uppercase text-muted text-sm">{{ review.created|date:"M d, Y"}}</span></div>
-                <div class="media-body">
+                <div class="text-md-left mr-4 mr-xl-5"><img class="d-block avatar avatar-xl p-2 mb-2" src="{% if reviewer.avatar %}{{ reviewer.avatar.url }}{% else %}https://epicattorneymarketing.com/wp-content/uploads/2016/07/Headshot-Placeholder-1.png{% endif %} " alt="{{ reviewer.first_name }} {{ reviewer.last_name }}"><span class="text-uppercase text-muted text-sm">{{ review.created|date:"M d, Y"}}</span></div>
+                <div class="media-body text-left">
                   <h6 class="mt-2 mb-1">{{ reviewer.first_name }} {{ reviewer.last_name }}</h6>
                   <div class="mb-2">{% for x in '12345' %}<i class="fas fa-star {% if forloop.counter <= review.star %}text-warning{% else %}text-gray-300{% endif %}"></i>{% endfor %}
                   </div>
@@ -117,33 +196,51 @@
               {% endwith %}
               {% endfor %}
               {% include 'business/company/pagination_review/pagination.html' with page=reviews %}
+              <hr>
               {% else %}
                 <h6>Be the first to write a review on this business after you complete a service with them.</h6>
+                <hr>
               {% endif %}
             
               
             </div>
-            <hr>
+
+            <div class="text-block d-none" id="gallarylist">
+              <div class="row text-center justify-content-center" id="galphotos">
+                {% for p in photos %}
+                  <div class="col-sm-12 col-md-6 col-lg-4 mt-2">
+                    <div class="card hover-animate justify-content-center align-self-center show-image" id="{{ p.id }}">
+                      <img width="100%" class="rounded" src="{{ p.photos.url }}" alt="">
+                    </div>
+                  </div>
+                {% empty %}
+                  <h6>No images have been uploaded by {{ company.name }}</h6>
+                {% endfor %}
+              </div>
+              <br>
+              {% include 'bizadmin/dashboard/reviews/pagination.html' with page=photos%}
+            </div>
+            
           </div>
           <div class="col-lg-5">
             <div class="pl-xl-4">
               <!-- Opening Hours      -->
               <div class="card border-0 shadow mb-5">
-                <div class="card-header bg-gray-100 py-4 border-0">
+              <div class="card-topcol bg-light"></div>
+                
+                <div class="card-body">
                   <div class="media align-items-center">
                     <div class="media-body">
-                      <h4 class="mb-0 licolor">Business Hours </h4>
+                      <h4 class="mb-0">Business Hours </h4>
                     </div>
                   </div>
-                </div>
-                <div class="card-body">
                   <table class="table text-sm mb-0">
                     <tr>
                       <th class="pl-0 border-0">Sunday</th>
                       {% if sun_hour.is_closed %}
                         <td class="pr-0 text-right border-0">Closed</td>
                       {% else %}
-                        <td class="pr-0 text-right border-0">{{ sun_hour.from_hour|date:"P"}} - {{ sun_hour.to_hour|date:"P" }}</td>
+                        <td class="pr-0 text-right border-0">{{ sun_hour.from_hour|date:'g:i A'}} - {{ sun_hour.to_hour|date:'g:i A' }}</td>
                       {% endif %}
                     </tr>
                     <tr>
@@ -151,7 +248,7 @@
                       {% if mon_hour.is_closed %}
                         <td class="pr-0 text-right border-0">Closed</td>
                       {% else %}
-                        <td class="pr-0 text-right border-0">{{ mon_hour.from_hour|date:"P" }} - {{ mon_hour.to_hour|date:"P" }}</td>
+                        <td class="pr-0 text-right border-0">{{ mon_hour.from_hour|date:'g:i A' }} - {{ mon_hour.to_hour|date:'g:i A' }}</td>
                       {% endif %}
                     </tr>
                     <tr>
@@ -159,7 +256,7 @@
                       {% if tues_hour.is_closed %}
                         <td class="pr-0 text-right border-0">Closed</td>
                       {% else %}
-                        <td class="pr-0 text-right border-0">{{ tues_hour.from_hour|date:"P" }} - {{ tues_hour.to_hour|date:"P" }}</td>
+                        <td class="pr-0 text-right border-0">{{ tues_hour.from_hour|date:'g:i A' }} - {{ tues_hour.to_hour|date:'g:i A' }}</td>
                       {% endif %}
                     </tr>
                     <tr>
@@ -167,7 +264,7 @@
                       {% if wed_hour.is_closed %}
                         <td class="pr-0 text-right border-0">Closed</td>
                       {% else %}
-                        <td class="pr-0 text-right border-0">{{ wed_hour.from_hour|date:"P" }} - {{ wed_hour.to_hour|date:"P" }}</td>
+                        <td class="pr-0 text-right border-0">{{ wed_hour.from_hour|date:'g:i A' }} - {{ wed_hour.to_hour|date:'g:i A' }}</td>
                       {% endif %}
                     </tr>
                     <tr>
@@ -175,7 +272,7 @@
                       {% if thur_hour.is_closed %}
                         <td class="pr-0 text-right border-0">Closed</td>
                       {% else %}
-                        <td class="pr-0 text-right border-0">{{ thur_hour.from_hour|date:"P" }} - {{ thur_hour.to_hour|date:"P" }}</td>
+                        <td class="pr-0 text-right border-0">{{ thur_hour.from_hour|date:'g:i A' }} - {{ thur_hour.to_hour|date:'g:i A' }}</td>
                       {% endif %}
                     </tr>
                     <tr>
@@ -183,7 +280,7 @@
                       {% if fri_hour.is_closed %}
                         <td class="pr-0 text-right border-0">Closed</td>
                       {% else %}
-                        <td class="pr-0 text-right border-0">{{ fri_hour.from_hour|date:"P" }} - {{ fri_hour.to_hour|date:"P" }}</td>
+                        <td class="pr-0 text-right border-0">{{ fri_hour.from_hour|date:'g:i A' }} - {{ fri_hour.to_hour|date:'g:i A' }}</td>
                       {% endif %}
                     </tr>
                     <tr>
@@ -191,7 +288,7 @@
                       {% if sat_hour.is_closed %}
                         <td class="pr-0 text-right border-0">Closed</td>
                       {% else %}
-                        <td class="pr-0 text-right border-0">{{ sat_hour.from_hour|date:"P" }} - {{ sat_hour.to_hour|date:"P" }}</td>
+                        <td class="pr-0 text-right border-0">{{ sat_hour.from_hour|date:'g:i A' }} - {{ sat_hour.to_hour|date:'g:i A' }}</td>
                       {% endif %}
                     </tr>
                   </table>
@@ -199,48 +296,112 @@
               </div>
               <!-- Contact-->
               <div class="card border-0 shadow mb-5">
-                <div class="card-header bg-gray-100 py-4 border-0">
+                <div class="card-topcol bg-light"></div>
+                <div class="card-body">
                   <div class="media align-items-center">
                     <div class="media-body">
-                      <h4 class="mb-0 licolor">Contact Information</h4>
+                      <h4 class="mb-0">Contact Information</h4>
                     </div>
                   </div>
-                </div>
-                <div class="card-body">
                   <ul class="list-unstyled mb-4">
-
-                    <li class="mb-2"> <a rel="nofollow" class="licolor text-sm text-decoration-none" href="tel:{{ company.phone }}"><i class="fa fa-phone mr-3"></i><span class="text-muted">{{ company.phone }}</span></a></li>
-                    <li class="mb-2"> <a rel="nofollow" class="licolor text-sm text-decoration-none" href="mailto:{{ company.email }}"><i class="fa fa-envelope mr-3"></i><span class="text-muted">{{ company.email }}</span></a></li>
+                    <li class="mb-0 pb-0"> 
+                      <a rel="nofollow" class="licolor text-sm text-decoration-none" href="tel:{{ company.phone }}">
+                        <div class="row my-0 py-0">
+                          <div class="col-2 mb-0 pb-0">
+                            <i class="fa fa-phone mr-3"></i>
+                          </div>
+                          <div class="col-10 pb-0 text-left">
+                            <span class="text-muted">{{ company.phone }}</span>
+                          </div>
+                        </div>
+                      </a>
+                    </li>
+                    <li class="mb-2"> 
+                      <a rel="nofollow" class="licolor text-sm text-decoration-none" href="mailto:{{ company.email }}">
+                        <div class="row my-0 py-0">
+                          <div class="col-2 my-0 pb-0">
+                            <i class="fa fa-envelope mr-3"></i>
+                          </div>
+                          <div class="col-10 pb-0 text-left">
+                            <span class="text-muted">{{ company.email }}</span>
+                          </div>
+                        </div>
+                      </a>
+                    </li>
                     {% if company.website_link %}
-                      <li class="mb-2"> <a rel="nofollow" class="licolor text-sm text-decoration-none" href="{{ company.website_link }}"><i class="fa fa-globe mr-3"></i><span class="text-muted">{{ company.website_link }}</span></a></li>
+                      <li class="mb-2"> 
+                        <a rel="nofollow" class="licolor text-sm text-decoration-none" href="{{ company.website_link }}">
+                          <div class="row my-0 py-0">
+                            <div class="col-2 my-0 pb-0">
+                              <i class="fa fa-globe mr-3"></i>
+                            </div>
+                            <div class="col-10 pb-0 text-left">
+                              <span class="text-muted">{{ company.website_link }}</span>
+                            </div>
+                          </div>
+                        </a>
+                      </li>
                     {% endif %}
                     {% if company.fb_link %}
-                      <li class="mb-2"> <a rel="nofollow" class="licolor text-blue text-sm text-decoration-none" href="{{ company.fb_link}}"><i class="fab fa-facebook mr-3"></i><span class="text-muted">Facebook</span></a></li>
+                      <li class="mb-2"> 
+                        <a rel="nofollow" class="licolor text-blue text-sm text-decoration-none" href="{{ company.fb_link}}">
+                          <div class="row my-0 py-0">
+                            <div class="col-2 my-0 pb-0">
+                              <i class="fab fa-facebook mr-3"></i>
+                            </div>
+                            <div class="col-10 pb-0 text-left">
+                              <span class="text-muted">Facebook</span>
+                            </div>
+                          </div>
+                        </a>
+                      </li>
                     {% endif %}
                     {% if company.twitter_link %}
-                      <li class="mb-2"> <a rel="nofollow" class="licolor text-sm text-decoration-none" href="{{ company.twitter_link}}"><i class="fab fa-twitter mr-3"></i><span class="text-muted">Twitter</span></a></li>
+                      <li class="mb-2"> 
+                        <a rel="nofollow" class="licolor text-sm text-decoration-none" href="{{ company.twitter_link}}">
+                          <div class="row my-0 py-0">
+                            <div class="col-2 my-0 pb-0">
+                              <i class="fab fa-twitter mr-3"></i>
+                            </div>
+                            <div class="col-10 pb-0 text-left">
+                              <span class="text-muted">Twitter</span>
+                            </div>
+                          </div>
+                        </a>
+                      </li>
                     {% endif %}
                     {% if company.instagram_link %}
-                      <li class="mb-2"> <a rel="nofollow" class="licolor text-sm text-decoration-none" href="{{ company.instagram_link}}"><i class="fab fa-instagram mr-3"></i><span class="text-muted">Instagram</span></a></li>
+                      <li class="mb-2"> 
+                        <a rel="nofollow" class="licolor text-sm text-decoration-none" href="{{ company.instagram_link}}">
+                          <div class="row my-0 py-0">
+                            <div class="col-2 my-0 pb-0">
+                              <i class="fab fa-instagram licolor mr-3"></i>
+                            </div>
+                            <div class="col-10 pb-0 text-left">
+                              <span class="text-muted">Instagram</span>
+                            </div>
+                          </div>
+                        </a>
+                      </li>
                     {% endif %}
                   </ul>
                 </div>
               </div>
               <div class="text-center">
-                {% with users_like=company.users_like.all %}
-                  {% with liked_count=users_like.count %}
-                  <p><a class="licolor likes" id="{{ company.id }}" href="#" data-id="{{ company.id }}" data-total={{ liked_count }} data-action="{% if request.user in users_like %}unlike{% else %}like{% endif %}"> <i class="fa fa-heart"></i> {% if request.user in users_like %}Unf{% else %}F{% endif %}avourite this company</a></p>
-  
-                  {% if liked_count == 1 %}
-                    <span id="totalsLikes">{{ liked_count }} person loves this business</span>
-                  {% elif liked_count > 1 %}
-                    <span id="totalsLikes">{{ liked_count }} people love this business</span>
-                  {% else %}
-                    <span id="totalsLikes">Be the first to favourite this business</span>
-                  {% endif %}
+                  {% with users_like=company.users_like.all %}
+                    {% with liked_count=users_like.count %}
+                    <p><a class="licolor likes" id="{{ company.id }}" href="#" data-id="{{ company.id }}" data-total={{ liked_count }} data-action="{% if request.user in users_like %}unlike{% else %}like{% endif %}"> <i class="fa fa-heart"></i> {% if request.user in users_like %}Unf{% else %}F{% endif %}avourite this company</a></p>
+    
+                    {% if liked_count == 1 %}
+                      <span id="totalsLikes">{{ liked_count }} person loves this business</span>
+                    {% elif liked_count > 1 %}
+                      <span id="totalsLikes">{{ liked_count }} people love this business</span>
+                    {% else %}
+                      <span id="totalsLikes">Be the first to favourite this business</span>
+                    {% endif %}
+                    {% endwith %}
                   {% endwith %}
-                {% endwith %}
-              </div>
+                </div>
             </div>
           </div>
         
@@ -268,10 +429,10 @@
 
               {% endif %}
           </div> {% endcomment %}
-
           </div>
       </div>
     </section>
+
   {% if similar_companies %}
     <div class="py-6 bg-gray-100"> 
       <div class="container mt-3">
@@ -425,6 +586,69 @@
     </script>
 {% endblock extrascripts %}
 {% block ajaxscripts %}
+    <script>
+      $(document).ready(function(){
+        function checkWidth(){
+          var windowWidth = $(window).width();
+          if (windowWidth <= 560){
+            $('.swiper-button-next').hide()
+            $('.swiper-button-prev').hide()
+          }
+          else{
+            $('.swiper-button-next').show()
+            $('.swiper-button-prev').show()
+          }
+        }
+        checkWidth();
+        $(window).resize(checkWidth);
+        $('.about-link').on('click', function(e){
+            document.getElementById('aboutList').classList.remove('d-none')
+            document.getElementById('serviceList').classList.add('d-none')
+            document.getElementById('reviewlist').classList.add('d-none')
+            document.getElementById('gallarylist').classList.add('d-none')
+
+            document.getElementById('aabout').classList.add('active')
+            document.getElementById('aservice').classList.remove('active')
+            document.getElementById('areview').classList.remove('active')
+            document.getElementById('agallary').classList.remove('active')
+        });
+        $('.service-link').on('click', function(e){
+            document.getElementById('aboutList').classList.add('d-none')
+            document.getElementById('serviceList').classList.remove('d-none')
+            document.getElementById('reviewlist').classList.add('d-none')
+            document.getElementById('gallarylist').classList.add('d-none')
+
+            document.getElementById('aabout').classList.remove('active')
+            document.getElementById('aservice').classList.add('active')
+            document.getElementById('areview').classList.remove('active')
+            document.getElementById('agallary').classList.remove('active')
+        });
+
+        $('.review-link').on('click', function(e){
+            document.getElementById('aboutList').classList.add('d-none')
+            document.getElementById('serviceList').classList.add('d-none')
+            document.getElementById('reviewlist').classList.remove('d-none')
+            document.getElementById('gallarylist').classList.add('d-none')
+
+            document.getElementById('aabout').classList.remove('active')
+            document.getElementById('aservice').classList.remove('active')
+            document.getElementById('areview').classList.add('active')
+            document.getElementById('agallary').classList.remove('active')
+        });
+
+        $('.gallary-link').on('click', function(e){
+            document.getElementById('aboutList').classList.add('d-none')
+            document.getElementById('serviceList').classList.add('d-none')
+            document.getElementById('reviewlist').classList.add('d-none')
+            document.getElementById('gallarylist').classList.remove('d-none')
+
+            document.getElementById('aabout').classList.remove('active')
+            document.getElementById('aservice').classList.remove('active')
+            document.getElementById('areview').classList.remove('active')
+            document.getElementById('agallary').classList.add('active')
+        });
+      })
+    </script>
     <script>
       function getCookie(name) {
                             let cookieValue = null;

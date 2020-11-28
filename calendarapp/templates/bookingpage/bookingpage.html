@@ -29,8 +29,8 @@
     <title>{{ company.business_name }} - Booking with Gibele</title>
   </head>
   <body>
-        {% block slideshow %}
-        {% endblock slideshow %}
+        {% comment %} {% block slideshow %}
+        {% endblock slideshow %} {% endcomment %}
         <div class="bg-light inline-block container-fluid align-items-center justify-content-center">
             <div class="row justify-content-between ">
                 <a class="my-2 pr-2 ml-2" href="{% host_url 'business:homepage' host 'www' %}"><img width="125px" style="white; border-radius:10px;" src="{% static "img/favicon/logo/GibeleLogo.svg" %}"></a>

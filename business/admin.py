@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Company, Category, Services, SubCategory, Amenities, OpeningHours, Gallary, Clients, CompanyReq
+from .models import Company, Category, Services, SubCategory, Amenities, OpeningHours, Gallary, Clients, CompanyReq, ServiceCategories
 # Register your models here.
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
@@ -36,12 +36,18 @@ class CompanyReqInline(admin.TabularInline):
     model = CompanyReq
     extra = 0
 
+class ServiceCategories(admin.TabularInline):
+    model = ServiceCategories
+    extra = 0
+
 @admin.register(Company)
 class CompanyAdmin(admin.ModelAdmin):
     list_display = ['user','business_name','slug','available','created','updated']
     exclude = ['location']
     list_filter = ['available', 'created', 'updated']
     list_editable = ['available']
-    inlines = [ ClientsInline, CompanyReqInline, GallaryInline, OpeningHoursInline, AmenitiesInline,  ]
+    inlines = [ ClientsInline, CompanyReqInline, GallaryInline, OpeningHoursInline, AmenitiesInline, ServiceCategories ]
+
+
 
 

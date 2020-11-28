@@ -1,5 +1,5 @@
 from account.models import Account
-from business.models import Company, OpeningHours, Gallary, Services
+from business.models import Company, OpeningHours, Gallary, Services, ServiceCategories
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
 from django.core.validators import RegexValidator
@@ -153,7 +153,7 @@ class MainPhoto(forms.ModelForm):
 
 
 class UpdateCompanyForm(forms.ModelForm):
-    business_name = forms.CharField(label='', max_length=30, widget=forms.TextInput(attrs={'class':'form-control'}))
+    business_name = forms.CharField(label='', max_length=35, widget=forms.TextInput(attrs={'class':'form-control'}))
     email = forms.EmailField(label='', required=True)
     category = forms.ModelChoiceField(queryset=Category.objects.all(),label='', empty_label=None, widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control','title':'Category'}))
     subcategory = forms.ModelMultipleChoiceField(queryset=SubCategory.objects.all(),label='', widget=forms.SelectMultiple(attrs={'class':'selectcolor selectpicker show-tick form-control','multiple':'', 'data-size':'5', 'data-dropdown-align-right':'true', 'title':'Subcategories'}))
@@ -253,3 +253,21 @@ class AddBookingForm(forms.Form):
 
         
 
+class AddServiceCategoryForm(forms.Form):
+    services = forms.ModelMultipleChoiceField(queryset=Services.objects.none(),label='Select All Services:', widget=forms.SelectMultiple(attrs={'class':'selectcolor selectpicker show-tick form-control','title':'Service','data-size':'6', 'multiple':''}))
+    name = forms.CharField(required=False, label='Service Category Name',max_length=30,widget=forms.TextInput(attrs={'class':'form-control','id':'catname'}))
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        try:
+            self.fields['services'].queryset = Services.objects.filter(business=self.initial['company'].id).order_by('name')
+        except AttributeError:
+            pass
+
+class AddServiceToCategory(forms.Form):
+    category = forms.ModelMultipleChoiceField(required=False,queryset=ServiceCategories.objects.none(),label='Select the categories this service belongs to:', widget=forms.SelectMultiple(attrs={'class':'selectcolor selectpicker show-tick form-control','title':'Service','data-size':'6', 'multiple':''}))
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        try:
+            self.fields['category'].queryset = ServiceCategories.objects.filter(company=self.initial['company'].id).order_by('name')
+        except AttributeError:
+            pass

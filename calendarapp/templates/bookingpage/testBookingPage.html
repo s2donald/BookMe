@@ -19,14 +19,14 @@
 <div class="container-fluid liblack">
         <div class="row">
             <form method="POST" class="justify-content-center fform" enctype="multipart/form-data">
-                        {% csrf_token %}
-                        <div class="container-fluid">
-                            <div class="col-md-12 d-flex justify-content-center">
-                                <h3 class="mb-3">Select Your Preferred Date and Time</h3>
-                            </div>
-                            <div class="row d-flex justify-content-center mb-3">
-                                <div class="pl-6" id="datepicker"></div>
-                                <div class="col-md-6">
+                {% csrf_token %}
+                <div class="container-fluid">
+                    <div class="col-md-12 d-flex justify-content-center">
+                        <h3 class="mb-3">Select Your Preferred Date and Time</h3>
+                    </div>
+                    <div class="row d-flex justify-content-center mb-3">
+                        <div class="pl-6" id="datepicker"></div>
+                            <div class="col-md-6">
                                     <div class="" id="booking-header"><h4 class="text-center">Available Booking Times</h4></div>
                                     <div class="sk-folding-cube d-none">
                                         <div class="sk-cube1 sk-cube"></div>
@@ -541,6 +541,7 @@ function getCookie(name) {
         function authenticationWithSwal(){
             {% if company.returning %}
                 {% if returnClient %}
+                    console.log('helo')
                 {% else %}
                     {% if user.is_authenticated %}
                     Swal.fire({
@@ -849,9 +850,10 @@ function getCookie(name) {
                 {% endif %}
                 
             {% endif %}
-            }
-            authenticationWithSwal();
-        });
+        }
+        
+        authenticationWithSwal();
+    });
 
 
 </script>

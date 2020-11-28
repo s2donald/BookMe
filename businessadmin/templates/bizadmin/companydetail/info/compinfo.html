@@ -418,14 +418,12 @@
                     });
                 }
                 if(data.good){
-                    Swal.fire({
-                        title:'Your information has been saved',
-                        icon: 'success',
-                        customClass:{
-                            confirmButton: 'btn btn-primary',
-                            cancelButton: 'btn btn-danger',
-                        },
-                        buttonsStyling: false,
+                    $.notify({
+                        // options
+                        message: 'Your information has been saved'
+                    },{
+                        // settings
+                        type: 'success'
                     });
                 }
 

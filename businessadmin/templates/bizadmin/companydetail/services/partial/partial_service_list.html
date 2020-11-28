@@ -1,28 +1,129 @@
 {% load hosts %}
-{% for s in services %}
-                                                <div class="card">
-                                                    <div class="row">
-                                                        <div class="col-12">
-                                                            <div class="card-header">{{ s.name }}</div>
-                                                            <div class="card-body d-lg-flex justify-content-between text-center">
-                                                                <div>
-                                                                    <p class="subtitle text-left">${{s.price}}</p>
-                                                                    <p class="text-muted text-left">{{ s.description }}</p>
-                                                                </div>
-        
-                                                                <div>
-                                                                    <button class="btn btn-danger btn-sm trashcan" data-url="{% host_url 'deleteservice' s.id host 'bizadmin' %}"><i class="fas fa-trash"></i></button>
-                                                                    <button class="btn btn-primary btn-sm updatebtn" data-url="{% host_url 'updateservice' s.id host 'bizadmin' %}"><i class="fas fa-pencil-alt"></i></button>
+{% load static %}
+{% load hosts %}
+{% load crispy_forms_tags %}
+<div class="tab-content">
+
+                                    <div class="tab-pane active" id="tabAll">
+                                        <div class="card shadow my-1">
+                                            <div class="row">
+                                                <div class="col-6">
+                                                    <h4 class="card-header p-2">Category - All Services</h4>
+                                                    
+                                                </div>
+                                                <div class="col-6 text-right">
+                                                    <div class="card-header p-2">
+                                                            <button class="btn btn-primary btn-sm mb-3 justify-content-center addnewservice" type="button" data-toggle="modal" data-target="#modal-service" data-url="{% host_url 'createservices' 0 host 'bizadmin' %}">Add Service <i class="fas fa-plus"></i></button>
+                                                    </div>
+                                                </div>
+                                            </div>       
+                                        </div>
+                                                    {% for s in services %}
+                                                        <div class="card shadow">
+                                                            <div class="row">
+                                                                <div class="col-12">
+                                                                    {% comment %} <div class="card-header">{{ s.name }}</div> {% endcomment %}
+                                                                    <div class="card-body">
+                                                                        {% with hour=s.duration_hour min=s.duration_minute type=s.price_type %}                          
+                                                                        <div class="row p-2 justify-content-between text-left align-self-center">
+                                                                            <div class="col-8 p-0">
+                                                                            <p class="mb-1">{{ s.name }}</p>
+                                                                            <p class="text-muted">{{ s.description }}</p>
+                                                                            </div>
+                                                                            <div class="col-4 p-1 text-right">
+                                                                            <div class="row">
+                                                                            <div class="col-12">
+                                                                            <strong class="text-header text-muted m-1">{% if not hour == 0 %}{{ hour }}h{% endif %} {% if not min == 0 and not hour == 0 %}&amp;{% endif %} {% if not min == 0 %}{{ min }} min{% endif %}</strong>
+                                                                            </div>
+                                                                            <div class="col-12">
+                                                                            {% if not type == 'dont' %}<p class="m-1">{% if type == "fixed" %}Fixed price of{% elif type == 'start' %}Prices start at{% elif type == 'variable' %}<strong>Prices Varies</strong>{% endif %}{% if type == 'variable' %}{% elif type == 'free' %}<strong>Free</strong> {% else %} <strong>${{ s.price }}</strong>{% endif %}</p>{% endif %}
+                                                                            </div>
+                                                                            <div class="col-12">
+                                                                            <button class="btn btn-danger btn-sm trashcan" data-url="{% host_url 'deleteservice' s.id host 'bizadmin' %}"><i class="fas fa-trash"></i></button>
+                                                                            <button type="button" class="updatebtn btn btn-sm btn-primary" data-toggle="modal" data-target="#modal-update" data-url="{% host_url 'updateservice' s.id host 'bizadmin' %}"><i class="fas fa-pencil-alt"></i></button>
+                                                                            </div>
+                                                                            </div>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        {% endwith %}
+                                                                    </div>
+                                                                    
                                                                 </div>
                                                             </div>
-                                                            
+                                                        </div>
+                                                    {% empty %}
+                                                        <div class="card">
+                                                            <div class="card-header">No Services Added</div>
+                                                        </div>
+                                                    {% endfor %}
+                                                    <div class="card pt-2">
+                                                        {% include 'bizadmin/dashboard/reviews/pagination.html' with page=services %}
+                                                    </div>
+                                                    
+                                    </div>
+                                    {% for category in company.service_category.all  %}
+
+                                        <div class="tab-pane" id="tab{{ forloop.counter }}">
+                                            <div class="card shadow my-1">
+                                                <div class="row">
+                                                    <div class="col-6 py-auto">
+                                                        <h4 class="card-header p-2">Category - {{ category.name }} Services</h4>
+                                                        
+                                                    </div>
+                                                    <div class="col-6 text-right">
+                                                        <div class="card-header p-2">
+                                                                <button class="btn btn-primary btn-sm justify-content-center addnewservice" type="button" data-toggle="modal" data-target="#modal-service" data-url="{% host_url 'createservices' category.id host 'bizadmin' %}">Add Service <i class="fas fa-plus"></i></button>
+                                                                <button class="btn btn-link btn-danger btn-sm categorydelete" type="button" data-catename="{{ category.name }}" data-url="{% host_url 'category_delete_view' category.id host 'bizadmin' %}">Delete Category <i class="fas fa-trash"></i></button>
                                                         </div>
                                                     </div>
                                                 </div>
-                                            {% empty %}
-                                                <div class="card">
-                                                    <div class="card-header">No Services Added</div>
-                                                </div>
-                                            {% endfor %}
-                                            {% include 'bizadmin/dashboard/reviews/pagination.html' with page=services%}
+                                                
+                                            </div>
+                                            {% for s in category.services.all %}
+                                                <div class="card shadow">
+                                                            <div class="row">
+                                                                <div class="col-12">
+                                                                    {% comment %} <div class="card-header">{{ s.name }}</div> {% endcomment %}
+                                                                    <div class="card-body">
+                                                                        {% comment %} <div>
+                                                                            <p class="subtitle text-left">${{s.price}}</p>
+                                                                            <p class="text-muted text-left">{{ s.description }}</p>
+                                                                        </div>
+                
+                                                                        <div>
+                                                                            <button class="btn btn-danger btn-sm trashcan" data-url="{% host_url 'deleteservice' s.id host 'bizadmin' %}"><i class="fas fa-trash"></i></button>
+                                                                            <button type="button" class="updatebtn btn btn-sm btn-primary" data-toggle="modal" data-target="#modal-update" data-url="{% host_url 'updateservice' s.id host 'bizadmin' %}"><i class="fas fa-pencil-alt"></i></button>
+                                                                        </div> {% endcomment %}
+                                                                        {% with hour=s.duration_hour min=s.duration_minute type=s.price_type %}                          
+                                                                        <div class="row p-2 justify-content-between text-left align-self-center">
+                                                                            <div class="col-8 p-0">
+                                                                            <p class="mb-1">{{ s.name }}</p>
+                                                                            <p class="text-muted">{{ s.description }}</p>
+                                                                            </div>
+                                                                            <div class="col-4 p-1 text-right">
+                                                                            <div class="row">
+                                                                            <div class="col-12">
+                                                                            <strong class="text-header text-muted m-1">{% if not hour == 0 %}{{ hour }}h{% endif %} {% if not min == 0 and not hour == 0 %}&amp;{% endif %} {% if not min == 0 %}{{ min }} min{% endif %}</strong>
+                                                                            </div>
+                                                                            <div class="col-12">
+                                                                            {% if not type == 'dont' %}<p class="m-1">{% if type == "fixed" %}Fixed price of{% elif type == 'start' %}Prices start at{% elif type == 'variable' %}<strong>Prices Varies</strong>{% endif %}{% if type == 'variable' %}{% elif type == 'free' %}<strong>Free</strong> {% else %} <strong>${{ s.price }}</strong>{% endif %}</p>{% endif %}
+                                                                            </div>
+                                                                            <div class="col-12">
+                                                                            <button class="btn btn-danger btn-sm trashcan" data-url="{% host_url 'deleteservice' s.id host 'bizadmin' %}"><i class="fas fa-trash"></i></button>
+                                                                            <button type="button" class="updatebtn btn btn-sm btn-primary" data-toggle="modal" data-target="#modal-update" data-url="{% host_url 'updateservice' s.id host 'bizadmin' %}"><i class="fas fa-pencil-alt"></i></button>
+                                                                            </div>
+                                                                            </div>
+                                                                            </div>
+                                                                        </div>
 
+                                                                        {% endwith %}
+                                                                    </div>
+                                                                    
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                            {% endfor %}
+                                        </div>
+                                    {% endfor %}
+                                </div>

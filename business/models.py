@@ -301,6 +301,13 @@ class Services(models.Model):
     def get_absolute_url(self):
         return reverse("business:company_detail", args=[self.id, self.slug])
 
+class ServiceCategories(models.Model):
+    name = models.CharField(max_length=200, db_index=True)
+    company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name='service_category')
+    services = models.ManyToManyField(Services, blank=True)
+    def __str__(self):
+        return self.name +' Services'
+
 def slug_generators(sender, instance, *args, **kwargs):
     if not instance.slug:
         instance.slug = unique_slug_generator_services(instance)

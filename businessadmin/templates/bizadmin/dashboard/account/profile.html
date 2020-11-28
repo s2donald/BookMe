@@ -141,30 +141,6 @@
                                         </form>
                                     </div>
                                 </div>
-                                
-                                <div class="card shadow">
-                                    <div class="card-header">Enable Dark Mode</div>
-                                    <div class="card-body">
-                                        <form method="POST">
-                                        {% csrf_token %}
-                                            <div class="row">
-                                                <div class="col-6">
-                                                    <div class="custom-control custom-radio">
-                                                        <input class="custom-control-input" id="radioDark" type="radio" name="radioPrivacy" {% if company.darkmode %}checked{% endif %} />
-                                                        <label class="custom-control-label" name="radPublic" for="radioDark">Enable Dark Mode Theme</label>
-                                                        
-                                                    </div>
-                                                    <div class="custom-control custom-radio">
-                                                        <input class="custom-control-input" id="radioLight" type="radio" name="radioPrivacy" {% if not company.darkmode %}checked{% endif %} />
-                                                        <label class="custom-control-label" name="radPrivate" for="radioLight">Enable Light Mode Theme</label>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
-
-
                             </div>
                         </div>
                         <!-- MODAL TO CROP THE IMAGE -->
@@ -211,7 +187,7 @@
                             }
                                 return cookieValue;
                             }
-                            const csrftoken = getCookie('csrftoken');
+                            {% comment %} var csrftoken = getCookie('csrftoken'); {% endcomment %}
 
                             document.getElementById('btnimage').addEventListener('click', openDialog);
 
@@ -299,6 +275,9 @@
                         data: $('#accountUpdate').serialize(),
                         type: "post",
                         url: "{% host_url 'accountCheck' host 'bizadmin' %}",
+                        headers:{
+                            "X-CSRFToken": csrftoken
+                        },
                         success: function(data){
                             if(data.errors){
                                 Swal.fire({
@@ -312,57 +291,19 @@
                                 });
                             }
                             if(data.good){
-                                Swal.fire({
-                                    title:'Your information has been saved',
-                                    icon: 'success',
-                                    customClass:{
-                                confirmButton: 'btn btn-primary',
-                                cancelButton: 'btn btn-danger',
-                            },
-                        buttonsStyling: false,
-                                });
+                                $.notify({
+                        // options
+                        message: 'Your information has been saved'
+                    },{
+                        // settings
+                        type: 'success'
+                    });
                             }
 
                         }
                     });
                     return false;
                 });
-                lightMode = document.querySelector('#radioLight');
-                darkMode = document.querySelector('#radioDark');
-                $(document).ready(function(){
-                    lightMode.addEventListener('click', function(e){
-                        $("body").addClass("white-content");
-                        $('nav').addClass('navbar-transparent')
-                        $.ajax({
-                            url: '{% host_url "changeDarkMode" host "bizadmin" %}',
-                            data: JSON.stringify({light:true}),
-                            type: "POST",
-                            dataType: 'json',
-                            headers:{
-                                "X-CSRFToken": csrftoken
-                            },
-                            success: function(data){
-                                
-                            },
-                        });
-                    });
-
-                    darkMode.addEventListener('click', function(e){
-                        $("body").removeClass("white-content");
-                        $('nav').addClass('navbar-transparent')
-                        $.ajax({
-                            url: '{% host_url "changeDarkMode" host "bizadmin" %}',
-                            data: JSON.stringify({light:false}),
-                            type: "POST",
-                            dataType: 'json',
-                            headers:{
-                                "X-CSRFToken": csrftoken
-                            },
-                            success: function(data){
-                                
-                            },
-                        });
-                    });
-                });
+                
 </script>
 {% endblock %}

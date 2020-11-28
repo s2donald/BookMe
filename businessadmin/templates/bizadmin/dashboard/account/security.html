@@ -159,14 +159,12 @@
                         });
                     }
                     else {
-                        Swal.fire({
-                            title:'We have successfully updated your password',
-                            icon:'success',
-                            customClass:{
-                                confirmButton: 'btn btn-primary',
-                                cancelButton: 'btn btn-danger',
-                            },
-                        buttonsStyling: false,
+                        $.notify({
+                            // options
+                            message: 'We have successfully updated your password'
+                        },{
+                            // settings
+                            type: 'success'
                         });
                     }
                     document.getElementById('passwordForm').reset()
@@ -184,15 +182,13 @@
                     "X-CSRFToken": csrftoken
                 },
                 success: function(data){
-                    Swal.fire({
-                        title: data.good,
-                        icon: 'success',
-                        customClass:{
-                                confirmButton: 'btn btn-primary',
-                                cancelButton: 'btn btn-danger',
-                            },
-                        buttonsStyling: false,
-                    });
+                    $.notify({
+                            // options
+                            message: data.good
+                        },{
+                            // settings
+                            type: 'success'
+                        });
                 },
             });
         });
@@ -206,15 +202,13 @@
                     "X-CSRFToken": csrftoken
                 },
                 success: function(data){
-                    Swal.fire({
-                        title: data.good,
-                        icon: 'success',
-                        customClass:{
-                                confirmButton: 'btn btn-primary',
-                                cancelButton: 'btn btn-danger',
-                            },
-                        buttonsStyling: false,
-                    });
+                    $.notify({
+                            // options
+                            message: data.good
+                        },{
+                            // settings
+                            type: 'success'
+                        });
                 },
             });
         });

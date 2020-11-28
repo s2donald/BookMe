@@ -1,0 +1,25 @@
+{% load static %}
+{% load hosts %}
+{% load crispy_forms_tags %}
+
+<div id="accordion" role="tablist" aria-multiselectable="true" class="card-collapse">
+    <div class="card card-plain">
+        <div class="card-header" role="tab" id="headingOne">
+            <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                View All Categories
+                <i class="fas fa-chevron-up"></i>
+            </a>
+        </div>
+
+        <div id="collapseOne" class="collapse something" role="tabpanel" aria-labelledby="headingOne">
+            <div class="card-body">
+                <ul class="nav nav-pills nav-pills-primary flex-column">
+                    <li class="nav-item"><a class="nav-link active" href="#tabAll" data-toggle="tab">All Services</a></li>
+                    {% for category in company.service_category.all %}
+                        <li class="nav-item"><a class="nav-link" href="#tab{{ forloop.counter }}" data-toggle="tab">{{ category.name }} Services</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

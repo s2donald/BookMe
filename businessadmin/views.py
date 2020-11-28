@@ -1,8 +1,8 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .forms import BusinessRegistrationForm, AddHoursForm, UpdateCompanyForm, AddClientForm, AddNotesForm, CreateSmallBizForm, AddBookingForm, BusinessName
+from .forms import BusinessRegistrationForm, AddHoursForm, UpdateCompanyForm, AddClientForm, AddNotesForm, CreateSmallBizForm, AddBookingForm, BusinessName, AddServiceCategoryForm, AddServiceToCategory
 from django.contrib.auth.decorators import login_required
 from django import forms
-from business.models import Company, SubCategory, OpeningHours, Services, Gallary, Amenities, Clients, CompanyReq
+from business.models import Company, SubCategory, OpeningHours, Services, Gallary, Amenities, Clients, CompanyReq, ServiceCategories
 from account.models import Account
 from account.forms import UpdatePersonalForm
 from account.tasks import bizCreatedEmailSent, consumerCreatedEmailSent
@@ -16,7 +16,7 @@ from business.forms import AddCompanyForm, AddServiceForm, UpdateServiceForm, Bo
 from django.forms import inlineformset_factory
 from django.views import View
 from slugify import slugify
-from .forms import MainPhoto
+from .forms import MainPhoto, AddServiceToCategory
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from businessadmin.tasks import addedOnCompanyList, requestToBeClient, appointmentCancelled
 from account.tasks import reminderEmail, confirmedEmail, consumerCreatedEmailSent
@@ -38,8 +38,9 @@ def createNewBusiness(request):
     user = request.user
     user_form = CreateSmallBizForm()
     if not user.is_authenticated:
+        user_form = AccountAuthenticationForm()
         context['business_registration_form'] = user_form
-        return render(request, 'account/bussignup.html', {'user_form':user_form})
+        return render(request, 'account/buslogin.html', {'user_form':user_form, 'none':'d-none'})
 
     if request.method == 'POST':
         user_form = CreateSmallBizForm(request.POST)
@@ -75,11 +76,9 @@ def createNewBusiness(request):
 
 def completeViews(request):
     if not request.user.is_authenticated:
-        context={}
-        user_form = BusinessRegistrationForm()
-        biz_name = BusinessName()
+        user_form = AccountAuthenticationForm()
         context['business_registration_form'] = user_form
-        return render(request, 'account/bussignup.html', {'user_form':user_form, 'biz_name':biz_name})
+        return render(request, 'account/buslogin.html', {'user_form':user_form, 'none':'d-none'})
     email = request.user.email
     user = get_object_or_404(Account, email=email)
     biz_form = AddCompanyForm()
@@ -224,6 +223,12 @@ def load_subcat(request):
     else:
         subcategories = None
     return render(request, 'bizadmin/dashboard/profile/addcompanyhelper/subcat_dropdown_list_options.html', {'subcategories': subcategories})
+
+def load_services(request):
+    company = Company.objects.get(user=request.user)
+    services = company.services_offered.all()
+    return render(request, 'bizadmin/dashboard/profile/addcompanyhelper/subcat_dropdown_list_options.html', {'subcategories': services})
+
 
 class subdomainCheck(View):
     def post(self, request):
@@ -432,10 +437,11 @@ def save_service_form(request, form, template_name):
             service = Services.objects.create(business=company,name=name,description=description,price=price, available=avail, 
                                                 price_type=price_type,duration_hour=duration_hour,duration_minute=duration_minute,checkintime=checkintime,
                                                 padding=padding,paddingtime_hour=paddingtime_hour,paddingtime_minute=paddingtime_minute)
+            
             service.save()
             data['form_is_valid'] = True
             services = Services.objects.filter(business=company)
-            data['html_service_list'] = render_to_string('bizadmin/dashboard/profile/services/partial_service_list.html', {'services':services})
+            data['html_service_list'] = render_to_string('bizadmin/dashboard/profile/services/partial_service_list.html', {'services':services, 'company':company})
             data['view'] = 'Your service has been created!'
         else:
             data['form_is_valid'] = False
@@ -456,9 +462,11 @@ def createserviceViews(request):
 #used in the bizadmin page
 class createserviceAPI(View):
     def post(self,request):
+        company = Company.objects.get(user=request.user)
         form = AddServiceForm(request.POST)
+        form2 = AddServiceToCategory(request.POST, initial={'company':company})
         data = dict()
-        if form.is_valid():
+        if form.is_valid() and form2.is_valid():
             name = form.cleaned_data['name']
             description = form.cleaned_data['description']
             price_type = form.cleaned_data.get('price_type')
@@ -470,11 +478,15 @@ class createserviceAPI(View):
             paddingtime_hour=form.cleaned_data.get('paddingtime_hour')
             paddingtime_minute=form.cleaned_data.get('paddingtime_minute')
             avail = True
-            company = Company.objects.get(user=request.user)
             service = Services.objects.create(business=company,name=name,description=description,price=price, available=avail, 
                                                 price_type=price_type,duration_hour=duration_hour,duration_minute=duration_minute,checkintime=checkintime,
                                                 padding=padding,paddingtime_hour=paddingtime_hour,paddingtime_minute=paddingtime_minute)
             service.save()
+            catename = form2.cleaned_data.get('category')
+            for cate in catename:
+                sc = ServiceCategories.objects.get(name=cate.name, company=company)
+                sc.services.add(service)
+
             data['form_is_valid'] = True
             data['view'] = 'Your service has been created!'
             data['icon'] = 'success'
@@ -493,6 +505,75 @@ class createserviceAPI(View):
         except EmptyPage:
             services = paginator.page(paginator.num_pages)
         data['html_service_list'] = render_to_string('bizadmin/companydetail/services/partial/partial_service_list.html', {'page':page,'services':services, 'company':company})
+        data['html_category_list'] = render_to_string('bizadmin/companydetail/services/partial_category/category_list.html',{'company':company})
+        return JsonResponse(data)
+
+class deleteCategoryAPI(View):
+    def post(self, request, pk):
+        ServiceCategories.objects.get(pk=pk).delete()
+        company = Company.objects.get(user=request.user)
+        services = Services.objects.filter(business=company)
+        paginator = Paginator(services, 5)
+        page = request.GET.get('page')
+        try:
+            services = paginator.page(page)
+        except PageNotAnInteger:
+            services = paginator.page(1)
+        except EmptyPage:
+            services = paginator.page(paginator.num_pages)
+        data=dict()
+        data['html_service_list'] = render_to_string('bizadmin/companydetail/services/partial/partial_service_list.html', {'page':page,'services':services, 'company':company})
+        data['html_category_list'] = render_to_string('bizadmin/companydetail/services/partial_category/category_list.html',{'company':company})
+        return JsonResponse(data)
+
+class createserviceAPII(View):
+    def get(self, request, pk):
+        company = Company.objects.get(user=request.user)
+        if int(pk)==0:
+            sc = company.service_category.none()
+        else:
+            sc = company.service_category.filter(id=pk)
+        form = AddServiceForm()
+        form2 = AddServiceToCategory(initial={'company':company, 'category':sc})
+        context = {'company':company}
+        html2 = render_to_string('bizadmin/companydetail/services/partial_category/category_list.html', context, request=request)
+        context = {'service_form':form, 'category_form':form2,'company':company}
+        html = render_to_string('bizadmin/companydetail/services/partial/partial_service_create.html', context, request=request)
+        return JsonResponse({'html_form':html, 'html_category':html2})
+
+
+class createcategoryAPI(View):
+    def post(self, request):
+        company = Company.objects.get(user=request.user)
+        form = AddServiceCategoryForm(request.POST, initial={'company':company})
+        data = dict()
+        if form.is_valid():
+            name = form.cleaned_data['name']
+            services = form.cleaned_data.get('services')
+            if not ServiceCategories.objects.filter(name=name, company=company).exists():
+                sc = ServiceCategories.objects.create(name=name, company=company)
+            else:
+                sc = ServiceCategories.objects.get(name=name, company=company)
+            for s in services:
+                sc.services.add(s)
+            sc.save()
+
+        services = Services.objects.filter(business=company)
+        paginator = Paginator(services, 5)
+        page = request.GET.get('page')
+        try:
+            services = paginator.page(page)
+        except PageNotAnInteger:
+            services = paginator.page(1)
+        except EmptyPage:
+            services = paginator.page(paginator.num_pages)
+
+        data=dict()
+        data['html_service_list'] = render_to_string('bizadmin/companydetail/services/partial/partial_service_list.html', {'page':page,'services':services, 'company':company})
+        data['html_category_list'] = render_to_string('bizadmin/companydetail/services/partial_category/category_list.html',{'company':company})
+        data['view'] = 'Service Category has been created'
+        data['icon'] ='success'
+
         return JsonResponse(data)
 
 class createclientAPI(View):
@@ -575,7 +656,8 @@ class deleteserviceAPI(View):
             services = paginator.page(1)
         except EmptyPage:
             services = paginator.page(paginator.num_pages)
-        data['html_service_list'] = render_to_string('bizadmin/companydetail/services/partial/partial_service_list.html', {'page':page,'services':services})
+        data['html_service_list'] = render_to_string('bizadmin/companydetail/services/partial/partial_service_list.html', {'page':page,'services':services, 'company':company})
+        data['html_category_list'] = render_to_string('bizadmin/companydetail/services/partial_category/category_list.html',{'company':company})
         return JsonResponse(data)
 
 class updateclientAPI(View):
@@ -726,17 +808,30 @@ class updateserviceAPI(View):
         dat = {'name': service.name, 'description': service.description, 'price_type':service.price_type, 'price':service.price, 'available':service.available, 'duration_hour':service.duration_hour, 'duration_minute':service.duration_minute, 'checkintime':service.checkintime, 'padding':service.padding, 'paddingtime_hour':service.paddingtime_hour, 'paddingtime_minute':service.paddingtime_minute}
         data=dict()
         form = UpdateServiceForm(initial=dat)
+        form2 = AddServiceToCategory(initial={'company':company, 'category':company.service_category.filter(services=service)})
         
-        context = {'service_form':form,'service':service}
+        context = {'service_form':form, 'category_form':form2,'service':service,'company':company}
         data['html_form'] = render_to_string('bizadmin/companydetail/services/partial/partial_service_update.html', context, request=request)
+        services = Services.objects.filter(business=company)
+        paginator = Paginator(services, 5)
+        page = request.GET.get('page')
+        try:
+            services = paginator.page(page)
+        except PageNotAnInteger:
+            services = paginator.page(1)
+        except EmptyPage:
+            services = paginator.page(paginator.num_pages)
+        data['html_service_list'] = render_to_string('bizadmin/companydetail/services/partial/partial_service_list.html', {'page':page,'services':services, 'company':company})
+        data['html_category_list'] = render_to_string('bizadmin/companydetail/services/partial_category/category_list.html',{'company':company})
         return JsonResponse(data)
 
     def post(self, request, pk):
         service = get_object_or_404(Services, pk=pk)
         company = Company.objects.get(user=request.user)
         form = UpdateServiceForm(request.POST)
+        form2 = AddServiceToCategory(request.POST, initial={'company':company})
         data=dict()
-        if form.is_valid():
+        if form.is_valid() and form2.is_valid():
             service.name = form.cleaned_data.get('name')
             service.description = form.cleaned_data.get('description')
             service.price_type = form.cleaned_data.get('price_type')
@@ -750,6 +845,18 @@ class updateserviceAPI(View):
             service.avail = True
             company = Company.objects.get(user=request.user)
             service.save()
+
+            allservCat = company.service_category.filter(services=service)
+            # print(allservCat)
+            for s in allservCat:
+                sc = ServiceCategories.objects.get(name=s.name, services=service)
+                sc.services.remove(service)
+
+            catename = form2.cleaned_data.get('category')
+            for cate in catename:
+                sc = ServiceCategories.objects.get(name=cate.name, company=company)
+                sc.services.add(service)
+
             data['form_is_valid'] = True
             services = Services.objects.filter(business=company)
             paginator = Paginator(services, 5)
@@ -760,10 +867,24 @@ class updateserviceAPI(View):
                 services = paginator.page(1)
             except EmptyPage:
                 services = paginator.page(paginator.num_pages)
+
+            
             data['html_service_list'] = render_to_string('bizadmin/companydetail/services/partial/partial_service_list.html', {'page':page,'services':services})
             data['view'] = 'Your service has been updated'
         else:
+            print(form.errors)
             data['form_is_valid'] = False
+        services = Services.objects.filter(business=company)
+        paginator = Paginator(services, 5)
+        page = request.GET.get('page')
+        try:
+            services = paginator.page(page)
+        except PageNotAnInteger:
+            services = paginator.page(1)
+        except EmptyPage:
+            services = paginator.page(paginator.num_pages)
+        data['html_service_list'] = render_to_string('bizadmin/companydetail/services/partial/partial_service_list.html', {'page':page,'services':services, 'company':company})
+        data['html_category_list'] = render_to_string('bizadmin/companydetail/services/partial_category/category_list.html',{'company':company})
         return JsonResponse(data)
 
 
@@ -1308,7 +1429,8 @@ def servicesDetailView(request):
         user_form = BusinessRegistrationForm()
         biz_name = BusinessName()
         context['business_registration_form'] = user_form
-        return render(request, 'account/bussignup.html', {'user_form':user_form,'biz_form':biz_form})
+        return render(request, 'account/bussignup.html', {'user_form':user_form,'biz_name':biz_name})
+        
     email = request.user.email
     user = get_object_or_404(Account, email=email)
     if not user.on_board:
@@ -1325,7 +1447,10 @@ def servicesDetailView(request):
     except EmptyPage:
         services = paginator.page(paginator.num_pages)
     service_form = AddServiceForm()
-    return render(request,'bizadmin/companydetail/services/service.html', {'page':page,'company':company, 'services':services, 'service_form':service_form})
+    servcategory_form = AddServiceCategoryForm(initial={'company':company})
+    category_form = AddServiceToCategory(initial={'company':company})
+
+    return render(request,'bizadmin/companydetail/services/service.html', {'page':page,'company':company, 'services':services, 'service_form':service_form, 'category_form':category_form,'servcategory_form':servcategory_form})
 
 from itertools import chain
 
@@ -1335,7 +1460,7 @@ def clientListView(request):
         user_form = BusinessRegistrationForm()
         biz_name = BusinessName()
         context['business_registration_form'] = user_form
-        return render(request, 'account/bussignup.html', {'user_form':user_form,'biz_form':biz_form})
+        return render(request, 'account/bussignup.html', {'user_form':user_form,'biz_name':biz_name})
     email = request.user.email
     user = get_object_or_404(Account, email=email)
     if not user.on_board:
@@ -1515,11 +1640,13 @@ class addBooking(View):
                 user = guest.user
             except ObjectDoesNotExist:
                 user = None
-
             booking = Bookings.objects.create(user=user, guest=guest,service=service, company=company,start=start, end=end, price=price)
             booking.save()
             confirmedEmail.delay(booking.id)
-            startTime = start - timedelta(minutes=company.confirmation_minutes)
+            confirmtime = 30
+            if service.checkintime:
+                confirmtime = service.checkintime + 30
+            startTime = start - timedelta(minutes=confirmtime)
             reminderEmail.apply_async(args=[booking.id], eta=startTime, task_id=booking.slug)
             #Create the booking and then send an email to customer and company
         else:
@@ -1584,9 +1711,9 @@ class changeDarkMode(View):
         data=json.loads(request.body)
         light = data['light']
         company = Company.objects.get(user=request.user)
-        if light:
+        if company.darkmode:
             company.darkmode = False
         else:
             company.darkmode = True
         company.save()
-        return JsonResponse({'':''})
+        return JsonResponse({'darkmode':company.darkmode})

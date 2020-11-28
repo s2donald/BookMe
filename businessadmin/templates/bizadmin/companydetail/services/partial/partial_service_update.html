@@ -2,7 +2,7 @@
 {% load hosts %}
 {% load crispy_forms_tags %}
 
-<form method="POST" action="{% host_url 'updateservice' service.id host 'bizadmin' %}" class="js-product-update-form">
+<form method="POST" action="{% host_url 'updateservice' service.id host 'bizadmin' %}" id="updateservformss">
         {% csrf_token %}
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -32,6 +32,9 @@
                 <a class="licolor" href="#simpleCollapse" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="simpleCollapse">Advanced Options</a>
                 <div class="collapse" id="simpleCollapse">
                     {{ service_form.checkintime|as_crispy_field }}
+                    {% if company.service_category.all %}
+                        {{ category_form.category|as_crispy_field }}
+                    {% endif %}
                     <div id="padd">
                         {{ service_form.padding|as_crispy_field }}
                     </div>
@@ -59,4 +62,33 @@
         
         });
     }
+    $('#updateservformss').submit(function(e){
+                e.preventDefault();
+                {% comment %} btn.attr("data-category") {% endcomment %}
+                $.ajax({
+                    type:'POST',
+                    url: "{% host_url 'updateservice' service.id host 'bizadmin' %}",
+                    data: $('#updateservformss').serialize(),
+                    headers:{
+                        "X-CSRFToken": csrftoken
+                    },
+                    success:function(data){
+                        $('#modal-update').modal('hide');
+                        var htmlcontent = data.html_service_list
+                        var el = document.querySelector('#service-t');
+                        el.innerHTML = htmlcontent
+                        console.log(data)
+                        var htmlcontents = data.html_category_list
+                        var catel = document.querySelector('#categorylisttab');
+                        catel.innerHTML = htmlcontents
+                        $.notify({
+                            // options
+                            message: data.view
+                        },{
+                            // settings
+                            type: 'success'
+                        });
+                    }
+                });
+            });
 </script> 

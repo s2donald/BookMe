@@ -49,28 +49,99 @@
                 <li class="nav-item"><a class="nav-link active ml-0 service-link" href="#navlink-page" id="aservice">Services</a></li>
                 <li class="nav-item"><a class="nav-link about-link" href="#navlink-page" id="aabout">About</a></li>
                 <li class="nav-item"><a class="nav-link review-link" href="#navlink-page" id="areview">Reviews</a></li>
-                {% comment %} <li class="nav-item"><a class="nav-link gallary-link" href="#navlink-page" id="agallary">Gallary</a></li> {% endcomment %}
+                <li class="nav-item"><a class="nav-link gallary-link" href="#navlink-page" id="agallary">Gallary</a></li>
             </nav>
             <hr>
             <div class="text-block" id="serviceList">
-                
+            <h2>All Services</h2>
+
+              <div id="accordion" role="tablist" aria-multiselectable="true" class="card-collapse">
+                <div class="card card-plain mb-2">
+                {% for categories in company.service_category.all %}
+                  <div class="card-header p-2 mb-2" role="tab" id="heading{{ forloop.counter }}">
+                    <p class="mb-0 text-sm text-left align-items-center justify-content-center">
+                      <a data-toggle="collapse" href="#collapse{{ forloop.counter }}" aria-expanded="false" aria-controls="collapse{{ forloop.counter }}">
+                        {{ categories.name }} Services
+                        <i class="fas fa-chevron-down text-line"></i>
+                      </a>
+                    </p>
+                  </div>
+                  <div id="collapse{{ forloop.counter }}" class="collapse" role="tabpanel" aria-labelledby="heading{{ forloop.counter }}" data-parent="#accordion">
+                    <div class="card-body text-left">
+                      {% for s in categories.services.all %}
+                        {% with hour=s.duration_hour min=s.duration_minute type=s.price_type %}                          
+                          <div class="row p-0 justify-content-between text-left align-self-center">
+                            <div class="col-8 p-0">
+                            <p class="mb-1">{{ s.name }}</p>
+                            <a id="serv{{ s.id }}" href="{% host_url 'bookingserviceurls' pk=s.id host 'bookingurl' slug=company.slug %}" class="btn btn-outline-primary">Book Now</a>
+                            </div>
+                            <div class="col-4 p-0 text-right">
+                              <strong class="text-header m-1">{% if not hour == 0 %}{{ hour }}h{% endif %} {% if not min == 0 and not hour == 0 %}&amp;{% endif %} {% if not min == 0 %}{{ min }} min{% endif %}</strong>
+                              {% if not type == 'dont' %}<p class="m-1">{% if type == "fixed" %}Fixed price of{% elif type == 'start' %}Prices start at{% elif type == 'variable' %}<strong>Prices Varies</strong>{% endif %}{% if type == 'variable' %}{% elif type == 'free' %}<strong>Free</strong> {% else %} <strong>${{ s.price }}</strong>{% endif %}</p>{% endif %}
+                            </div>
+                          </div>
+                          <div class="col-12 p-0 mt-2">
+                            <p class="text-muted">{{ s.description }}</p>
+                          </div>
+                        {% endwith %}  
+                            <hr>
+                      {% endfor %}
+                    </div>
+                  </div>
+                {% endfor %}
+                  <div class="card-header p-2 hover-animate" role="tab" id="headingAll">
+                    <p class="mb-0 text-sm text-left align-items-center justify-content-center">
+                      <a data-toggle="collapse" href="#collapseAll" aria-expanded="false" aria-controls="collapseAll">
+                        All Services
+                        <i class="fas fa-chevron-down text-line"></i>
+                      </a>
+                    </p>
+                  </div>
+                  <div id="collapseAll" class="collapse" role="tabpanel" aria-labelledby="headingAll" data-parent="#accordion">
+                    <div class="card-body text-left">
+                      {% for s in services %}
+                        {% with hour=s.duration_hour min=s.duration_minute type=s.price_type %}                          
+                          <div class="row p-0 justify-content-between text-left align-self-center">
+                            <div class="col-8 p-0">
+                              <p class="mb-1">{{ s.name }}</p>
+                              <a id="serv{{ s.id }}" href="{% host_url 'bookingserviceurls' pk=s.id host 'bookingurl' slug=company.slug %}" class="btn btn-outline-primary">Book Now</a>
+                            </div>
+                            <div class="col-4 p-0 text-right">
+                              <strong class="text-header m-1">{% if not hour == 0 %}{{ hour }}h{% endif %} {% if not min == 0 and not hour == 0 %}&amp;{% endif %} {% if not min == 0 %}{{ min }} min{% endif %}</strong>
+                              {% if not type == 'dont' %}<p class="m-1">{% if type == "fixed" %}Fixed price of{% elif type == 'start' %}Prices start at{% elif type == 'variable' %}<strong>Prices Varies</strong>{% endif %}{% if type == 'variable' %}{% elif type == 'free' %}<strong>Free</strong> {% else %} <strong>${{ s.price }}</strong>{% endif %}</p>{% endif %}
+                            </div>
+                          </div>
+
+                          <div class="col-12 p-0 m-0 text-center">
+                            <p class="text-muted text-left">{{ s.description }}</p>
+                          </div>
+                        {% endwith %}  
+                            <hr>
+                      {% endfor %}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+{% comment %} 
                 {% if services %}
-                    <h2>All Services</h1>
-                    {% for s in services %}
-                        {% with hour=s.duration_hour min=s.duration_minute type=s.price_type %}
-                        <h3 class="mb-3">{{ s.name }}</h3>
-                        <strong class="text-header">{% if not hour == 0 %}{{ hour }} hour {% endif %} {% if not min == 0 and not hour == 0 %}&amp;{% endif %} {% if not min == 0 %}{{ min }} min{% endif %}</strong>
-                        <p class="text-muted">{{ s.description }}</p>
-                        <p>{% if type == "fixed" %}Fixed price of{% elif type == 'start' %}Prices start at{% elif type == 'variable' %}<strong>Prices Varies</strong>{% endif %}{% if type == 'variable' %}{% elif type == 'free' %}<strong>Free</strong> {% elif type == 'dont' %}{% else %} <strong>${{ s.price }}</strong>{% endif %}</p>
-                        {% endwith %}
-                        <a id="serv{{ s.id }}" href="{% host_url 'bookingserviceurls' pk=s.id host 'bookingurl' slug=company.slug %}" class="btn btn-outline-primary">Book Now</a>
-                        <hr>
-                        
-                    {% endfor %}
+                    <h2>All Services</h2>
+                      <div class="card pb-2">
+                        {% for s in services %}
+                            {% with hour=s.duration_hour min=s.duration_minute type=s.price_type %}
+                            <h3 class="mb-3">{{ s.name }}</h3>
+                            <strong class="text-header">{% if not hour == 0 %}{{ hour }} hour {% endif %} {% if not min == 0 and not hour == 0 %}&amp;{% endif %} {% if not min == 0 %}{{ min }} min{% endif %}</strong>
+                            <p class="text-muted">{{ s.description }}</p>
+                            <p>{% if type == "fixed" %}Fixed price of{% elif type == 'start' %}Prices start at{% elif type == 'variable' %}<strong>Prices Varies</strong>{% endif %}{% if type == 'variable' %}{% elif type == 'free' %}<strong>Free</strong> {% elif type == 'dont' %}{% else %} <strong>${{ s.price }}</strong>{% endif %}</p>
+                            {% endwith %}
+                            <a id="serv{{ s.id }}" href="{% host_url 'bookingserviceurls' pk=s.id host 'bookingurl' slug=company.slug %}" class="btn btn-outline-primary">Book Now</a>
+                            <hr>
+                        {% endfor %}
+                      </div>
                 {% else %}
                     <h2>No services offered at this time</h2>
                     <hr>
-                {% endif %}
+                {% endif %} {% endcomment %}
                 
             </div>
             <!-- Amenities-->
@@ -134,6 +205,22 @@
               {% endif %}
             
               
+            </div>
+
+            <div class="text-block d-none" id="gallarylist">
+              <div class="row text-center justify-content-center" id="galphotos">
+                {% for p in photos %}
+                  <div class="col-sm-12 col-md-6 col-lg-4 mt-2">
+                    <div class="card hover-animate justify-content-center align-self-center show-image" id="{{ p.id }}">
+                      <img width="100%" class="rounded" src="{{ p.photos.url }}" alt="">
+                    </div>
+                  </div>
+                {% empty %}
+                  <h6>No images have been uploaded by {{ company.name }}</h6>
+                {% endfor %}
+              </div>
+              <br>
+              {% include 'bizadmin/dashboard/reviews/pagination.html' with page=photos%}
             </div>
             
           </div>
@@ -351,30 +438,47 @@
             document.getElementById('aboutList').classList.remove('d-none')
             document.getElementById('serviceList').classList.add('d-none')
             document.getElementById('reviewlist').classList.add('d-none')
+            document.getElementById('gallarylist').classList.add('d-none')
 
             document.getElementById('aabout').classList.add('active')
             document.getElementById('aservice').classList.remove('active')
             document.getElementById('areview').classList.remove('active')
+            document.getElementById('agallary').classList.remove('active')
         });
         $('.service-link').on('click', function(e){
             document.getElementById('aboutList').classList.add('d-none')
             document.getElementById('serviceList').classList.remove('d-none')
             document.getElementById('reviewlist').classList.add('d-none')
+            document.getElementById('gallarylist').classList.add('d-none')
 
             document.getElementById('aabout').classList.remove('active')
             document.getElementById('aservice').classList.add('active')
             document.getElementById('areview').classList.remove('active')
-
+            document.getElementById('agallary').classList.remove('active')
         });
+
         $('.review-link').on('click', function(e){
             document.getElementById('aboutList').classList.add('d-none')
             document.getElementById('serviceList').classList.add('d-none')
             document.getElementById('reviewlist').classList.remove('d-none')
+            document.getElementById('gallarylist').classList.add('d-none')
 
             document.getElementById('aabout').classList.remove('active')
             document.getElementById('aservice').classList.remove('active')
             document.getElementById('areview').classList.add('active')
+            document.getElementById('agallary').classList.remove('active')
+        });
 
+        $('.gallary-link').on('click', function(e){
+            document.getElementById('aboutList').classList.add('d-none')
+            document.getElementById('serviceList').classList.add('d-none')
+            document.getElementById('reviewlist').classList.add('d-none')
+            document.getElementById('gallarylist').classList.remove('d-none')
+
+            document.getElementById('aabout').classList.remove('active')
+            document.getElementById('aservice').classList.remove('active')
+            document.getElementById('areview').classList.remove('active')
+            document.getElementById('agallary').classList.add('active')
         });
       })
     </script>

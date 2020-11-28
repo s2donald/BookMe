@@ -17,12 +17,15 @@ from businessadmin.tasks import requestToBeClient
 from business.forms import VehicleMakeModelForm, AddressForm
 import re
 from gibele import settings
+from django.views.decorators.clickjacking import xframe_options_exempt
+
 # from account.models import Account
 # Create your views here.
 
 def get_companyslug(request, slug):
     request.viewing_company = get_object_or_404(Company, slug=slug)
 
+@xframe_options_exempt
 def bookingurl(request):
     user = request.user
     company = request.viewing_company
@@ -54,8 +57,17 @@ def bookingurl(request):
         reviews = paginator.page(1)
     except EmptyPage:
         reviews = paginator.page(paginator.num_pages)
+    paginator = Paginator(galPhotos, 6)
+    page = request.GET.get('page')
+    try:
+        galPhotos = paginator.page(page)
+    except PageNotAnInteger:
+        galPhotos = paginator.page(1)
+    except EmptyPage:
+        galPhotos = paginator.page(paginator.num_pages)
     return render(request, 'bookingpage/homes.html', {'returnClient':returnClient,'user': user, 'page':page,'photos':galPhotos,'sun_hour':sun_hour,'mon_hour':mon_hour,'tues_hour':tues_hour,'wed_hour':wed_hour,'thur_hour':thur_hour,'fri_hour':fri_hour,'sat_hour':sat_hour,'subcategories':subcategories,'amenities':amenities,'address':address,'company':company,'category':category,'categories':categories, 'services':services, 'reviews':reviews})
 
+@xframe_options_exempt
 def bookingServiceView(request, pk):
     user = request.user
     company = request.viewing_company
@@ -63,10 +75,10 @@ def bookingServiceView(request, pk):
     personal_form = UpdatePersonalForm()
     gibele_form = AccountAuthenticationFormId()
     if user.is_authenticated:
-        returnClient = company.clients.filter(user=user).exists() or company.clients.filter(phone=user.phone).exists() or company.clients.filter(email=user.email).exists()
+        returnClient = company.clients.filter(user=user,first_name=user.first_name).exists() or company.clients.filter(phone=user.phone,first_name=user.first_name,).exists() or company.clients.filter(email=user.email,first_name=user.first_name).exists()
     else:
         returnClient = False
-
+    print(user)
     if company.category.name == 'Automotive Services':
         extra_info_form = VehicleMakeModelForm()
     elif company.category.name == 'Home Services':
@@ -92,33 +104,46 @@ def time_slots(start_time, end_time, interval, duration_hour, duration_minute, y
         if endTime.time() <= t:
             endTime = timezone.localtime(timezone.make_aware(datetime.datetime.combine(servDate, datetime.time(23,59,59))))
         for obj in objects:
+            #Check if the booking date from the loop is the same as the requested date
             if (timezone.localtime(obj.start).date() == timezone.localtime(servStart).date()):
                 #Check the buffer option that applies to this booking
-                # buffer = obj.service.padding
-                # before_durhour = 0
-                # before_durmin =0
-                # after_durhour = 0
-                # after_durmin = 0
-                # if buffer == 'bf':
-                #     before_durhour = obj.service.paddingtime_hour
-                #     before_durmin = obj.service.paddingtime_minute
-                #     after_durhour = obj.service.paddingtime_hour
-                #     after_durmin = obj.service.paddingtime_minute
-                # elif buffer == 'before':
-                #     before_durhour = obj.service.paddingtime_hour
-                #     before_durmin = obj.service.paddingtime_minute
-                # elif buffer == 'after':
-                #     after_durhour = obj.service.paddingtime_hour
-                #     after_durmin = obj.service.paddingtime_minute
-                
+                buffer = obj.service.padding
+                before_durhour = 0
+                before_durmin =0
+                after_durhour = 0
+                after_durmin = 0
+                if buffer == 'bf':
+                    before_durhour = obj.service.paddingtime_hour
+                    before_durmin = obj.service.paddingtime_minute
+                    after_durhour = obj.service.paddingtime_hour
+                    after_durmin = obj.service.paddingtime_minute
+                elif buffer == 'before':
+                    before_durhour = obj.service.paddingtime_hour
+                    before_durmin = obj.service.paddingtime_minute
+                elif buffer == 'after':
+                    after_durhour = obj.service.paddingtime_hour
+                    after_durmin = obj.service.paddingtime_minute
+                #The start time of the already booked service
                 s = timezone.localtime(obj.start).time()
+                #The endtime of the already booked service
                 g = timezone.localtime(obj.end).time()
-                if((servStart.time()<=s<=endTime.time()) or (servStart.time()<=g<=endTime.time())):
+                #Check if already booked service interfers with the proposed 
+                if((s<=servStart.time()<g) or (s<=endTime.time()<g) or (end_time<endTime.time())):
+                    t = endTime.time()
+                    #Since we know this booking time falls between an already booked service 
+                    # We basically check if the ending time of the booking interval 't' is less than the booking time of the 
+                    # already booked service. If it is then we use that time 'g' to start the new interval.
+                    if(t<g):
+                        t=g
                     count = 1
+        if not objects:
+            if end_time<endTime.time():
+                t = endTime.time()
+                count = 1
         if count==0:
             availableDay.append(t.strftime("%I:%M %p"))
-        t = timezone.localtime(timezone.make_aware(datetime.datetime.combine(datetime.date.today(), t) +
-             datetime.timedelta(minutes=interval))).time()
+            t = timezone.localtime(timezone.make_aware(datetime.datetime.combine(datetime.date.today(), t) +
+                datetime.timedelta(minutes=interval))).time()
     return availableDay
 
 class bookingTimes(View):
@@ -261,7 +286,10 @@ class createAppointment(View):
 
                 confirmedEmail.delay(booking.id)
                 confirmedEmailCompany.delay(booking.id)
-                startTime = timezone.localtime(start - datetime.timedelta(minutes=company.confirmation_minutes))
+                confirmtime = 30
+                if service.checkintime:
+                    confirmtime = service.checkintime + 30
+                startTime = timezone.localtime(start - datetime.timedelta(minutes=confirmtime))
                 reminderEmail.apply_async(args=[booking.id], eta=startTime, task_id=booking.slug)
                 good = True
             else:
@@ -297,7 +325,10 @@ class createAppointment(View):
                 if email:
                     confirmedEmail.delay(booking.id)
                     confirmedEmailCompany.delay(booking.id)
-                    startTime = start - datetime.timedelta(minutes=company.confirmation_minutes)
+                    confirmtime = 30
+                    if service.checkintime:
+                        confirmtime = service.checkintime + 30
+                    startTime = start - datetime.timedelta(minutes=confirmtime)
                     reminderEmail.apply_async(args=[booking.id], eta=startTime)
                 good = True
             else:

@@ -10,7 +10,7 @@
                     <!-- Main page content-->
                     <div class="content">
                         <div class="row">
-                        <div class="col-md-10 ml-auto mr-auto">
+                        <div class="col-10 ml-auto mr-auto">
                         <header class="page-header page-header-compact page-header-light mb-4">
                         <div class="container">
                             <div class="page-header-content">
@@ -34,41 +34,170 @@
                         </nav>
                         <hr class="mt-0 mb-4" />
                         <div class="row">
-                            <div class="col-xl-12">
-                                <!-- Account details card-->
-                                <div class="card shadow mb-4">
-                                    <div class="col-md-12 text-center mt-2">
-                                        <button id="addserv" class="btn btn-primary mb-3 js-create-product justify-content-center" type="button" data-toggle="modal" data-target="#modal-service" >Add Service</button>
+                            <div class="col-md-4">
+                                <div class="text-center mt-2">
+                                        <button id="addcategory" class="btn btn-primary mb-3" data-toggle="modal" data-target="#modal-addcategory">Add Category</button>
                                     </div>
-                                    <div class="card-header">Offered Services</div>
-                                    <div class="card-body" id="service-t">
-                                            {% for s in services %}
-                                                <div class="card shadow">
-                                                    <div class="row">
-                                                        <div class="col-12">
-                                                            <div class="card-header">{{ s.name }}</div>
-                                                            <div class="card-body d-lg-flex justify-content-between text-center">
-                                                                <div>
-                                                                    <p class="subtitle text-left">${{s.price}}</p>
-                                                                    <p class="text-muted text-left">{{ s.description }}</p>
-                                                                </div>
-        
-                                                                <div>
-                                                                    <button class="btn btn-danger btn-sm trashcan" data-url="{% host_url 'deleteservice' s.id host 'bizadmin' %}"><i class="fas fa-trash"></i></button>
-                                                                    <button type="button" class="updatebtn btn btn-sm btn-primary" data-toggle="modal" data-target="#modal-update" data-url="{% host_url 'updateservice' s.id host 'bizadmin' %}"><i class="fas fa-pencil-alt"></i></button>
+                                <div class="card shadow mb-4 p-3" id="categorylisttab">
+                                    <div id="accordion" role="tablist" aria-multiselectable="true" class="card-collapse">
+                                        <div class="card card-plain">
+                                            <div class="card-header" role="tab" id="headingOne">
+                                                <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                                                    View All Categories
+                                                    <i class="fas fa-chevron-up"></i>
+                                                </a>
+                                            </div>
+
+                                            <div id="collapseOne" class="collapse something" role="tabpanel" aria-labelledby="headingOne">
+                                                <div class="card-body">
+                                                    <ul class="nav nav-pills nav-pills-primary flex-column">
+                                                        <li class="nav-item"><a class="nav-link active" href="#tabAll" data-toggle="tab">All Services</a></li>
+                                                        {% for category in company.service_category.all %}
+                                                            <li class="nav-item"><a class="nav-link" href="#tab{{ forloop.counter }}" data-toggle="tab">{{ category.name }} Services</a></li>
+                                                        {% endfor %}
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                
+                            </div>
+                            <div class="col-md-8" id="service-t">
+                                <div class="tab-content">
+
+                                    <div class="tab-pane active" id="tabAll">
+                                        <div class="card shadow my-1">
+                                            <div class="row">
+                                                <div class="col-6">
+                                                    <h4 class="card-header p-2">Category - All Services</h4>
+                                                    
+                                                </div>
+                                                <div class="col-6 text-right">
+                                                    <div class="card-header p-2">
+                                                            <button class="btn btn-primary btn-sm mb-3 justify-content-center addnewservice" type="button" data-toggle="modal" data-target="#modal-service" data-url="{% host_url 'createservices' 0 host 'bizadmin' %}">Add Service <i class="fas fa-plus"></i></button>
+                                                    </div>
+                                                </div>
+                                            </div>       
+                                        </div>
+                                                    {% for s in services %}
+                                                        <div class="card shadow">
+                                                            <div class="row">
+                                                                <div class="col-12">
+                                                                    {% comment %} <div class="card-header">{{ s.name }}</div> {% endcomment %}
+                                                                    <div class="card-body">
+                                                                        {% comment %} <div>
+                                                                            <p class="subtitle text-left">${{s.price}}</p>
+                                                                            <p class="text-muted text-left">{{ s.description }}</p>
+                                                                        </div>
+                
+                                                                        <div>
+                                                                            <button class="btn btn-danger btn-sm trashcan" data-url="{% host_url 'deleteservice' s.id host 'bizadmin' %}"><i class="fas fa-trash"></i></button>
+                                                                            <button type="button" class="updatebtn btn btn-sm btn-primary" data-toggle="modal" data-target="#modal-update" data-url="{% host_url 'updateservice' s.id host 'bizadmin' %}"><i class="fas fa-pencil-alt"></i></button>
+                                                                        </div> {% endcomment %}
+                                                                        {% with hour=s.duration_hour min=s.duration_minute type=s.price_type %}                          
+                                                                        <div class="row p-2 justify-content-between text-left align-self-center">
+                                                                            <div class="col-8 p-0">
+                                                                            <p class="mb-1">{{ s.name }}</p>
+                                                                            <p class="text-muted">{{ s.description }}</p>
+                                                                            </div>
+                                                                            <div class="col-4 p-1 text-right">
+                                                                            <div class="row">
+                                                                            <div class="col-12">
+                                                                            <strong class="text-header text-muted m-1">{% if not hour == 0 %}{{ hour }}h{% endif %} {% if not min == 0 and not hour == 0 %}&amp;{% endif %} {% if not min == 0 %}{{ min }} min{% endif %}</strong>
+                                                                            </div>
+                                                                            <div class="col-12">
+                                                                            {% if not type == 'dont' %}<p class="m-1">{% if type == "fixed" %}Fixed price of{% elif type == 'start' %}Prices start at{% elif type == 'variable' %}<strong>Prices Varies</strong>{% endif %}{% if type == 'variable' %}{% elif type == 'free' %}<strong>Free</strong> {% else %} <strong>${{ s.price }}</strong>{% endif %}</p>{% endif %}
+                                                                            </div>
+                                                                            <div class="col-12">
+                                                                            <button class="btn btn-danger btn-sm trashcan" data-url="{% host_url 'deleteservice' s.id host 'bizadmin' %}"><i class="fas fa-trash"></i></button>
+                                                                            <button type="button" class="updatebtn btn btn-sm btn-primary" data-toggle="modal" data-target="#modal-update" data-url="{% host_url 'updateservice' s.id host 'bizadmin' %}"><i class="fas fa-pencil-alt"></i></button>
+                                                                            </div>
+                                                                            </div>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        {% endwith %}
+                                                                    </div>
+                                                                    
                                                                 </div>
                                                             </div>
-                                                            
+                                                        </div>
+                                                    {% empty %}
+                                                        <div class="card">
+                                                            <div class="card-header">No Services Added</div>
+                                                        </div>
+                                                    {% endfor %}
+                                                    <div class="card pt-2">
+                                                        {% include 'bizadmin/dashboard/reviews/pagination.html' with page=services%}
+                                                    </div>
+                                                    
+                                    </div>
+                                    {% for category in company.service_category.all  %}
+
+                                        <div class="tab-pane" id="tab{{ forloop.counter }}">
+                                            <div class="card shadow my-1">
+                                                <div class="row">
+                                                    <div class="col-6 py-auto">
+                                                        <h4 class="card-header p-2">Category - {{ category.name }} Services</h4>
+                                                        
+                                                    </div>
+                                                    <div class="col-6 text-right">
+                                                        <div class="card-header p-2">
+                                                                <button class="btn btn-primary btn-sm justify-content-center addnewservice" type="button" data-toggle="modal" data-target="#modal-service" data-url="{% host_url 'createservices' category.id host 'bizadmin' %}">Add Service <i class="fas fa-plus"></i></button>
+                                                                <button class="btn btn-link btn-danger btn-sm categorydelete" type="button" data-catename="{{ category.name }}" data-url="{% host_url 'category_delete_view' category.id host 'bizadmin' %}">Delete Category <i class="fas fa-trash"></i></button>
                                                         </div>
                                                     </div>
                                                 </div>
-                                            {% empty %}
-                                                <div class="card">
-                                                    <div class="card-header">No Services Added</div>
-                                                </div>
+                                                
+                                            </div>
+                                            {% for s in category.services.all %}
+                                                <div class="card shadow">
+                                                            <div class="row">
+                                                                <div class="col-12">
+                                                                    {% comment %} <div class="card-header">{{ s.name }}</div> {% endcomment %}
+                                                                    <div class="card-body">
+                                                                        {% comment %} <div>
+                                                                            <p class="subtitle text-left">${{s.price}}</p>
+                                                                            <p class="text-muted text-left">{{ s.description }}</p>
+                                                                        </div>
+                
+                                                                        <div>
+                                                                            <button class="btn btn-danger btn-sm trashcan" data-url="{% host_url 'deleteservice' s.id host 'bizadmin' %}"><i class="fas fa-trash"></i></button>
+                                                                            <button type="button" class="updatebtn btn btn-sm btn-primary" data-toggle="modal" data-target="#modal-update" data-url="{% host_url 'updateservice' s.id host 'bizadmin' %}"><i class="fas fa-pencil-alt"></i></button>
+                                                                        </div> {% endcomment %}
+                                                                        {% with hour=s.duration_hour min=s.duration_minute type=s.price_type %}                          
+                                                                        <div class="row p-2 justify-content-between text-left align-self-center">
+                                                                            <div class="col-8 p-0">
+                                                                            <p class="mb-1">{{ s.name }}</p>
+                                                                            <p class="text-muted">{{ s.description }}</p>
+                                                                            </div>
+                                                                            <div class="col-4 p-1 text-right">
+                                                                            <div class="row">
+                                                                            <div class="col-12">
+                                                                            <strong class="text-header text-muted m-1">{% if not hour == 0 %}{{ hour }}h{% endif %} {% if not min == 0 and not hour == 0 %}&amp;{% endif %} {% if not min == 0 %}{{ min }} min{% endif %}</strong>
+                                                                            </div>
+                                                                            <div class="col-12">
+                                                                            {% if not type == 'dont' %}<p class="m-1">{% if type == "fixed" %}Fixed price of{% elif type == 'start' %}Prices start at{% elif type == 'variable' %}<strong>Prices Varies</strong>{% endif %}{% if type == 'variable' %}{% elif type == 'free' %}<strong>Free</strong> {% else %} <strong>${{ s.price }}</strong>{% endif %}</p>{% endif %}
+                                                                            </div>
+                                                                            <div class="col-12">
+                                                                            <button class="btn btn-danger btn-sm trashcan" data-url="{% host_url 'deleteservice' s.id host 'bizadmin' %}"><i class="fas fa-trash"></i></button>
+                                                                            <button type="button" class="updatebtn btn btn-sm btn-primary" data-toggle="modal" data-target="#modal-update" data-url="{% host_url 'updateservice' s.id host 'bizadmin' %}"><i class="fas fa-pencil-alt"></i></button>
+                                                                            </div>
+                                                                            </div>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        {% endwith %}
+                                                                    </div>
+                                                                    
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                             {% endfor %}
-                                            {% include 'bizadmin/dashboard/reviews/pagination.html' with page=services%}
-                                    </div>
+                                        </div>
+                                    {% endfor %}
                                 </div>
                             </div>
                         </div>
@@ -131,6 +260,9 @@
                 <a class="licolor" href="#simpleCollapse" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="simpleCollapse">Advanced Options</a>
                 <div class="collapse" id="simpleCollapse">
                     {{ service_form.checkintime|as_crispy_field }}
+                    {% if company.service_category.all %}
+                        {{ category_form.category|as_crispy_field }}
+                    {% endif %}
                     <div id="padd">
                         {{ service_form.padding|as_crispy_field }}
                     </div>
@@ -144,9 +276,28 @@
                     </div>
                 </div>
         </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modal-addcategory" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content card">
+      <div class="modal-header">
+        <h5 class="modal-title {% if company.darkmode %}text-white{% endif %} font-weight-bold d-flex justify-content-center pr-1 page-header-title" id="exampleModalLabel">Add a new service category</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      <form method="POST" id="createcate">
+        {% csrf_token %}
+        {{ servcategory_form.name|as_crispy_field }}
+        {{ servcategory_form.services|as_crispy_field }}
         <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="submit" class="btn btn-primary" id="addService">Add Service</button>
+            <button type="submit" class="btn btn-primary" id="addCategory">Add Service Category</button>
         </div>
       </form>
     </div>
@@ -157,22 +308,27 @@
 {% block java %}
     <script>
         $( document ).ready(function() {
+
             function getCookie(name) {
-    let cookieValue = null;
-    if (document.cookie && document.cookie !== '') {
-        const cookies = document.cookie.split(';');
-        for (let i = 0; i < cookies.length; i++) {
-            const cookie = cookies[i].trim();
-            // Does this cookie string begin with the name we want?
-            if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                break;
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
             }
-        }
-    }
-        return cookieValue;
-    }
-    const csrftoken = getCookie('csrftoken');
+                return cookieValue;
+            }
+            const csrftoken = getCookie('csrftoken');
+            var w = screen.width;
+            if (w>768){
+                $('.collapse.something').collapse('show')
+            }
 
                 $(document).on('click','.trashcan',function(){
                     const swalStyles = Swal.mixin({
@@ -183,51 +339,70 @@
                         buttonsStyling: false
                     });
                     var $this = $(this)
-                    var urldata = $this.attr('data-url')
+                    var urldata = $this.attr('data-url');
                     swalStyles.fire({
                         title: 'Are you sure you want to delete the service?',
                         text: 'You will not be able to change this',
-                        {% comment %} icon: 'warning', {% endcomment %}
+                        icon: 'warning',
                         showCancelButton: true,
                         reverseButtons: true
-                                    }).then((result) => {
-                                        if (result.isConfirmed) {
-                                            $.ajax({
-                                                type:'GET',
-                                                dataType: 'json',
-                                                url: urldata,
-                                                cache: false,
-                                                success: function(data){
-                                                    var htmlcontent = data.html_service_list
-                                                    var el = document.querySelector('#service-t');
-                                                    el.innerHTML = htmlcontent
-                                                    Swal.fire({
-                                                        title: '{{ s.name }} Service Deleted!', 
-                                                        text: 'Your service has been deleted.', 
-                                                        icon: 'success',
-                                                        customClass:{
-                                                            confirmButton: 'btn btn-primary',
-                                                            cancelButton: 'btn btn-danger',
-                                                        },
-                                                        buttonsStyling: false,
-                                                    });
-                                                }
-                                            });
-                                        } else if (
-                                            /* Read more about handling dismissals below */
-                                            result.dismiss === Swal.DismissReason.cancel
-                                        ) {
-                                            swalStyles.fire(
-                                            'Cancelled',
-                                            'We still have your service saved! 😊',
-                                            'error'
-                                            )
-                                        }
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            $.ajax({
+                                type:'GET',
+                                dataType: 'json',
+                                url: urldata,
+                                cache: false,
+                                success: function(data){
+                                    var htmlcontent = data.html_service_list
+                                    var el = document.querySelector('#service-t');
+                                    el.innerHTML = htmlcontent
+                                    var htmlcontents = data.html_category_list
+                                    var catel = document.querySelector('#categorylisttab');
+                                    catel.innerHTML = htmlcontents
+                                    Swal.fire({
+                                        title: '{{ s.name }} Service Deleted!', 
+                                        text: 'Your service has been deleted.', 
+                                        icon: 'success',
+                                        customClass:{
+                                            confirmButton: 'btn btn-primary',
+                                            cancelButton: 'btn btn-danger',
+                                        },
+                                        buttonsStyling: false,
                                     });
-                                });
+                                }
+                            });
+                        } else if (
+                            /* Read more about handling dismissals below */
+                            result.dismiss === Swal.DismissReason.cancel
+                        ) {
+                            swalStyles.fire(
+                                'Cancelled',
+                                'We still have your service saved! 😊',
+                                'error'
+                            )
+                        }
+                    });
+                });
+            
+            $(document).on('click', '.addnewservice', function(e){
+                var btn = $(this);
+                $.ajax({
+                    url: btn.attr("data-url"),
+                    type: 'get',
+                    dataType: 'json',
+                    beforeSend: function () {
+                        $("#modal-service").modal("show");
+                    },
+                    success: function (data) {
+                        $("#modal-service .modal-body").html(data.html_form);
+                    }
+                });
+            })
 
             $('#createserv').submit(function(e){
                 e.preventDefault();
+                {% comment %} btn.attr("data-category") {% endcomment %}
                 $.ajax({
                     type:'POST',
                     url: "{% host_url 'createservice' host 'bizadmin' %}",
@@ -236,19 +411,47 @@
                         "X-CSRFToken": csrftoken
                     },
                     success:function(data){
-
                         $('#modal-service').modal('hide');
                         var htmlcontent = data.html_service_list
                         var el = document.querySelector('#service-t');
                         el.innerHTML = htmlcontent
-                        Swal.fire({
-                            title:data.view,
-                            icon:data.icon,
-                            customClass:{
-                                confirmButton: 'btn btn-primary',
-                                cancelButton: 'btn btn-danger',
-                            },
-                        buttonsStyling: false,
+                        var htmlcontents = data.html_category_list
+                        var catel = document.querySelector('#categorylisttab');
+                        catel.innerHTML = htmlcontents
+                        $.notify({
+                            // options
+                            message: data.view
+                        },{
+                            // settings
+                            type: data.icon
+                        });
+                    }
+                });
+            });
+
+            $('#createcate').submit(function(e){
+                e.preventDefault();
+                $.ajax({
+                    type:'POST',
+                    url: "{% host_url 'createservicecate' host 'bizadmin' %}",
+                    data: $('#createcate').serialize(),
+                    headers:{
+                        "X-CSRFToken": csrftoken
+                    },
+                    success:function(data){
+                        $('#modal-addcategory').modal('hide');
+                        var htmlcontent = data.html_service_list
+                        var el = document.querySelector('#service-t');
+                        el.innerHTML = htmlcontent
+                        var htmlcontent = data.html_category_list
+                        var catel = document.querySelector('#categorylisttab');
+                        catel.innerHTML = htmlcontent
+                        $.notify({
+                            // options
+                            message: data.view
+                        },{
+                            // settings
+                            type: data.icon
                         });
                     }
                 });
@@ -256,7 +459,7 @@
 
             $(document).on('click', '.updatebtn', function () { 
                 var btn = $(this);
-                    $.ajax({
+                $.ajax({
                     url: btn.attr("data-url"),
                     type: 'get',
                     dataType: 'json',
@@ -269,6 +472,85 @@
                 });
             });
 
+            $(document).on('click', '.categorydelete', function(){
+                const swalStyles = Swal.mixin({
+                        customClass:{
+                            confirmButton: 'btn btn-primary',
+                            cancelButton: 'btn btn-danger',
+                        },
+                        buttonsStyling: false
+                    });
+                    var $this = $(this)
+                    var urldata = $this.attr('data-url');
+                    var category = $this.attr('data-catename');
+                    swalStyles.fire({
+                        title: 'Are you sure you want to delete the '+ category +' category?',
+                        text: 'Your services will still be there',
+                        icon: 'question',
+                        showCancelButton: true,
+                        reverseButtons: true
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            $.ajax({
+                                type:'POST',
+                                dataType: 'json',
+                                headers:{
+                                    "X-CSRFToken": csrftoken
+                                },
+                                url: urldata,
+                                cache: false,
+                                success: function(data){
+                                    var htmlcontent = data.html_service_list
+                                    var htmlcategory = data.html_category_list
+                                    var el = document.querySelector('#service-t');
+                                    var catel = document.querySelector('#categorylisttab');
+                                    el.innerHTML = htmlcontent
+                                    catel.innerHTML = htmlcategory
+                                    Swal.fire({
+                                        title: 'Category has been removed!', 
+                                        text: 'Your category has been removed.', 
+                                        icon: 'success',
+                                        customClass:{
+                                            confirmButton: 'btn btn-primary',
+                                            cancelButton: 'btn btn-danger',
+                                        },
+                                        buttonsStyling: false,
+                                    });
+                                }
+                            });
+                        } else if (
+                            /* Read more about handling dismissals below */
+                            result.dismiss === Swal.DismissReason.cancel
+                        ) {
+                            swalStyles.fire(
+                                'Cancelled',
+                                'We still have your category saved! 😊',
+                                'error'
+                            )
+                        }
+                    });
+
+            })
+
+            addcategory = document.querySelector('#addcategory')
+
+            $(document).on('click', '.nav-item', function(){
+                var w = screen.width;
+                if (w<768){
+                    $('.collapse').collapse('hide')
+                }
+                
+            });
+            $(window).on('shown.bs.modal', function() { 
+                $.ajax({
+                    url: '{% host_url "ajax_load_services" host "bizadmin" %}',
+                    success: function(data){
+                        $('#id_services').empty()
+                        $('#id_services').append(data)
+                        $('#id_services').selectpicker('refresh')
+                    }
+                });
+            });
         });
     </script>
 {% endblock java %}

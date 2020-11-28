@@ -242,15 +242,14 @@
                         var htmlcontent = data.html_service_list
                         var el = document.querySelector('#client-table');
                         el.innerHTML = htmlcontent
-                        Swal.fire({
-                            title:data.view,
-                            icon:data.icon,
-                            customClass:{
-                                confirmButton: 'btn btn-primary',
-                                cancelButton: 'btn btn-danger',
-                            },
-                        buttonsStyling: false,
+                        $.notify({
+                            // options
+                            message: data.view
+                        },{
+                            // settings
+                            type: data.icon
                         });
+                        
                     }
                 });
             });

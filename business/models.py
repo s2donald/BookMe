@@ -184,7 +184,7 @@ class Company(models.Model):
     website_link = models.URLField(max_length=200, blank=True, null=True)
     tags = TaggableManager(blank=True)
     location = models.PointField(blank=True, null=True)
-    darkmode = models.BooleanField(default=False)
+    darkmode = models.BooleanField(default=True)
     tz = models.CharField(choices=ALL_TIMEZONES, max_length=64, default="America/Toronto")
     showAddress = models.BooleanField(default=True)
     class Meta:

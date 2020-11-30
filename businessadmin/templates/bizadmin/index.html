@@ -31,14 +31,14 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.2.3/themes/dark.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/4.0.0/css/jasny-bootstrap.min.css" integrity="sha512-VUj0sZbQFPixq7NJ6ioBRK/scakfsdlKl647mLmZaZHWPgpnrWvIfy80/QF3q1l+kozBc8IHrTEoiZY25PSUTw==" crossorigin="anonymous" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.css" integrity="sha512-/zs32ZEJh+/EO2N1b0PEdoA10JkdC3zJ8L5FTiQu82LR9S/rOQNfQN7U59U9BC12swNeRAz3HSzIL2vpp4fv3w==" crossorigin="anonymous" />
-    
+    <script src="{% static 'js/businessAdmin/perfect-scrollbar.jquery.min.js' %}"></script>
     {% block linkscript %}
     {% endblock linkscript %}
     <title>Business - Booking with Gibele</title>
   </head>
   <body class="sidebar-mini {% if not company.darkmode %}white-content{% endif %}">
     <div class="wrapper">
-    <div class="sidebar" id="sidebar">
+    <div class="sidebar" id="sidebar" data="pink">
       <div class="sidebar-wrapper">
         <div class="logo">
           <a class="simple-text logo-mini text-white">

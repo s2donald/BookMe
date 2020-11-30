@@ -1,29 +1,55 @@
-{% extends 'welcome/main.html' %}
+{% extends 'welcome/main-test.html' %}
 {% load static %}
 {% load hosts %}
 {% block 'index_faq' %}active{% endblock %}
+
+
+{% block custompath %}
+    {% comment %} <path class="cls-1" d="M0,160L48,186.7C96,213,192,267,288,288C384,309,480,299,576,250.7C672,203,768,117,864,106.7C960,96,1056,160,1152,154.7C1248,149,1344,75,1392,37.3L1440,0L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z"></path> {% endcomment %}
+     <g>
+  <title>background</title>
+  <rect fill="none" id="canvas_background" height="602" width="802" y="-1" x="-1"/>
+  <g display="none" overflow="visible" y="0" x="0" height="100%" width="100%" id="canvasGrid">
+   <rect fill="url(#linear-gradient)" stroke-width="0" y="0" x="0" height="100%" width="100%"/>
+  </g>
+ </g>
+ <g>
+  <title>backgroundl</title>
+  <rect stroke="#000" id="svg_1" height="100" width="2000" y="-13.54687" x="-35.75" stroke-width="1.5" fill="url(#linear-gradient)"/>
+  <ellipse stroke="#000" ry="100" rx="1000" id="svg_2" cy="85" cx="650" stroke-opacity="null" stroke-width="0" fill="url(#linear-gradient)"/>
+ </g>
+{% endblock %}
+
+
+{% block header %}
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                    <div class="text-container">
+                        <h1>Frequently Asked Questions</h1>
+                    </div> <!-- end of text-container -->
+                </div> <!-- end of col -->
+            </div> <!-- end of row -->
+        </div> <!-- end of container -->
+{% endblock header %}
+
 {% block businesscontent %}
-<div class="container text-center">
-    <h1>F.A.Q.</h1>
-    <p></p>
-    <hr>
-</div>
-<section class="py-6">
+<section>
       <div class="container">
         <div class="py-4">
-          <h2 class="mb-5 licolor">Client First Booking Approach</h2>
+          <h2 class="mb-5 z-4 list-item-title" style="z-index: 4!important;">Client First Booking Approach</h2>
           <div class="row">
             <div class="col-md-6">
-              <h5>How does Gibele work?</h5>
+              <h5 class="list-item-title">How does Gibele work?</h5>
               <p class="text-muted mb-4">Gibele offers a straightforward web application which allows you to view your booking schedule, add or cancel appointments for any service and offers a platform which your clients can use to stay connected with you.</p>
-              <h5>What is a Booking Page URL?</h5>
+              <h5 class="list-item-title">What is a Booking Page URL?</h5>
               <p class="text-muted mb-4">The Booking Page URL refers to the url which Gibele offers to your business which can be put in your Instagram bio's, embedded in your business websites and/or shared to your clients. This URL will take your clients to your booking page where they can view all of the services that you have to offer and schedule an appointment based on the availability of your schedule.</p>
               <p class="text-muted mb-4">This allows your clients to view your availability and schedule themselves in for appointments without having to contact you directly.</p>
               </div>
             <div class="col-md-6">
-              <h5>What is a Business Page?</h5>
+              <h5 class="list-item-title">What is a Business Page?</h5>
               <p class="text-muted mb-4">Your business page will be listed on the Gibele marketplace where potential customers can read reviews and look at the services that your business has to offer. You can customize this business page by adding a banner image, up to 10 images to the gallary section of your business and list amenities to showcase to the world what your business has to offer!</p>
-              <h5>How do we stay connected with clients?</h5>
+              <h5 class="list-item-title">How do we stay connected with clients?</h5>
               <p class="text-muted mb-4">We offer an online marketplace where potential customers can browse and view all of the services you have to offer from your Booking Page. Depending on the subscription your business has with Gibele, we send out email notifications and text message reminders to your clients to ensure they are ready for their booked appointment.</p>
             </div>
           </div>
@@ -33,7 +59,7 @@
           <h2 class="mb-5 licolororange">Payment</h2>
           <div class="row">
             <div class="col-md-6">
-              <h5>Stripe</h5>
+              <h5 class="list-item-title">Stripe</h5>
               <p class="text-muted mb-4">All payments will be handled with Stripe.</p>
               <h5>Payment methods accepted</h5>
               <p class="text-muted mb-4">Some payments.</p>

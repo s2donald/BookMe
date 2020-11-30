@@ -1593,13 +1593,13 @@ class deleteBookingByCompAPI(View):
         booking = get_object_or_404(Bookings, id=booking_id)
         try:
             email = booking.user.email
-            app.control.revoke(task_id=booking.slug, terminate=True)
+            # app.control.revoke(task_id=booking.slug, terminate=True)
             appointmentCancelled.delay(booking.id)
             
         except AttributeError:
             try:
                 email = booking.guest.email
-                app.control.revoke(task_id=booking.slug, terminate=True)
+                # app.control.revoke(task_id=booking.slug, terminate=True)
                 appointmentCancelled.delay(booking.id)
             except AttributeError:
                 email = ''

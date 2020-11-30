@@ -77,7 +77,7 @@
                         <a class="btn btn-link pt-md-3 pt-lg-1 mx-auto text-white d-flex align-items-center" href="{% url 'account:account' %}" >{{ user.first_name }} <i class="fas fa-user-circle mx-1"></i></a>
                         <a class="btn btn-link pt-lg-1 mx-auto text-white d-flex align-items-center" href="{% url 'logout' %}">Logout <i class="fas fa-sign-out-alt mx-1"></i></a>
                 {% else %}
-                        <a class="btn btn-link pt-md-3 pt-lg-1 mx-auto text-white d-flex align-items-center" href="{% url 'account:signup' %}" >Register</a>
+                        {% comment %} <a class="btn btn-link pt-md-3 pt-lg-1 mx-auto text-white d-flex align-items-center" href="{% url 'account:signup' %}" >Register</a> {% endcomment %}
                         <a class="btn btn-link pt-lg-1 mx-auto text-white d-flex align-items-center" href="{% url 'login' %}">Login</a>
                 {% endif %}
 

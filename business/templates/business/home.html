@@ -105,6 +105,7 @@
 
     <script>
         $(document).ready(function(e){
+
             setTimeout(typeWriter, 1000)
             $('#fullSearch').submit(function(e){
                 e.preventDefault();
@@ -125,9 +126,13 @@
                     function showPosition(position) {
                         document.getElementById("id_lat").value = position.coords.latitude
                         document.getElementById("id_lon").value = position.coords.longitude
+                        window.open(targetLink, '_self');
                     });
                 }
-                window.open(targetLink, '_self');
+                else {
+                    window.open(targetLink, '_self');
+                }
+                
             })
         });
         

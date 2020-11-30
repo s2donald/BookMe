@@ -1,20 +1,47 @@
-{% extends 'welcome/main.html' %}
+{% extends 'welcome/main-test.html' %}
 {% load static %}
 {% load hosts %}
 {% block 'index_features' %}active{% endblock %}
-{% block businesscontent %}
-    <div class="container text-center">
-        <h1>Welcome to Gibele</h1>
-        <p>Our booking software provides you with the best way to stay connected with your clients, reduce no shows and allows you to focus on providing the best services possible for your clients.</p>
-        <a href="{% host_url 'bizadminsignup' host 'bizadmin' %}" class="btn btn-outline-primary">Get Started For Free!</a>
-        <hr>
-    </div>
+{% block custompath %}
+<path class="cls-1" d="M0,160L48,186.7C96,213,192,267,288,288C384,309,480,299,576,250.7C672,203,768,117,864,106.7C960,96,1056,160,1152,154.7C1248,149,1344,75,1392,37.3L1440,0L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z"></path>
+{% endblock %}
+{% block header %}
+        <!-- Text Logo - Use this if you don't have a graphic logo -->
+        <!-- <a class="logo-text" href="index.html">RIGA</a> -->
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-7">
+                    <div class="text-container">
+                        <h1>A simple scheduling tool for <span id="js-rotating">barbers, detailers, mechanics, stylists, everyone</span></h1>
+                        <div class="">
+                        {% if user.is_business %}
+                                    <a class="btn-solid-lg" href="{% host_url 'completeprofile' host 'bizadmin' %}">Go to your business page</a>
+                        {% elif user.is_consumer %}
+                                    <a class="btn-solid-lg" href="{% host_url 'newbizcreate' host 'bizadmin' %}">Create a business page</a>
+                        {% else %}
+                                <a class="btn-solid-lg" href="{% host_url 'bizadminlogin' host 'bizadmin' %}"><i class="fab fa-start"></i>Sign into Gibele</a>
+                                <a class="btn-solid-lg" href="{% host_url 'bizadminsignup' host 'bizadmin' %}"><i class="fab fa-start"></i>Get started for free</a>
+                        {% endif %}
+                        </div>
+                    </div> <!-- end of text-container -->
+                </div> <!-- end of col -->
+                <div class="col-lg-5">
+                    <div class="image-container">
+                        {% comment %} <object height="auto" width="100%" id="communicate-welcome" data="{% static 'css/svg-img/bizpage-welcome/business.svg' %}" type="image/svg+xml"></object> {% endcomment %}
+                        <img class="img-fluid" src="{% static 'img/business.png' %}" alt="alternative">
+                    </div> <!-- end of image-container -->
+                </div> <!-- end of col -->
+            </div> <!-- end of row -->
+        </div> <!-- end of container -->
+{% endblock header %}
 
-    <section class="py-5">
+{% block businesscontent %}
+
+    <section class="py-lg-5">
       <div class="container">
         <h1 class="hero-heading mb-0">How can Gibele help your business thrive</h1>
         <div class="row">
-          <div class="col-12 col-md-6 col-lg-4 mb-30px">
+          <div class="col-12 col-md-6 col-lg-4 mb-3">
             <div class="card h-100 border-0 shadow hover-animate">
               <div class="card-body">
                 <object height="300px" width="100%" id="marketplace-welcome" data="{% static 'css/svg-img/bizpage-welcome/marketplace.svg' %}" type="image/svg+xml"></object>
@@ -24,7 +51,7 @@
             </div>
           </div>
          
-          <div class="col-12 col-md-6 col-lg-4 mb-30px">
+          <div class="col-12 col-md-6 col-lg-4 mb-3">
             <div class="card h-100 border-0 shadow hover-animate">
               <div class="card-body">
                 <object height="300px" width="100%" id="quality-welcome" data="{% static 'css/svg-img/bizpage-welcome/booking.svg' %}" type="image/svg+xml"></object>
@@ -33,7 +60,7 @@
               </div>
             </div>
           </div>
-          <div class="col-12 col-md-6 col-lg-4 mb-30px">
+          <div class="col-12 col-md-6 col-lg-4 mb-3">
             <div class="card h-100 border-0 shadow hover-animate">
               <div class="card-body">
                 <object height="300px" width="100%" id="communicate-welcome" data="{% static 'css/svg-img/bizpage-welcome/communicate.svg' %}" type="image/svg+xml"></object>
@@ -42,7 +69,7 @@
               </div>
             </div>
           </div>
-          <div class="col-12 col-md-6 col-lg-4 mb-30px">
+          <div class="col-12 col-md-6 col-lg-4 mb-3">
             <div class="card h-100 border-0 shadow hover-animate">
               <div class="card-body">
                 <object height="300px" width="100%" id="communicate-welcome" data="{% static 'css/svg-img/bizpage-welcome/payment.svg' %}" type="image/svg+xml"></object>
@@ -51,7 +78,7 @@
               </div>
             </div>
           </div>
-          <div class="col-12 col-md-6 col-lg-4 mb-30px">
+          <div class="col-12 col-md-6 col-lg-4 mb-3">
             <div class="card h-100 border-0 shadow hover-animate">
               <div class="card-body">
                 <object height="300px" width="100%" id="communicate-welcome" data="{% static 'css/svg-img/bizpage-welcome/schedules.svg' %}" type="image/svg+xml"></object>
@@ -60,7 +87,7 @@
               </div>
             </div>
           </div>
-          <div class="col-12 col-md-6 col-lg-4 mb-30px">
+          <div class="col-12 col-md-6 col-lg-4 mb-3">
             <div class="card h-100 border-0 shadow hover-animate">
               <div class="card-body">
                 <object height="300px" width="100%" id="communicate-welcome" data="{% static 'css/svg-img/bizpage-welcome/charts-demo.svg' %}" type="image/svg+xml"></object>

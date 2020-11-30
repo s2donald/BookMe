@@ -585,7 +585,10 @@ input[type='checkbox'] {
     background-position: 0 0;
     top: 0;
     left: 0;
-	text-align: center;
+    text-align: center;
+    border-radius: 100% / 100px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
 }
 
 .header .header-bg {
@@ -1945,7 +1948,7 @@ a:hover.back-to-top {
 
 /* Min-width 1200px */
 @media (min-width: 1200px) {
-
+    
 	/* Navigation */
 	#menuToggle {
 		right: 2rem;
@@ -1957,6 +1960,7 @@ a:hover.back-to-top {
 	.header {
         background: #212325;
         background-image: none !important;
+        border-radius: 0px 0px 0px 0px;
 	}
 	
 	.header .header-bg {

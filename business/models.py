@@ -144,6 +144,9 @@ def get_user_image_folder(instance, filename):
 def get_user_image_folder(instance, filename):
     return "company/images/user_{0}/requested/{1}/".format(instance.user.id, filename)
 
+def calendar_folder(instance, filename):
+    return "company/other/user_{0}/calendar/{1}/".format(instance.user.id,"calendar.ics")
+
 #This is the model for the information we need from each company that is listed on the website
 class Company(models.Model):
     STATUS_CHOICES = (
@@ -173,6 +176,7 @@ class Company(models.Model):
     emailReminders = models.BooleanField(default=True)
     confirmation_minutes = models.IntegerField(choices=minute_choices,default=15)
     shownotes = models.BooleanField(default=False)
+    calendarics = models.FileField(upload_to=calendar_folder,null=True, blank=True)
     users_like = models.ManyToManyField(Account, related_name='companies_liked', blank=True)
     available = models.BooleanField(default=True)
     created = models.DateTimeField(auto_now_add=True)

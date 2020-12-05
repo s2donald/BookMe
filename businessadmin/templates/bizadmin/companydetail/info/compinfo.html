@@ -97,7 +97,7 @@
                                     <div class="card-header">Main Company Header Photo</div>
                                     <div class="card-body text-center">
                                         <!-- Profile picture image-->
-                                        <img class="img-account-profile mb-2" src="{% if company.image %}{{ company.image.url }}{% else %}https://epicattorneymarketing.com/wp-content/uploads/2016/07/Headshot-Placeholder-1.png{% endif %}" alt="{{ company.business_name }} Main Image" />
+                                        <img class="img-account-profile mb-2" width="300px" src="{% if company.image %}{{ company.image.url }}{% else %}{% static 'img/Headshot-Placeholder.png' %}{% endif %}" alt="{{ company.business_name }} Main Image" />
                                         <!-- Profile picture help block-->
                                         <div class="small font-italic text-muted mb-4">JPG or PNG no larger than 5 MB</div>
                                         <!-- Profile picture upload button -->

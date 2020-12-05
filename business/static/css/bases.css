@@ -421,9 +421,8 @@ a:focus {
 html, body {
     height: 100%;
     width: 100%;
-    font-family: 'Baloo Tamma 2', sans-serif cursive;
+    font: 400 1rem/1.75rem 'Baloo Tamma 2', sans-serif cursive;
     font-style: normal;
-    font-size: 22px;
     color: var(--title-color);
     margin: 0;
     padding: 0;
@@ -604,7 +603,7 @@ button:active,
 .btn.btn-outline-primary{
     border-radius: 50px;
     background: var(--gradient-color);
-    border: 3px solid transparent;
+    border: 3px solid #ffae74;
     background-clip: padding-box;
     color: whitesmoke;
     transition: background .6 ease;
@@ -683,7 +682,7 @@ button:active,
 }
 
 .nav-link {
-    font-size: 1.1em !important;
+    /* font-size: 1.1em !important; */
 }
 .nav-top-default {
     background: linear-gradient(90deg, #ff5f6d 0%,#ffc371 100%);
@@ -761,6 +760,70 @@ button:active,
     position: absolute;
   }
 
+  .navbar .megamenu {
+    margin-top: 0px;
+    background-color: #979797;
+    border-radius: 0px 0px 25px 25px;
+    
+  }
+  
+  /*
+  * ===================================================
+  *     Megamenu
+  * ===================================================
+  */
+  .megamenu {
+    overflow: hidden;
+    width: 100%;
+    border: none !important;
+    border-radius: 0;
+    z-index: 9999;
+  }
+  
+  .megamenu .megamenu-list {
+    margin-bottom: 1.5rem;
+    padding: 0;
+    font-size: 0.8rem;
+  }
+  
+  .megamenu .megamenu-list-item {
+    margin-bottom: 5px;
+  }
+  
+  .megamenu .megamenu-list-link {
+    padding: 5px 0;
+    text-decoration: none;
+    color: #868e96;
+  }
+  
+  .megamenu .megamenu-list-link:hover {
+    color: #212529;
+    background: none;
+  }
+  
+  .megamenu .megamenu-services {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    background: #f8f9fa;
+  }
+  
+  .megamenu .megamenu-services .megamenu-services-item {
+    display: -ms-flexbox;
+    display: flex;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    -ms-flex-align: center;
+    align-items: center;
+  }
+  
+  .megamenu .megamenu-services .megamenu-services-icon {
+    width: 30px;
+    height: 30px;
+    margin-right: 1rem;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+  }
+
 li {
     list-style: none;
 }
@@ -799,9 +862,79 @@ li {
     color: #d5d5d5;
 }
 
-footer {
-    background-color: #3f3f3f;
-    color: #d5d5d5;
+/******************/
+/*     Footer     */
+/******************/
+.footer {
+	padding-top: 5rem;
+  padding-bottom: 0.5rem;
+}
+
+.footer a {
+  text-decoration: none;
+  color: #854fee;
+}
+.footer a:hover {
+  text-decoration: none;
+  color: #d52ecd !important;
+}
+
+.footer .footer-col {
+	margin-bottom: 3rem;
+}
+
+.footer h6 {
+	margin-bottom: 0.625rem;
+	color: #afafaf;
+}
+
+.footer p,
+.footer ul {
+	color: #afafaf;
+}
+
+.footer .li-space-lg li {
+	margin-bottom: 0.375rem;
+}
+
+.footer .footer-col.third .fa-stack {
+	width: 2em;
+	margin-bottom: 1.25rem;
+	margin-right: 0.375rem;
+	font-size: 1.375rem;
+}
+
+.footer .footer-col.third .fa-stack .fa-stack-1x {
+    color: #ffffff;
+	transition: all 0.2s ease;
+}
+
+.footer .footer-col.third .fa-stack .fa-stack-2x {
+	color: #3f4143;
+	transition: all 0.2s ease;
+}
+
+.footer .footer-col.third .fa-stack:hover .fa-stack-1x {
+	color: #ffffff;
+}
+
+.footer .footer-col.third .fa-stack:hover .fa-stack-2x {
+    color: #d52ecd;
+}
+
+
+/*********************/
+/*     Copyright     */
+/*********************/
+.copyright {
+	padding-bottom: 1rem;
+	text-align: center;
+}
+
+.copyright p,
+.copyright a {
+	color: #afafaf;
+	text-decoration: none;
 }
 
 .search-bar{
@@ -817,6 +950,9 @@ footer {
     background-repeat: no-repeat;
     background-position: center center;
     background-size: cover;
+  }
+  .bg-black {
+    background-color: #212325;
   }
 
   .detail-slider {
@@ -937,7 +1073,37 @@ footer {
 		margin-right: 0.625rem;
 		margin-left: 0;
 	}
-	/* end of header */
+  /* end of header */
+  /* Footer */
+	.footer .footer-col {
+		margin-bottom: 2rem;
+	}
+
+	.footer .footer-col.first {
+		display: inline-block;
+		width: 18rem;
+		vertical-align: top;
+	}
+	
+	.footer .footer-col.second {
+		display: inline-block;
+		width: 18rem;
+		margin-right: 1rem;
+		vertical-align: top;
+	}
+	
+	.footer .footer-col.third {
+		display: inline-block;
+		width: 14rem;
+		text-align: right;
+		vertical-align: top;
+	}
+
+	.footer .footer-col.third .fa-stack {
+		margin-right: 0rem;
+		margin-left: 0.375rem;
+	}
+	/* end of footer */
 }
 @media (min-width: 1200px) {
   /* Header */
@@ -965,11 +1131,28 @@ footer {
 	}
 
 	.header h1 {
-		font-size: 4.5rem;
+		/* font-size: 4.5rem; */
 		line-height: 5.25rem;
 		letter-spacing: -0.25px;
 	}
-	/* end of header */
+  /* end of header */
+  
+  /* Footer */
+	.footer .footer-col.first {
+		width: 20rem;
+		margin-right: 4rem;
+	}
+	
+	.footer .footer-col.second {
+		width: 18rem;
+		margin-right: 2.5rem;
+	}
+	
+	.footer .footer-col.third {
+		width: 14rem;
+		text-align: right;
+	}
+	/* end of footer */
 }
 /* Min-width 1500px */
 @media (min-width: 1500px) {
@@ -1197,7 +1380,15 @@ footer {
     background: #ffae74;
   }
 
-
+  .bg-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+  }
+  
 
 /* ---------------------------------------------------
     SIDEBAR STYLE
@@ -1356,12 +1547,6 @@ a[data-toggle="collapse"] {
     width: 50%;
   }
 
-ul ul a {
-    font-size: 0.9em !important;
-    padding-left: 30px !important;
-    background: #6d7fcc;
-}
-
 ul.CTAs {
     padding: 20px;
 }
@@ -1415,7 +1600,6 @@ form{
 /*---Media Queries --*/
 @media (max-width: 992px) {
     html, body {
-        font-size: 20px;
         overflow-x: hidden;
     }
     .card-columns {
@@ -1440,10 +1624,6 @@ form{
     .header-font{
         font-family: 'Paytone One', sans-serif;
         color:whitesmoke;
-        font-size:55px !important;
-    }
-    html, body {
-        font-size: 17px;
     }
     .list-img{
         width:40vw !important;
@@ -1909,6 +2089,10 @@ figure {
     }
     .search-bar .form-group {
       margin-bottom: 1rem;
+    }
+    .navbar-expand-lg .navbar-collapse {
+      overflow-y: auto !important;
+      max-height: 80vh !important;
     }
     .search-bar .form-group::after {
       display: block;

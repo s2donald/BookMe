@@ -1159,7 +1159,12 @@ input[type='checkbox'] {
 }
 
 .footer a {
-	text-decoration: none;
+    text-decoration: none;
+    color: #854fee;
+}
+.footer a:hover {
+    text-decoration: none;
+    color: #d52ecd !important;
 }
 
 .footer .footer-col {
@@ -1172,7 +1177,6 @@ input[type='checkbox'] {
 }
 
 .footer p,
-.footer a,
 .footer ul {
 	color: #afafaf;
 }
@@ -1203,7 +1207,7 @@ input[type='checkbox'] {
 }
 
 .footer .footer-col.third .fa-stack:hover .fa-stack-2x {
-    color: #ff4587;
+    color: #d52ecd;
 }
 
 

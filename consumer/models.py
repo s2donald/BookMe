@@ -56,7 +56,7 @@ class Bookings(models.Model):
     #The service booked (also contains the company the service is with)
     service = models.ForeignKey(Services, on_delete=models.SET_NULL, null=True, related_name='bookings', related_query_name="bookings")
     #The company which is offering this service
-    company = models.ForeignKey(Company, on_delete=models.SET_NULL, null=True)
+    company = models.ForeignKey(Company, on_delete=models.CASCADE, null=True)
     #We must add a timeslot for the booking
     #The amount the booking has been paid for
     price_paid = models.DecimalField(max_digits=10, decimal_places=2, default=0)

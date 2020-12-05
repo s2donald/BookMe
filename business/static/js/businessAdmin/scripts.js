@@ -253,7 +253,9 @@ function debounce(func, wait, immediate) {
 })();
 
 $(document).ready(function() {
-
+  $('.sidebar .sidebar-wrapper').on('click',function(e){
+    console.log('hello')
+  });
   var scroll_start = 0;
   var startchange = $('.row');
   var offset = startchange.offset();

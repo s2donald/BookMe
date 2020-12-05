@@ -5,232 +5,234 @@
 {% endblock linkscript %}
 {% block activehome%}active{%endblock%}
 {% block businessadmin %}
-        <!-- Main page content-->
-        <div class="content">
-        <div class="row">
-            <div class="col-xxl-4 col-xl-12 mb-4">
-                <div class="card h-100">
-                    <div class="card-body h-100 d-flex flex-column justify-content-center py-5 py-xl-4">
-                        <div class="row align-items-center">
-                            <div class="col-md-6 col-xxl-12">
-                                <div class="text-center px-4 mb-4 mb-xl-0 mb-xxl-4">
-                                    <h1 class="text-primary">Welcome Back!</h1>
-                                    <p class="text-gray-700 mb-0">View your <a href="{% host_url 'schedule' host 'bizadmin' %}" >schedule</a> or update your <a href="{% host_url 'profile' host 'bizadmin'%}">account</a> settings.</p>
-                                </div>
-                            </div>
-                          <div class="col-md-6 col-xxl-12">
-                            <div class="text-lg-left px-4 mb-xxl-4 d-block d-inline">
-                              <h4 class="text-info mb-0 mt-3">Your personalized booking link:
-                              <p class="text-gray-700 mb-2"><a href="{% host_url 'bookingurls' host 'bookingurl' slug=company.slug %}">{{ company.slug }}.gibele.com</a></p></h4>
-                              {% comment %} <button class="btn btn-primary" id="changeLinkModal">Change Booking Link</button> {% endcomment %}
-                            </div>
-                          </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            {% if not ttpp == 100 %}
-            <div class="col-12">
-                    <div class="row">
-                        <div class="col-xl-12 mb-4">
-                            <div class="card card-header-actions h-100">
-                                <div class="card-header">
-                                    Account Profile
-                                </div>
-                                <div class="card-body">
-                                    {% if not bpp == 100 %}
-                                      <h4 class="small">
-                                          <a href="{% host_url 'photos' host 'bizadmin' %}">Add Business Page Photos</a>
-                                          <span class="float-right font-weight-bold">{{ bpp }}%</span>
-                                      </h4>
-                                      <div class="progress mb-4"><div class="progress-bar" role="progressbar" style="width: {{ bpp }}%;" aria-valuenow="{{ bpp }}" aria-valuemin="0" aria-valuemax="100"></div></div>
-                                    {% endif %}
 
-                                    {% if not sdb == 100 %}
-                                    <h4 class="small">
-                                        <a href="{% host_url 'service_detail' host 'bizadmin' %}">Add Some Services</a>
-                                        <span class="float-right font-weight-bold">{{ sdb }}%</span>
-                                    </h4>
-                                    <div class="progress mb-4"><div class="progress-bar bg-info" role="progressbar" style="width: {{ sdb }}%;" aria-valuenow="{{ sdb }}" aria-valuemin="0" aria-valuemax="100"></div></div>
-                                    
-                                    {% endif %}
-
-                                    {% if not cdb == 100 %}
-                                    <h4 class="small">
-                                        <a class="licolorblue" href="{% host_url 'client_list' host 'bizadmin' %}">Get atleast 3 clients</a>
-                                        <span class="float-right font-weight-bold">{{ cdb }}%</span>
-                                    </h4>
-                                    <div class="progress mb-4"><div class="progress-bar bg-warning" role="progressbar" style="width: {{ cdb }}%;" aria-valuenow="{{ cdb }}" aria-valuemin="0" aria-valuemax="100"></div></div>
-                                    {% endif %}
-
-                                    {% if not tpp == 100 %}
-                                    <h4 class="small">
-                                        <a class="licolorblue" href="{% host_url 'amenities' host 'bizadmin' %}">Add some amenities and tags to improve your search</a>
-                                        <span class="float-right font-weight-bold">{{ tpp }}%</span>
-                                    </h4>
-                                    <div class="progress mb-4"><div class="progress-bar bg-danger" role="progressbar" style="width: {{ tpp }}%;" aria-valuenow="{{ tpp }}" aria-valuemin="0" aria-valuemax="100"></div></div>
-                                    {% endif %}
-                                    {% if not ttpp == 100 %}
-                                      <h4 class="small">
-                                        Basic Account Setup
-                                        <span class="float-right font-weight-bold">{{ ttpp }}%</span>
-                                      </h4>
-                                      <div class="progress"><div class="progress-bar bg-success" role="progressbar" style="width: {{ ttpp }}%;" aria-valuenow="{{ ttpp }}" aria-valuemin="0" aria-valuemax="100"></div></div>
-                                    {% endif %}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-          </div>
-          {% endif %}
-
-          <div class="col-12">
-            <div class="card card-chart">
-              <div class="card-header">
-                <div class="row">
-                  <div class="col-sm-6 text-left">
-                    <h5 class="card-category">Total Sales</h5>
-                    <h2 class="card-title">Sales($)</h2>
-                  </div>
-                  <div class="col-sm-6">
-                    <div class="btn-group btn-group-toggle float-right" data-toggle="buttons">
-                      <label class="btn btn-sm btn-primary btn-simple active" id="0">
-                        <input type="radio" name="options" checked>
-                        <span class="d-none d-md-block d-lg-block d-xl-block">Sales Per Week</span>
-                        <span class="d-block d-md-none">
-                          <i class="fas fa-dollar-sign"></i>
-                        </span>
-                      </label>
-                      <label class="btn btn-sm btn-primary btn-simple" id="1">
-                        <input type="radio" class="d-none d-sm-none" name="options">
-                        <span class="d-none d-md-block d-lg-block d-xl-block">Sales per month</span>
-                        <span class="d-block d-md-none">
-                          <i class="fas fa-chart-line"></i>
-                        </span>
-                      </label>
-                    </div>
-                  </div>
-                </div>
+<!-- Main page content-->
+<div class="content">
+  <div class="row">
+    <div class="col-xxl-4 col-xl-12 mb-4">
+      <div class="card h-100">
+        <div class="card-body h-100 d-flex flex-column justify-content-center py-5 py-xl-4">
+          <div class="row align-items-center">
+            <div class="col-md-6 col-xxl-12">
+              <div class="text-center px-4 mb-4 mb-xl-0 mb-xxl-4">
+                <h1 class="text-primary">Welcome Back!</h1>
+                <p class="text-gray-700 mb-0">View your <a href="{% host_url 'schedule' host 'bizadmin' %}" >schedule</a> or update your <a href="{% host_url 'profile' host 'bizadmin'%}">account</a> settings.</p>
               </div>
-              <div class="card-body">
-                <div class="chart-area">
-                  <canvas id="myChart"></canvas>
-                </div>
+            </div>
+            <div class="col-md-6 col-xxl-12">
+              <div class="text-lg-left px-4 mb-xxl-4 d-block d-inline">
+                <h4 class="page-title mb-0 mt-3">Your personalized booking link:
+                <p class="text-gray-700 mb-2"><a href="{% host_url 'bookingurls' host 'bookingurl' slug=company.slug %}">{{ company.slug }}.gibele.com</a></p></h4>
+              {% comment %} <button class="btn btn-primary" id="changeLinkModal">Change Booking Link</button> {% endcomment %}
               </div>
             </div>
           </div>
         </div>
       </div>
+    </div>
+
+    {% if not ttpp == 100 %}
+      <div class="col-12">
+        <div class="row">
+          <div class="col-xl-12 mb-4">
+            <div class="card card-header-actions h-100">
+              <div class="card-header">Account Profile</div>
+              <div class="card-body">
+                {% if not bpp == 100 %}
+                  <h4 class="small">
+                    <a href="{% host_url 'photos' host 'bizadmin' %}">Add Business Page Photos</a>
+                    <span class="float-right font-weight-bold">{{ bpp }}%</span>
+                  </h4>
+                  <div class="progress mb-4"><div class="progress-bar" role="progressbar" style="width: {{ bpp }}%;" aria-valuenow="{{ bpp }}" aria-valuemin="0" aria-valuemax="100"></div></div>
+                {% endif %}
+
+                {% if not sdb == 100 %}
+                  <h4 class="small">
+                    <a href="{% host_url 'service_detail' host 'bizadmin' %}">Add Some Services</a>
+                    <span class="float-right font-weight-bold">{{ sdb }}%</span>
+                  </h4>
+                  <div class="progress mb-4"><div class="progress-bar bg-info" role="progressbar" style="width: {{ sdb }}%;" aria-valuenow="{{ sdb }}" aria-valuemin="0" aria-valuemax="100"></div></div>
+
+                {% endif %}
+
+                {% if not cdb == 100 %}
+                  <h4 class="small">
+                    <a class="licolorblue" href="{% host_url 'client_list' host 'bizadmin' %}">Get atleast 3 clients</a>
+                    <span class="float-right font-weight-bold">{{ cdb }}%</span>
+                  </h4>
+                  <div class="progress mb-4"><div class="progress-bar bg-warning" role="progressbar" style="width: {{ cdb }}%;" aria-valuenow="{{ cdb }}" aria-valuemin="0" aria-valuemax="100"></div></div>
+                {% endif %}
+
+                {% if not tpp == 100 %}
+                  <h4 class="small">
+                    <a class="licolorblue" href="{% host_url 'amenities' host 'bizadmin' %}">Add some amenities and tags to improve your search</a>
+                    <span class="float-right font-weight-bold">{{ tpp }}%</span>
+                  </h4>
+                  <div class="progress mb-4"><div class="progress-bar bg-danger" role="progressbar" style="width: {{ tpp }}%;" aria-valuenow="{{ tpp }}" aria-valuemin="0" aria-valuemax="100"></div></div>
+                {% endif %}
+
+                {% if not ttpp == 100 %}
+                  <h4 class="small">
+                    Basic Account Setup
+                    <span class="float-right font-weight-bold">{{ ttpp }}%</span>
+                  </h4>
+                  <div class="progress"><div class="progress-bar bg-success" role="progressbar" style="width: {{ ttpp }}%;" aria-valuenow="{{ ttpp }}" aria-valuemin="0" aria-valuemax="100"></div></div>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    {% endif %}
+
+    <div class="col-12">
+      <div class="card card-chart">
+        <div class="card-header">
+          <div class="row">
+            <div class="col-sm-6 text-left">
+              <h5 class="card-category">Total Sales</h5>
+              <h2 class="card-title">Sales($)</h2>
+            </div>
+            <div class="col-sm-6">
+              <div class="btn-group btn-group-toggle float-right" data-toggle="buttons">
+                <label class="btn btn-sm btn-primary btn-simple active" id="0">
+                  <input type="radio" name="options" checked>
+                  <span class="d-none d-md-block d-lg-block d-xl-block">Sales Per Week</span>
+                  <span class="d-block d-md-none">
+                    <i class="fas fa-dollar-sign"></i>
+                  </span>
+                </label>
+                <label class="btn btn-sm btn-primary btn-simple" id="1">
+                  <input type="radio" class="d-none d-sm-none" name="options">
+                  <span class="d-none d-md-block d-lg-block d-xl-block">Sales per month</span>
+                  <span class="d-block d-md-none">
+                    <i class="fas fa-chart-line"></i>
+                  </span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="chart-area">
+            <canvas id="myChart"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js" integrity="sha512-s+xg36jbIujB2S2VKfpGmlC3T5V2TF3lY48DX7u2r9XzGzgPsa6wTpOQA7J9iffvdeBN0q9tKzRxVxw1JviZPg==" crossorigin="anonymous"></script>
 <script>
-gradientChartOptionsConfigurationWithTooltipPurple = {
-      maintainAspectRatio: false,
-      legend: {
-        display: false
-      },
+  gradientChartOptionsConfigurationWithTooltipPurple = {
+    maintainAspectRatio: false,
+    legend: {
+      display: false
+    },
 
-      tooltips: {
-        backgroundColor: '#f5f5f5',
-        titleFontColor: '#333',
-        bodyFontColor: '#666',
-        bodySpacing: 4,
-        xPadding: 12,
-        mode: "nearest",
-        intersect: 0,
-        position: "nearest"
-      },
-      responsive: true,
-      scales: {
-        yAxes: [{
-          barPercentage: 1.6,
-          gridLines: {
-            drawBorder: false,
-            color: 'rgba(29,140,248,0.0)',
-            zeroLineColor: "transparent",
-          },
-          scaleLabel: {
-                    display: true,
-                    labelString: 'Sales in ($)'
-                },
-          ticks: {
-            suggestedMin: 60,
-            suggestedMax: 125,
-            padding: 20,
-            fontColor: "#9a9a9a"
-          }
-        }],
+    tooltips: {
+      backgroundColor: '#f5f5f5',
+      titleFontColor: '#333',
+      bodyFontColor: '#666',
+      bodySpacing: 4,
+      xPadding: 12,
+      mode: "nearest",
+      intersect: 0,
+      position: "nearest"
+    },
+    responsive: true,
+    scales: {
+      yAxes: [{
+        barPercentage: 1.6,
+        gridLines: {
+          drawBorder: false,
+          color: 'rgba(29,140,248,0.0)',
+          zeroLineColor: "transparent",
+        },
+        scaleLabel: {
+          display: true,
+          labelString: 'Sales in ($)'
+        },
+        ticks: {
+          suggestedMin: 60,
+          suggestedMax: 125,
+          padding: 20,
+          fontColor: "#9a9a9a"
+        }
+      }],
 
-        xAxes: [{
-          barPercentage: 1.6,
-          gridLines: {
-            drawBorder: false,
-            color: 'rgba(225,78,202,0.1)',
-            zeroLineColor: "transparent",
-          },
-          scaleLabel: {
-                display: true,
-                labelString: 'Starting From Week Of'
-            },
-          ticks: {
-            padding: 20,
-            fontColor: "#9a9a9a"
-          }
-        }]
-      }
-    };
+      xAxes: [{
+        barPercentage: 1.6,
+        gridLines: {
+          drawBorder: false,
+          color: 'rgba(225,78,202,0.1)',
+          zeroLineColor: "transparent",
+        },
+        scaleLabel: {
+          display: true,
+          labelString: 'Starting From Week Of'
+        },
+        ticks: {
+          padding: 20,
+          fontColor: "#9a9a9a"
+        }
+      }]
+    }
+  };
 
-    var chart_labels = {{ weeklabel|safe }};
-    var chart_data = {{ week|safe }};
+  var chart_labels = {{ weeklabel|safe }};
+  var chart_data = {{ week|safe }};
 
-    var ctx = document.getElementById("myChart").getContext('2d');
+  var ctx = document.getElementById("myChart").getContext('2d');
 
-    var gradientStroke = ctx.createLinearGradient(0, 230, 0, 50);
+  var gradientStroke = ctx.createLinearGradient(0, 230, 0, 50);
 
-    gradientStroke.addColorStop(1, 'rgba(72,72,176,0.1)');
-    gradientStroke.addColorStop(0.4, 'rgba(72,72,176,0.0)');
-    gradientStroke.addColorStop(0, 'rgba(119,52,169,0)'); //purple colors
-    var config = {
-      type: 'line',
-      data: {
-        labels: chart_labels,
-        datasets: [{
-          label: "Earned",
-          fill: true,
-          backgroundColor: gradientStroke,
-          borderColor: '#d346b1',
-          borderWidth: 2,
-          borderDash: [],
-          borderDashOffset: 0.0,
-          pointBackgroundColor: '#d346b1',
-          pointBorderColor: 'rgba(255,255,255,0)',
-          pointHoverBackgroundColor: '#d346b1',
-          pointBorderWidth: 20,
-          pointHoverRadius: 4,
-          pointHoverBorderWidth: 15,
-          pointRadius: 4,
-          data: chart_data,
-        }],
-      },
-      options: gradientChartOptionsConfigurationWithTooltipPurple
-    };
-    var myChartData = new Chart(ctx, config);
-    $("#0").click(function() {
-      var data = myChartData.config.data;
-      var label = myChartData.config.options.scales;
-      label.xAxes[0].scaleLabel.labelString = 'Starting From Week Of'
-      data.datasets[0].data = chart_data;
-      data.labels = chart_labels;
-      myChartData.update();
-    });
-    $("#1").click(function() {
-      var chart_labels = {{ monthlabel|safe }};
-      var chart_data = {{ month|safe }};
-      var data = myChartData.config.data;
-      var label = myChartData.config.options.scales;
-      label.xAxes[0].scaleLabel.labelString = 'Starting From Month Of'
-      data.datasets[0].data = chart_data;
-      data.labels = chart_labels;
-      myChartData.update();
-    });
+  gradientStroke.addColorStop(1, 'rgba(72,72,176,0.1)');
+  gradientStroke.addColorStop(0.4, 'rgba(72,72,176,0.0)');
+  gradientStroke.addColorStop(0, 'rgba(119,52,169,0)'); //purple colors
+  var config = {
+    type: 'line',
+    data: {
+      labels: chart_labels,
+      datasets: [{
+        label: "Earned",
+        fill: true,
+        backgroundColor: gradientStroke,
+        borderColor: '#d346b1',
+        borderWidth: 2,
+        borderDash: [],
+        borderDashOffset: 0.0,
+        pointBackgroundColor: '#d346b1',
+        pointBorderColor: 'rgba(255,255,255,0)',
+        pointHoverBackgroundColor: '#d346b1',
+        pointBorderWidth: 20,
+        pointHoverRadius: 4,
+        pointHoverBorderWidth: 15,
+        pointRadius: 4,
+        data: chart_data,
+      }],
+    },
+    options: gradientChartOptionsConfigurationWithTooltipPurple
+  };
+
+  var myChartData = new Chart(ctx, config);
+  $("#0").click(function() {
+    var data = myChartData.config.data;
+    var label = myChartData.config.options.scales;
+    label.xAxes[0].scaleLabel.labelString = 'Starting From Week Of'
+    data.datasets[0].data = chart_data;
+    data.labels = chart_labels;
+    myChartData.update();
+  });
+  $("#1").click(function() {
+    var chart_labels = {{ monthlabel|safe }};
+    var chart_data = {{ month|safe }};
+    var data = myChartData.config.data;
+    var label = myChartData.config.options.scales;
+    label.xAxes[0].scaleLabel.labelString = 'Starting From Month Of'
+    data.datasets[0].data = chart_data;
+    data.labels = chart_labels;
+    myChartData.update();
+  });
 </script>
 {% endblock %}

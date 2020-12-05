@@ -1,20 +1,20 @@
 from django.conf.urls import url, include
-from django.urls import path
+from django.urls import path, re_path
 from . import views
 app_name = 'calendarapp'
 urlpatterns = [
-    url(r'^account/updatep/$', views.phoneValidationView.as_view(), name='phoneupdate'),
-    url(r'^login/', views.LoginView.as_view(), name='loginbooking'),
-    url(r'^createbook/$', views.createAppointment.as_view(), name='creatingBooking'),
-    url(r'^confirmbook/$', views.confbook.as_view(), name='confbook'),
-    url(r'^bookingtime/$', views.bookingTimes.as_view(), name='bookingtimeretrieval'),
-    url(r'^facebookLoginBooked/$', views.facebookLogin.as_view(), name='facebookLogin'),
-    url(r'^requestclient/$', views.requestSpot.as_view(), name='requestSpotAsClient'),
-    url(r'^checkIfClient/$', views.checkIfClientView.as_view(), name='checkIfClient'),
-    url(r'^createAcct/$', views.createAccountView.as_view(), name='createAccount'),
+    re_path(r'^account/updatep/$', views.phoneValidationView.as_view(), name='phoneupdate'),
+    re_path(r'^login/', views.LoginView.as_view(), name='loginbooking'),
+    re_path(r'^createbook/$', views.createAppointment.as_view(), name='creatingBooking'),
+    re_path(r'^confirmbook/$', views.confbook.as_view(), name='confbook'),
+    re_path(r'^bookingtime/$', views.bookingTimes.as_view(), name='bookingtimeretrieval'),
+    re_path(r'^facebookLoginBooked/$', views.facebookLogin.as_view(), name='facebookLogin'),
+    re_path(r'^requestclient/$', views.requestSpot.as_view(), name='requestSpotAsClient'),
+    re_path(r'^checkIfClient/$', views.checkIfClientView.as_view(), name='checkIfClient'),
+    re_path(r'^createAcct/$', views.createAccountView.as_view(), name='createAccount'),
     path('social-auth/',include('social_django.urls',namespace='social'), name='fb'),
-    url(r'^service(?P<pk>\d+)/$', views.bookingServiceView, name='bookingserviceurls'),
-    url(r'^$', views.bookingurl, name='bookingurls'),
+    re_path(r'^service(?P<pk>\d+)/$', views.bookingServiceView, name='bookingserviceurls'),
+    re_path(r'^$', views.bookingurl, name='bookingurls'),
 ]
 
 from django.conf import settings

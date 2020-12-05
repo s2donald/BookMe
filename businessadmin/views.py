@@ -12,6 +12,7 @@ from django.contrib.auth import authenticate, login, logout
 from django_hosts.resolvers import reverse
 from django.http import JsonResponse
 import json
+from django.http.response import HttpResponse
 from business.forms import AddCompanyForm, AddServiceForm, UpdateServiceForm, BookingSettingForm
 from django.forms import inlineformset_factory
 from django.views import View
@@ -1717,3 +1718,65 @@ class changeDarkMode(View):
             company.darkmode = True
         company.save()
         return JsonResponse({'darkmode':company.darkmode})
+
+@login_required
+def integrationsView(request):
+    company = Company.objects.get(user=request.user)
+    user=request.user
+    if user.is_business and not user.on_board:
+        return redirect(reverse('completeprofile', host='bizadmin'))
+    elif not user.is_business:
+        loginViews(request)
+    
+    return render(request, 'bizadmin/dashboard/integrations/integrations.html',{'company':company})
+
+from icalendar import Calendar, Event
+#Below code is not used anywhere, just as an example on how to create an ics file for future purposes
+class createCalendarFile(View):
+    def post(self, request):
+        company = Company.objects.get(user=request.user)
+        cal = Calendar()
+        if not company.calendarics:
+            bookings = Bookings.objects.filter(company=company)
+            for booking in bookings:
+                event = Event()
+                event.add('dtstart', booking.start)
+                event.add('dtend', booking.end)
+                event.add('description', booking.service.name)
+                event.add('summary', booking.service.name)
+                cal.add_component(event)
+            f = open('course_schedule.ics', 'wb')
+            f.write(cal.to_ical())
+            f.close()
+            print(f)
+            
+            company.calendarics.save('course_schedule', ContentFile(cal.to_ical()), save=False)
+            company.save()
+        else:
+            return JsonResponse({'already':True})
+
+        return JsonResponse({'already':False})
+
+
+class calendarScheduleICS(View):
+    def get(self, request, pk):
+        user = Account.objects.get(pk=pk)
+        company = Company.objects.get(user=user)
+        cal = Calendar()
+        bookings = Bookings.objects.filter(company=company, is_cancelled_user=False, is_cancelled_company=False)
+        for booking in bookings:
+            if booking.user:
+                cust = booking.user
+            else:
+                cust = booking.guest
+            description = render_to_string('bizadmin/dashboard/schedule/bookinginfo.txt', {'booking':booking,'cust':cust})
+            event = Event()
+            event.add('dtstart', booking.start)
+            event.add('dtend', booking.end)
+            event.add('description', description)
+            event.add('summary', booking.service.name)
+            cal.add_component(event)
+        f = open('course_schedule.ics', 'wb')
+        f.write(cal.to_ical())
+        f = open('course_schedule.ics', 'rb')
+        return HttpResponse(f)

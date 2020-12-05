@@ -67,7 +67,134 @@
                         <p class="d-flex-inline pt-3 pr-1 flex-nowrap">Welcome <a class="btn btn-link licolorblue p-0" href="{% if user.is_business %}{% host_url 'home' host 'bizadmin' %}{% else %}{% url 'account:account' %}{% endif %}">{{user.first_name}}</a></p>
                     </div>
                 {% endif %} {% endcomment %}
-                <div class="my-auto mx-auto d-lg-flex align-center">
+                <div class="mx-auto d-lg-flex align-center">
+                    {% comment %} <li class="nav-item dropdown position-static">
+                    <a href="#" class="btn btn-link text-white bold dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Industries</a>
+                    <div class="dropdown-menu megamenu py-lg-0">
+                    <div class="row">
+                        <div class="col-lg-9">
+                        <div class="row p-3 pr-lg-0 pl-lg-5 pt-lg-5">
+                            <div class="col-lg-3">
+                            <!-- Megamenu list-->
+                            <h6 class="text-uppercase">Homepage</h6>
+                            <ul class="megamenu-list list-unstyled">
+                                <li class="megamenu-list-item"><a class="megamenu-list-link" href="index.html">Rooms   </a></li>
+                                <li class="megamenu-list-item"><a class="megamenu-list-link" href="index-2.html">Restaurants   </a></li>
+                                <li class="megamenu-list-item"><a class="megamenu-list-link" href="index-3.html">Travel   </a></li>
+                                <li class="megamenu-list-item"><a class="megamenu-list-link" href="index-4.html">Real estate <span class="badge badge-info-light ml-1">New</span>   </a></li>
+                            </ul>
+                            <!-- Megamenu list-->
+                            <h6 class="text-uppercase">Restaurants</h6>
+                            <ul class="megamenu-list list-unstyled">
+                                <li class="megamenu-list-item"><a class="megamenu-list-link" href="category.html">Category - Map on the top   </a></li>
+                                <li class="megamenu-list-item"><a class="megamenu-list-link" href="category-2.html">Category - Map on the right   </a></li>
+                                <li class="megamenu-list-item"><a class="megamenu-list-link" href="category-3.html">Category - no map   </a></li>
+                                <li class="megamenu-list-item"><a class="megamenu-list-link" href="detail.html">Restaurant detail   </a></li>
+                            </ul>
+                            </div>
+                            <div class="col-lg-3">
+                            <!-- Megamenu list-->
+                            <h6 class="text-uppercase">Rooms</h6>
+                            <ul class="megamenu-list list-unstyled">
+                                <li class="megamenu-list-item"><a class="megamenu-list-link" href="category-rooms.html">Category - Map on the top   </a></li>
+                                <li class="megamenu-list-item"><a class="megamenu-list-link" href="category-2-rooms.html">Category - Map on the right   </a></li>
+                                <li class="megamenu-list-item"><a class="megamenu-list-link" href="category-3-rooms.html">Category - no map   </a></li>
+                                <li class="megamenu-list-item"><a class="megamenu-list-link" href="detail-rooms.html">Room detail   </a></li>
+                            </ul>
+                            <!-- Megamenu list-->
+                            <h6 class="text-uppercase">Blog</h6>
+                            <ul class="megamenu-list list-unstyled">
+                                <li class="megamenu-list-item"><a class="megamenu-list-link" href="blog.html">Blog   </a></li>
+                                <li class="megamenu-list-item"><a class="megamenu-list-link" href="post.html">Post   </a></li>
+                            </ul>
+                            </div>
+                            <div class="col-lg-3">
+                            <!-- Megamenu list-->
+                            <h6 class="text-uppercase">Pages</h6>
+                            <ul class="megamenu-list list-unstyled">
+                                <li class="megamenu-list-item"><a class="megamenu-list-link" href="compare.html">Comparison  <span class="badge badge-info-light ml-1">New</span>   </a></li>
+                                <li class="megamenu-list-item"><a class="megamenu-list-link" href="team.html">Team  <span class="badge badge-info-light ml-1">New</span>   </a></li>
+                                <li class="megamenu-list-item"><a class="megamenu-list-link" href="contact.html">Contact   </a></li>
+                                <li class="megamenu-list-item"><a class="megamenu-list-link" href="pricing.html">Pricing   </a></li>
+                                <li class="megamenu-list-item"><a class="megamenu-list-link" href="text.html">Text page   </a></li>
+                                <li class="megamenu-list-item"><a class="megamenu-list-link" href="faq.html">F.A.Q.s   </a></li>
+                                <li class="megamenu-list-item"><a class="megamenu-list-link" href="coming-soon.html">Coming soon   </a></li>
+                                <li class="megamenu-list-item"><a class="megamenu-list-link" href="404.html">404 page  <span class="badge badge-info-light ml-1">New</span>   </a></li>
+                            </ul>
+                            <!-- Megamenu list-->
+                            <h6 class="text-uppercase">Host</h6>
+                            <ul class="megamenu-list list-unstyled">
+                                <li class="megamenu-list-item"><a class="megamenu-list-link" href="user-add-0.html">Add new listing - 6 pages   </a></li>
+                                <li class="megamenu-list-item"><a class="megamenu-list-link" href="user-list.html">Bookings &mdash; list view   </a></li>
+                            </ul>
+                            </div>
+                            <div class="col-lg-3">
+                            <!-- Megamenu list-->
+                            <h6 class="text-uppercase">User</h6>
+                            <ul class="megamenu-list list-unstyled">
+                                <li class="megamenu-list-item"><a class="megamenu-list-link" href="user-profile.html">Profile  <span class="badge badge-info-light ml-1">New</span>   </a></li>
+                                <li class="megamenu-list-item"><a class="megamenu-list-link" href="user-account.html">Account  <span class="badge badge-info-light ml-1">New</span>   </a></li>
+                                <li class="megamenu-list-item"><a class="megamenu-list-link" href="user-personal.html">Personal info - forms  <span class="badge badge-info-light ml-1">New</span>   </a></li>
+                                <li class="megamenu-list-item"><a class="megamenu-list-link" href="user-security.html">Password & security - forms  <span class="badge badge-info-light ml-1">New</span>   </a></li>
+                                <li class="megamenu-list-item"><a class="megamenu-list-link" href="login.html">Sign in   </a></li>
+                                <li class="megamenu-list-item"><a class="megamenu-list-link" href="signup.html">Sign up   </a></li>
+                                <li class="megamenu-list-item"><a class="megamenu-list-link" href="user-booking-1.html">Booking process - 4 pages   </a></li>
+                                <li class="megamenu-list-item"><a class="megamenu-list-link" href="user-grid.html">Bookings &mdash; grid view   </a></li>
+                                <li class="megamenu-list-item"><a class="megamenu-list-link" href="user-booking-detail.html">Booking detail   </a></li>
+                            </ul>
+                            </div>
+                        </div>
+                        <div class="row megamenu-services d-none d-lg-flex pl-lg-5">
+                            <div class="col-xl-3 col-lg-6 d-flex">
+                            <div class="megamenu-services-item">
+                                <svg class="svg-icon megamenu-services-icon">
+                                <use xlink:href="#destination-map-1"> </use>
+                                </svg>
+                                <div>
+                                <h6 class="text-uppercase">Best rentals</h6>
+                                <p class="mb-0 text-muted text-sm">Find the perfect place</p>
+                                </div>
+                            </div>
+                            </div>
+                            <div class="col-xl-3 col-lg-6 d-flex">
+                            <div class="megamenu-services-item">
+                                <svg class="svg-icon megamenu-services-icon">
+                                <use xlink:href="#money-box-1"> </use>
+                                </svg>
+                                <div>
+                                <h6 class="text-uppercase">Earn points</h6>
+                                <p class="mb-0 text-muted text-sm">And get great rewards</p>
+                                </div>
+                            </div>
+                            </div>
+                            <div class="col-xl-3 col-lg-6 d-flex">
+                            <div class="megamenu-services-item">
+                                <svg class="svg-icon megamenu-services-icon">
+                                <use xlink:href="#customer-support-1"> </use>
+                                </svg>
+                                <div>
+                                <h6 class="text-uppercase">020-800-456-747</h6>
+                                <p class="mb-0 text-muted text-sm">24/7 Available Support</p>
+                                </div>
+                            </div>
+                            </div>
+                            <div class="col-xl-3 col-lg-6 d-flex">
+                            <div class="megamenu-services-item">
+                                <svg class="svg-icon megamenu-services-icon">
+                                <use xlink:href="#secure-payment-1"> </use>
+                                </svg>
+                                <div>
+                                <h6 class="text-uppercase">Secure Payment</h6>
+                                <p class="mb-0 text-muted text-sm">Secure Payment</p>
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+                        </div>
+                        <div class="col-lg-3 d-none d-lg-block"><img class="bg-image" src="{% static 'css/svg-img/bizpage-welcome/communicate.svg' %}" alt=""></div>
+                    </div>
+                    </div>
+                    </li> {% endcomment %}
                     {% if user.is_business %}
                         <a href="{% host_url 'schedule' host 'bizadmin'%}" class="btn btn-outline-light btn-sm my-lg-3 mx-auto">Business Dashboard</a>
                     {% else %}
@@ -114,6 +241,16 @@
             } 
             injectSvgSprite('{% static 'css/icons.svg' %}'); 
             injectSvgSprite('{% static 'css/icon-unliked.svg' %}');
+
+            {% comment %} jQuery(document).ready(function(){
+                $(".dropdown").hover(
+                    function() { $('.dropdown-menu', this).fadeIn(300);
+                    },
+                    function() { $('.dropdown-menu', this).fadeOut(300);
+                });
+            }); {% endcomment %}
+
+            
         </script>
         
     {% block extrascripts %}
@@ -129,8 +266,60 @@
     {% block scripts %}
     {% endblock scripts %}
     </body>
+
+    <div class="footer bg-black">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="footer-col first">
+                        <h6>About Gibele</h6>
+                        <p class="p-small">'We are a small team and our goal is to support the local services community.'</p><p class="p-small"> Gibele is an online scheduling tool which enables businesses in any category to allow their clients to book appointments. Gibele was built to help you grow your client base.</p>
+                    </div> <!-- end of footer-col -->
+                    <div class="footer-col second">
+                        <h6>The Company</h6>
+                        <ul class="list-unstyled li-space-lg p-small">
+                            <li>Legal: <a href="{% host_url 'business:terms' host 'www'%}">Terms & Conditions</a>, <a href="{% host_url 'business:privacy' host 'www'%}">Privacy Policy</a></li>
+                            {% comment %} <li>Useful: <a href="#">Colorpicker</a>, <a href="#">Icon Library</a>, <a href="#">Illustrations</a></li> {% endcomment %}
+                            <li>Product: <a href="{% host_url 'bizadminmain' host 'bizadmin'%}">For Businesses</a>, <a href="{% host_url 'business:homepage' host 'www'%}">For Consumers</a></li>
+                        </ul>
+                    </div> <!-- end of footer-col -->
+                    <div class="footer-col third">
+                        <span class="fa-stack">
+                            <a href="https://www.facebook.com/pages/category/Business-Service/Gibele-114057003711107/">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-facebook-f fa-stack-1x"></i>
+                            </a>
+                        </span>
+                        <span class="fa-stack">
+                            <a href="https://twitter.com/Gibele_">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-twitter fa-stack-1x"></i>
+                            </a>
+                        </span>
+                        <span class="fa-stack">
+                            <a href="https://www.instagram.com/gibele_/?hl=en">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-instagram fa-stack-1x"></i>
+                            </a>
+                        </span>
+                        <p class="p-small">We would love to hear from you <a href="mailto:suppot@gibele.com"><strong>support@gibele.com</strong></a></p>
+                    </div> <!-- end of footer-col -->
+                </div> <!-- end of col -->
+            </div> <!-- end of row -->
+        </div> <!-- end of container -->
+    </div> <!-- end of footer -->  
+
+    <div class="copyright bg-black">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <p class="p-small">©2020 Gibele Inc, All rights reserved.</a></p>
+                </div> <!-- end of col -->
+            </div> <!-- enf of row -->
+        </div> <!-- end of container -->
+    </div> <!-- end of copyright --> 
     
-    <footer class="bg-dark">
+    {% comment %} <footer class="bg-dark">
     <div class="container-fluid padding">
     <div class="row text-center">
         <div class="col-md-4">
@@ -170,6 +359,6 @@
         
     </div>
     </div>
-    </footer>
+    </footer> {% endcomment %}
 
 </html>

@@ -145,6 +145,12 @@
               <p>Stats</p>
             </a>
           </li> {% endcomment %}
+          <li class="{% block activeint %}{%endblock%}">
+            <a href="{% host_url 'integrations' host 'bizadmin'%}">
+              <i class="fas fa-network-wired"></i>
+              <p>Integrations</p>
+            </a>
+          </li>
 
           <li class="{% block activedetails%}{%endblock%}">
             <a data-toggle="collapse" href="#mapsExamples">

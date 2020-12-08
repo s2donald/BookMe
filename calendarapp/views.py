@@ -128,7 +128,7 @@ def time_slots(start_time, end_time, interval, duration_hour, duration_minute, y
                 #The endtime of the already booked service
                 g = timezone.localtime(obj.end).time()
                 #Check if already booked service interfers with the proposed 
-                if((s<=servStart.time()<g) or (s<=endTime.time()<g) or (end_time<endTime.time())):
+                if((s<=servStart.time()<g) or (s<endTime.time()<g) or (end_time<endTime.time())):
                     t = endTime.time()
                     #Since we know this booking time falls between an already booked service 
                     # We basically check if the ending time of the booking interval 't' is less than the booking time of the 

@@ -5,7 +5,7 @@
   <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="author" content="Stephen Donald">
@@ -25,7 +25,8 @@
     <link rel="stylesheet" href="{% static "css/vendor/dropzone.min.css" %}">
     <link rel="stylesheet" href="{% static 'css/vendor/jquery-cropper.min.css'%}">
     <link rel="stylesheet" href="{% static 'css/vendor/bootstrap-tagsinput.css' %}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.18/css/bootstrap-select.min.css" integrity="sha512-ARJR74swou2y0Q2V9k0GbzQ/5vJ2RBSoCWokg4zkfM29Fb3vZEQyv0iWBMW/yvKgyHSR/7D64pFMmU8nYmbRkg==" crossorigin="anonymous" />        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/14.6.1/nouislider.min.css" integrity="sha512-1qnaNbQJ1IbEE01sp3ac1n/oa3olZ0N9io+n2Tbdk/sbWMRoMi5Btc/MLqtWCAIHVbPr5dukCODmyLVxx8pmKA==" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.18/css/bootstrap-select.min.css" integrity="sha512-ARJR74swou2y0Q2V9k0GbzQ/5vJ2RBSoCWokg4zkfM29Fb3vZEQyv0iWBMW/yvKgyHSR/7D64pFMmU8nYmbRkg==" crossorigin="anonymous" />        
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/14.6.1/nouislider.min.css" integrity="sha512-1qnaNbQJ1IbEE01sp3ac1n/oa3olZ0N9io+n2Tbdk/sbWMRoMi5Btc/MLqtWCAIHVbPr5dukCODmyLVxx8pmKA==" crossorigin="anonymous" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.2.3/flatpickr.css">
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.2.3/themes/dark.css">
@@ -48,7 +49,7 @@
             {{ company.business_name }}
           </a>
         </div>
-        <ul class="nav">
+        <ul class="nav marg-6">
           <li class="{% block activehome %}{%endblock%}">
             <a href="{% host_url 'home' host 'bizadmin'%}">
               <i class="fas fa-home"></i>
@@ -152,15 +153,15 @@
             </a>
           </li>
 
-          <li class="{% block activedetails%}{%endblock%}">
-            <a data-toggle="collapse" href="#mapsExamples">
+          <li class="{% block activedetails%}{%endblock%} settingEx mb-3">
+            <a data-toggle="collapse" href="#settingExample" class="">
               <i class="fas fa-cog"></i>
               <p>
                 Settings
                 <b class="caret"></b>
               </p>
             </a>
-            <div class="collapse" id="mapsExamples">
+            <div class="collapse" id="settingExample">
               <ul class="nav">
                 <li>
                   <a href="{% host_url 'profile' host 'bizadmin'%}">
@@ -382,6 +383,9 @@
               },
             });
           });
+          settingMode = document.querySelector('.sidebar .sidebar-wrapper');
+
+          
         </script>
         {% block java %}
         {% endblock java %}

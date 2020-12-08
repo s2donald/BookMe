@@ -254,7 +254,7 @@ hr.hrwhite{
 .header-font{
     font-family: 'Paytone One', sans-serif;
     color: whitesmoke;
-    font-size:75px !important;
+    font-size:65px !important;
 }
 
 .mybg-img{
@@ -279,8 +279,8 @@ a:focus {
     transition: all 0.3s;
 }
 .bg-secondary {
-    background-color: #ffae74 !important;
-  }
+  background-color: #ffae74 !important;
+}
   
   a.bg-secondary:hover, a.bg-secondary:focus,
   button.bg-secondary:hover,
@@ -905,7 +905,7 @@ li {
 }
 
 .footer .footer-col.third .fa-stack .fa-stack-1x {
-    color: #ffffff;
+  color: #ffffff !important;
 	transition: all 0.2s ease;
 }
 

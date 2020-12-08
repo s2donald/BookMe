@@ -147,6 +147,8 @@ def get_user_image_folder(instance, filename):
 def calendar_folder(instance, filename):
     return "company/other/user_{0}/calendar/{1}/".format(instance.user.id,"calendar.ics")
 
+
+
 #This is the model for the information we need from each company that is listed on the website
 class Company(models.Model):
     STATUS_CHOICES = (
@@ -191,6 +193,7 @@ class Company(models.Model):
     darkmode = models.BooleanField(default=True)
     tz = models.CharField(choices=ALL_TIMEZONES, max_length=64, default="America/Toronto")
     showAddress = models.BooleanField(default=True)
+
     class Meta:
         ordering = ('-updated',)
         verbose_name = 'company'
@@ -319,8 +322,11 @@ def slug_generators(sender, instance, *args, **kwargs):
 pre_save.connect(slug_generators, sender=Services)
 
 class Amenities(models.Model):
-    company=models.ForeignKey(Company, on_delete=models.CASCADE)
+    company=models.ForeignKey(Company, on_delete=models.CASCADE, related_name='company_amenity')
     amenity = models.CharField(max_length=30)
+
+    def __str__(self):
+        return self.amenity
 
     class Meta:
         verbose_name = 'Amenity'

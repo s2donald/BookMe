@@ -22,7 +22,7 @@
                 </div>
             </header>
         </div>
-        <div class="col-lg-3 col-md-6">
+        <div class="col-lg-3 col-md-3">
             <div class="card">
                 <div class="card-header">
                     <h5 class="card-category">Calendar Syncing</h5>
@@ -31,7 +31,7 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-12">
-                            <ul class="nav nav-pills nav-pills-warning nav-pills-icons flex-column">
+                            <ul class="nav nav-pills nav-pills-warning nav-pills-icons flex-md-column justify-content-center">
                                 <li class="nav-item">
                                     <a href="#googleCalendar" class="nav-link" data-toggle="tab">
                                         <i class="fab fa-google"></i>
@@ -39,19 +39,19 @@
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="#outlookCalendar" class="nav-link" data-toggle="tab">
+                                    <a href="#outlookCalendar" class="nav-link mr-2" data-toggle="tab">
                                         <i class="fab fa-microsoft"></i>
                                         Outlook Calendar
                                     </a>
                                 </li>
                                 {% comment %} <li class="nav-item">
-                                    <a href="#appleCalendar" class="nav-link" data-toggle="tab">
+                                    <a href="#appleCalendar" class="nav-link mr-2" data-toggle="tab">
                                         <i class="fab fa-apple"></i>
                                         Apple Calendar
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="#mobileCalendar" class="nav-link" data-toggle="tab">
+                                    <a href="#mobileCalendar" class="nav-link mr-2" data-toggle="tab">
                                         <i class="fab fa-apple"></i>
                                         Mobile Calendar
                                     </a>
@@ -62,13 +62,13 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-9">
+        <div class="col-lg-9 col-md-8">
             <div class="tab-content">
                 <div class="tab-pane" id="googleCalendar">
                     <p>Sync all your bookings between Google Calendar and Gibele. This allows you to stay organized across multiple calendars.</p>
                     <hr>
                     <h1>Instructions</h1>
-                    <div class="col-lg-6">
+                    <div class="col-lg-9">
                         <div class="card card-timeline card-plain">
                             <div class="card-body">
                                 <div class="timeline timeline-simple">
@@ -85,13 +85,12 @@
                                                         <div class="lds-facebook d-none"><div></div><div></div><div></div></div>
                                                     </div>
                                                     <br>
-                                                    <br>
                                                     <div class="row">
                                                         <div class="col-sm-8">
-                                                            <input id="calendarOutlookURL" type="text" class="form-control" value="{% host_url 'calendarScheduleICS' request.user.id host 'bizadmin'%}" data-url="{% host_url 'calendarScheduleICS' request.user.id host 'bizadmin'%}" disabled>
+                                                            <input id="calendarOutlookURL" type="text" class="form-control" value="https:{% host_url 'calendarScheduleICS' request.user.id host 'bizadmin'%}" data-url="{% host_url 'calendarScheduleICS' request.user.id host 'bizadmin'%}" disabled>
                                                         </div>
                                                         <div class="col-sm-4">
-                                                            <button class="btn btn-primary" onclick="copyText()">Copy URL</button>
+                                                            {% comment %} <button class="btn btn-primary" onclick="copyGoogleText()">Copy URL</button> {% endcomment %}
                                                         </div>
                                                     </div>
                                                     <p class="activatatedq"></p>
@@ -105,7 +104,30 @@
                                             <div class="timeline-panel">
                                                 <div class="timeline-heading"><span class="badge badge-danger">Step 2</span></div>
                                                 <div class="timeline-body">
-                                                    <p>Go to Google Calendar and under the "Other Calendar" section add "New Calendar URL".</p>
+                                                    <p>Go to Google Calendar and under the "Other Calendar" section click "Add URL".</p>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="timeline-inverted">
+                                            <div class="timeline-badge danger">
+                                                3.
+                                            </div>
+                                            <div class="timeline-panel">
+                                                <div class="timeline-heading"><span class="badge badge-danger">Step 2</span></div>
+                                                <div class="timeline-body">
+                                                    <p>Paste the URL copied in Step 1 into the form and "Add Calendar".</p>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="timeline-inverted">
+                                            <div class="timeline-badge danger">
+                                                4.
+                                            </div>
+                                            <div class="timeline-panel">
+                                                <div class="timeline-heading"><span class="badge badge-danger">Step 2</span></div>
+                                                <div class="timeline-body">
+                                                    <p>Your calendar should now have all of your current booking information from Gibele.</p>
+                                                    <p>Any new bookings will take 24 hours to be shown in Google Calendar</p>
                                                 </div>
                                             </div>
                                         </li>
@@ -143,7 +165,7 @@
                                                             <input id="calendarGoogleURL" type="text" class="form-control" value="https:{% host_url 'calendarScheduleICS' request.user.id host 'bizadmin'%}" data-url="{% host_url 'calendarScheduleICS' request.user.id host 'bizadmin'%}" disabled>
                                                         </div>
                                                         <div class="col-sm-4">
-                                                            <button class="btn btn-primary" onclick="copyText()">Copy URL</button>
+                                                            {% comment %} <button class="btn btn-primary" onclick="copyOutlookText()">Copy URL</button> {% endcomment %}
                                                         </div>
                                                     </div>
                                                     <p class="activatatedq"></p>
@@ -172,9 +194,9 @@
     </div>
 </div>
 <script>
-    function copyText() {
-        var urldata = $(this).attr('data-url')
-        var copyText = "https:" + urldata;
+    function copyGoogleText() {
+        var copyText = document.querySelector("#calendarGoogleURL");
+        copyText.select();
         document.execCommand("copy");
     }
 </script>

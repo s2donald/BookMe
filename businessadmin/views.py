@@ -1280,7 +1280,8 @@ class addAmenityAPI(View):
         tag = data['addedAmenity']
         tag = string.capwords(tag)
         company = Company.objects.get(user=request.user)
-        Amenities.objects.create(amenity=tag, company=company)
+        company.company_amenity.create(amenity=tag)
+        company.save()
         if not tag:
             return JsonResponse({'email_error':'You must choose a subdomain or else a random one will be chosen.','email_valid':True})
         return JsonResponse({'tags':'works'})
@@ -1290,8 +1291,7 @@ class removeAmenityAPI(View):
         data=json.loads(request.body)
         tag = data['removedAmenity']
         company = Company.objects.get(user=request.user)
-        amen = Amenities.objects.get(amenity=tag, company=company)
-        amen.delete()
+        amen = company.company_amenity.get(amenity__iexact=tag).delete()
 
         if not tag:
             return JsonResponse({'email_error':'You must choose a subdomain or else a random one will be chosen.','email_valid':True})
@@ -1736,6 +1736,8 @@ class createCalendarFile(View):
     def post(self, request):
         company = Company.objects.get(user=request.user)
         cal = Calendar()
+        cal.add('X-WR-CALNAME', request.user.first_name + "'s Appointments with Gibele")
+        cal.add('X-WR-TIMEZONE', request.user.tz)
         if not company.calendarics:
             bookings = Bookings.objects.filter(company=company)
             for booking in bookings:
@@ -1748,7 +1750,6 @@ class createCalendarFile(View):
             f = open('course_schedule.ics', 'wb')
             f.write(cal.to_ical())
             f.close()
-            print(f)
             
             company.calendarics.save('course_schedule', ContentFile(cal.to_ical()), save=False)
             company.save()
@@ -1763,6 +1764,8 @@ class calendarScheduleICS(View):
         user = Account.objects.get(pk=pk)
         company = Company.objects.get(user=user)
         cal = Calendar()
+        cal.add('X-WR-CALNAME', request.user.first_name + "'s Appointments with Gibele")
+        cal.add('X-WR-TIMEZONE', request.user.tz)
         bookings = Bookings.objects.filter(company=company, is_cancelled_user=False, is_cancelled_company=False)
         for booking in bookings:
             if booking.user:

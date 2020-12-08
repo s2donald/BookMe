@@ -31,9 +31,9 @@
                     <div class="col-lg-6 mb-4">
                         <div class="card h-100 border-left-lg border-left-secondary">
                             <div class="card-header"><p>Add The Amenities You Offer</p> <small>Add some of the amenities you offer to your clients. Type up to 10 amenities in the input section then enter. (Each amenity can be up to 25 characters long)</small> </div>
-                            <div class="card-body text-center">
+                            <div class="card-body">
                                 <!-- Gallary upload button -->
-                                <form method="POST" enctype="multipart/form-data" id="galUpload">
+                                <form method="POST" enctype="multipart/form-data">
                                     {% csrf_token %}
                                     <div class="col-12">
                                         <input id="amenitiestag" type="text" size="20" value="{% for amenity in amenities %}{{ amenity.amenity }},{% endfor %}" class="tagsinput textarea form-control" data-role="tagsinput" data-color="danger">
@@ -46,9 +46,9 @@
                     <div class="col-lg-6 mb-4">
                         <div class="card h-100 border-left-lg border-left-secondary">
                             <div class="card-header"><p>Add Your Tags</p> <small>This helps expand your reach so include up to 20 key words related to your business.</small> </div>
-                            <div class="card-body text-center">
+                            <div class="card-body">
                                 <!-- Gallary upload button -->
-                                <form method="POST" enctype="multipart/form-data" id="galUpload">
+                                <form method="POST" enctype="multipart/form-data">
                                     {% csrf_token %}
                                     <input id="taggerinput" size="20" type="text" value="{% for tags in company.tags.all %}{{ tags }},{% endfor %}" class="tagsinput textarea form-control" data-role="tagsinput" data-color="danger">                                
                                 </form>
@@ -75,7 +75,6 @@
         }
             return cookieValue;
         }
-        const csrftoken = getCookie('csrftoken');
 
         $('#taggerinput').tagsinput({
             maxTags: 25,
@@ -125,7 +124,9 @@
                 headers:{
                     "X-CSRFToken": csrftoken
                 },
-                cache: false,
+                success: {
+                    
+                }
             });
         });
         $('#amenitiestag').on('itemRemoved', function(event){

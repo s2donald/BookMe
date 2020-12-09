@@ -180,9 +180,6 @@ var $full_screen_map = $('.full-screen-map');
 var $datetimepicker = $('.datetimepicker');
 var $datepicker = $('.datepicker');
 var $timepicker = $('.timepicker');
-var $ps
-var $ps1
-var $ps2
 var seq = 0,
   delays = 80,
   durations = 500;
@@ -225,17 +222,17 @@ function debounce(func, wait, immediate) {
 
     if ($('.sidebar .sidebar-wrapper').length != 0) {
 
-      var $ps1 = new PerfectScrollbar('.sidebar .sidebar-wrapper');
+      var ps1 = new PerfectScrollbar('.sidebar .sidebar-wrapper');
       
       $('.table-responsive').each(function() {
-        var $ps2 = new PerfectScrollbar($(this)[0]);
+        var ps2 = new PerfectScrollbar($(this)[0]);
       });
     }
     $html.addClass('perfect-scrollbar-on');
   } else {
     // if we are on windows OS we activate the perfectScrollbar function
     if ($('.main-panel').length != 0) {
-      var $ps = new PerfectScrollbar('.main-panel', {
+      var ps = new PerfectScrollbar('.main-panel', {
         wheelSpeed: 2,
         wheelPropagation: true,
         minScrollbarLength: 20,
@@ -245,11 +242,11 @@ function debounce(func, wait, immediate) {
 
     if ($('.sidebar .sidebar-wrapper').length != 0) {
 
-      var $ps1 = new PerfectScrollbar('.sidebar .sidebar-wrapper');
+      var ps1 = new PerfectScrollbar('.sidebar .sidebar-wrapper');
       $('.table-responsive').each(function() {
-        var $ps2 = new PerfectScrollbar($(this)[0]);
+        var ps2 = new PerfectScrollbar($(this)[0]);
       });
-      console.log($ps1.update())
+      console.log(ps1.update())
     }
     $html.addClass('perfect-scrollbar-off');
   }

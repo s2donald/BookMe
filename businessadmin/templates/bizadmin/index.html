@@ -375,10 +375,14 @@
                 if (data.darkmode){
                   $("body").removeClass("white-content");
                   $('nav').removeClass('navbar-transparent');
+                  $('table').removeClass('table-white');
+                  $('table').addClass('table-dark');
                 }
                 else {
                   $("body").addClass("white-content");
                   $('nav').addClass('navbar-transparent');
+                  $('table').addClass('table-white');
+                  $('table').removeClass('table-dark');
                 }
               },
             });

@@ -20459,7 +20459,7 @@ Copyright (c) 2015 Daniel Eden
   .white-content .has-danger .form-control, .white-content .has-danger .input-group-prepend .input-group-text {
     border-color: #ec250d; }
   .white-content .input-group-prepend .input-group-text, .white-content .input-group-append .input-group-text {
-    border-color: transparent;
+    border-color: rgba(29, 37, 59, 0.5);
     color: #1d253b; }
   .white-content .form-control {
     color: #222a42;

@@ -69,7 +69,7 @@ article, aside, figcaption, figure, footer, header, hgroup, main, nav, section {
 body {
   margin: 0;
   font-family: "Poppins", sans-serif;
-  font-size: 0.875rem;
+  font-size: 16px;
   font-weight: 400;
   line-height: 1.5;
   color: #525f7f;
@@ -78,6 +78,42 @@ body {
 
 [tabindex="-1"]:focus {
   outline: 0 !important; }
+  .lds-facebook {
+    display: inline-block;
+    position: relative;
+    width: 80px;
+    height: 80px;
+  }
+  .lds-facebook div {
+    display: inline-block;
+    position: absolute;
+    left: 8px;
+    width: 16px;
+    background: #e14eca;
+    animation: lds-facebook 1.2s cubic-bezier(0, 0.5, 0.5, 1) infinite;
+  }
+  .lds-facebook div:nth-child(1) {
+    left: 8px;
+    animation-delay: -0.24s;
+  }
+  .lds-facebook div:nth-child(2) {
+    left: 32px;
+    animation-delay: -0.12s;
+  }
+  .lds-facebook div:nth-child(3) {
+    left: 56px;
+    animation-delay: 0;
+  }
+  @keyframes lds-facebook {
+    0% {
+      top: 8px;
+      height: 64px;
+    }
+    50%, 100% {
+      top: 24px;
+      height: 32px;
+    }
+  }
 
 hr {
   box-sizing: content-box;
@@ -3204,8 +3240,10 @@ input[type="button"].btn-block {
   display: flex;
   flex-wrap: wrap;
   padding-left: 0;
-  margin-bottom: 0;
-  list-style: none; }
+  margin-bottom: 0; }
+.marg-6 {
+    margin-bottom: 70px !important;
+}
 
 .nav-link {
   display: block;
@@ -4435,10 +4473,12 @@ a.close.disabled {
   pointer-events: none; }
 
 .modal-open {
-  overflow: hidden; }
+  overflow: hidden;
+  background: rgba(0,0,0,0,0.4) !important; }
   .modal-open .modal {
     overflow-x: hidden;
-    overflow-y: auto; }
+    overflow-y: auto;
+    background: rgba(0,0,0,0.4); }
 
 .modal {
   position: fixed;
@@ -14319,8 +14359,7 @@ table.tablesorter thead tr .headerSortDown {
     min-height: 100%;
     max-height: calc(100vh - 705px);
     z-index: 4;
-    position: relative;
-    overflow: auto; }
+    position: relative; }
     .sidebar .sidebar-wrapper .dropdown .dropdown-backdrop,
     .off-canvas-sidebar .sidebar-wrapper .dropdown .dropdown-backdrop {
       display: none !important; }
@@ -14674,9 +14713,9 @@ table.tablesorter thead tr .headerSortDown {
   .off-canvas-sidebar:before {
     content: "";
     position: absolute;
-    border-left: 5px solid transparent;
+    /* border-left: 5px solid transparent;
     border-right: 5px solid transparent;
-    border-bottom: 5px solid #e14eca;
+    border-bottom: 5px solid #e14eca; */
     top: -5px;
     left: 40px;
     -webkit-transform: translate(-50%);
@@ -18509,7 +18548,8 @@ select.selectpicker {
   line-height: 22px;
   vertical-align: middle;
   cursor: text;
-  background-color: transparent !important; }
+  background-color: transparent !important;
+  border: 0px solid transparent !important; }
   .bootstrap-tagsinput input {
     border: none;
     color: #9A9A9A;
@@ -18563,7 +18603,6 @@ select.selectpicker {
  * Container style
  */
 .ps {
-  overflow: hidden !important;
   overflow-anchor: none;
   -ms-overflow-style: none;
   touch-action: auto;
@@ -18589,6 +18628,7 @@ select.selectpicker {
   transition: background-color .2s linear, opacity .2s linear;
   -webkit-transition: background-color .2s linear, opacity .2s linear;
   width: 15px;
+  top: 9999px;
   /* there must be 'right' or 'left' for ps__rail-y */
   right: 0;
   /* please don't change 'position' */
@@ -20388,7 +20428,7 @@ Copyright (c) 2015 Daniel Eden
     .white-content .sidebar p {
       color: rgba(255, 255, 255, 0.8); }
   .white-content .main-panel {
-    background: #f5f6fa; }
+    background: rgba(146, 146, 146, 0.24); }
   .white-content h1, .white-content h2, .white-content h3, .white-content h4, .white-content h5, .white-content h6, .white-content p, .white-content ol li, .white-content ul li, .white-content pre {
     color: #1d253b; }
   .white-content .font-icon-detail i {
@@ -20409,6 +20449,9 @@ Copyright (c) 2015 Daniel Eden
     color: rgba(34, 42, 66, 0.4);
     opacity: 1;
     filter: alpha(opacity=100); }
+  .white-content .fc-theme-standard .fc-list-day-cushion {
+      background-color: rgba(146, 146, 146, 0.24) !important;
+  }
   .white-content .form-control:-ms-input-placeholder {
     color: rgba(34, 42, 66, 0.4);
     opacity: 1;
@@ -20416,7 +20459,7 @@ Copyright (c) 2015 Daniel Eden
   .white-content .has-danger .form-control, .white-content .has-danger .input-group-prepend .input-group-text {
     border-color: #ec250d; }
   .white-content .input-group-prepend .input-group-text, .white-content .input-group-append .input-group-text {
-    border-color: transparent;
+    border-color: rgba(29, 37, 59, 0.5);
     color: #1d253b; }
   .white-content .form-control {
     color: #222a42;
@@ -21410,3 +21453,4 @@ Copyright (c) 2015 Daniel Eden
     padding-right: 0;
     float: none;
     text-align: center; } }
+

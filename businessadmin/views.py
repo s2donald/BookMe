@@ -1193,6 +1193,26 @@ def businessAmenitiesView(request):
     return render(request,'bizadmin/businesspage/amenities.html',{'company':company, 'amenities':amenities})
 
 @login_required
+def businessBreaksView(request):
+    company = Company.objects.get(user=request.user)
+    user=request.user
+    if user.is_business and not user.on_board:
+        return redirect(reverse('completeprofile', host='bizadmin'))
+    elif not user.is_business:
+        loginViews(request)
+    return render(request, 'bizadmin/businesspage/hours/breaks-time.html', {'company':company})
+
+@login_required
+def businessTimeOffView(request):
+    company = Company.objects.get(user=request.user)
+    user=request.user
+    if user.is_business and not user.on_board:
+        return redirect(reverse('completeprofile', host='bizadmin'))
+    elif not user.is_business:
+        loginViews(request)
+    return render(request, 'bizadmin/businesspage/hours/timeoff.html', {'company':company})
+
+@login_required
 def businessHoursView(request):
     company = Company.objects.get(user=request.user)
     sunday = OpeningHours.objects.get(company=company, weekday=0)
@@ -1208,6 +1228,7 @@ def businessHoursView(request):
     elif not user.is_business:
         loginViews(request)
     return render(request, 'bizadmin/businesspage/hours.html', {'company':company,'sunday':sunday, 'monday':monday, 'tuesday':tuesday,'wednesday':wednesday, 'thursday':thursday, 'friday':friday, 'saturday':saturday})
+
 
 class addTagAPI(View):
     def post(self, request):

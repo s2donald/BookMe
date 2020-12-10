@@ -3239,11 +3239,35 @@ input[type="button"].btn-block {
 .nav {
   display: flex;
   flex-wrap: wrap;
+  list-style:none;
   padding-left: 0;
   margin-bottom: 0; }
 .marg-6 {
     margin-bottom: 70px !important;
 }
+
+.nav-borders {
+    overflow: auto;
+    white-space:nowrap;
+    flex-wrap: nowrap !important;
+}
+
+ .nav-borders a {
+    display: inline-block;
+    text-align: center;
+    padding: 14px;
+    padding-bottom: 10px;
+    text-decoration: none;
+  }
+  
+  .nav-borders a:hover {
+    /* background-color: #777; */
+    border-bottom: 1px solid #e14eca;
+  }
+  .nav-borders a.activate {
+    /* background-color: #777; */
+    border-bottom: 3px solid #e14eca;
+  }
 
 .nav-link {
   display: block;
@@ -4201,7 +4225,7 @@ input[type="button"].btn-block {
 .list-group-item {
   position: relative;
   display: block;
-  padding: 1rem 1rem;
+  padding: 0.5rem 0.5rem;
   margin-bottom: -0.0625rem;
   background-color: #ffffff;
   border: 0.0625rem solid #e9ecef; }
@@ -14438,7 +14462,8 @@ table.tablesorter thead tr .headerSortDown {
   .sidebar .nav,
   .off-canvas-sidebar .nav {
     margin-top: 20px;
-    display: block; }
+    display: block;
+    list-style: none; }
     .sidebar .nav .caret,
     .off-canvas-sidebar .nav .caret {
       top: 14px;
@@ -18603,6 +18628,7 @@ select.selectpicker {
  * Container style
  */
 .ps {
+  overflow: hidden !important;
   overflow-anchor: none;
   -ms-overflow-style: none;
   touch-action: auto;

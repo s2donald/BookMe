@@ -20,8 +20,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/smartwizard@5/dist/css/smart_wizard_all.min.css" rel="stylesheet" type="text/css" />
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    {% comment %} <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous"> {% endcomment %}
     <link rel="stylesheet" href="{% static "css/dashboardstyles.css" %}">
+    <link rel="stylesheet" href="{% static "css/dashboard.css" %}">
     <link rel="stylesheet" href="{% static "css/vendor/dropzone.min.css" %}">
     <link rel="stylesheet" href="{% static 'css/vendor/jquery-cropper.min.css'%}">
     <link rel="stylesheet" href="{% static 'css/vendor/bootstrap-tagsinput.css' %}">
@@ -81,7 +82,7 @@
                 <li class=''>
                   <a href="{% host_url 'hours' host 'bizadmin'%}">
                     <span class="sidebar-mini-icon"><i class="fas fa-clock"></i></span>
-                    <span class="sidebar-normal"> Business Hours</span>
+                    <span class="sidebar-normal"> Working Hours</span>
                   </a>
                 </li>
                 <li>

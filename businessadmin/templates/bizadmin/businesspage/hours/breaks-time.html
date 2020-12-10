@@ -1,0 +1,129 @@
+{% extends 'bizadmin/index.html' %}
+{% load static %}
+{% load hosts %}
+{% block activecompinfo %}active{%endblock%}
+{% block businessadmin %}
+<!-- Main page content-->
+    <div class="content">
+        <div class="row">
+            <div class="col-md-10 ml-auto mr-auto">
+                <header class="page-header page-header-compact page-header-light mb-4">
+                    <div class="container">
+                        <div class="page-header-content">
+                            <div class="row align-items-center justify-content-between pt-3">
+                                <div class="col-auto mb-3">
+                                    <h1 class="page-header-title">
+                                        Breaks in Schedule
+                                    </h1>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </header>
+                <!-- Account page navigation-->
+                <nav class="nav nav-borders">
+                    <a class="nav-link ml-0" href="{% host_url 'information' host 'bizadmin'%}">Company Info</a>
+                    <a class="nav-link" href="{% host_url 'hours' host 'bizadmin'%}">Working Hours</a>
+                    {% comment %} <a class="nav-link activate" href="{% host_url 'breaks_time' host 'bizadmin'%}">Breaks</a>
+                    <a class="nav-link" href="{% host_url 'timeoff_time' host 'bizadmin'%}">Time Off</a> {% endcomment %}
+                    <a class="nav-link" href="{% host_url 'service_detail' host 'bizadmin' %}">Services</a>
+                    <a class="nav-link" href="{% host_url 'client_list' host 'bizadmin' %}">Clients</a>
+                    {% comment %} <a class="nav-link" href="#">Staff Members</a> {% endcomment %}
+                </nav>
+                <hr class="mt-0 mb-4">
+                <div class="col-xl-8">
+                    <div class="card">
+                        <div class="card-header">Take a Break</div>
+                        <div class="card-body">
+                            <div class="justify-content-center my-auto align-items-center">
+                                {% for day in company.hours.all %}
+                                    <ul class="list-inline">
+
+                                        <li class="list-inline-item" style="width:90px">
+                                            <strong for="" class="text-danger">{{ day.get_weekday_display }}</strong>
+                                        </li>
+                                        <span class="list-inline-item"><button id="{{ day.weekday }}" class="btn btn-sm btn-warning {% if day.is_closed %}disabled{% endif %}"> {% if day.is_closed %}Closed{% else %}Add break{% endif %}</button></span>
+                                        {% if not day.is_closed %}
+                                            <span class="list-inline-item">
+                                                <ul class="list-group">
+                                                    <li class="list-group-item">12:15P.M. to 11:P.M.</li>
+                                                    <li class="list-group-item">12:15P.M. to 11:P.M.</li>
+                                                </ul>
+                                            </span>
+                                        {% endif %}
+                                    </ul>
+                                {% endfor %}
+                                
+                                {% comment %} <ul class="list-inline">
+                                    <li class="list-inline-item">
+                                        <strong for="" class="text-danger">Monday</strong>
+                                    </li>
+                                    <span class="list-inline-item"><button class="btn btn-sm btn-warning">Add break</button></span>
+                                    <span class="list-inline-item">
+                                        <ul class="list-group">
+                                            <li class="list-group-item">Break #1</li>
+                                            <li class="list-group-item">Break #2</li>
+                                        </ul>
+                                    </span>
+                                </ul> {% endcomment %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+    $('.datetimepicker').datetimepicker({
+        format: 'LT',
+        icons: {
+        time: "fas fa-clock",
+        up: "fa fa-chevron-up",
+        down: "fa fa-chevron-down",
+        previous: 'tim-icons icon-minimal-left',
+        next: 'tim-icons icon-minimal-right',
+        today: 'fa fa-screenshot',
+        clear: 'fa fa-trash',
+        close: 'fa fa-remove'
+        }
+    });
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    {% comment %} const csrftoken = getCookie('csrftoken'); {% endcomment %}
+    $('#subhour').submit(function(e){
+        e.preventDefault();
+        $.ajax({
+            type:'POST',
+            url: "{% host_url 'businessHourSave' host 'bizadmin' %}",
+            data: $('#subhour').serialize(),
+            headers:{
+                "X-CSRFToken": csrftoken
+            },
+            success:function(data){
+                Swal.fire({
+                    title:'Your business hours have been saved',
+                    icon: 'success',
+                    customClass:{
+                        confirmButton: 'btn btn-primary',
+                        cancelButton: 'btn btn-danger',
+                    },
+                    buttonsStyling: false,
+                });
+            }
+        });
+    });
+    </script>
+{% endblock %}

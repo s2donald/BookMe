@@ -247,6 +247,8 @@ class Clients(models.Model):
     postal = models.CharField(max_length=35,null=True, blank=True)
     province = models.CharField(max_length=35,null=True, blank=True)
     city = models.CharField(max_length=35,null=True, blank=True)
+    class Meta:
+        ordering = ('first_name',)
 
     def __str__(self):
         return self.first_name + ' ' + self.last_name

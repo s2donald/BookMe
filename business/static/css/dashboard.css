@@ -1,0 +1,17 @@
+
+.list-group-item {
+    /* Changed from padding: 1rem 1rem */
+    padding: 0.5rem 0.5rem;
+    /* Changed from background-color: #ffffff */
+    background-color: transparent;
+    border: 1px solid #2b3553;
+    ;
+}
+
+.white-content .list-group-item {
+    /* Changed from padding: 1rem 1rem */
+    padding: 0.5rem 0.5rem;
+    /* Changed from background-color: #ffffff */
+    background-color: #ffffff;
+    border: 0.0625rem solid #e9ecef;
+}

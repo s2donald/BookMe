@@ -13,7 +13,7 @@
                             <div class="row align-items-center justify-content-between pt-3">
                                 <div class="col-auto mb-3">
                                     <h1 class="page-header-title">
-                                        Business Page - Shop Hours
+                                        Working Hours
                                     </h1>
                                 </div>
                             </div>
@@ -23,14 +23,17 @@
                 <!-- Account page navigation-->
                 <nav class="nav nav-borders">
                     <a class="nav-link ml-0" href="{% host_url 'information' host 'bizadmin'%}">Company Info</a>
-                    <a class="nav-link activate" href="{% host_url 'hours' host 'bizadmin'%}">Business Hours</a>
+                    <a class="nav-link activate" href="{% host_url 'hours' host 'bizadmin'%}">Working Hours</a>
+                    {% comment %} <a class="nav-link" href="{% host_url 'breaks_time' host 'bizadmin'%}">Breaks</a>
+                    <a class="nav-link" href="{% host_url 'timeoff_time' host 'bizadmin'%}">Time Off</a> {% endcomment %}
                     <a class="nav-link" href="{% host_url 'service_detail' host 'bizadmin' %}">Services</a>
                     <a class="nav-link" href="{% host_url 'client_list' host 'bizadmin' %}">Clients</a>
                     {% comment %} <a class="nav-link" href="#">Staff Members</a> {% endcomment %}
                 </nav>
-                <hr class="mt-0 mb-4" />
+                <hr class="mt-0 mb-4">
                 <form method="POST" id="subhour">
                 {% csrf_token %}
+                <div class="col-xl-9 col-lg-10">
                 <div class="card text-center">
                     <h2 class="text-center card-header">Business Hours</h2>
                 <p class="text-center text-subtitle">Update your business hours</p>
@@ -40,24 +43,24 @@
                             <strong for="" class="text-danger">Sunday Business Hours</strong>
                             <input type="checkbox" name="sunOpen" {% if sunday.is_closed %}{% else %}checked{% endif %} class="bootstrap-switch bootstrap-switch-red my-0" id="sunOpen" data-on-label="OPEN" data-off-label=""/>
                         </div>
-                            <div class="row justify-content-center" id="sundaytimes">
-                                <div class="col-sm-6 col-lg-4 col-lg-2">
+                        <div class="row justify-content-center" id="sundaytimes">
+                            <div class="col-sm-6 col-lg-4 col-lg-2">
                                 <div class="input-group justify-content-center mb-3">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text bg-transparent text-white">Open Time</span>
                                     </div>
                                     <input type="text" class="datetimepicker form-control text-center" name="sunOpenHour" id="sunOpenHour" value="{{ sunday.from_hour|time:"H:i" }}"/>
                                 </div>
-                                </div>
-                                <div class="col-sm-6 col-lg-4 col-lg-2">
+                            </div>
+                            <div class="col-sm-6 col-lg-4 col-lg-2">
                                 <div class="input-group justify-content-center mb-3">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text bg-transparent text-white">Close Time</span>
                                     </div>
                                     <input type="text" class="datetimepicker form-control text-center" name="sunCloseHour" id="sunCloseHour" value="{{ sunday.to_hour|time:"H:i" }}"/>
                                 </div>
-                                </div>
                             </div>
+                        </div>
                     </div>
                     <hr>
                     <div class="col-md-12 mt-1">
@@ -206,6 +209,7 @@
                     </div>
 
                     <button class="btn btn-primary text-center mb-3" type="submit">Save Hours</button>
+                </div>
                 </div>
                 </div>
                 </form>

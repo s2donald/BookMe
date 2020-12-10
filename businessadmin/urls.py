@@ -4,7 +4,6 @@ from django.urls import re_path
 from . import views
 app_name = 'businessadmin'
 urlpatterns = [
-    re_path(r'bpage/hours/$', views.businessHoursView, name='hours'),
     re_path(r'bpage/photo/$', views.businessPhotoView, name='photos'),
     re_path(r'bpage/amentities/$', views.businessAmenitiesView, name='amenities'),
 
@@ -27,6 +26,10 @@ urlpatterns = [
     re_path(r'detail/info/$', views.compinfoViews, name='information'),
     re_path(r'detail/service/$', views.servicesDetailView, name='service_detail'),
     re_path(r'detail/clients/$', views.clientListView, name='client_list'),
+    re_path(r'detail/hours/$', views.businessHoursView, name='hours'),
+    re_path(r'detail/breaks/$', views.businessBreaksView, name='breaks_time'),
+    re_path(r'detail/timeoff/$', views.businessTimeOffView, name='timeoff_time'),
+
 
     re_path(r'creating/$', views.createserviceViews, name='service_create'),
     re_path(r'delete/(?P<pk>\d+)/$', views.deleteserviceViews, name='service_delete'),

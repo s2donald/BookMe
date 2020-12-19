@@ -2,6 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from .forms import BusinessRegistrationForm, AddHoursForm, UpdateCompanyForm, AddClientForm, AddNotesForm, CreateSmallBizForm, AddBookingForm, BusinessName, AddServiceCategoryForm, AddServiceToCategory
 from django.contrib.auth.decorators import login_required
 from django import forms
+from .models import StaffMember, Breaks
 from business.models import Company, SubCategory, OpeningHours, Services, Gallary, Amenities, Clients, CompanyReq, ServiceCategories
 from account.models import Account
 from account.forms import UpdatePersonalForm
@@ -1213,6 +1214,18 @@ def businessTimeOffView(request):
     return render(request, 'bizadmin/businesspage/hours/timeoff.html', {'company':company})
 
 @login_required
+def staffMemberView(request):
+    company = Company.objects.get(user=request.user)
+    user=request.user
+    if user.is_business and not user.on_board:
+        return redirect(reverse('completeprofile', host='bizadmin'))
+    elif not user.is_business:
+        loginViews(request)
+    print(company.staffmembers.all())
+    return render(request, 'bizadmin/companydetail/staff/staffmembers.html', {'company':company})
+
+
+@login_required
 def businessHoursView(request):
     company = Company.objects.get(user=request.user)
     sunday = OpeningHours.objects.get(company=company, weekday=0)
@@ -1724,7 +1737,7 @@ class load_service(View):
         service_id = request.GET.get('service_id')
         services = Services.objects.get(pk=service_id)
         name = services.name
-        someStr = 'Service: ' + name
+        someStr = name + '\n' + str(services.price)
         return JsonResponse({'servName':someStr})
 
 
@@ -1804,3 +1817,40 @@ class calendarScheduleICS(View):
         f.write(cal.to_ical())
         f = open('course_schedule.ics', 'rb')
         return HttpResponse(f)
+
+class staffServicesViews(View):
+    def get(self, request):
+        staff_id = request.GET.get('staff_id')
+        types = request.GET.get('type')
+        staff = StaffMember.objects.get(id=int(staff_id))
+        company = staff.company
+        if types == 'services':
+            html = render_to_string('bizadmin/companydetail/staff/partial/partial_staff_services.html', {'staff':staff,'company':company}, request)
+        elif types == 'detail':
+            html = render_to_string('bizadmin/companydetail/staff/partial/partial_detail.html', {'staff':staff,'company':company}, request)
+        elif types == 'working':
+            html = render_to_string('bizadmin/companydetail/staff/partial/working_hours.html', {'staff':staff,'company':company}, request)
+
+        return JsonResponse({'html_content':html})
+
+class addstaffServicesViews(View):
+    def post(self, request):
+        staff_id = request.POST.get('staff_id')
+        serv_id = request.POST.get('serv_id')
+        staff = StaffMember.objects.get(id=int(staff_id))
+        service = Services.objects.get(id=serv_id)
+        staff.services.add(service)
+        text_service_header = 'All services that ' + str(staff.first_name) + ' ' + str(staff.last_name) + ' can provide(' + str(staff.services.count()) + '):'
+        innerbtn = ' <i class="fas fa-check-circle "></i> ' + service.name
+        return JsonResponse({'innerbtn':innerbtn, 'text_service_header':text_service_header})
+
+class removestaffServicesViews(View):
+    def post(self, request):
+        staff_id = request.POST.get('staff_id')
+        serv_id = request.POST.get('serv_id')
+        staff = StaffMember.objects.get(id=int(staff_id))
+        service = Services.objects.get(id=int(serv_id))
+        staff.services.remove(service)
+        text_service_header = 'All services that ' + str(staff.first_name) + ' ' + str(staff.last_name) + ' can provide(' + str(staff.services.count()) + '):'
+        innerbtn = ' <i class="fas fa-plus-circle "></i> ' + service.name
+        return JsonResponse({'innerbtn':innerbtn, 'text_service_header':text_service_header})

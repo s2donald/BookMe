@@ -3,6 +3,7 @@ from django.urls import reverse
 from taggit.managers import TaggableManager
 from django.core.validators import RegexValidator
 from account.models import Account, MyAccountManager
+# from businessadmin.models import StaffMember
 from django.utils.text import slugify
 from django.contrib.auth.models import AbstractBaseUser
 from django.utils import timezone
@@ -11,6 +12,7 @@ from gibele.utils import unique_slug_generator, unique_slug_generator_services
 import geocoder
 import pytz
 ALL_TIMEZONES = sorted((item, item) for item in pytz.all_timezones)
+
 # This category holds our different types of services such as
 #   automotive services, health and wellness services, home services, etc
 #   These should not be modified by the user
@@ -190,7 +192,7 @@ class Company(models.Model):
     website_link = models.URLField(max_length=200, blank=True, null=True)
     tags = TaggableManager(blank=True)
     location = models.PointField(blank=True, null=True)
-    darkmode = models.BooleanField(default=True)
+    darkmode = models.BooleanField(default=False)
     tz = models.CharField(choices=ALL_TIMEZONES, max_length=64, default="America/Toronto")
     showAddress = models.BooleanField(default=True)
 
@@ -301,6 +303,7 @@ class Services(models.Model):
     paddingtime_minute = models.IntegerField(choices=minute_choices,default=0)
     padding = models.CharField(max_length=20,choices=beforeafter, default='none')
     available = models.BooleanField(default=True)
+
     class Meta:
         ordering = ('name',)
         verbose_name = 'service'

@@ -14,7 +14,7 @@ class SubCategoryAdmin(admin.ModelAdmin):
 
 @admin.register(Services)
 class ServicesAdmin(admin.ModelAdmin):
-    list_display = ['name', 'slug', 'price', 'price_type', 'duration_hour', 'duration_minute']
+    list_display = ['business','name', 'slug', 'price', 'price_type', 'duration_hour', 'duration_minute']
     prepopulated_fields = {'slug':('name',)}
 
 class GallaryInline(admin.TabularInline):
@@ -50,6 +50,7 @@ class CompanyAdmin(admin.ModelAdmin):
     list_display = ['user','business_name','slug','available','created','updated']
     exclude = ['location']
     list_filter = ['available', 'created', 'updated']
+    search_fields = ('user__first_name','business_name','user__email')
     list_editable = ['available']
     inlines = [ StaffMemberInline, ClientsInline, CompanyReqInline, GallaryInline, OpeningHoursInline, AmenitiesInline, ServiceCategories ]
 

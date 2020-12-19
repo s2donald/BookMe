@@ -12,6 +12,7 @@ urlpatterns = [
     re_path(r'^requestclient/$', views.requestSpot.as_view(), name='requestSpotAsClient'),
     re_path(r'^checkIfClient/$', views.checkIfClientView.as_view(), name='checkIfClient'),
     re_path(r'^createAcct/$', views.createAccountView.as_view(), name='createAccount'),
+    path('<slug:slug>/',views.bookingStaffUrl,name='company_detail'),
     path('social-auth/',include('social_django.urls',namespace='social'), name='fb'),
     re_path(r'^service(?P<pk>\d+)/$', views.bookingServiceView, name='bookingserviceurls'),
     re_path(r'^$', views.bookingurl, name='bookingurls'),

@@ -152,7 +152,7 @@
                 var asprat = aspect
                 var calendarEl = document.getElementById('calendar');
                 var calendar = new FullCalendar.Calendar(calendarEl, {
-                    
+                    eventDisplay: 'list-item',
                     buttonText: {
                         listWeek: 'Week',
                         listDay: 'Day',
@@ -160,7 +160,7 @@
                     },
                     selectable: true,
                 aspectRatio: asprat,
-                dayMaxEvents: 3,
+                dayMaxEvents: 10,
 
                 events: function(start, successCallback, failureCallback) {
                     
@@ -223,31 +223,37 @@
         
         <div class="content">
         <div class="row">
-        <div class="col-md-12 ml-auto mr-auto">
-            
-            <div class="card mx-auto">
-            <div class="card-header">Schedule Manager</div>
-            <div class="card-body">
-                <button type="button" id="addbooking" class="btn btn-primary" data-toggle="modal" data-target="#add-booking" data-backdrop="static" data-keyboard="false" data-url="{% host_url 'add_booking' host 'bizadmin' %}">
-                Add A Booking
-            </button>
+            <div class="col-md-12 ml-auto mr-auto">
+                
+                <div class="card mx-auto">
+                    <div class="card-header">Schedule Manager</div>
+                    <div class="card-body">
+                        <button type="button" id="addbooking" class="btn btn-primary" data-toggle="modal" data-target="#add-booking" data-backdrop="static" data-keyboard="false" data-url="{% host_url 'add_booking' host 'bizadmin' %}">
+                            Add A Booking
+                        </button>
+                    </div>
+
+                    <div class="card-body">
+                        <p>If you want to reschedule or delete a booking, go into the Agenda below, navigate to the date of the booking and click on the booking. </p>
+                    </div>
+                </div>
             </div>
 
-            <div class="card-body">
-                <p>If you want to reschedule or delete a booking, go into the Agenda below, navigate to the date of the booking and click on the booking. </p>
+            <div class="col-md-12 ml-auto mr-auto">
+                <div class="card card-calendar">
+                    <div class="card-header">Viewing Stephen's Calendar</div>
+                        <div class="card-body">
+                            Staff:
+                            <nav class="nav nav-borders mt-0">
+                                {% for staff in company.staffmembers.all %}
+                                    <a class="nav-link my-0 py-0 {% if forloop.counter == 1 %}activate{% endif %}" href="{% host_url 'profile' host 'bizadmin'%}">{{ staff.first_name }} {{ staff.last_name}}</a>
+                                {% endfor %}
+                            </nav>
+                            <div id="calendar"></div>
+                        </div>
+                    </div>
+                </div>
             </div>
-                
-            </div>
-        </div>
-          <div class="col-md-12 ml-auto mr-auto">
-            <div class="card card-calendar">
-            <div class="card-header"></div>
-              <div class="card-body">
-                <div id="calendar"></div>
-              </div>
-            </div>
-          </div>
-        </div>
         <div class="modal fade" id="add-booking" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content card">

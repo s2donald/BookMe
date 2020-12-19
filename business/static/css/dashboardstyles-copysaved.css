@@ -427,19 +427,6 @@ small,
   font-size: 80%;
   font-weight: 400; }
 
-  .avatar {
-    display: inline-block;
-    position: relative;
-    width: 3rem;
-    height: 3rem;
-    text-align: center;
-    border: #dee2e6;
-    border-radius: 50%;
-    background: #fff;
-    box-shadow: 0 0 1rem rgba(0, 0, 0, 0.15);
-    line-height: 3rem;
-  }
-
 mark,
 .mark {
   padding: 0.2em;
@@ -8321,10 +8308,10 @@ button.bg-darker:focus {
 .text-white {
   color: #ffffff !important; }
 
-.text-warning {
+.text-primary {
   color: #e14eca !important; }
 
-a.text-warning:hover, a.text-warning:focus {
+a.text-primary:hover, a.text-primary:focus {
   color: #c221a9 !important; }
 
 .text-secondary {
@@ -8345,10 +8332,10 @@ a.text-success:hover, a.text-success:focus {
 a.text-info:hover, a.text-info:focus {
   color: #0666c2 !important; }
 
-.text-primary {
+.text-warning {
   color: #ff8d72 !important; }
 
-a.text-primary:hover, a.text-primary:focus {
+a.text-warning:hover, a.text-warning:focus {
   color: #ff4f26 !important; }
 
 .text-danger {
@@ -13363,7 +13350,7 @@ textarea.form-control {
     background-color: #ffffff;
     color: #e14eca; }
 
-.nav-pills.nav-pills-warning .nav-item .nav-link.active, .nav-pills.nav-pills-warning .nav-item .nav-link.active:focus, .nav-pills.nav-pills-warning .nav-item .nav-link.active:hover {
+.nav-pills.nav-pills-primary .nav-item .nav-link.active, .nav-pills.nav-pills-primary .nav-item .nav-link.active:focus, .nav-pills.nav-pills-primary .nav-item .nav-link.active:hover {
   background: #e14eca;
   background-image: linear-gradient(to bottom left, #e14eca, #ba54f5, #e14eca);
   background-size: 210% 210%;
@@ -13381,7 +13368,7 @@ textarea.form-control {
   background-size: 210% 210%;
   background-position: top right; }
 
-.nav-pills.nav-pills-primary .nav-item .nav-link.active, .nav-pills.nav-pills-primary .nav-item .nav-link.active:focus, .nav-pills.nav-pills-primary .nav-item .nav-link.active:hover {
+.nav-pills.nav-pills-warning .nav-item .nav-link.active, .nav-pills.nav-pills-warning .nav-item .nav-link.active:focus, .nav-pills.nav-pills-warning .nav-item .nav-link.active:hover {
   background: #ff8d72;
   background-image: linear-gradient(to bottom left, #ff8d72, #ff6491, #ff8d72);
   background-size: 210% 210%;
@@ -14779,7 +14766,7 @@ table.tablesorter thead tr .headerSortDown {
   float: right;
   width: 100%;
   min-height: 100vh;
-  border-top: 2px solid #ff8d72;
+  border-top: 2px solid #e14eca;
   background: linear-gradient(#1e1e2f, #1e1e24);
   transition: all 0.5s cubic-bezier(0.685, 0.0473, 0.346, 1); }
   .main-panel[data="blue"] {
@@ -17048,10 +17035,6 @@ from https://feathericons.com/ and built with IcoMoon
 Lots taken from Flatly (MIT): https://bootswatch.com/4/flatly/bootstrap.css
 */
 /* reset */
-.fc .fc-button-primary {
-    border: none;
-    margin: 1px; 
-}
 .fc-button {
   border-width: 2px;
   font-weight: 400;
@@ -17069,25 +17052,22 @@ Lots taken from Flatly (MIT): https://bootswatch.com/4/flatly/bootstrap.css
   .fc-button::-moz-focus-inner {
     border: 0; }
   .fc-button, .fc-button.btn-warning {
-    background: #ff8d72;
-    background-image: linear-gradient(to bottom left, #ff8d72, #ff6491, #ff8d72);
+    background: #e14eca;
+    background-image: linear-gradient(to bottom left, #e14eca, #ba54f5, #e14eca);
     background-size: 210% 210%;
     background-position: top right;
-    background-color: #ff8d72;
-    margin: 1px !important;
-    border: #ff8d72 !important;
+    background-color: #e14eca;
     transition: all 0.15s ease;
-    border: 0px solid #ffffff;
     box-shadow: none;
     color: #ffffff; }
     .fc-button.animation-on-hover:hover, .fc-button.btn-warning.animation-on-hover:hover {
       background-position: bottom left;
       transition: 0.3s ease-in-out; }
     .fc-button:hover, .fc-button:focus, .fc-button:active, .fc-button.active, .fc-button:active:focus, .fc-button:active:hover, .fc-button.active:focus, .fc-button.active:hover, .fc-button.btn-warning:hover, .fc-button.btn-warning:focus, .fc-button.btn-warning:active, .fc-button.btn-warning.active, .fc-button.btn-warning:active:focus, .fc-button.btn-warning:active:hover, .fc-button.btn-warning.active:focus, .fc-button.btn-warning.active:hover {
-      background-color: #ff6491 !important;
-      background-image: linear-gradient(to bottom left, #ff8d72, #ff6491, #ff8d72) !important;
-      background-image: -moz-linear-gradient(to bottom left, #ff8d72, #ff6491, #ff8d72) !important;
-      color: black;
+      background-color: #ba54f5 !important;
+      background-image: linear-gradient(to bottom left, #e14eca, #ba54f5, #e14eca) !important;
+      background-image: -moz-linear-gradient(to bottom left, #e14eca, #ba54f5, #e14eca) !important;
+      color: #ffffff;
       box-shadow: none; }
     .fc-button:active, .fc-button.btn-warning:active {
       box-shadow: none !important;
@@ -20479,7 +20459,7 @@ Copyright (c) 2015 Daniel Eden
     .white-content .sidebar p {
       color: rgba(255, 255, 255, 0.8); }
   .white-content .main-panel {
-    background: rgba(146, 146, 146, 0.1); }
+    background: rgba(146, 146, 146, 0.24); }
   .white-content h1, .white-content h2, .white-content h3, .white-content h4, .white-content h5, .white-content h6, .white-content p, .white-content ol li, .white-content ul li, .white-content pre {
     color: #1d253b; }
   .white-content .font-icon-detail i {

@@ -1,0 +1,32 @@
+<div class="card-header">What hours do you work?</div>
+    <div class="card-body">
+        <div class="justify-content-center my-auto align-items-center">
+            <form method="POST" >
+                {% csrf_token %}
+            </form>
+            {% for day in company.hours.all %}
+                <ul class="list-inline">
+
+                    <li class="list-inline-item" style="width:90px">
+                        <strong for="" class="text-danger">{{ day.get_weekday_display }}</strong>
+                    </li>
+                    <span class="list-inline-item"><button id="{{ day.weekday }}" data-url="" class="btn btn-sm btn-warning {% if day.is_closed %}disabled{% endif %}"> {% if day.is_closed %}Closed{% else %}Add break{% endif %}</button></span>
+                    {% if not day.is_closed %}
+                        <span class="list-inline-item">
+                            <ul class="list-group">
+                                <li class="list-group-item"> 
+                                    <div class="row m-0 align-items-center">
+                                        <input type="text" class="datetimepicker form-control text-center mr-1" style="width:90px" value="12:00"> to <input type="text" style="width:90px" class="datetimepicker form-control text-center ml-1" value="13:00"> 
+                                        <button class="btn btn-icon btn-danger">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </li>
+                            </ul>
+                        </span>
+                    {% endif %}
+                </ul>
+            {% endfor %}
+        </div>
+    </div>
+</div>

@@ -52,4 +52,16 @@ def incancellationperiod(comp_id, booking_id):
         return False
     return True
 
-    
+# @register.filter(name='filtered days')
+# def in_category(company, category):
+#     return company..filter(category=category)
+
+@register.filter(name='staff_services_offered')
+def staff_services_offered(comp_services, staff_services):
+    print(comp_services)
+    print(staff_services)
+    if comp_services in staff_services:
+        return True
+    else:
+        return False
+    return True

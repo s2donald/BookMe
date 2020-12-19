@@ -1,5 +1,5 @@
 from django.conf.urls import url, include
-from django.urls import re_path
+from django.urls import re_path, path
 
 from . import views
 app_name = 'businessadmin'
@@ -25,7 +25,11 @@ urlpatterns = [
 
     re_path(r'detail/info/$', views.compinfoViews, name='information'),
     re_path(r'detail/service/$', views.servicesDetailView, name='service_detail'),
+    re_path(r'get/getstaffservice/', views.staffServicesViews.as_view(), name='getstaffservice'),
+    re_path(r'post/addstaffservice/', views.addstaffServicesViews.as_view(), name='addstaffservice'),
+    re_path(r'post/removestaffservice/', views.removestaffServicesViews.as_view(), name='removestaffservice'),
     re_path(r'detail/clients/$', views.clientListView, name='client_list'),
+    re_path(r'detail/staff/$', views.staffMemberView, name='staffmemb'),
     re_path(r'detail/hours/$', views.businessHoursView, name='hours'),
     re_path(r'detail/breaks/$', views.businessBreaksView, name='breaks_time'),
     re_path(r'detail/timeoff/$', views.businessTimeOffView, name='timeoff_time'),

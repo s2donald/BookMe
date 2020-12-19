@@ -65,7 +65,7 @@ def bookingurl(request):
         galPhotos = paginator.page(1)
     except EmptyPage:
         galPhotos = paginator.page(paginator.num_pages)
-    return render(request, 'bookingpage/homes.html', {'returnClient':returnClient,'user': user, 'page':page,'photos':galPhotos,'sun_hour':sun_hour,'mon_hour':mon_hour,'tues_hour':tues_hour,'wed_hour':wed_hour,'thur_hour':thur_hour,'fri_hour':fri_hour,'sat_hour':sat_hour,'subcategories':subcategories,'amenities':amenities,'address':address,'company':company,'category':category,'categories':categories, 'services':services, 'reviews':reviews})
+    return render(request, 'bookingpage/onestaff/bookingpage/homes.html', {'returnClient':returnClient,'user': user, 'page':page,'photos':galPhotos,'sun_hour':sun_hour,'mon_hour':mon_hour,'tues_hour':tues_hour,'wed_hour':wed_hour,'thur_hour':thur_hour,'fri_hour':fri_hour,'sat_hour':sat_hour,'subcategories':subcategories,'amenities':amenities,'address':address,'company':company,'category':category,'categories':categories, 'services':services, 'reviews':reviews})
 
 @xframe_options_exempt
 def bookingServiceView(request, pk):
@@ -85,9 +85,9 @@ def bookingServiceView(request, pk):
         extra_info_form = AddressForm()
     else:
         extra_info_form = AddressForm()
-    return render(request, 'bookingpage/testBookingPage.html', {'extra_info_form':extra_info_form,'returnClient':returnClient,'user': user, 'company':company, 'service':service, 'personal_form':personal_form, 'gibele_form':gibele_form})
+    return render(request, 'bookingpage/onestaff/bookingpage/testBookingPage.html', {'extra_info_form':extra_info_form,'returnClient':returnClient,'user': user, 'company':company, 'service':service, 'personal_form':personal_form, 'gibele_form':gibele_form})
 
-def time_slots(start_time, end_time, interval, duration_hour, duration_minute, year, month, day, company):
+def time_slots(start_time, end_time, interval, duration_hour, duration_minute, year, month, day, company, staff_breaks):
     t = start_time
     servDate = timezone.localtime(timezone.make_aware(datetime.datetime(year,month,day)))
     if timezone.localtime(timezone.now()).date() == servDate.date():
@@ -140,6 +140,13 @@ def time_slots(start_time, end_time, interval, duration_hour, duration_minute, y
             if end_time<endTime.time():
                 t = endTime.time()
                 count = 1
+        if count == 0:
+            for breaks in staff_breaks:
+                if((breaks.from_hour<=servStart.time()<breaks.to_hour) or (breaks.from_hour<endTime.time()<breaks.to_hour)):
+                    count = 1
+                    t=breaks.to_hour
+                print(t)
+
         if count==0:
             availableDay.append(t.strftime("%I:%M %p"))
             t = timezone.localtime(timezone.make_aware(datetime.datetime.combine(datetime.date.today(), t) +
@@ -171,8 +178,24 @@ class bookingTimes(View):
         buffer_durhour = Services.objects.get(pk=s_id).paddingtime_hour
         buffer_durmin = Services.objects.get(pk=s_id).paddingtime_minute
         is_auth = request.user.is_authenticated
+
+        # #This code has to change once staff members are added
+        if company.staffmembers.count() == 1:
+            breakss = company.staffmembers.all()[0].staff_breaks.all()
+        else:
+            breakss = None
+        staff_breaks = []
+        if breakss:
+            for breaks in breakss:
+                if weekday == breaks.weekday:
+                    staff_breaks.append(breaks)
+
+        # #This code has to change once staff members are added
+        # for staffmem in company.staffmembers.all():
+        #     staff_break = staffmem.staff_breaks.all()
+        
         if open_hours.is_closed==False:
-            slist = list(time_slots(b_open,b_close,interval, duration_hour, duration_minute, year, month, day, company))
+            slist = list(time_slots(b_open,b_close,interval, duration_hour, duration_minute, year, month, day, company, staff_breaks))
             # appslot = list(appointmentValid(slist, duration_hour, duration_minute, len(slist)))
         else:
             slist = []
@@ -454,4 +477,8 @@ class createAccountView(View):
             account = authenticate(email=email, password=password)
             login(request, account)
         return JsonResponse({'good':'good'})
+
+
+def bookingStaffUrl(request, slug):
+    pass
 

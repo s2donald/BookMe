@@ -10,9 +10,9 @@
                     <!-- Main page content-->
                     <div class="content">
                         <div class="row">
-                        <div class="col-10 ml-auto mr-auto">
+                        <div class="col-md-12 ml-auto mr-auto">
                         <header class="page-header page-header-compact page-header-light mb-4">
-                        <div class="container">
+                        <div class="container-fluid">
                             <div class="page-header-content">
                                 <div class="row align-items-center justify-content-between pt-3">
                                     <div class="col-auto mb-3">
@@ -27,7 +27,8 @@
                         <!-- Account page navigation-->
                         <nav class="nav nav-borders">
                             <a class="nav-link ml-0" href="{% host_url 'information' host 'bizadmin'%}">Company Info</a>
-                            <a class="nav-link" href="{% host_url 'hours' host 'bizadmin'%}">Working Hours</a>
+                            <a class="nav-link" href="{% host_url 'hours' host 'bizadmin'%}">Business Hours</a>
+                            <a class="nav-link" href="{% host_url 'staffmemb' host 'bizadmin'%}">Staff Members</a>
                             {% comment %} <a class="nav-link" href="{% host_url 'breaks_time' host 'bizadmin'%}">Breaks</a>
                             <a class="nav-link" href="{% host_url 'timeoff_time' host 'bizadmin'%}">Time Off</a> {% endcomment %}
                             <a class="nav-link activate" href="{% host_url 'service_detail' host 'bizadmin' %}">Services</a>

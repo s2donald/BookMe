@@ -1,0 +1,325 @@
+{% extends 'bizadmin/index.html' %}
+{% load static %}
+{% load hosts %}
+{% block activecompinfo %}active{%endblock%}
+{% block businessadmin %}
+<!-- Main page content-->
+    <div class="content">
+        <div class="row">
+            <div class="col-md-12 ml-auto mr-auto">
+                <header class="page-header page-header-compact page-header-light mb-4">
+                    <div class="container-fluid">
+                        <div class="page-header-content">
+                            <div class="row align-items-center justify-content-between pt-3">
+                                <div class="col-auto mb-3">
+                                    <h1 class="page-header-title">
+                                        Staff Members
+                                    </h1>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </header>
+                <!-- Account page navigation-->
+                <nav class="nav nav-borders">
+                    <a class="nav-link ml-0" href="{% host_url 'information' host 'bizadmin'%}">Company Info</a>
+                    <a class="nav-link" href="{% host_url 'hours' host 'bizadmin'%}">Business Hours</a>
+                    <a class="nav-link activate" href="{% host_url 'staffmemb' host 'bizadmin'%}">Staff Members</a>
+                    <a class="nav-link" href="{% host_url 'service_detail' host 'bizadmin' %}">Services</a>
+                    <a class="nav-link" href="{% host_url 'client_list' host 'bizadmin' %}">Clients</a>
+                    {% comment %} <a class="nav-link" href="#">Staff Members</a> {% endcomment %}
+                </nav>
+                <hr class="mt-0 mb-4">
+
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="text-center mt-2">
+                                <button id="addstaff" class="btn btn-primary mb-3" data-toggle="modal" data-target="#modal-addstaff">Add Staff Member</button>
+                            </div>
+                        <div class="card shadow mb-4 p-3" id="categorylisttab">
+                            <div id="accordion" role="tablist" aria-multiselectable="true" class="card-collapse">
+                                <div class="card card-plain">
+                                    <div class="card-header" role="tab" id="headingOne">
+                                        <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                                            View All Staff Members
+                                            <i class="fas fa-chevron-up"></i>
+                                        </a>
+                                    </div>
+
+                                    <div id="collapseOne" class="collapse something" role="tabpanel" aria-labelledby="headingOne">
+                                        <div class="card-body">
+                                        <div class="col-12">
+                                            <ul class="nav nav-pills nav-pills-primary flex-column">
+                                                {% for staff in company.staffmembers.all %}
+                                                    <li class="nav-item"><a class="nav-link stafflist {% if forloop.counter == 1 %}active{% endif %}" style="border-radius:10px;" href="#tab{{ staff.id }}" data-staff="{{ staff.id }}" id="tab{{ forloop.counter }}" data-toggle="tab">{{ staff.first_name }} {{ staff.last_name}}</a></li>
+                                                {% endfor %}
+                                            </ul>
+                                        </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        
+                    </div>
+                    <div class="col-md-8" id="staff-information">
+                        {% with staff=company.staffmembers.all.0 %}
+                            <div class="card shadow my-1">
+                                <div class="row">
+                                    <div class="col-md-8 py-auto" style="overflow:hidden;">
+                                        <nav class="nav nav-borders" >
+                                            <a class="nav-link activate ml-0" id="detail" data-staff="{{ staff.id }}" href="#detail" data-toggle="tab">Details</a>
+                                            <a class="nav-link" id="services" data-staff="{{ staff.id }}" href="#services" data-toggle="tab">Services</a>
+                                            <a class="nav-link" id="hours" data-staff="{{ staff.id }}" href="#hours" data-toggle="tab">Working Hours</a>
+                                            <a class="nav-link" id="breaks" data-staff="{{ staff.id }}" href="#breaks" data-toggle="tab">Breaks</a>
+                                            <a class="nav-link" id="timeoff" data-staff="{{ staff.id }}" href="#timeoff" data-toggle="tab">Time Off</a>
+                                            {% comment %} <a class="nav-link" href="#">Staff Members</a> {% endcomment %}
+                                        </nav>
+                                        
+                                    </div>
+                                    <div class="col-md-4 text-right">
+                                        <div class="card-header p-2">
+                                                {% if company.staffmembers.count > 1 %}
+                                                    <button class="btn btn-link btn-danger btn-sm categorydelete" type="button" data-catename="{{ category.name }}" data-url="{% host_url 'category_delete_view' staff.id host 'bizadmin' %}">Remove Staff Member <i class="fas fa-trash"></i></button>
+                                                {% endif %}        
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="card-header"> {{ staff.first_name }}'s Details</div>
+                                <div class="card-body">
+                                    <div class="justify-content-center my-auto align-items-center">
+                                        <form method="POST" autocomplete="off">
+                                            {% csrf_token %}
+                                            <div class="row">
+                                                <div class="col-lg-4 col-6">
+                                                    <label for="first">First Name:</label>
+                                                    <input autocomplete="off" id="first_name" type="text" class="form-control" value="{{staff.first_name}}">
+                                                </div>
+                                                <div class="col-lg-4 col-6">
+                                                    <label for="first">Last Name:</label>
+                                                    <input autocomplete="off" id="last_name" type="text" class="form-control" value="{{staff.last_name}}">
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-lg-4 col-6">
+                                                    <label for="first">Email:</label>
+                                                    <input autocomplete="off" id="staff_email" type="text" class="form-control" value="{{staff.email}}">
+                                                </div>
+
+                                                <div class="col-lg-4 col-6">
+                                                    <label for="first">CC Emails To:</label>
+                                                    <input autocomplete="off" id="staff_cc_email" type="text" class="form-control" value=" {% if staff.cc_email %}{{staff.cc_email}}{% endif %}">
+                                                </div>
+
+
+                                                <div class="col-md-6 col-lg-8">
+                                                    <label for="first">Phone Number:</label>
+                                                    <input autocomplete="off" id="phone_number" type="text" class="form-control" value="{{staff.phone}}">
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endwith %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+    $('.datetimepicker').datetimepicker({
+        format: 'LT',
+        icons: {
+        time: "fas fa-clock",
+        up: "fa fa-chevron-up",
+        down: "fa fa-chevron-down",
+        previous: 'tim-icons icon-minimal-left',
+        next: 'tim-icons icon-minimal-right',
+        today: 'fa fa-screenshot',
+        clear: 'fa fa-trash',
+        close: 'fa fa-remove'
+        }
+    });
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    {% comment %} const csrftoken = getCookie('csrftoken'); {% endcomment %}
+
+    $('#subhour').submit(function(e){
+        e.preventDefault();
+        $.ajax({
+            type:'POST',
+            url: "{% host_url 'businessHourSave' host 'bizadmin' %}",
+            data: $('#subhour').serialize(),
+            headers:{
+                "X-CSRFToken": csrftoken
+            },
+            success:function(data){
+                Swal.fire({
+                    title:'Your business hours have been saved',
+                    icon: 'success',
+                    customClass:{
+                        confirmButton: 'btn btn-primary',
+                        cancelButton: 'btn btn-danger',
+                    },
+                    buttonsStyling: false,
+                });
+            }
+        });
+    });
+
+    var w = screen.width;
+    if (w>768){
+        $('.collapse.something').collapse('show')
+    }
+
+    $(document).on('click', '.nav-item', function(){
+        var w = screen.width;
+        if (w<768){
+            $('.collapse').collapse('hide')
+        }        
+    });
+
+    {% for staff in company.staffmembers.all %}
+        $('#tab{{ forloop.counter }}').on('click', function(e){
+            {% comment %} Get detail views ajaxly {% endcomment %}
+
+        })
+    {% endfor %}
+
+    $(document).on('click', '#services',function(){
+        var staffinfo = document.querySelector('#staff-information');
+        var staff_id =  $('#services').attr("data-staff")
+        $.ajax({
+            type:'GET',
+            url: "{% host_url 'getstaffservice' host 'bizadmin' %}",
+            data: {
+                'staff_id': staff_id, 'type': 'services'
+            },
+            success:function(data){
+                staffinfo.innerHTML = data.html_content
+            }
+        });
+    });
+
+    $(document).on('click', '#detail',function(){
+        var staffinfo = document.querySelector('#staff-information');
+        var staff_id =  $('#detail').attr("data-staff")
+        $.ajax({
+            type:'GET',
+            url: "{% host_url 'getstaffservice' host 'bizadmin' %}",
+            data: {
+                'staff_id': staff_id, 'type': 'detail'
+            },
+
+            success:function(data){
+                staffinfo.innerHTML = data.html_content
+            }
+        });
+    });
+
+    $(document).on('click', '.stafflist',function(){
+        var $this = $(this)
+        var staffinfo = document.querySelector('#staff-information');
+        var staff_id =  $this.attr('data-staff')
+        $.ajax({
+            type:'GET',
+            url: "{% host_url 'getstaffservice' host 'bizadmin' %}",
+            data: {
+                'staff_id': staff_id, 'type': 'detail'
+            },
+
+            success:function(data){
+                staffinfo.innerHTML = data.html_content
+            }
+        });
+    });
+
+    $(document).on('focus',"#first_name", function() {
+        console.log('in');
+    })
+    $(document).on('blur','#first_name',function() {
+        console.log('out');
+    });
+
+    $(document).on('click', '.removefromstaff',function(){
+        var $this = $(this)
+        serv_id = $this.attr('data-companyserv')
+        staff_id = $this.attr('data-staff')
+        $.ajax({
+            type:'POST',
+            url: "{% host_url 'removestaffservice' host 'bizadmin' %}",
+            data: {
+                'staff_id': staff_id, 'serv_id': serv_id
+            },
+            headers:{
+                "X-CSRFToken": csrftoken
+            },
+            success:function(data){
+                $this[0].classList.remove('removefromstaff')
+                $this[0].classList.add('addtostaff')
+                $this[0].classList.remove('btn-info')
+                var el = document.querySelector('#text_service_header');
+                el.innerHTML = data.text_service_header
+                $this[0].innerHTML = data.innerbtn
+                $.notify({
+                    // options
+                    message: 'Staff removed from offering service'
+                },{
+                    // settings
+                    type: 'success',
+                    delay: 50,
+                });
+            }
+        });
+    })
+    $(document).on('click', '.addtostaff',function(){
+        var $this = $(this)
+        serv_id = $this.attr('data-companyserv')
+        staff_id = $this.attr('data-staff')
+        $.ajax({
+            type:'POST',
+            url: "{% host_url 'addstaffservice' host 'bizadmin' %}",
+            data: {
+                'staff_id': staff_id, 'serv_id': serv_id
+            },
+            headers:{
+                "X-CSRFToken": csrftoken
+            },
+            success:function(data){ 
+                $this[0].classList.add('removefromstaff')
+                $this[0].classList.remove('addtostaff')
+                $this[0].classList.add('btn-info')
+                var el = document.querySelector('#text_service_header');
+                el.innerHTML = data.text_service_header
+                $this[0].innerHTML = data.innerbtn
+                $.notify({
+                    // options
+                    message: 'Staff assigned to service'
+                },{
+                    // settings
+                    type: 'success',
+                    delay: 50,
+                });
+
+            }
+        });
+    })
+
+    </script>
+{% endblock %}

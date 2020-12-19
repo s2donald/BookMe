@@ -1,0 +1,50 @@
+{% load static %}
+{% load hosts %}
+{% load business_tags %}
+<div class="card shadow my-1">
+    <div class="row">
+        <div class="col-md-8 py-auto" style="overflow:hidden;">
+            <nav class="nav nav-borders" >
+                <a class="nav-link ml-0" id="detail" data-staff="{{ staff.id }}" href="#detail" data-toggle="tab">Details</a>
+                <a class="nav-link activate" id="services" data-staff="{{ staff.id }}" href="#services" data-toggle="tab">Services</a>
+                <a class="nav-link" id="hours" data-staff="{{ staff.id }}" href="#hours" data-toggle="tab">Working Hours</a>
+                <a class="nav-link" id="breaks" data-staff="{{ staff.id }}" href="#breaks" data-toggle="tab">Breaks</a>
+                <a class="nav-link" id="timeoff" data-staff="{{ staff.id }}" href="#timeoff" data-toggle="tab">Time Off</a>
+                {% comment %} <a class="nav-link" href="#">Staff Members</a> {% endcomment %}
+            </nav>
+            
+        </div>
+        <div class="col-md-4 text-right">
+            <div class="card-header p-2">
+                    {% if company.staffmembers.count > 1 %}
+                        <button class="btn btn-link btn-danger btn-sm categorydelete" type="button" data-catename="{{ category.name }}" data-url="{% host_url 'category_delete_view' staff.id host 'bizadmin' %}">Remove Staff Member <i class="fas fa-trash"></i></button>
+                    {% endif %}        
+            </div>
+        </div>
+    </div>
+
+    <div class="card-header"> <p id="text_service_header">All services that {{ staff.first_name }} {{staff.last_name}} can provide({{ staff.services.count }}):</p></div>
+    <div class="card-body">
+        <div class="justify-content-center my-auto align-items-center">
+            <form method="POST" autocomplete="off">
+                {% csrf_token %}
+                {% with staff_services=staff.services.all %}
+                    {% for comp_services in company.services_offered.all %}
+                        <div class="row">
+                            {% if comp_services|staff_services_offered:staff_services %}
+                            <div class="col-12">
+                                <button class="btn btn-info btn-pills btn-sm mx-3 removefromstaff" type='button' data-companyserv='{{ comp_services.id }}' data-staff='{{ staff.id }}'> <i class="fas fa-check-circle "></i> {{ comp_services}}</button>
+
+                            </div>
+                            {% else %}
+                            <div class="col-12">
+                                <button class="btn btn-pills btn-sm mx-3 addtostaff" type='button' data-companyserv='{{ comp_services.id }}' data-staff='{{ staff.id }}'> <i class="fas fa-plus-circle"></i> {{ comp_services}}</button>
+                            </div>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                {% endwith %}
+            </form>
+        </div>
+    </div>
+</div>

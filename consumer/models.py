@@ -1,5 +1,6 @@
 from django.db import models
 from business.models import Account, Company, Services, Clients
+from businessadmin.models import StaffMember, Breaks
 from django.utils import timezone
 from django.core.validators import MinValueValidator, MaxValueValidator,RegexValidator
 from django.db.models.signals import pre_save
@@ -50,13 +51,15 @@ minute_choices = (
 
 class Bookings(models.Model):
     #The user's information name who booked
-    user = models.ForeignKey(Account, on_delete=models.SET_NULL, null=True)
-    guest = models.ForeignKey(Clients, on_delete=models.SET_NULL, null=True)
+    user = models.ForeignKey(Account, on_delete=models.SET_NULL, null=True, blank=True)
+    guest = models.ForeignKey(Clients, on_delete=models.SET_NULL, null=True, blank=True)
     slug = models.SlugField(max_length=200, db_index=True, blank=True, unique=True)
     #The service booked (also contains the company the service is with)
     service = models.ForeignKey(Services, on_delete=models.SET_NULL, null=True, related_name='bookings', related_query_name="bookings")
     #The company which is offering this service
     company = models.ForeignKey(Company, on_delete=models.CASCADE, null=True)
+    #Staff member booked
+    staffmem = models.ForeignKey(StaffMember, on_delete=models.CASCADE, null=True, blank=True)
     #We must add a timeslot for the booking
     #The amount the booking has been paid for
     price_paid = models.DecimalField(max_digits=10, decimal_places=2, default=0)
@@ -69,6 +72,8 @@ class Bookings(models.Model):
     #We must also create a receipt model to handle the reciepts and link to the booking
     start = models.DateTimeField(default=timezone.now)
     end = models.DateTimeField(default=timezone.now)
+
+
     class Meta:
         ordering = ('start',)
         verbose_name = 'booking'
@@ -107,7 +112,7 @@ class extraInformation(models.Model):
     booking = models.OneToOneField(Bookings, on_delete=models.CASCADE, related_name='more_info')
     description = models.TextField(max_length=500, blank=True, null=True)
     photo = models.ImageField(upload_to=get_booking_folder, blank=True, null=True)
-    #For car services only
+    #For car services only 
     car_make = models.CharField(max_length=30, blank=True, null=True)
     car_model = models.CharField(max_length=30, blank=True, null=True)
     car_year = models.IntegerField(blank=True, null=True)

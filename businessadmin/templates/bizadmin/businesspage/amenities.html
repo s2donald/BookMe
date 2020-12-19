@@ -93,6 +93,16 @@
                     "X-CSRFToken": csrftoken
                 },
                 cache: false,
+                success: function(data){
+                    $.notify({
+                    // options
+                    message: 'Tag Added'
+                    },{
+                        // settings
+                        type: 'success',
+                        delay: 50,
+                    });
+                }
             });
         });
         $('#taggerinput').on('itemRemoved', function(event){
@@ -106,6 +116,16 @@
                     "X-CSRFToken": csrftoken
                 },
                 cache: false,
+                success: function(data){
+                    $.notify({
+                    // options
+                    message: 'Tag Removed'
+                    },{
+                        // settings
+                        type: 'success',
+                        delay: 50,
+                    });
+                }
             });
         });
 
@@ -124,8 +144,15 @@
                 headers:{
                     "X-CSRFToken": csrftoken
                 },
-                success: {
-                    
+                success: function(data){
+                    $.notify({
+                    // options
+                    message: 'Amenity Added'
+                    },{
+                        // settings
+                        type: 'success',
+                        delay: 50,
+                    });
                 }
             });
         });
@@ -140,6 +167,16 @@
                     "X-CSRFToken": csrftoken
                 },
                 cache: false,
+                success: function(data){
+                    $.notify({
+                    // options
+                    message: 'Amenity Removed'
+                    },{
+                        // settings
+                        type: 'success',
+                        delay: 50,
+                    });
+                }
             });
         });
     </script>

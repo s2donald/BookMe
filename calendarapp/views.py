@@ -78,7 +78,6 @@ def bookingServiceView(request, pk):
         returnClient = company.clients.filter(user=user,first_name=user.first_name).exists() or company.clients.filter(phone=user.phone,first_name=user.first_name,).exists() or company.clients.filter(email=user.email,first_name=user.first_name).exists()
     else:
         returnClient = False
-    print(user)
     if company.category.name == 'Automotive Services':
         extra_info_form = VehicleMakeModelForm()
     elif company.category.name == 'Home Services':
@@ -107,22 +106,22 @@ def time_slots(start_time, end_time, interval, duration_hour, duration_minute, y
             #Check if the booking date from the loop is the same as the requested date
             if (timezone.localtime(obj.start).date() == timezone.localtime(servStart).date()):
                 #Check the buffer option that applies to this booking
-                buffer = obj.service.padding
+                # buffer = obj.service.padding
                 before_durhour = 0
                 before_durmin =0
                 after_durhour = 0
                 after_durmin = 0
-                if buffer == 'bf':
-                    before_durhour = obj.service.paddingtime_hour
-                    before_durmin = obj.service.paddingtime_minute
-                    after_durhour = obj.service.paddingtime_hour
-                    after_durmin = obj.service.paddingtime_minute
-                elif buffer == 'before':
-                    before_durhour = obj.service.paddingtime_hour
-                    before_durmin = obj.service.paddingtime_minute
-                elif buffer == 'after':
-                    after_durhour = obj.service.paddingtime_hour
-                    after_durmin = obj.service.paddingtime_minute
+                # if buffer == 'bf':
+                #     before_durhour = obj.service.paddingtime_hour
+                #     before_durmin = obj.service.paddingtime_minute
+                #     after_durhour = obj.service.paddingtime_hour
+                #     after_durmin = obj.service.paddingtime_minute
+                # elif buffer == 'before':
+                #     before_durhour = obj.service.paddingtime_hour
+                #     before_durmin = obj.service.paddingtime_minute
+                # elif buffer == 'after':
+                #     after_durhour = obj.service.paddingtime_hour
+                #     after_durmin = obj.service.paddingtime_minute
                 #The start time of the already booked service
                 s = timezone.localtime(obj.start).time()
                 #The endtime of the already booked service
@@ -174,9 +173,9 @@ class bookingTimes(View):
         duration_hour = Services.objects.get(pk=s_id).duration_hour
         duration_minute = Services.objects.get(pk=s_id).duration_minute
         #Check buffer before and after
-        beforeafter = Services.objects.get(pk=s_id).padding
-        buffer_durhour = Services.objects.get(pk=s_id).paddingtime_hour
-        buffer_durmin = Services.objects.get(pk=s_id).paddingtime_minute
+        # beforeafter = Services.objects.get(pk=s_id).padding
+        # buffer_durhour = Services.objects.get(pk=s_id).paddingtime_hour
+        # buffer_durmin = Services.objects.get(pk=s_id).paddingtime_minute
         is_auth = request.user.is_authenticated
 
         # #This code has to change once staff members are added

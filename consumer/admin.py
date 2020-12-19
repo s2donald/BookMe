@@ -13,5 +13,6 @@ class extraInformationInline(admin.TabularInline):
 
 @admin.register(Bookings)
 class BookingAdmin(admin.ModelAdmin):
-    list_display = ['company','service','user', 'start', 'end', 'price', 'price_paid']
+    list_display = ['company','service','user', 'guest', 'start', 'end', 'price', 'price_paid']
+
     inlines = [extraInformationInline]

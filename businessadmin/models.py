@@ -54,6 +54,8 @@ class StaffMember(models.Model):
         verbose_name = 'Staff Member'
     
     def __str__(self):
+        if self.first_name==None:
+            return "ERROR-Staff NAME IS NULL"
         return self.first_name
 
 class Breaks(models.Model):

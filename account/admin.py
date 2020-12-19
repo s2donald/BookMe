@@ -54,7 +54,7 @@ class ClientAdmin(admin.ModelAdmin):
     
 @admin.register(StaffMember)
 class StaffAdmin(admin.ModelAdmin):
-    list_display = ['company', 'user']
+    list_display = ['company', 'user', 'first_name', 'last_name']
     search_fields = ('user__first_name','company__business_name',)
     inlines = [ BreaksInline ]
 

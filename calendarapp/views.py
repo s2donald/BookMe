@@ -479,6 +479,6 @@ class createAccountView(View):
         return JsonResponse({'good':'good'})
 
 
-def bookingStaffUrl(request, slug):
-    pass
+# def bookingStaffUrl(request, slug):
+    
 

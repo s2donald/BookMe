@@ -51,11 +51,11 @@ minute_choices = (
 
 class Bookings(models.Model):
     #The user's information name who booked
-    user = models.ForeignKey(Account, on_delete=models.SET_NULL, null=True, blank=True)
-    guest = models.ForeignKey(Clients, on_delete=models.SET_NULL, null=True, blank=True)
+    user = models.ForeignKey(Account, on_delete=models.CASCADE, null=True, blank=True)
+    guest = models.ForeignKey(Clients, on_delete=models.CASCADE, null=True, blank=True)
     slug = models.SlugField(max_length=200, db_index=True, blank=True, unique=True)
     #The service booked (also contains the company the service is with)
-    service = models.ForeignKey(Services, on_delete=models.SET_NULL, null=True, related_name='bookings', related_query_name="bookings")
+    service = models.ForeignKey(Services, on_delete=models.CASCADE, null=True, related_name='bookings', related_query_name="bookings")
     #The company which is offering this service
     company = models.ForeignKey(Company, on_delete=models.CASCADE, null=True)
     #Staff member booked
@@ -75,12 +75,15 @@ class Bookings(models.Model):
 
 
     class Meta:
-        ordering = ('start',)
+        ordering = ('-start',)
         verbose_name = 'booking'
         verbose_name_plural = 'bookings'
 
-    def __str__(self):
-        return self.service.name
+    # def __str__(self):
+    #     if self.service.name==None:
+    #         return 'No Name'
+    #     return self.service.name
+
     def clean(self):
         super().clean()
         if self.user is None and self.guest is None:

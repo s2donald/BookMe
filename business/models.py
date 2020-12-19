@@ -251,9 +251,12 @@ class Clients(models.Model):
     city = models.CharField(max_length=35,null=True, blank=True)
     class Meta:
         ordering = ('first_name',)
-
     def __str__(self):
-        return self.first_name + ' ' + self.last_name
+        if not (self.first_name and self.last_name):
+            return 'No Val'
+        else:
+            return self.first_name + ' ' + self.last_name
+
 from django.utils.timezone import now
 #This model should include all requests for bookings or getting on the client list(Bookings not added yet)
 class CompanyReq(models.Model):

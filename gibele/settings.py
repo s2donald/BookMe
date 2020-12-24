@@ -30,7 +30,7 @@ DEBUG = False
 
 TIME_INPUT_FORMATS = ['%I:%M %p',]
 
-ALLOWED_HOSTS = ['pure-fjord-45840.herokuapp.com','.pure-fjord-45840.herokuapp.com','gibele.com', '.gibele.com','.gibele.ca','gibele.ca']
+ALLOWED_HOSTS = ['pure-fjord-45840.herokuapp.com','.pure-fjord-45840.herokuapp.com','gibele.com', '.gibele.com','.gibele.ca','gibele.ca', 'bookme.to', '.bookme.to']
 if DEBUG:
     SESSION_COOKIE_DOMAIN= 'gibele.com'
     DOMAIN_NAME= 'gibele.com'
@@ -83,7 +83,7 @@ SESSION_COOKIE_AGE = 60*60*24*7*4
 
 ROOT_URLCONF = 'gibele.urls'
 ROOT_HOSTCONF = 'gibele.hosts'
-DEFAULT_HOST = 'www'
+DEFAULT_HOST = 'bizadmin'
 
 TEMPLATES = [
     {

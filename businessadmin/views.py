@@ -1822,8 +1822,8 @@ class staffServicesViews(View):
     def get(self, request):
         staff_id = request.GET.get('staff_id')
         types = request.GET.get('type')
-        staff = StaffMember.objects.get(id=int(staff_id))
-        company = staff.company
+        # staff = StaffMember.objects.get(id=int(staff_id))
+        # company = staff.company
         if types == 'services':
             html = render_to_string('bizadmin/companydetail/staff/partial/partial_staff_services.html', {'staff':staff,'company':company}, request)
         elif types == 'detail':

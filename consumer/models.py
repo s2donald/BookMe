@@ -79,10 +79,10 @@ class Bookings(models.Model):
         verbose_name = 'booking'
         verbose_name_plural = 'bookings'
 
-    # def __str__(self):
-    #     if self.service.name==None:
-    #         return 'No Name'
-    #     return self.service.name
+    def __str__(self):
+        if self.service.name==None:
+            return 'No Name'
+        return self.service.name
 
     def clean(self):
         super().clean()

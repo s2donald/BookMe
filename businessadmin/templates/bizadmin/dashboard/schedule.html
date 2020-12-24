@@ -32,6 +32,8 @@
                     return (b == 0) ? a : gcd (b, a%b);
                 }
 
+
+
                 function changeBooking(id) {
                     Swal.fire({
                         customClass:{
@@ -145,10 +147,6 @@
 
                 var leftitems = 'prev,next today'
                 
-               
-
-                
-
                 var asprat = aspect
                 var calendarEl = document.getElementById('calendar');
                 var calendar = new FullCalendar.Calendar(calendarEl, {
@@ -190,6 +188,14 @@
                             successCallback(events)
                         }
                     })
+                },
+                loading: function (isLoading) {
+                    if (isLoading) {
+                        $('.lds-facebook').show();
+                    }
+                    else {                
+                        $('.lds-facebook').hide();
+                    }
                 },
                 
 
@@ -249,6 +255,7 @@
                                     <a class="nav-link my-0 py-0 {% if forloop.counter == 1 %}activate{% endif %}" href="{% host_url 'profile' host 'bizadmin'%}">{{ staff.first_name }} {{ staff.last_name}}</a>
                                 {% endfor %}
                             </nav>
+                            <div class="lds-facebook" style="display:none;"><div></div><div></div><div></div></div>
                             <div id="calendar"></div>
                         </div>
                     </div>

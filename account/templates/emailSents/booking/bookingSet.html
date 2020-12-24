@@ -1,17 +1,77 @@
 {% extends 'emailSents/account/baseEmail.html' %}
 
 {% block emailcontent %}
-<h2>Hello {{ acct.first_name }},</h2>
-<p>Your appointment has been confirmed with {{ company.business_name }} for a <strong>{{ service.name }}</strong>.</p>
-<p>Your appointment will be held at {{ booking.start|date:'g:i A' }} on {{ booking.start|date:'l, F j, Y' }}.</p>
+<table border="0" cellpadding="0" cellspacing="0" width="100%" class="mcnTextBlock" style="min-width:100%;">
+	<tbody class="mcnBoxedTextBlockOuter">
+        <tr>
+            <td valign="top" class="mcnBoxedTextBlockInner">
+                
+				<!--[if gte mso 9]>
+				<td align="center" valign="top" ">
+				<![endif]-->
+                <table align="left" border="0" cellpadding="0" cellspacing="0" width="100%" style="min-width:100%;" class="mcnBoxedTextContentContainer">
+                    <tbody><tr>
+                        
+                        <td style="padding-top:9px; padding-left:18px; padding-bottom:9px; padding-right:18px;">
+                        
+                            <table border="0" cellspacing="0" class="mcnTextContentContainer" width="100%" style="min-width: 100% !important;background-color: #FFFFFF;border: 1px solid #838383;">
+                                <tbody>
+                                    <tr>
+                                    <td valign="top" class="mcnTextContent" style="padding: 18px;color: #616161;font-family: Helvetica;font-size: 14px;font-weight: normal;line-height: 150%;text-align: center;">
+                                        <div style="text-align: left;"><br>
+                                        <p>Appointment Confirmed!</p>
+                                        <br>
+                                        <span style="font-size:14px; color:#616161 !important;">Hello {{ acct.first_name }},</span><br>
+                                        <span style="font-size:14px; color:#616161 !important;">You have an appointment scheduled with {{ company.business_name }}.</span><br>
+                                        &nbsp;
+                                        <hr><br>
+                                        <span style="font-size:14px; color:#616161 !important;">When: {{ booking.start|date:'D, N j, Y' }}, {{ booking.start|date:'g:i A e' }}</span><br>
+                                        <span style="font-size:14px; color:#616161 !important;">Service: {{ service.name }}</span><br>
+                                        &nbsp;
+                                        <hr><br>
+                                        <span style="font-size:14px; color:#616161 !important;">Company Email: {{ company.email }}</span><br>
+                                        <span style="font-size:14px; color:#616161 !important;">Company Phone Number: {{ company.phone }}</span><br>
+                                        <span style="font-size:14px; color:#616161 !important;">Company Address: {{ company.address }}, {{ company.postal }}, {{ company.city }}, {{ company.state }}</span><br>
+                                        <span style="font-size:14px; color:#616161 !important;">Booking ID: {{ booking.slug }}</span><br>
 
-{% if service.checkintime > 0 %}
-    <p><strong>NOTE:</strong>Please arrive {{ service.checkintime }} minutes before your service starts to check in.</p>
-{% endif %}
 
-<p>Company Email: {{ company.email }}</p>
-<p>Company Phone Number: {{ company.phone }}</p>
-<p>Company Address: {{ company.address }}, {{ company.postal }}, {{ company.city }}, {{ company.state }}</p>
-<p>Booking ID: {{ booking.slug }}</p>
-<h3>Thanks!</h3>
+                                        &nbsp;
+                                        <hr><br>
+                                        {% if service.checkintime > 0 %}
+                                            <p><strong>NOTE:</strong>Please arrive {{ service.checkintime }} minutes before your service starts to check in.</p>
+                                            <hr><br>
+                                        {% endif %}
+                                        </div>
+
+                                    </td>
+                                </tr>
+                            </tbody></table>
+                        </td>
+                    </tr>
+                </tbody></table>
+				<!--[if gte mso 9]>
+				</td>
+				<![endif]-->
+                
+				<!--[if gte mso 9]>
+                </tr>
+                </table>
+				<![endif]-->
+            </td>
+        </tr>
+    </tbody>
+</table></td>
+                            </tr>
+                            <tr>
+                                <td valign="top" id="templateFooter"><table border="0" cellpadding="0" cellspacing="0" width="100%" class="mcnDividerBlock" style="min-width:100%;">
+    <tbody class="mcnDividerBlockOuter">
+        <tr>
+            <td class="mcnDividerBlockInner" style="min-width: 100%; padding: 10px 18px 25px;">
+                <table class="mcnDividerContent" border="0" cellpadding="0" cellspacing="0" width="100%" style="min-width: 100%;border-top: 2px solid #EEEEEE;">
+                    <tbody><tr>
+                        <td>
+                            <span></span>
+                        </td>
+                    </tr>
+                </tbody></table>
 {% endblock %}

@@ -86,18 +86,21 @@ def bookingServiceView(request, pk):
         extra_info_form = AddressForm()
     return render(request, 'bookingpage/onestaff/bookingpage/testBookingPage.html', {'extra_info_form':extra_info_form,'returnClient':returnClient,'user': user, 'company':company, 'service':service, 'personal_form':personal_form, 'gibele_form':gibele_form})
 
+from django.db.models import Q
 def time_slots(start_time, end_time, interval, duration_hour, duration_minute, year, month, day, company, staff_breaks):
     t = start_time
     servDate = timezone.localtime(timezone.make_aware(datetime.datetime(year,month,day)))
+    #We check if the date they are looking to book an appointment is today. If so, we get the earliest available time
     if timezone.localtime(timezone.now()).date() == servDate.date():
         while timezone.localtime(timezone.now()).time()>t:
             t = timezone.localtime(timezone.make_aware(datetime.datetime.combine(datetime.date.today(), t) +
              datetime.timedelta(minutes=interval))).time()
     availableDay = []
+    #end_time is the closing hour of the shop
     while t < end_time:
         servStart = timezone.localtime(timezone.make_aware(datetime.datetime.combine(servDate, t)))
         endTime = timezone.localtime(timezone.make_aware(datetime.datetime.combine(servDate, t) + datetime.timedelta(hours=duration_hour,minutes=duration_minute)))
-        objects = Bookings.objects.filter(company=company, start__gte=servDate, end__lte=timezone.localtime(servDate + datetime.timedelta(days=1)), is_cancelled_user=False, is_cancelled_company=False)
+        objects = Bookings.objects.filter(company=company, start__gte=servDate, is_cancelled_user=False, is_cancelled_company=False)
         # objlength = len(objects)
         count = 0
         if endTime.time() <= t:
@@ -123,17 +126,22 @@ def time_slots(start_time, end_time, interval, duration_hour, duration_minute, y
                 #     after_durhour = obj.service.paddingtime_hour
                 #     after_durmin = obj.service.paddingtime_minute
                 #The start time of the already booked service
-                s = timezone.localtime(obj.start).time()
+                s = timezone.localtime(obj.start)
                 #The endtime of the already booked service
-                g = timezone.localtime(obj.end).time()
+                g = timezone.localtime(obj.end)
+                print(s)
+                print(g)
+                print(servStart)
+                print(endTime.time())
+                print(end_time)
                 #Check if already booked service interfers with the proposed 
-                if((s<=servStart.time()<g) or (s<endTime.time()<g) or (end_time<endTime.time())):
+                if((s<=servStart<g) or (s<endTime<g) or (end_time<endTime.time())):
                     t = endTime.time()
                     #Since we know this booking time falls between an already booked service 
                     # We basically check if the ending time of the booking interval 't' is less than the booking time of the 
                     # already booked service. If it is then we use that time 'g' to start the new interval.
-                    if(t<g):
-                        t=g
+                    if(t<g.time()):
+                        t=g.time()
                     count = 1
         if not objects:
             if end_time<endTime.time():
@@ -144,13 +152,13 @@ def time_slots(start_time, end_time, interval, duration_hour, duration_minute, y
                 if((breaks.from_hour<=servStart.time()<breaks.to_hour) or (breaks.from_hour<endTime.time()<breaks.to_hour)):
                     count = 1
                     t=breaks.to_hour
-                print(t)
 
         if count==0:
             availableDay.append(t.strftime("%I:%M %p"))
             t = timezone.localtime(timezone.make_aware(datetime.datetime.combine(datetime.date.today(), t) +
                 datetime.timedelta(minutes=interval))).time()
     return availableDay
+
 
 class bookingTimes(View):
     def post(self, request):
@@ -325,7 +333,7 @@ class createAppointment(View):
                 return JsonResponse({'time':time, 's_id':s_id,'start':start,'date':date,'time':time, 'emailerr':True, 'notonclientlist':True})
             if Bookings.objects.filter(company=company, start=start, end=end, is_cancelled_user=False,is_cancelled_company=False).count()<1:
                 if Account.objects.filter(email=email).exists():
-                    return JsonResponse({'time':time, 's_id':s_id,'start':start,'date':date,'time':time, 'good':False, 'emailerr':'The email you have provided has already been used to create an account. Please sign into Gibele then try booking again later.'})
+                    return JsonResponse({'time':time, 's_id':s_id,'start':start,'date':date,'time':time, 'good':False, 'emailerr':'The email you have provided has already been used to create an account. Please sign into BookMe then try booking again later.'})
                 
                 if Clients.objects.filter(email=email, user=None,first_name=first_name, last_name=last_name,phone=phone, company=company).exists():
                     guest = Clients.objects.get(company=company, email=email, first_name=first_name,last_name=last_name,phone=phone)

@@ -63,3 +63,13 @@
         border-right-width: thin !important;
         border-bottom-width: thin !important;
     }
+
+    .fc .fc-list-event-dot {
+        border: transparent !important;
+        display: none;
+    }
+
+    .fc .fc-daygrid-event-dot {
+        border: transparent !important;
+        display: none;
+    }

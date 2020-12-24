@@ -1,4 +1,4 @@
-{% extends 'welcome/main-test.html' %}
+{% extends 'welcome/main.html' %}
 {% block 'index_pricing' %}active{% endblock %}
 {% load static %}
 {% load hosts %}
@@ -34,7 +34,7 @@
               <div class="price"><p class="text-muted text-center"><span class="value">FREE</p></div>
               <div class="card-body">
                 <h2 class="text-pt subtitle text-center py-3">Solo Tier</h2>
-                <p class="text-muted text-center">Best for individuals</p>
+                <p class="text-center">Maximum 4 Staff Member</p>
                 <hr>
                 <ul class="fa-ul my-4">
                   <li class="mb-3"><span class="fa-li"><i class="fas fa-check"></i></span> <p class="text-left"> Individual Staff Member</p></li>
@@ -43,9 +43,9 @@
                   <li class="mb-3"><span class="fa-li"><i class="fas fa-check"></i></span><p class="text-left"> Google Calendar and Outlook Integration</p></li>
                   <li class="mb-3"><span class="fa-li"><i class="fas fa-check"></i></span><p class="text-left"> Seemlessly integrate on your website</p></li>
                   <li class="mb-3"><span class="fa-li"><i class="fas fa-check"></i></span><p class="text-left"> Your own web page for clients to book appointments with you</p></li>
-                  <li class="mb-3"><span class="fa-li"><i class="fas fa-check"></i></span><p class="text-left"> Listed on Gibele Marketplace</li>
+                  <li class="mb-3"><span class="fa-li"><i class="fas fa-check"></i></span><p class="text-left"> Listed on the BookMe Marketplace</li>
                   <li class="mb-3"><span class="fa-li"><i class="fas fa-times"></i></span> <p class="text-left"> Text message reminders for customers</p></li>
-                  <li class="mb-3"><span class="fa-li"><i class="fas fa-times"></i></span><p class="text-left"> Remove Gibele branding from your booking page</p></li>
+                  <li class="mb-3"><span class="fa-li"><i class="fas fa-times"></i></span><p class="text-left"> Remove BookMe branding from your booking page</p></li>
                 </ul>
                 <div class="text-center"><a class="btn btn-info" href="{% host_url 'bizadminsignup' host 'bizadmin' %}">Select</a></div>
               </div>
@@ -54,17 +54,17 @@
             <!-- pricing card-->
             <div class="card mb-5 b-0 card-highlight shadow-lg">
               <div class="card-topcol bg-purple"></div>
-              <div class="price"><p class="text-muted text-center"><span class="value text-sm" style="font-size: 15px">$5/user</p></div>
+              <div class="price"><p class="text-muted text-center"><span class="value text-sm" style="font-size: 15px">$5/staff</p></div>
               <div class="card-body">
                 <h2 class="text-pt subtitle text-center py-3">Mid Tier</h2>
-                <p class=" text-center">Maximum 5 staff members</p>
+                <p class="text-center">Maximum 8 staff members</p>
                 <hr>
                 <ul class="fa-ul my-4">
                   <li class="mb-3"><span class="fa-li"><i class="fas fa-check"></i></span><p class="text-left">Includes everything in basic tier</p></li>
                   <li class="mb-3"><span class="fa-li"><i class="fas fa-check"></i></span><p class="text-left">Up to 5 company staff members</p></li>
                   <li class="mb-3"><span class="fa-li"><i class="fas fa-check"></i></span><p class="text-left">Unlimited Text message reminders for customers</p></li>
                   <li class="mb-3"><span class="fa-li"><i class="fas fa-check"></i></span><p class="text-left">Take security deposits and enforce cancellation fees using Stripe. <p>See FAQ for more information.</p></p></li>
-                  <li class="mb-3"><span class="fa-li"><i class="fas fa-times"></i></span><p class="text-left">Remove Gibele branding from your booking page</p></li>
+                  <li class="mb-3"><span class="fa-li"><i class="fas fa-times"></i></span><p class="text-left">Remove BookMe branding from your booking page</p></li>
                 </ul>
                 <div class="text-center"><a class="btn btn-primary" href="{% host_url 'bizadminsignup' host 'bizadmin' %}">Select</a></div>
               </div>
@@ -73,17 +73,17 @@
             <!-- pricing card-->
             <div class="card mb-5 b-0 shadow">
               <div class="card-topcol bg-pink"></div>
-              <div class="price"><p class="text-muted text-center"><span class="value text-sm" style="font-size: 12px">$40/month</p></div>
+              <div class="price"><p class="text-center"><span class="value text-sm" style="font-size: 12px">$40/month</p></div>
               <div class="card-body">
                 <h2 class="text-pt subtitle text-center licolorpink py-3">Premium Tier</h2>
-                <p class="text-muted text-center">Unlimited staff members</p>
+                <p class="text-center">Unlimited staff members</p>
                 <hr>
                 <ul class="fa-ul my-4">
                   <li class="mb-3"><span class="fa-li licolorpink"><i class="fas fa-check"></i></span><p class="text-left">Includes everything in basic and mid tier</p></li>
-                  <li class="mb-3"><span class="fa-li licolorpink"><i class="fas fa-check"></i></span><p class="text-left">Get a custom made website (First come first serve basis)</p></li>
-                  <li class="mb-3"><span class="fa-li licolorpink"><i class="fas fa-check"></i></span><p class="text-left">Don't show similar companies on your business page in the Gibele marketplace</p></li>
-                  <li class="mb-3"><span class="fa-li licolorpink"><i class="fas fa-check"></i></span><p class="text-left">Premium banner shown on your business page in the Gibele marketplace</p></li>
-                  <li class="mb-3"><span class="fa-li licolorpink"><i class="fas fa-check"></i></span><p class="text-left">Remove Gibele branding from your booking page</p></li>
+                  <li class="mb-3"><span class="fa-li licolorpink"><i class="fas fa-check"></i></span><p class="text-left">Get a custom made website with your own email(First come first serve basis)</p></li>
+                  <li class="mb-3"><span class="fa-li licolorpink"><i class="fas fa-check"></i></span><p class="text-left">Don't show similar companies on your business page in the BookMe marketplace</p></li>
+                  <li class="mb-3"><span class="fa-li licolorpink"><i class="fas fa-check"></i></span><p class="text-left">Premium banner shown on your business page in the BookMe marketplace</p></li>
+                  <li class="mb-3"><span class="fa-li licolorpink"><i class="fas fa-check"></i></span><p class="text-left">Remove BookMe branding from your booking page</p></li>
                 </ul>
                 <div class="text-center"><a class="btn btn-success" href="{% host_url 'bizadminsignup' host 'bizadmin' %}">Select</a></div>
               </div>
@@ -91,7 +91,7 @@
 
             <div class="card mb-5 b-0 shadow" style="">
               <div class="card-topcol bg-warning"></div>
-              <div class="price"><p class="text-muted text-center"><span class="value text-sm" style="font-size: 18px">Contact</p></div>
+              <div class="price"><p class="text-center"><span class="value text-sm" style="font-size: 18px">Contact</p></div>
               <div class="card-body">
                 <h2 class="text-pt subtitle text-center licolor py-3 text-white">Enterprise Solutions</h2>
                 <p>If you have a team of more than 20 staff members or have any additional service requests, please contact our sales department.</p>

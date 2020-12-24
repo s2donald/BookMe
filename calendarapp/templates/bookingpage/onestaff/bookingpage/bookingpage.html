@@ -11,12 +11,12 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="author" content="Stephen Donald">
     <meta name="type" content="SaaS Website">
-    <meta name="site_name" content="Gibele">
+    <meta name="site_name" content="BookMe">
     <meta name="theme-color" content="#854fee">
-    <link rel="shortcut icon" type="image/jpg" href="{% static 'img/favicon/logo/gibele57.png'%}"/>
-    <link rel="apple-touch-icon" href="{% static 'img/favicon/logo/gibele57.png'%}">
+    <link rel="shortcut icon" type="image/png" href="{% static 'img/favicon/logo/favicon15.png'%}"/>
+    <link rel="apple-touch-icon" href="{% static '/img/favicon/logo/favicon15.png'%}">
     <meta name="robots" content="index, follow">
-    <meta name="description" content="Book your appointments with {% block companybizname %}{% endblock  %} online using the Gibele booking tool.">
+    <meta name="description" content="Book your appointments online with {% block companybizname %}{% endblock  %} using the BookMe booking tool.">
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
     <link rel="stylesheet" href="{% static "css/bases.css" %}">
@@ -26,15 +26,14 @@
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     <link rel="stylesheet" href="{% static "css/magnific-popup.css"%}">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
-    <title>{{ company.business_name }} - Booking with Gibele</title>
+    <title>{{ company.business_name }} - BookMe Bookings</title>
   </head>
   <body>
         {% comment %} {% block slideshow %}
         {% endblock slideshow %} {% endcomment %}
         <div class="bg-light inline-block container-fluid align-items-center justify-content-center">
-            <div class="row justify-content-between ">
-                <a class="my-2 pr-2 ml-2" href="{% host_url 'business:homepage' host 'www' %}"><img width="125px" style="white; border-radius:10px;" src="{% static "img/favicon/logo/GibeleLogo.svg" %}"></a>
-                <p class="font-weight-bold text-white pr-2 mt-1 ml-1">Appointments Powered by Gibele</p>
+            <div class="row justify-content-between p-2">
+                <a class="my-2 pr-2 ml-2" href="{% host_url 'business:homepage' host 'www' %}"><img width="125px" src="{% static "/img/favicon/logo/BookMe-whitebrown.svg" %}"></a>
             </div>
             <div class="d-flex align-items-center justify-content-center">
               <h1><a class="text-white" href="{% host_url 'bookingurls' host 'bookingurl' slug=company.slug %}">{{ company.business_name }}</a></h1>
@@ -64,7 +63,7 @@
             {% endblock %}
             {% block scripts %}
             {% endblock scripts %}
-            
+            <p class="font-weight-bold text-black m-2" style="color:black; margin:2px">Appointments Powered by BookMe</p>
         </div>
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->

@@ -63,7 +63,7 @@
                                     <div class="card-body">
                                         <!-- Account privacy optinos-->
                                         <h5 class="mb-1">Account Privacy</h5>
-                                        <p class="small text-muted">By setting your company to private, your company will be taken off the marketplace however you can still send clients your booking url and book appointments within Gibele.</p>
+                                        <p class="small text-muted">By setting your company to private, your company will be taken off the marketplace however you can still send clients your booking url and book appointments within BookMe.</p>
                                         <form>
                                         {% csrf_token %}
                                             {% with stat=company.status %}
@@ -216,7 +216,7 @@
         $("#deleteAcct").on('click', function(){
             Swal.fire({
                 title: 'We are sad to see you leave.',
-                html: 'Please send an email to support@gibele.com to finalize the deletion of your account.',
+                html: 'Please send an email to support@bookme.to to finalize the deletion of your account.',
                 customClass:{
                     confirmButton: 'btn btn-primary',
                     cancelButton: 'btn btn-danger',

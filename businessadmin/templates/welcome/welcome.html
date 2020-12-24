@@ -1,4 +1,4 @@
-{% extends 'welcome/main-test.html' %}
+{% extends 'welcome/main.html' %}
 {% load static %}
 {% load hosts %}
 {% block 'index_features' %}active{% endblock %}
@@ -19,7 +19,7 @@
                         {% elif user.is_consumer %}
                                     <a class="btn-solid-lg" href="{% host_url 'newbizcreate' host 'bizadmin' %}">Create a business page</a>
                         {% else %}
-                                <a class="btn-solid-lg" href="{% host_url 'bizadminlogin' host 'bizadmin' %}"><i class="fab fa-start"></i>Sign into Gibele</a>
+                                <a class="btn-solid-lg" href="{% host_url 'bizadminlogin' host 'bizadmin' %}"><i class="fab fa-start"></i>Sign into BookMe</a>
                                 <a class="btn-solid-lg" href="{% host_url 'bizadminsignup' host 'bizadmin' %}"><i class="fab fa-start"></i>Get started for free</a>
                         {% endif %}
                         </div>
@@ -39,14 +39,14 @@
 
     <section class="py-lg-5">
       <div class="container">
-        <h1 class="hero-heading mb-0">How can Gibele help your business thrive</h1>
+        <h1 class="hero-heading mb-0">How can BookMe help your business thrive</h1>
         <div class="row">
           <div class="col-12 col-md-6 col-lg-4 mb-3">
             <div class="card h-100 border-0 shadow hover-animate">
               <div class="card-body">
                 <object height="300px" width="100%" id="marketplace-welcome" data="{% static 'css/svg-img/bizpage-welcome/marketplace.svg' %}" type="image/svg+xml"></object>
-                <h5 class="card-title mb-3">Showcase your business on the Gibele marketplace</h5>
-                <p class="text-muted card-text text-sm">List your business on the Gibele marketplace for free and increase your exposure to new clients! You can also share your calendars on Facebook, Instagram, email or on your own website</p>
+                <h5 class="card-title mb-3">Showcase your business on the BookMe marketplace</h5>
+                <p class="text-muted card-text text-sm">List your business on the BookMe marketplace for free and increase your exposure to new clients! You can also share your calendars on Facebook, Instagram, email or on your own website</p>
               </div>
             </div>
           </div>

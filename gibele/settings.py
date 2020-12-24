@@ -35,8 +35,8 @@ if DEBUG:
     SESSION_COOKIE_DOMAIN= 'gibele.com'
     DOMAIN_NAME= 'gibele.com'
 else:
-    SESSION_COOKIE_DOMAIN= 'gibele.com'
-    DOMAIN_NAME= 'gibele.com'
+    SESSION_COOKIE_DOMAIN= 'bookme.to'
+    DOMAIN_NAME= 'bookme.to'
 
 # Application definition
 
@@ -210,7 +210,7 @@ LOGIN_REDIRECT_URL = 'business:homepage'
 
 EMAIL_HOST = 'smtp.zoho.com'
 EMAIL_PORT = 465
-EMAIL_HOST_USER = 'noreply@gibele.com'
+EMAIL_HOST_USER = 'noreply@bookme.to'
 EMAIL_HOST_PASSWORD = 'vEK97wFvxY27jTEhqQY8Qv6L!'
 EMAIL_USE_TLS = False
 EMAIL_USE_SSL = True

@@ -203,7 +203,7 @@ transform:scale(0.7);-webkit-transform-origin:0 0;transform-origin:0 0;" data-si
                             </div>
                         </div>
                         <div class="col-md-12" id="pphone">
-                            <a id="loginGibeleForm" class="btn btn-pill btn-warning mb-1">Log into Gibele</a>
+                            <a id="loginGibeleForm" class="btn btn-pill btn-warning mb-1">Log into BookMe</a>
                         </div>
                     </div>
                 </form>
@@ -213,7 +213,7 @@ transform:scale(0.7);-webkit-transform-origin:0 0;transform-origin:0 0;" data-si
                     <div class="authver justify-content-center container">
                         <div class="row justify-content-center">
                             <div class="col-sm-12">
-                                <h3>Book appointment using your Gibele Account</h3>
+                                <h3>Book appointment using your BookMe Account</h3>
                             </div>
                             <div class="col-md-12 p-0 justify-content-center d-none errorGib font-weight-bold" style="color:red">Incorrect password and email. Please try again</div>
                             <div class="col-sm-6 p-0 justify-content-center">
@@ -472,12 +472,12 @@ function getCookie(name) {
                             if (data.emailerr){
                                 confheader3.innerHTML = 'Unable to book service as a guest.'
                                 if (data.notonclientlist) {
-                                    bookingtimes.innerHTML = `<p style="font-size:25px;">Unfortunately you are not a returning client for this company. Please create an account with Gibele and request to be added on the client list.</p>`
+                                    bookingtimes.innerHTML = `<p style="font-size:25px;">Unfortunately you are not a returning client for this company. Please create an account with BookMe and request to be added on the client list.</p>`
                                 }
                                 else {
-                                    bookingtimes.innerHTML = `<p style="font-size:25px;">The email you have provided is already associated with an account. Please sign into Gibele and try booking again.</p>`
+                                    bookingtimes.innerHTML = `<p style="font-size:25px;">The email you have provided is already associated with an account. Please sign into BookMe and try booking again.</p>`
                                 }
-                                msg.innerHTML = `<a class="btn btn-outline-primary mt-1" href="{% host_url 'business:homepage' host 'www' %}">Go to Gibele Website</a>`
+                                msg.innerHTML = `<a class="btn btn-outline-primary mt-1" href="{% host_url 'business:homepage' host 'www' %}">Go to BookMe Website</a>`
                                 const loader = document.querySelector(".sk-folding-cube").classList.add("d-none")
                             }
                             else if (data.good){
@@ -513,12 +513,12 @@ function getCookie(name) {
                 if (data.emailerr){
                     confheader3.innerHTML = 'Unable to book service as a guest.'
                     if (data.notonclientlist) {
-                        bookingtimes.innerHTML = `<p style="font-size:25px;">Unfortunately you are not a returning client for this company. Please create an account with Gibele and request to be added on the client list.</p>`
+                        bookingtimes.innerHTML = `<p style="font-size:25px;">Unfortunately you are not a returning client for this company. Please create an account with BookMe and request to be added on the client list.</p>`
                     }
                     else {
-                        bookingtimes.innerHTML = `<p style="font-size:25px;">The email you have provided is already associated with an account. Please sign into Gibele and try booking again.</p>`
+                        bookingtimes.innerHTML = `<p style="font-size:25px;">The email you have provided is already associated with an account. Please sign into BookMe and try booking again.</p>`
                     }
-                    msg.innerHTML = `<a class="btn btn-outline-primary mt-1" href="{% host_url 'business:homepage' host 'www' %}">Go to Gibele Website</a>`
+                    msg.innerHTML = `<a class="btn btn-outline-primary mt-1" href="{% host_url 'business:homepage' host 'www' %}">Go to the BookMe Website</a>`
                     const loader = document.querySelector(".sk-folding-cube").classList.add("d-none")
                 }
                             else if (data.good){
@@ -599,7 +599,7 @@ function getCookie(name) {
                         showCancelButton: true,
                         allowOutsideClick: false,
                         title: 'This service provider does not accept new clients. ',
-                        html: `<p>Please log into Gibele to place a request</p><input type="text" id="login" class="swal2-input" placeholder="Email">
+                        html: `<p>Please log into BookMe to place a request</p><input type="text" id="login" class="swal2-input" placeholder="Email">
                                 <input type="password" id="password" class="swal2-input" placeholder="Password">`,
                         confirmButtonText: 'Sign In',
                         denyButtonText: `Sign Up`,
@@ -712,8 +712,8 @@ function getCookie(name) {
                                 showCancelButton: true,
                                 buttonsStyling: false,
                                 allowOutsideClick: false,
-                                title: 'Sign Up for a free Gibele account',
-                                html: `<p>Please sign up for Gibele to place a request</p>
+                                title: 'Sign Up for a free BookMe account',
+                                html: `<p>Please sign up for BookMe to place a request</p>
                                 <div class="row swalPadding">
                                     <div class="col-md-6 swalPadding">
                                         <input type="text" id="first" class="swal2-input" placeholder="First Name">

@@ -4,24 +4,24 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <meta property="og:title" content="Gibele - Bookings Made Easy"/>
-        <meta property="og:url" content="https://www.gibele.com/"/>
+        <meta property="og:title" content="BookMe.to - Bookings Made Easy"/>
+        <meta property="og:url" content="https://bookme.to/"/>
         <meta property="og:type" content="SaaS Website">
-        <meta property="og:site_name" content="Gibele">
-        <meta property="og:description" content="Book appointments online with Gibele. Search for bookable services offered by our partners across many different industries such as Automotive, Home Services, Personal Care, and other Professional Services">
-        <meta property="og:image" content="{% static 'img/favicon/logo/gibele57.png'%}"/>
+        <meta property="og:site_name" content="BookMe.to">
+        <meta property="og:description" cont=" {% block ogdescription %}{% endblock  %} ">
+        <meta property="og:image" content="{% static '/img/favicon/logo/favicon15.png'%}"/>
         <meta property="fb:app_id" content="780700556106489">
         <meta name="facebook-domain-verification" content="zo1f6s5ermy4srmky6umdx4m8nbbty" />
         <meta charset="utf-8">
-        <meta property="description" content="Book appointments online with Gibele. Search for bookable services offered by our partners across many different industries such as Automotive, Home Services, Personal Care, and other Professional Services">
+        <meta property="description" content="Book appointments online with BookMe. Search for bookable services offered by our partners across many different industries such as Automotive, Home Services, Personal Care, and other Professional Services">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
         <meta name="apple-mobile-web-app-capable" content="yes">
         <meta name="mobile-web-app-capable" content="yes">
         <meta name="author" content="Stephen Donald">
         <meta name="theme-color" content="#854fee">
-        <link rel="shortcut icon" type="image/jpg" href="{% static 'img/favicon/logo/gibele57.png'%}"/>
-        <link rel="apple-touch-icon" href="{% static 'img/favicon/logo/gibele57.png'%}">
+        <link rel="shortcut icon" type="image/png" href="{% static '/img/favicon/logo/favicon15.png'%}"/>
+        <link rel="apple-touch-icon" href="{% static '/img/favicon/logo/favicon15.png'%}">
         <meta name="robots" content="index, follow">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.18/css/bootstrap-select.min.css" integrity="sha512-ARJR74swou2y0Q2V9k0GbzQ/5vJ2RBSoCWokg4zkfM29Fb3vZEQyv0iWBMW/yvKgyHSR/7D64pFMmU8nYmbRkg==" crossorigin="anonymous" />        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/14.6.1/nouislider.min.css" integrity="sha512-1qnaNbQJ1IbEE01sp3ac1n/oa3olZ0N9io+n2Tbdk/sbWMRoMi5Btc/MLqtWCAIHVbPr5dukCODmyLVxx8pmKA==" crossorigin="anonymous" />
         <link rel="stylesheet" href="{% static "css/bases.css" %}">
@@ -34,12 +34,12 @@
         <!-- swiper-->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.4.1/css/swiper.min.css">
         <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-        <title>{% block title %}Gibele.com - Bookings Made Easy{% endblock %}</title>
+        <title>{% block title %}BookMe.to - Bookings Made Easy{% endblock %}</title>
     </head>
     <body id="page-wrapper fontarvo">
         <nav class="navbar navbar-expand-lg navbar-dark nav-box-round bg-light flex-shrink-2 flex-grow-0">
             <div class="container-fluid ">
-                <a class="mb-1 pr-2" href="/"><img width="150px"  src="{% static "img/favicon/logo/GibeleLogo.svg" %}"></a>
+                <a class="mb-1 pr-2" href="/"><img width="125px"  src="{% static "/img/favicon/logo/BookMe-whitebrown.svg" %}"></a>
                 <form method="GET" class="mr-2 my-auto w-100 d-inline-block order-1" action="{% url 'business:bizsearch' %}">
                     <div class="input-group {% block hidesearch %}{% endblock  %} ">
                         {{ form.Search }}
@@ -272,8 +272,8 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="footer-col first">
-                        <h6>About Gibele</h6>
-                        <p class="p-small">'We are a small team and our goal is to support the local services community.'</p><p class="p-small"> Gibele is an online scheduling tool which enables businesses in any category to allow their clients to book appointments. Gibele was built to help you grow your client base.</p>
+                        <h6>About BookMe</h6>
+                        <p class="p-small">'We are a small team and our goal is to support the local services community.'</p><p class="p-small"> BookMe is an online scheduling tool which enables businesses in any category to allow their clients to book appointments. BookMe was built to help you grow your client base.</p>
                     </div> <!-- end of footer-col -->
                     <div class="footer-col second">
                         <h6>The Company</h6>
@@ -313,52 +313,10 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-12">
-                    <p class="p-small">©2020 Gibele Inc, All rights reserved.</a></p>
+                    <p class="p-small">©2020 Gibele Systems Inc, All rights reserved.</a></p>
                 </div> <!-- end of col -->
             </div> <!-- enf of row -->
         </div> <!-- end of container -->
     </div> <!-- end of copyright --> 
-    
-    {% comment %} <footer class="bg-dark">
-    <div class="container-fluid padding">
-    <div class="row text-center">
-        <div class="col-md-4">
-            <hr class="light">
-            <h5 class="logo">Gibele</h5>
-            <hr class="light">
-            <li>©2020 Gibele Systems Inc, All rights reserved.</li>
-            <br>
-            <li><a class="licolor" href="{% host_url 'business:privacy' host 'www'%}">Privacy Policy</a></li>
-            <br>
-            <li><a class="licolor" href="{% host_url 'business:terms' host 'www'%}">Terms of Service</a></li>
-        </div>
-        <div class="col-md-4">
-            <hr class="light">
-            <h5 class="logo">The Company</h5>
-            <hr class="light">
-    
-                <a class="licolor" href="{% host_url 'bizadminmain' host 'bizadmin'%}">Gibele for Business</a>
-                <br>
-                <br>
-                <a class="licolor" href="{% host_url 'business:homepage' host 'www'%}">Gibele for Consumers</a>
-                <br>
-                <br>
-                <a class="licolor" href="mailto:support@gibele.com">Contact Us</a>
-            
-        </div>
-        <div class="col-md-4">
-            <hr class="light">
-            <h5 class="logo">Contact Information</h5>
-            <hr class="light">
-                <li>Toronto, Ontario</li>
-                <br>
-                <li>M1C4W7</li>
-                <br>
-                <a class="licolor" href="mailto:support@gibele.com">support@gibele.com</a>
-        </div>
-        
-    </div>
-    </div>
-    </footer> {% endcomment %}
 
 </html>

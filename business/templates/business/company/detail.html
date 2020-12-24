@@ -2,7 +2,8 @@
 {% load static %}
 {% load hosts %}
 {% load business_tags %}
-{% block title %}{{ company.business_name }} - Gibele.com{% endblock %}
+{% block title %}{{ company.business_name }} - BookMe.to{% endblock %}
+{% block ogdescription %}{{ company.description }}{% endblock ogdescription %}
 {% block content %}
     <!-- Hero Section-->
     {% with categoryname=company.category.name %}

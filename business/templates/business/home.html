@@ -2,6 +2,7 @@
 {% load static %}
 {% load hosts %}
 {% block hidesearch %} d-none {% endblock %}
+{% block ogdescription %}Book appointments online with BookMe. Search for bookable services offered by our partners across many different industries such as Automotive, Home Services, Personal Care, and other Professional Services{% endblock ogdescription %}
 {% block content %}
     <section class="hero-home" style="background: linear-gradient(180deg, #ff5f6d 0%, rgba(255, 95, 109, 0) 100%);">
       <div class="container z-index-20">
@@ -91,7 +92,7 @@
     <div class="container-fluid">
         <div class="row jumbotron text-center">
             <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 col-xl-10">
-                <p class="lead">Give your clients the best experience possible by having your services listed on Gibele!</p>
+                <p class="lead">Give your clients the best experience possible by having your services listed on BookMe!</p>
             </div>
             <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 col-xl-2">
                 <a href="{% host_url 'bizadminmain' host 'bizadmin' %}"><button type="button" class="btn btn-outline-secondary btn-lg">Learn More</button></a>

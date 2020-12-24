@@ -1,0 +1,75 @@
+
+.list-group-item {
+    /* Changed from padding: 1rem 1rem */
+    padding: 0.5rem 0.5rem;
+    /* Changed from background-color: #ffffff */
+    background-color: transparent;
+    border: 0px solid #2b3553;
+    ;
+}
+
+.white-content .list-group-item {
+    /* Changed from padding: 1rem 1rem */
+    padding: 0.5rem 0.5rem;
+    /* Changed from background-color: #ffffff */
+    background-color: #ffffff;
+    border: 0px solid #e9ecef;
+}
+
+  .form-group .form-control + .input-group-append .input-group-text,
+  .input-group .form-control + .input-group-append .input-group-text {
+    padding: 0 5px 0 5px; }
+
+    .input-group-append {
+        background-color: transparent;
+        border: none;
+        border-left: 0.5px solid #2b3553;
+        border-radius: 0rem;
+        color: #ffffff;
+        margin: 0;
+    }
+
+    .input-group > .input-group-append:not(:last-child) > .btn, .input-group > .input-group-append:not(:last-child) > .input-group-text, .input-group > .input-group-append:last-child > .btn:not(:last-child):not(.dropdown-toggle), .input-group > .input-group-append:last-child > .input-group-text:not(:last-child) {
+        border-top-right-radius: 0.4875rem;
+        border-bottom-right-radius: 0.4875rem;
+    }
+
+    .fc-theme-standard td, .fc-theme-standard th {
+        /* border: 1px solid #ddd; */
+        /* border: 1px solid var(--fc-border-color, #ddd); */
+        border: 1px solid #1e1e2f !important;
+        border: 1px solid var(--fc-border-color, #1e1e2f) !important;
+        /* border: green!important; */
+    }
+
+    .white-content .fc-theme-standard td, .white-content .fc-theme-standard th {
+        border: 1px solid #ddd !important;
+        border: 1px solid var(--fc-border-color, #ddd) !important;
+        /* border: none; */
+    }
+
+    .fc-theme-standard .fc-scrollgrid {
+        border: 1px solid #1e1e2f !important;
+        border: 1px solid var(--fc-border-color, #1e1e2f) !important;
+    }
+
+    .white-content .fc-theme-standard .fc-scrollgrid {
+        border: 1px solid #ddd !important;
+        border: 1px solid var(--fc-border-color, #ddd) !important;
+    }
+
+    .fc .fc-scrollgrid {
+        border-collapse: separate;
+        border-right-width: thin !important;
+        border-bottom-width: thin !important;
+    }
+
+    .fc .fc-list-event-dot {
+        border: transparent !important;
+        display: none;
+    }
+
+    .fc .fc-daygrid-event-dot {
+        border: transparent !important;
+        display: none;
+    }

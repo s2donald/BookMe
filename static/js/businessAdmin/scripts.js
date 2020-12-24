@@ -212,7 +212,7 @@ function debounce(func, wait, immediate) {
   if (isWindows) {
     // if we are on windows OS we activate the perfectScrollbar function
     if ($('.main-panel').length != 0) {
-      var $ps = new PerfectScrollbar('.main-panel', {
+      var ps = new PerfectScrollbar('.main-panel', {
         wheelSpeed: 2,
         wheelPropagation: true,
         minScrollbarLength: 20,
@@ -230,24 +230,6 @@ function debounce(func, wait, immediate) {
     }
     $html.addClass('perfect-scrollbar-on');
   } else {
-    // if we are on windows OS we activate the perfectScrollbar function
-    if ($('.main-panel').length != 0) {
-      var ps = new PerfectScrollbar('.main-panel', {
-        wheelSpeed: 2,
-        wheelPropagation: true,
-        minScrollbarLength: 20,
-        suppressScrollX: true
-      });
-    }
-
-    if ($('.sidebar .sidebar-wrapper').length != 0) {
-
-      var ps1 = new PerfectScrollbar('.sidebar .sidebar-wrapper');
-      $('.table-responsive').each(function() {
-        var ps2 = new PerfectScrollbar($(this)[0]);
-      });
-      console.log(ps1.update())
-    }
     $html.addClass('perfect-scrollbar-off');
   }
 })();

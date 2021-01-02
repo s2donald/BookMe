@@ -44,7 +44,7 @@ body,
 html {
     width: 100%;
 	height: 100%;
-	background-color: whitesmoke;
+	background-color: #f9f8ff;
 }
 
 body, p {
@@ -1714,11 +1714,27 @@ a:hover.back-to-top {
 	/* end of extra pages */
 }
 /* end of min-width 768px */
-
+@media(max-width:992px){
+	.dynamicalchange {
+		text-align: center;
+		margin-right: 0rem;
+	}
+}
+@media(max-width:1360px){
+	.dynamicalchange {
+		text-align: center;
+		margin-right: 4rem;
+	}
+}
+@media(min-width: 1360px) {
+	.dynamicalchange {
+		text-align: left;
+		/* margin-left: 7rem; */
+	}
+}
 
 /* Min-width 992px */
 @media (min-width: 992px) {
-	
 	/* General Styles */
 	h1 {
 		font-size: 3.25rem;
@@ -1975,7 +1991,7 @@ a:hover.back-to-top {
 
 	/* Header */
 	.header {
-        background: whitesmoke;
+        background: #f9f8ff;
         background-image: none !important;
         border-radius: 0px 0px 0px 0px;
 	}

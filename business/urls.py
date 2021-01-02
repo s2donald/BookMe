@@ -10,6 +10,7 @@ urlpatterns = [
     # path('create/<int:pk>/<slug:slug>/', views.CreateServiceView, name='create_service'),
     # path('delete/<int:pk>/<int:pks>/<slug:slug>/', views.DeleteServiceView, name='delete_service'),
     # path('update/<int:pk>/<int:pks>/<slug:slug>/', views.UpdateServiceView, name='update_service'),
+    # path('sendmassEmail/sqtrptrackme/', views.sendMassEmailAjax.as_view(), name='sendemail'),
     path('userlike', views.company_like.as_view(), name='company_like'),
     path('getcompany/', views.getCompanyName, name='get_company'),
     path('addreview/', views.addReviewView, name='add_review'),
@@ -17,6 +18,4 @@ urlpatterns = [
     path('search', views.allsearch,name='bizsearch'),
     path('<slug:slug>/<int:id>/',views.company_detail,name='company_detail'),
     path('<slug:category_slug>/',views.company_list, name='company_list_by_category'),
-    
-    
 ]

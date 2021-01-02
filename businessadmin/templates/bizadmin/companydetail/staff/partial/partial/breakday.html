@@ -1,0 +1,13 @@
+{% for breakday in staff.staff_breaks.all %}
+    {% if breakday.weekday == weekday %}
+        <div class="list-group-item">
+            <div class="row m-0 align-items-center">
+        
+                <input type="text" class="breaktimepicker form-control text-center mr-1 updatebreaktime" data-fromto="from" data-staff="{{ staff.id }}" data-breakid="{{ breakday.id }}" style="width:90px" value="{{ breakday.from_hour|time:"H:i A" }}"> to <input type="text" style="width:90px" data-fromto="to" class="breaktimepicker form-control text-center ml-1 updatebreaktime" data-staff="{{ staff.id }}" data-breakid="{{ breakday.id }}" value="{{ breakday.to_hour|time:"H:i A" }}"> 
+                {% comment %} <button class="btn btn-icon btn-danger"></button> {% endcomment %}
+                <a tabindex="0" data-staff="{{ staff.id }}" data-weekday="{{ day.weekday }}" class="popover btn btn-icon btn-danger text-center breakdate" data-breakid="{{ breakday.id }}" role="button" data-toggle="popover" data-trigger="focus" title="Delete?" data-html='true' style="z-index:1 !important;"><i class="fas fa-trash" data-breakid="{{ breakday.id }}" data-staff="{{ staff.id }}"></i></a>
+                
+            </div>
+        </div>
+    {% endif %}
+{% endfor %}

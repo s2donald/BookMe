@@ -1,5 +1,6 @@
 from celery import task
-from django.core.mail import send_mail
+from django.core.mail import send_mail, EmailMultiAlternatives
+from django.core import mail
 from account.models import Account
 from business.models import Company, CompanyReq
 from consumer.models import Bookings
@@ -63,3 +64,17 @@ def appointmentCancelledCompany(booking_id):
     plain_message = strip_tags(html_message)
     mail_sent = send_mail(subject, plain_message, 'BookMe.to <noreply@bookme.to>', [email], html_message=html_message, fail_silently=False)
     return mail_sent
+
+@task
+def sendMassEmail():
+    allcompanies = Company.objects.all()
+    emails = []
+    subject = f'Merry Christmas and Name Change Announcement from Gibele to BookMe!'
+    for comp in allcompanies:
+        html_content = render_to_string('emailSents/massEmail/massEmail.html', {'name':comp.user.first_name, 'slug':comp.slug})
+        text_content = strip_tags(html_content)
+        email = EmailMultiAlternatives(subject, text_content, 'BookMe.to <noreply@bookme.to>', [comp.user.email])
+        email.attach_alternative(html_content, "text/html")
+        emails.append(email)
+    mail_sent = mail.get_connection()
+    return mail_sent.send_messages(emails)

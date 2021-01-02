@@ -130,19 +130,7 @@
         </div>
     </div>
     <script>
-    $('.datetimepicker').datetimepicker({
-        format: 'LT',
-        icons: {
-        time: "fas fa-clock",
-        up: "fa fa-chevron-up",
-        down: "fa fa-chevron-down",
-        previous: 'tim-icons icon-minimal-left',
-        next: 'tim-icons icon-minimal-right',
-        today: 'fa fa-screenshot',
-        clear: 'fa fa-trash',
-        close: 'fa fa-remove'
-        }
-    });
+    
     function getCookie(name) {
         let cookieValue = null;
         if (document.cookie && document.cookie !== '') {
@@ -195,13 +183,6 @@
         }        
     });
 
-    {% for staff in company.staffmembers.all %}
-        $('#tab{{ forloop.counter }}').on('click', function(e){
-            {% comment %} Get detail views ajaxly {% endcomment %}
-
-        })
-    {% endfor %}
-
     $(document).on('click', '#services',function(){
         var staffinfo = document.querySelector('#staff-information');
         var staff_id =  $('#services').attr("data-staff")
@@ -213,6 +194,71 @@
             },
             success:function(data){
                 staffinfo.innerHTML = data.html_content
+            }
+        });
+    });
+
+    $(document).on('click', '#hours',function(){
+        var staffinfo = document.querySelector('#staff-information');
+        var staff_id =  $('#hours').attr("data-staff")
+        $.ajax({
+            type:'GET',
+            url: "{% host_url 'getstaffservice' host 'bizadmin' %}",
+            data: {
+                'staff_id': staff_id, 'type': 'hours'
+            },
+            success:function(data){
+                staffinfo.innerHTML = data.html_content
+                $('.hourtimepickr').datetimepicker({
+                    format: 'LT',
+                    icons: {
+                    time: "fas fa-clock",
+                    up: "fa fa-chevron-up",
+                    down: "fa fa-chevron-down",
+                    previous: 'tim-icons icon-minimal-left',
+                    next: 'tim-icons icon-minimal-right',
+                    today: 'fa fa-screenshot',
+                    clear: 'fa fa-trash',
+                    close: 'fa fa-remove',
+                    
+                    }
+                });
+            }
+        });
+    });
+
+    $(document).on('click', '#breaks',function(){
+        var staffinfo = document.querySelector('#staff-information');
+        var staff_id =  $('#breaks').attr("data-staff")
+        $.ajax({
+            type:'GET',
+            url: "{% host_url 'getstaffservice' host 'bizadmin' %}",
+            data: {
+                'staff_id': staff_id, 'type': 'breaks'
+            },
+            success:function(data){
+                staffinfo.innerHTML = data.html_content
+                $('.breaktimepicker').datetimepicker({
+                    format: 'LT',
+                    icons: {
+                    time: "fas fa-clock",
+                    up: "fa fa-chevron-up",
+                    down: "fa fa-chevron-down",
+                    previous: 'tim-icons icon-minimal-left',
+                    next: 'tim-icons icon-minimal-right',
+                    today: 'fa fa-screenshot',
+                    clear: 'fa fa-trash',
+                    close: 'fa fa-remove',
+                    
+                    }
+                });
+                $('.popover').popover({
+                    trigger: 'focus',
+                    html: true,
+                    sanitize: false,
+                    content: 'Are you sure you want to delete? <button class="btn btn-sm btn-danger removebreak" data-breakid='+staff_id+' data-staff='+staff_id+' >Delete</button><button class="btn btn-sm">Cancel</button>',
+
+                })
             }
         });
     });
@@ -320,6 +366,254 @@
             }
         });
     })
+
+    $(document).on('click', '.removeworkingday',function(){
+        var $this = $(this)
+        workday = $this.attr('data-workingday')
+        staff_id = $this.attr('data-staff')
+        $.ajax({
+            type:'POST',
+            url: "{% host_url 'removestaffworkingday' host 'bizadmin' %}",
+            data: {
+                'staff_id': staff_id, 'workday': workday
+            },
+            headers:{
+                "X-CSRFToken": csrftoken
+            },
+            success:function(data){
+                $this[0].classList.remove('removeworkingday')
+                $this[0].classList.add('addworkingday')
+                $this[0].classList.remove('btn-info')
+                $this[0].innerHTML = data.innerbtn
+                var el = document.querySelector(data.hideornot);
+                el.classList.add('d-none')
+                $.notify({
+                    // options
+                    message: 'Updated Staff Working Day'
+                },{
+                    // settings
+                    type: 'success',
+                    delay: 50,
+                });
+
+            }
+        });
+    });
+
+    let breakid = -1
+
+    $(document).on('click', '.breakdate', function(){
+        var $this = $(this)
+        break_id = $this.attr('data-breakid')
+        breakid = break_id
+    });
+
+    $(document).on('click', '.removebreak',function(){
+        var $this = $(this)
+        staff_id = $this.attr('data-staff')
+        $.ajax({
+            type:'POST',
+            url: "{% host_url 'removebreakday' host 'bizadmin' %}",
+            data: {
+                'staff_id': staff_id, 'break_id': breakid
+            },
+            headers:{
+                "X-CSRFToken": csrftoken
+            },
+            success:function(data){
+                var el = document.querySelector(data.innerid);
+                el.innerHTML = data.html
+                $.notify({
+                    // options
+                    message: 'Removed staff break'
+                },{
+                    // settings
+                    type: 'success',
+                    delay: 50,
+                });
+
+                $('.breaktimepicker').datetimepicker({
+                    format: 'LT',
+                    icons: {
+                    time: "fas fa-clock",
+                    up: "fa fa-chevron-up",
+                    down: "fa fa-chevron-down",
+                    previous: 'tim-icons icon-minimal-left',
+                    next: 'tim-icons icon-minimal-right',
+                    today: 'fa fa-screenshot',
+                    clear: 'fa fa-trash',
+                    close: 'fa fa-remove',
+                    
+                    }
+                });
+                $('.popover').popover({
+                    trigger: 'focus',
+                    html: true,
+                    sanitize: false,
+                    content: 'Are you sure you want to delete? <button class="btn btn-sm btn-danger removebreak" data-breakid='+staff_id+' data-staff='+staff_id+' >Delete</button><button class="btn btn-sm">Cancel</button>',
+
+                })
+
+            }
+        });
+    }); 
+
+    let countworkday = 1
+    $(document).on('blur','.updatebreaktime',function() {
+        var $this = $(this)
+        breakid = $this.attr('data-breakid')
+        staff_id = $this.attr('data-staff')
+        time = $this[0].value
+        fromto = $this.attr('data-fromto')
+        if(countworkday == 2){
+            countworkday = 1
+            $.ajax({
+                type:'POST',
+                url: "{% host_url 'savestaffbreakday' host 'bizadmin' %}",
+                data: {
+                    'staff_id': staff_id, 'break_id': breakid, 'time':time, 'fromto':fromto
+                },
+                headers:{
+                    "X-CSRFToken": csrftoken
+                },
+            }).done(function(result){
+                $.notify({
+                        // options
+                        message: result.innerbtn
+                    },{
+                        // settings
+                        type: result.success,
+                        delay: 50,
+                    });
+            });
+        }
+        else {
+            countworkday++;
+        }
+        
+    });
+
+
+
+    $(document).on('click', '.addworkingday',function(){
+        var $this = $(this)
+        workday = $this.attr('data-workingday')
+        staff_id = $this.attr('data-staff')
+        $.ajax({
+            type:'POST',
+            url: "{% host_url 'addstaffworkingday' host 'bizadmin' %}",
+            data: {
+                'staff_id': staff_id, 'workday': workday
+            },
+            headers:{
+                "X-CSRFToken": csrftoken
+            },
+            success:function(data){ 
+                $this[0].classList.add('removeworkingday')
+                $this[0].classList.remove('addworkingday')
+                $this[0].classList.add('btn-info')
+                $this[0].innerHTML = data.innerbtn
+                var el = document.querySelector(data.hideornot);
+                el.classList.remove('d-none')
+                $.notify({
+                    // options
+                    message: 'Updated Staff Working Day'
+                },{
+                    // settings
+                    type: 'success',
+                    delay: 50,
+                });
+
+            }
+        });
+    });
+
+
+    $(document).on('blur','.workdaystaff',function() {
+        var $this = $(this)
+        workday = $this.attr('data-workingday')
+        staff_id = $this.attr('data-staff')
+        time = $this[0].value
+        fromto = $this.attr('data-fromto')
+        if(countworkday == 2){
+            countworkday = 1
+            $.ajax({
+                type:'POST',
+                url: "{% host_url 'savestaffworkingday' host 'bizadmin' %}",
+                data: {
+                    'staff_id': staff_id, 'workday': workday, 'time':time, 'fromto':fromto
+                },
+                headers:{
+                    "X-CSRFToken": csrftoken
+                },
+                success:function(data){
+                    $.notify({
+                        // options
+                        message: data.innerbtn
+                    },{
+                        // settings
+                        type: data.success,
+                        delay: 50,
+                    });
+
+                }
+            });
+        }
+        else {
+            countworkday++;
+        }
+        
+    });
+
+    $(document).on('click', '.addbreak',function(){
+        var $this = $(this)
+        workday = $this.attr('data-weekday')
+        staff_id = $this.attr('data-staff')
+        $.ajax({
+            type:'POST',
+            url: "{% host_url 'addbreakday' host 'bizadmin' %}",
+            data: {
+                'staff_id': staff_id, 'workday': workday
+            },
+            headers:{
+                "X-CSRFToken": csrftoken
+            },
+            success:function(data){
+                var el = document.querySelector(data.innerid);
+                el.innerHTML = data.html
+                $('.breaktimepicker').datetimepicker({
+                    format: 'LT',
+                    icons: {
+                    time: "fas fa-clock",
+                    up: "fa fa-chevron-up",
+                    down: "fa fa-chevron-down",
+                    previous: 'tim-icons icon-minimal-left',
+                    next: 'tim-icons icon-minimal-right',
+                    today: 'fa fa-screenshot',
+                    clear: 'fa fa-trash',
+                    close: 'fa fa-remove',
+                    
+                    }
+                });
+                $('.popover').popover({
+                    trigger: 'focus',
+                    html: true,
+                    sanitize: false,
+                    content: 'Are you sure you want to delete? <button class="btn btn-sm btn-danger removebreak" data-breakid='+staff_id+' data-staff='+staff_id+' >Delete</button><button class="btn btn-sm">Cancel</button>',
+
+                })
+                $.notify({
+                    // options
+                    message: 'Added a new staff break'
+                },{
+                    // settings
+                    type: 'success',
+                    delay: 50,
+                });
+
+            }
+        });
+    });
 
     </script>
 {% endblock %}

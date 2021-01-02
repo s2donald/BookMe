@@ -39,15 +39,13 @@ class StaffMember(models.Model):
     last_name = models.CharField(verbose_name="Last Name", max_length=30, unique=False, null=True, blank=True)
     phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$', message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
     phone = models.CharField("Phone Number",validators=[phone_regex], max_length=17, null=True, blank=True)
-    email = models.EmailField(verbose_name='Email', max_length=60, unique=False, null=True, blank=True)
+    email = models.EmailField(verbose_name='Email', max_length=60, unique=True, null=True, blank=True)
     cc_email = models.EmailField(verbose_name='CC Email', max_length=60, unique=False, null=True, blank=True)
     slug = models.SlugField(max_length=200, db_index=True, blank=True, unique=False)
     login = models.BooleanField(default=False)
     access = models.IntegerField(choices=STAFF_ACCESS, default=0)
     calendarics = models.FileField(upload_to=calendar_staff_folder,null=True, blank=True)
     services = models.ManyToManyField(Services, blank=True)
-
-
 
     class Meta:
         ordering = ('user',)
@@ -62,7 +60,7 @@ class Breaks(models.Model):
     staffmember = models.ForeignKey(StaffMember, on_delete=models.CASCADE, related_name='staff_breaks', null=True, blank=True)
     weekday = models.IntegerField(choices=WEEKDAYS)
     from_hour = models.TimeField(default='12:00 PM')
-    to_hour = models.TimeField(default='1:00 PM')
+    to_hour = models.TimeField(default='13:00 PM')
     class Meta:
         ordering = ('weekday',)
         verbose_name = 'Break'
@@ -73,8 +71,8 @@ class Breaks(models.Model):
 class StaffWorkingHours(models.Model):
     staff = models.ForeignKey(StaffMember, on_delete=models.CASCADE, related_name='staff_hours')
     weekday = models.IntegerField(choices=WEEKDAYS)
-    from_hour = models.TimeField(default='9:00:00')
-    to_hour = models.TimeField(default='17:00:00')
+    from_hour = models.TimeField(default='9:00 AM')
+    to_hour = models.TimeField(default='5:00 PM')
     is_off = models.BooleanField(default=False)
     class Meta:
         ordering = ('weekday', 'from_hour')

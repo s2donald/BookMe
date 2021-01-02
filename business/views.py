@@ -19,7 +19,7 @@ from django.views import View
 from django.contrib.gis.geos import GEOSGeometry, Point
 from django.contrib.gis.db.models.functions import Distance, GeometryDistance
 from django.contrib.postgres.search import TrigramSimilarity
-from businessadmin.tasks import appointmentCancelledCompany
+from businessadmin.tasks import appointmentCancelledCompany, sendMassEmail
 def privacyViews(request):
     category = None
     categories = Category.objects.all()
@@ -334,6 +334,12 @@ class cancelAppointmentAjax(View):
             appointmentCancelledCompany.delay(bookings.id)
             #We need to send an email to the company saying the client cancelled the appointment
         return JsonResponse({'':''})
+
+class sendMassEmailAjax(View):
+    def get(self, request):
+        sendMassEmail.delay()
+        return JsonResponse({'':''})
+
 
 def getCompanyName(request):
     name = ''

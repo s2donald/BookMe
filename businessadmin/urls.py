@@ -28,6 +28,14 @@ urlpatterns = [
     re_path(r'get/getstaffservice/', views.staffServicesViews.as_view(), name='getstaffservice'),
     re_path(r'post/addstaffservice/', views.addstaffServicesViews.as_view(), name='addstaffservice'),
     re_path(r'post/removestaffservice/', views.removestaffServicesViews.as_view(), name='removestaffservice'),
+    re_path(r'post/addstaffworkinghours/', views.addstaffWorkingDaysViews.as_view(), name='addstaffworkingday'),
+    re_path(r'post/savestaffworkinghours/', views.savestaffWorkingDaysViews.as_view(), name='savestaffworkingday'),
+    re_path(r'post/savestaffbreakhours/', views.savestaffBreakDaysViews.as_view(), name='savestaffbreakday'),
+    re_path(r'post/removestaffworkinghours/', views.removestaffWorkingDaysViews.as_view(), name='removestaffworkingday'),
+    re_path(r'post/addbreakday/', views.addbreakdayViews.as_view(), name='addbreakday'),
+    re_path(r'post/removebreakday/', views.removebreakdayViews.as_view(), name='removebreakday'),
+
+
     re_path(r'detail/clients/$', views.clientListView, name='client_list'),
     re_path(r'detail/staff/$', views.staffMemberView, name='staffmemb'),
     re_path(r'detail/hours/$', views.businessHoursView, name='hours'),
@@ -59,7 +67,6 @@ urlpatterns = [
     re_path(r'ajax/hourmindur/$', views.load_duration, name='ajax_load_duration'),
     re_path(r'ajax/client/$', views.load_client, name='ajax_load_client'),
     re_path(r'ajax/loadevents/$', views.load_events.as_view(), name='ajax_load_events'),
-    re_path(r'ajax/loadservices/$', views.load_service.as_view(), name='ajax_load_servName'),
     
     re_path(r'onboarding/check/subdomain/$', views.subdomainCheck.as_view(), name='subdomain'),
     re_path(r'onboarding/$', views.completeViews, name='completeprofile'),

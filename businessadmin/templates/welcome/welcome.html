@@ -13,7 +13,7 @@
                 <div class="col-lg-7">
                     <div class="text-container">
                         <h1>A simple scheduling tool for <span id="js-rotating">barbers, detailers, mechanics, stylists, everyone</span></h1>
-                        <div class="">
+                        <div class="dynamicalchange">
                         {% if user.is_business %}
                                     <a class="btn-solid-lg" href="{% host_url 'completeprofile' host 'bizadmin' %}">Go to your business page</a>
                         {% elif user.is_consumer %}
@@ -22,7 +22,7 @@
                                 <a class="btn-solid-lg" href="{% host_url 'bizadminlogin' host 'bizadmin' %}"><i class="fab fa-start"></i>Sign into BookMe</a>
                                 <a class="btn-solid-lg" href="{% host_url 'bizadminsignup' host 'bizadmin' %}"><i class="fab fa-start"></i>Get started for free</a>
                         {% endif %}
-                        </div>
+                    </div>
                     </div> <!-- end of text-container -->
                 </div> <!-- end of col -->
                 <div class="col-lg-5">

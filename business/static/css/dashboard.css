@@ -73,3 +73,49 @@
         border: transparent !important;
         display: none;
     }
+
+    .fc .fc-more-popover .fc-popover-body {
+        overflow-y: auto !important;
+        height: 500px !important;
+    }
+
+    .fc .fc-scrollgrid-section-body table, .fc .fc-scrollgrid-section-footer table {
+        border-bottom-style: hidden;
+    }
+
+    .fc-event {
+        height: 70px;
+        flex-wrap: wrap;
+    }
+
+    .fc .fc-more-popover {
+        width: auto;
+    }
+
+    .fc .fc-daygrid-event {
+        flex-wrap: wrap;
+        white-space: break-spaces;
+        display: list-item;
+        cursor: pointer;
+        list-style: none;
+    }
+
+    .fc, .fc *, .fc *:before, .fc *:after {
+        padding-right: 6px;
+    }
+
+    td.day div {
+        color: black !important;
+    }
+    
+    td.day.active div {
+        color: white !important;
+    }
+
+    td.day.old div {
+        color: grey !important;
+    }
+
+    td.day.new div {
+        color: grey !important;
+    }

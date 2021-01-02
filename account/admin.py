@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from .models import Account
 from business.models import Clients, Company, Services
-from businessadmin.models import Breaks, StaffMember
+from businessadmin.models import Breaks, StaffMember, StaffWorkingHours
 from consumer.models import Bookings
 from django.contrib.auth.models import Group
 # Register your models here.
@@ -46,6 +46,10 @@ class BreaksInline(admin.TabularInline):
     model = Breaks
     extra = 0
 
+class StaffWorkingHoursInline(admin.TabularInline):
+    model = StaffWorkingHours
+    extra = 0
+
 @admin.register(Clients)
 class ClientAdmin(admin.ModelAdmin):
     list_display = ['user','first_name','last_name','email', 'phone', 'company']
@@ -56,6 +60,6 @@ class ClientAdmin(admin.ModelAdmin):
 class StaffAdmin(admin.ModelAdmin):
     list_display = ['company', 'user', 'first_name', 'last_name']
     search_fields = ('user__first_name','company__business_name',)
-    inlines = [ BreaksInline ]
+    inlines = [ BreaksInline, StaffWorkingHoursInline ]
 
     

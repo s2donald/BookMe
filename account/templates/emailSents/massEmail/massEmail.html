@@ -18,9 +18,11 @@
                         
                         <td valign="top" class="mcnTextContent" style="padding: 0px 18px 9px; line-height: 150%;">
                         
-                            <h1><span style="font-size:15px">Hello {{ acct.first_name }},&nbsp;</span></h1>
+                            <h1><span style="font-size:15px">Hi {{ name }},&nbsp;</span></h1>
 
-<p style="line-height: 150%;"><span style="font-size:14px">Thank you for joining BookMe! We are excited to help you discover the best services around you!</span></p>
+<p style="line-height: 150%;"><span style="font-size:14px">Merry Christmas to you and your families! We hope you have been enjoying some well deserved time off with your loved ones during this holiday season.</span>
+<br><br>
+                              <span style="font-size:14px">As some of you are aware, we have been planning a name change from Gibele to BookMe for our booking platform. We have already imported all existing users and data into the new BookMe website.</span></p>
 
                         </td>
                     </tr>
@@ -53,14 +55,12 @@
                         
                         <td valign="top" class="mcnTextContent" style="padding: 0px 18px 9px; line-height: 150%;">
                         
-                            <span style="font-size:14px"><strong>You can now:</strong></span>
+                            <span style="font-size:14px"><strong>To get started:</strong></span>
 
 <ul>
-	<li><span style="font-size:14px">Book appointments online, 24/7</span></li>
-	<li><span style="font-size:14px">Reschedule or cancel appointments with a few clicks</span></li>
-	<li><span style="font-size:14px">Discover businesses and services in the BookMe marketplace</span></li>
-	<li><span style="font-size:14px">Bookmark businesses for notifications when discounts and deals are offered</span></li>
-	<li><span style="font-size:14px">Write reviews and rate businesses on the services they provide you</span></li>
+	<li><span style="font-size:14px">1. Open your browser on your computer and go to <a href="https://bookme.to">bookme.to</a>.</span></li>
+	<li><span style="font-size:14px">2. Sign into the BookMe platform using the email address and password you used on the previous website (gibele.com)</span></li>
+	<li><span style="font-size:14px">3. Begin sharing your new booking page url, <a href="https://{{ slug }}.bookme.to">{{ slug }}.bookme.to</a>, to allow your clients to book appointments with you.</span></li>
 </ul>
 
                         </td>
@@ -94,7 +94,11 @@
                         
                         <td valign="top" class="mcnTextContent" style="padding: 0px 18px 9px; line-height: 150%;">
                         
-                            <div style="text-align: center;"><span style="font-size:14px">Go to the BookMe marketplace and book an appointment now!</span></div>
+                            <div style="text-align: left;"><span style="font-size:14px">Questions?</span>
+                            <br><br>
+                            <span style="font-size:14px;">If you have any questions, feel free to email us at <a href="mailto:support@bookme.to">support@bookme.to</a>.</span>
+                            <br>
+                            </div>
 
                         </td>
                     </tr>
@@ -110,7 +114,9 @@
             </td>
         </tr>
     </tbody>
-</table><table border="0" cellpadding="0" cellspacing="0" width="100%" class="mcnButtonBlock" style="min-width:100%;">
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%" class="mcnButtonBlock" style="min-width:100%;">
     <tbody class="mcnButtonBlockOuter">
         <tr>
             <td style="padding-top:0; padding-right:18px; padding-bottom:18px; padding-left:18px;" valign="top" align="center" class="mcnButtonBlockInner">
@@ -118,7 +124,7 @@
                     <tbody>
                         <tr>
                             <td align="center" valign="middle" class="mcnButtonContent" style="font-family: Arial; font-size: 14px; padding: 16px;">
-                                <a class="mcnButton " title="BookMe Marketplace" href="https://www.bookme.to/" target="_blank" style="font-weight: bold;letter-spacing: normal;line-height: 100%;text-align: center;text-decoration: none;color: #FFFFFF;">BookMe Marketplace</a>
+                                <a class="mcnButton " title="BookMe Marketplace" href="https://biz.bookme.to/" target="_blank" style="font-weight: bold;letter-spacing: normal;line-height: 100%;text-align: center;text-decoration: none;color: #FFFFFF;">Go to BookMe Biz</a>
                             </td>
                         </tr>
                     </tbody>
@@ -128,5 +134,3 @@
     </tbody>
 </table>
 {% endblock %}
-
-

@@ -1728,17 +1728,15 @@ class load_events(View):
         end = request.GET.get('end')
         company= Company.objects.get(user=request.user)
         bookings = Bookings.objects.filter(start__gte=start, end__lte=end, company=company, is_cancelled_user=False, is_cancelled_company=False).values()
+        for b in bookings:
+            b_id = b['id']
+            booking = Bookings.objects.get(pk=b_id)
+            name = booking.service.name
+            someStr = name + '\nC$' + str(booking.price)
+            b['service_name'] = someStr
+        
         bookings_list = list(bookings)
-
         return JsonResponse(bookings_list, safe=False)
-
-class load_service(View):
-    def get(self, request):
-        service_id = request.GET.get('service_id')
-        services = Services.objects.get(pk=service_id)
-        name = services.name
-        someStr = name + '\n' + str(services.price)
-        return JsonResponse({'servName':someStr})
 
 
 class changeDarkMode(View):
@@ -1822,13 +1820,15 @@ class staffServicesViews(View):
     def get(self, request):
         staff_id = request.GET.get('staff_id')
         types = request.GET.get('type')
-        # staff = StaffMember.objects.get(id=int(staff_id))
-        # company = staff.company
+        staff = StaffMember.objects.get(id=int(staff_id))
+        company = staff.company
         if types == 'services':
             html = render_to_string('bizadmin/companydetail/staff/partial/partial_staff_services.html', {'staff':staff,'company':company}, request)
         elif types == 'detail':
             html = render_to_string('bizadmin/companydetail/staff/partial/partial_detail.html', {'staff':staff,'company':company}, request)
-        elif types == 'working':
+        elif types == 'breaks':
+            html = render_to_string('bizadmin/companydetail/staff/partial/breaks.html', {'staff':staff,'company':company}, request)
+        elif types == 'hours':
             html = render_to_string('bizadmin/companydetail/staff/partial/working_hours.html', {'staff':staff,'company':company}, request)
 
         return JsonResponse({'html_content':html})
@@ -1854,3 +1854,113 @@ class removestaffServicesViews(View):
         text_service_header = 'All services that ' + str(staff.first_name) + ' ' + str(staff.last_name) + ' can provide(' + str(staff.services.count()) + '):'
         innerbtn = ' <i class="fas fa-plus-circle "></i> ' + service.name
         return JsonResponse({'innerbtn':innerbtn, 'text_service_header':text_service_header})
+
+class addstaffWorkingDaysViews(View):
+    def post(self, request):
+        staff_id = request.POST.get('staff_id')
+        workday = request.POST.get('workday')
+        staff = StaffMember.objects.get(id=int(staff_id))
+        dayoff = staff.staff_hours.get(weekday=workday)
+        dayoff.is_off = False
+        dayoff.save()
+        hideornot = '#workdaystaff' + str(workday)
+        innerbtn = ' <i class="fas fa-check-circle "></i> Working'
+        return JsonResponse({'innerbtn':innerbtn, 'hideornot':hideornot})
+
+class removestaffWorkingDaysViews(View):
+    def post(self, request):
+        staff_id = request.POST.get('staff_id')
+        workday = request.POST.get('workday')
+        staff = StaffMember.objects.get(id=int(staff_id))
+        dayoff = staff.staff_hours.get(weekday=workday)
+        dayoff.is_off = True
+        dayoff.save()
+        hideornot = '#workdaystaff' + str(workday)
+        innerbtn = ' <i class="fas fa-plus-circle "></i> Off'
+        return JsonResponse({'innerbtn':innerbtn, 'hideornot':hideornot})
+
+class savestaffWorkingDaysViews(View):
+    def post(self, request):
+        staff_id = request.POST.get('staff_id')
+        workday = request.POST.get('workday')
+        time = request.POST.get('time')
+        fromto = request.POST.get('fromto')
+        staff = StaffMember.objects.get(id=int(staff_id))
+        hours = staff.staff_hours.get(weekday=workday)
+        savedtime = datetime.strptime(time,"%I:%M %p").time()
+
+        if fromto == 'from':
+            if savedtime > hours.to_hour:
+                innerbtn = 'Start time cannot be after end time'
+                success = 'danger'
+            else:
+                innerbtn = staff.first_name + '\'s hours have changed'
+                success = 'success'
+                hours.from_hour = savedtime
+                hours.save()
+        else:
+            if savedtime < hours.from_hour:
+                innerbtn = 'End time cannot be before start time'
+                success = 'danger'
+            else:
+                innerbtn = staff.first_name + '\'s hours have changed'
+                success = 'success'
+                hours.to_hour = savedtime
+                hours.save()
+        
+        return JsonResponse({'innerbtn':innerbtn, 'success':success})
+
+class addbreakdayViews(View):
+    def post(self, request):
+        staff_id = request.POST.get('staff_id')
+        workday = request.POST.get('workday')
+        staff = StaffMember.objects.get(id=int(staff_id))
+        staff.staff_breaks.create(weekday=workday)
+        html = render_to_string('bizadmin/companydetail/staff/partial/partial/breakday.html', {'staff':staff,'weekday':int(workday)}, request)
+        innerid = '#workdaybreaks' + str(workday)
+        return JsonResponse({'html':html, 'innerid':innerid})
+
+class removebreakdayViews(View):
+    def post(self, request):
+        staff_id = request.POST.get('staff_id')
+        break_id = request.POST.get('break_id')
+        staff = StaffMember.objects.get(id=int(staff_id))
+        weekday = staff.staff_breaks.get(id=break_id).weekday
+        dayoff = staff.staff_breaks.get(id=break_id).delete()
+        html = render_to_string('bizadmin/companydetail/staff/partial/partial/breakday.html', {'staff':staff,'weekday':int(weekday)}, request)
+        innerid = '#workdaybreaks' + str(weekday)
+        return JsonResponse({'html':html, 'innerid':innerid})
+
+class savestaffBreakDaysViews(View):
+    def post(self, request):
+        staff_id = request.POST.get('staff_id')
+        breakid = request.POST.get('break_id')
+        time = request.POST.get('time')
+        fromto = request.POST.get('fromto')
+        staff = StaffMember.objects.get(id=int(staff_id))
+        hours = staff.staff_breaks.get(pk=breakid)
+        savedtime = datetime.strptime(time,"%I:%M %p").time()
+        print(savedtime)
+        print(fromto)
+        if fromto == 'from':
+            if savedtime > hours.to_hour:
+                innerbtn = 'Start time cannot be after end time'
+                success = 'danger'
+            else:
+                innerbtn = staff.first_name + '\'s break time has changed'
+                print(hours.to_hour)
+                success = 'success'
+                hours.from_hour = savedtime
+                hours.save()
+        else:
+            if savedtime < hours.from_hour:
+                innerbtn = 'End time cannot be before start time'
+                success = 'danger'
+            else:
+                innerbtn = staff.first_name + '\'s break time has changed'
+                print(hours.from_hour)
+                success = 'success'
+                hours.to_hour = savedtime
+                hours.save()
+        
+        return JsonResponse({'innerbtn':innerbtn, 'success':success})

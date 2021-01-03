@@ -11,11 +11,11 @@
                     <div class="content">
                         <div class="row">
                         <div class="col-md-12 ml-auto mr-auto">
-                        <header class="page-header page-header-compact page-header-light mb-4">
+                        <header class="page-header page-header-compact page-header-light mb-2">
                         <div class="container-fluid">
                             <div class="page-header-content">
                                 <div class="row align-items-center justify-content-between pt-3">
-                                    <div class="col-auto mb-3">
+                                    <div class="col-auto">
                                         <h1 class="page-header-title">
                                             Company Services
                                         </h1>
@@ -46,17 +46,18 @@
                                         <div class="card card-plain">
                                             <div class="card-header" role="tab" id="headingOne">
                                                 <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
-                                                    View All Categories
+                                                    <h4>View All Categories
                                                     <i class="fas fa-chevron-up"></i>
+                                                    </h4>
                                                 </a>
                                             </div>
 
                                             <div id="collapseOne" class="collapse something" role="tabpanel" aria-labelledby="headingOne">
                                                 <div class="card-body">
                                                     <ul class="nav nav-pills nav-pills-primary flex-column">
-                                                        <li class="nav-item"><a class="nav-link active" href="#tabAll" data-toggle="tab">All</a></li>
+                                                        <li class="nav-item"><a class="nav-link active" href="#tabAll" data-toggle="tab">All Services</a></li>
                                                         {% for category in company.service_category.all %}
-                                                            <li class="nav-item"><a class="nav-link" href="#tab{{ forloop.counter }}" data-toggle="tab">{{ category.name }}</a></li>
+                                                            <li class="nav-item"><a class="nav-link" href="#tab{{ forloop.counter }}" data-toggle="tab">{{ category.name }} Services</a></li>
                                                         {% endfor %}
                                                     </ul>
                                                 </div>
@@ -71,10 +72,10 @@
                                 <div class="tab-content">
 
                                     <div class="tab-pane active" id="tabAll">
-                                        <div class="card shadow my-1">
+                                        <div class="card shadow my-1" style="border-radius: 8px !important;">
                                             <div class="row">
                                                 <div class="col-6">
-                                                    <h4 class="card-header p-2">Category - All</h4>
+                                                    <h4 class="card-header p-2">Category - All Services</h4>
                                                     
                                                 </div>
                                                 <div class="col-6 text-right">

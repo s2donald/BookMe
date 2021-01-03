@@ -9,11 +9,11 @@
                     <div class="content">
                         <div class="row">
                         <div class="col-md-12 ml-auto mr-auto">
-                        <header class="page-header page-header-compact page-header-light mb-4">
+                        <header class="page-header page-header-compact page-header-light mb-2">
                         <div class="container-fluid">
                             <div class="page-header-content">
                                 <div class="row align-items-center justify-content-between pt-3">
-                                    <div class="col-auto mb-3">
+                                    <div class="col-auto">
                                         <h1 class="page-header-title">
                                             Account Settings - Notifications
                                         </h1>
@@ -35,7 +35,7 @@
                             <div class="col-lg-6">
                                 <!-- Security preferences card-->
                                 <div class="card mb-4">
-                                    <div class="card-header">Email Notifications</div>
+                                    <div class="card-header"><h4>Email Notifications</h4></div>
                                     <div class="card-body">
                                         <form>
                                         {% csrf_token %}
@@ -57,7 +57,7 @@
                             <div class="col-lg-6">
                                 <!-- Two factor authentication card-->
                                 <div class="card mb-4">
-                                    <div class="card-header">Text Notifications</div>
+                                    <div class="card-header"><h4>Text Notifications</h4></div>
                                     <div class="card-body">
                                         <p class="small text-muted">Add another level of user experience for your clients by sending out automated text messages when they book an appointment.</p>
                                         {% if company.has_texts %}
@@ -71,7 +71,7 @@
 
                             <div class="col-lg-12">
                                 <div class="card mb-4">
-                                    <div class="card-header">Notes to Clients</div>
+                                    <div class="card-header"><h4>Notes to Clients</h4></div>
                                     <div class="card-body">
                                         <form id="notesForm">
                                             {% csrf_token %}

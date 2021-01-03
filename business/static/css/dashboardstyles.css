@@ -70,7 +70,6 @@ body {
   margin: 0;
   font-family: "Poppins", sans-serif;
   font-size: 16px;
-  font-weight: 400;
   line-height: 1.5;
   color: #525f7f;
   text-align: left;
@@ -370,7 +369,6 @@ h1, h2, h3, h4, h5, h6,
 .h1, .h2, .h3, .h4, .h5, .h6 {
   margin-bottom: 0.5rem;
   font-family: inherit;
-  font-weight: 400;
   line-height: 1.2;
   color: #32325d; }
 
@@ -1119,7 +1117,7 @@ pre {
 
 .table {
   width: 100%;
-  margin-bottom: 1rem;
+  margin-bottom: 0rem;
   color: #525f7f;
   background-color: transparent; }
   .table th,
@@ -2643,9 +2641,9 @@ input[type="button"].btn-block {
   .dropdown-item:hover, .dropdown-item:focus {
     color: #16181b;
     text-decoration: none;
-    background-color: #f6f9fc; }
+    background-color: blue; }
   .dropdown-item.active, .dropdown-item:active {
-    color: #ffffff;
+    color: #ffffff !important;
     text-decoration: none;
     background-color: #e14eca; }
   .dropdown-item.disabled, .dropdown-item:disabled {
@@ -10856,6 +10854,7 @@ fieldset[disabled]
     .dropdown-menu .dropdown-item:hover, .dropdown-menu .dropdown-item:focus,
     .bootstrap-select .dropdown-menu.inner li a:hover,
     .bootstrap-select .dropdown-menu.inner li a:focus {
+      color: #212529 !important;
       background-color: rgba(222, 222, 222, 0.3); }
     .dropdown-menu .dropdown-item.disabled, .dropdown-menu .dropdown-item:disabled,
     .bootstrap-select .dropdown-menu.inner li a.disabled,
@@ -13727,7 +13726,6 @@ textarea {
   color: rgba(255, 255, 255, 0.8); }
 
 h1, h2, h3, h4, h5, h6 {
-  font-weight: 400;
   color: rgba(255, 255, 255, 0.8); }
 
 a {
@@ -14000,7 +13998,7 @@ hr {
 
 .table-responsive {
   overflow: scroll;
-  padding-bottom: 10px; }
+  padding-bottom: 0px; }
 
 #tables .table-responsive {
   margin-bottom: 30px; }
@@ -14431,7 +14429,7 @@ table.tablesorter thead tr .headerSortDown {
       text-transform: uppercase;
       width: 34px;
       margin-right: 10px;
-      margin-left: 0px;
+      margin-left: 4px;
       font-size: 12px;
       text-align: center;
       line-height: 25px;
@@ -14689,8 +14687,8 @@ table.tablesorter thead tr .headerSortDown {
       border-bottom-color: #00f2c3; }
   .sidebar[data="orange"],
   .off-canvas-sidebar[data="orange"] {
-    background: #ff6491;
-    background: linear-gradient(0deg, #ff6491 0%, #ff8d72 100%); }
+    background: #ff8d72;
+    background: linear-gradient(0deg, #ff6491 0%, #ff8d72 100%); } 
     .sidebar[data="orange"]:before,
     .off-canvas-sidebar[data="orange"]:before {
       border-bottom-color: #ff8d72; }

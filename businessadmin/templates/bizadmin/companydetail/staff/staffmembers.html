@@ -7,11 +7,11 @@
     <div class="content">
         <div class="row">
             <div class="col-md-12 ml-auto mr-auto">
-                <header class="page-header page-header-compact page-header-light mb-4">
+                <header class="page-header page-header-compact page-header-light mb-2">
                     <div class="container-fluid">
                         <div class="page-header-content">
                             <div class="row align-items-center justify-content-between pt-3">
-                                <div class="col-auto mb-3">
+                                <div class="col-auto">
                                     <h1 class="page-header-title">
                                         Staff Members
                                     </h1>
@@ -41,8 +41,9 @@
                                 <div class="card card-plain">
                                     <div class="card-header" role="tab" id="headingOne">
                                         <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
-                                            View All Staff Members
+                                            <h4>View All Staff Members
                                             <i class="fas fa-chevron-up"></i>
+                                            </h4>
                                         </a>
                                     </div>
 
@@ -87,7 +88,7 @@
                                     </div>
                                 </div>
 
-                                <div class="card-header"> {{ staff.first_name }}'s Details</div>
+                                <div class="card-header"><h4>{{ staff.first_name }}'s Details</h4></div>
                                 <div class="card-body">
                                     <div class="justify-content-center my-auto align-items-center">
                                         <form method="POST" autocomplete="off">
@@ -271,6 +272,22 @@
             url: "{% host_url 'getstaffservice' host 'bizadmin' %}",
             data: {
                 'staff_id': staff_id, 'type': 'detail'
+            },
+
+            success:function(data){
+                staffinfo.innerHTML = data.html_content
+            }
+        });
+    });
+
+    $(document).on('click', '#timeoff',function(){
+        var staffinfo = document.querySelector('#staff-information');
+        var staff_id =  $('#timeoff').attr("data-staff")
+        $.ajax({
+            type:'GET',
+            url: "{% host_url 'getstaffservice' host 'bizadmin' %}",
+            data: {
+                'staff_id': staff_id, 'type': 'timeoff'
             },
 
             success:function(data){

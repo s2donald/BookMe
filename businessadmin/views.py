@@ -1830,6 +1830,8 @@ class staffServicesViews(View):
             html = render_to_string('bizadmin/companydetail/staff/partial/breaks.html', {'staff':staff,'company':company}, request)
         elif types == 'hours':
             html = render_to_string('bizadmin/companydetail/staff/partial/working_hours.html', {'staff':staff,'company':company}, request)
+        elif types == 'timeoff':
+            html = render_to_string('bizadmin/companydetail/staff/partial/timeoff.html', {'staff':staff,'company':company}, request)
 
         return JsonResponse({'html_content':html})
 

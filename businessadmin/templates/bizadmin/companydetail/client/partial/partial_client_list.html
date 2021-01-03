@@ -1,7 +1,6 @@
 {% load hosts %}
 {% for client in clients %}
     <tr>
-    <td class="text-center" scope="row">{{ forloop.counter }}</td>
     <td class="text-center">{{ client.first_name }} {{ client.last_name }}</td>
     <td class="text-center">{{ client.phone }}</td>
     <td class="text-center">{{ client.email}}</td>

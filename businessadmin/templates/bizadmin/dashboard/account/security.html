@@ -8,11 +8,11 @@
                     <div class="content">
                         <div class="row">
                         <div class="col-md-12 ml-auto mr-auto">
-                        <header class="page-header page-header-compact page-header-light mb-4">
+                        <header class="page-header page-header-compact page-header-light mb-2">
                         <div class="container-fluid">
                             <div class="page-header-content">
                                 <div class="row align-items-center justify-content-between pt-3">
-                                    <div class="col-auto mb-3">
+                                    <div class="col-auto">
                                         <h1 class="page-header-title">
                                             Account Settings - Security
                                         </h1>
@@ -34,7 +34,7 @@
                             <div class="col-lg-8">
                                 <!-- Change password card-->
                                 <div class="card shadow mb-4">
-                                    <div class="card-header">Change Password</div>
+                                    <div class="card-header"><h4>Change Password</h4></div>
                                     <div class="card-body">
                                         <form method="post" id="passwordForm">
                                             {% csrf_token %}
@@ -59,7 +59,7 @@
                                 </div>
                                 <!-- Security preferences card-->
                                 <div class="card shadow mb-4">
-                                    <div class="card-header">Security Preferences</div>
+                                    <div class="card-header"><h4>Security Preferences</h4></div>
                                     <div class="card-body">
                                         <!-- Account privacy optinos-->
                                         <h5 class="mb-1">Account Privacy</h5>
@@ -102,7 +102,7 @@
                                 </div> {% endcomment %}
                                 <!-- Delete account card-->
                                 <div class="card shadow mb-4">
-                                    <div class="card-header">Delete Account</div>
+                                    <div class="card-header"><h4>Delete Account</h4></div>
                                     <div class="card-body">
                                         <p>Deleting your account is a permanent action and cannot be undone. If you are sure you want to delete your account, select the button below.</p>
                                         <button class="btn btn-danger-soft text-danger" id="deleteAcct" type="button">I understand, delete my account</button>

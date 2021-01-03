@@ -101,7 +101,11 @@
     }
 
     .fc, .fc *, .fc *:before, .fc *:after {
-        padding-right: 6px;
+        /* padding-right: 6px; */
+    }
+
+    .card-calendar .fc td:last-child {
+        padding-right: 12px !important;
     }
 
     td.day div {
@@ -118,4 +122,13 @@
 
     td.day.new div {
         color: grey !important;
+    }
+
+    .card {
+        border-radius: 25px;
+    }
+
+    .bootstrap-select.show-tick .dropdown-menu .selected span.check-mark {
+        right: 30px !important;
+        top: 10px !important;
     }

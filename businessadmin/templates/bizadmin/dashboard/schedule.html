@@ -169,7 +169,6 @@
                         data: {start:start.startStr , end: start.endStr},
                         success: function(data){
                             var events = [];
-                            console.log(data)
                             $.map(data, function(r){
                                 events.push({
                                     id: r.id,
@@ -227,32 +226,38 @@
         
         <div class="content">
         <div class="row">
-            <div class="col-md-12 ml-auto mr-auto">
-                
-                <div class="card mx-auto">
-                    <div class="card-header">Schedule Manager</div>
-                    <div class="card-body">
-                        <button type="button" id="addbooking" class="btn btn-primary" data-toggle="modal" data-target="#add-booking" data-backdrop="static" data-keyboard="false" data-url="{% host_url 'add_booking' host 'bizadmin' %}">
+         <header class="page-header page-header-compact page-header-light mb-4">
+                            <div class="container-fluid">
+                                <div class="page-header-content">
+                                    <div class="row align-items-center justify-content-between pt-3">
+                                        <div class="col-12 mb-3">
+                                            <h1 class="page-header-title">
+                                                Schedule
+                                            </h1>
+                                        </div>
+
+                                        <button type="button" id="addbooking" class="btn btn-primary" data-toggle="modal" data-target="#add-booking" data-backdrop="static" data-keyboard="false" data-url="{% host_url 'add_booking' host 'bizadmin' %}">
                             Add A Booking
                         </button>
-                    </div>
-
-                    <div class="card-body">
-                        <p>If you want to reschedule or delete a booking, go into the Agenda below, navigate to the date of the booking and click on the booking. </p>
-                    </div>
-                </div>
-            </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </header>
+                        
 
             <div class="col-md-12 ml-auto mr-auto">
                 <div class="card card-calendar">
-                    <div class="card-header">Viewing Stephen's Calendar</div>
-                        <div class="card-body">
-                            Staff:
+                    <div class="card-header">
+                        <h4>Staff:</h4>
                             <nav class="nav nav-borders mt-0">
                                 {% for staff in company.staffmembers.all %}
                                     <a class="nav-link my-0 py-0 {% if forloop.counter == 1 %}activate{% endif %}" href="{% host_url 'profile' host 'bizadmin'%}">{{ staff.first_name }} {{ staff.last_name}}</a>
                                 {% endfor %}
                             </nav>
+                    </div>
+                    
+                        <div class="card-body">
+                            
                             <div class="lds-facebook" style="display:none;"><div></div><div></div><div></div></div>
                             <div id="calendar"></div>
                         </div>

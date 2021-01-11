@@ -59,6 +59,7 @@ Pillow==7.0.0
 postgis==1.0.4
 proj==0.2.0
 psycopg2-binary==2.8.4
+pycountry==20.7.3
 pycparser==2.20
 PyJWT==1.7.1
 PyNaCl==1.4.0

@@ -23,7 +23,8 @@
         </div>
     </div>
 
-    <div class="card-header"> <h4>All services that {{ staff.first_name }} {{staff.last_name}} can provide({{ staff.services.count }}):</h4></div>
+    <div class="card-header"> 
+        <h4 id="text_service_header">All services that {{ staff.first_name }} {{staff.last_name}} can provide({{ staff.services.count }}):</h4></div>
     <div class="card-body">
         <div class="justify-content-center my-auto align-items-center">
             <form method="POST" autocomplete="off">
@@ -34,7 +35,6 @@
                             {% if comp_services|staff_services_offered:staff_services %}
                             <div class="col-12">
                                 <button class="btn btn-info btn-pills btn-sm mx-3 removefromstaff" type='button' data-companyserv='{{ comp_services.id }}' data-staff='{{ staff.id }}'> <i class="fas fa-check-circle "></i> {{ comp_services}}</button>
-
                             </div>
                             {% else %}
                             <div class="col-12">

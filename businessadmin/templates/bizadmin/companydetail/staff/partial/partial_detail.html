@@ -22,7 +22,14 @@
         </div>
     </div>
 
-    <div class="card-header"><h4>{{ staff.first_name }}'s Details</h4></div>
+    <div class="card-header">
+        <span>
+            <img class="avatar mx-2" src="{% if staff.image %}{{ staff.image.url }}{% else %}https://epicattorneymarketing.com/wp-content/uploads/2016/07/Headshot-Placeholder-1.png{% endif %} " alt="{{ staff.first_name }}">
+            <label><h4> {{ staff.first_name }}'s Details</h4></label>
+        </span>
+        
+        
+    </div>
     <div class="card-body">
         <div class="justify-content-center my-auto align-items-center">
             <form method="POST">

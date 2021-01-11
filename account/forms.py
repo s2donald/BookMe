@@ -3,10 +3,42 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 from .models import Account
-from business.models import Company
+from business.models import Company, Clients
 from django.core.validators import RegexValidator
 from bootstrap_modal_forms.forms import BSModalModelForm
 import re
+import pycountry
+
+# il8nl =  ["AF", "AX", "AL", "DZ", "AS", "AD", "AO", "AI", "AQ", "AG", "AR",
+# "AM", "AW", "AU", "AT", "AZ", "BS", "BH", "BD", "BB", "BY", "BE",
+# "BZ", "BJ", "BM", "BT", "BO", "BQ", "BA", "BW", "BV", "BR", "IO",
+# "BN", "BG", "BF", "BI", "CV", "KH", "CM", "CA", "KY", "CF", "TD",
+# "CL", "CN", "CX", "CC", "CO", "KM", "CG", "CD", "CK", "CR", "CI",
+# "HR", "CU", "CW", "CY", "CZ", "DK", "DJ", "DM", "DO", "EC", "EG",
+# "SV", "GQ", "ER", "EE", "ET", "FK", "FO", "FJ", "FI", "FR", "GF",
+# "PF", "TF", "GA", "GM", "GE", "DE", "GH", "GI", "GR", "GL", "GD",
+# "GP", "GU", "GT", "GG", "GN", "GW", "GY", "HT", "HM", "VA", "HN",
+# "HK", "HU", "IS", "IN", "ID", "IR", "IQ", "IE", "IM", "IL", "IT",
+# "JM", "JP", "JE", "JO", "KZ", "KE", "KI", "KP", "KR", "KW", "KG",
+# "LA", "LV", "LB", "LS", "LR", "LY", "LI", "LT", "LU", "MO", "MK",
+# "MG", "MW", "MY", "MV", "ML", "MT", "MH", "MQ", "MR", "MU", "YT",
+# "MX", "FM", "MD", "MC", "MN", "ME", "MS", "MA", "MZ", "MM", "NA",
+# "NR", "NP", "NL", "NC", "NZ", "NI", "NE", "NG", "NU", "NF", "MP",
+# "NO", "OM", "PK", "PW", "PS", "PA", "PG", "PY", "PE", "PH", "PN",
+# "PL", "PT", "PR", "QA", "RE", "RO", "RU", "RW", "BL", "SH", "KN",
+# "LC", "MF", "PM", "VC", "WS", "SM", "ST", "SA", "SN", "RS", "SC",
+# "SL", "SG", "SX", "SK", "SI", "SB", "SO", "ZA", "GS", "SS", "ES",
+# "LK", "SD", "SR", "SJ", "SZ", "SE", "CH", "SY", "TW", "TJ", "TZ",
+# "TH", "TL", "TG", "TK", "TO", "TT", "TN", "TR", "TM", "TC", "TV",
+# "UG", "UA", "AE", "GB", "US", "UM", "UY", "UZ", "VU", "VE", "VN",
+# "VG", "VI", "WF", "EH", "YE", "ZM", "ZW"]
+
+il8nl = ["CA", "US"]
+
+il8nlist = sorted((item, item) for item in il8nl)
+from crispy_forms.helper import FormHelper
+
+
 class ConsumerRegistrationForm(UserCreationForm):
     password1 = forms.CharField(label='Password', widget=forms.PasswordInput)
     password2 = forms.CharField(label='Repeat password', widget=forms.PasswordInput)
@@ -100,6 +132,31 @@ class UpdatePersonalForm(forms.ModelForm):
         else:
             return email
 
+class GuestPersonalForm(forms.ModelForm):
+    first_name = forms.CharField(label='First Name',max_length=30)
+    last_name = forms.CharField(label='Last Name',max_length=30)
+    email = forms.EmailField(label='Email')
+    phone = forms.CharField(label='', required=False, max_length=30)
+    phone_code = forms.ChoiceField(label='',choices=il8nlist, widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control', 'id':"isocode", 'data-live-search':"true", 'data-size':'5'}))
+    class Meta:
+        model = Clients
+        fields = ('first_name','last_name','email','phone')
+
+    def clean_email(self):
+        email = self.cleaned_data['email']
+        acct = Account.objects.filter(email=email).exclude(email=self.instance.email)
+        if acct:
+            raise forms.ValidationError("Email address is already associated with an account.")
+        else:
+            return email
+
+    def clean_phone(self):
+        phone = self.cleaned_data['phone'].strip()
+        return phone
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper(self)
 
 
 class UpdateHomeAddressForm(forms.Form):

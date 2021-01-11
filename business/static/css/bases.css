@@ -350,6 +350,14 @@ a:focus {
     box-shadow: 0 0 1rem rgba(0, 0, 0, 0.15);
     line-height: 3rem;
   }
+
+  .loading {
+    max-height: 500px;
+  }
+  #bm {
+    position: fixed;
+    z-index: 99999;
+  }
   
   .avatar.avatar-sm {
     width: 3rem;
@@ -421,7 +429,9 @@ a:focus {
 html, body {
     height: 100%;
     width: 100%;
-    font: 400 1rem/1.75rem 'Baloo Tamma 2', sans-serif cursive;
+    /* font: 400 'Baloo Tamma 2', sans-serif cursive; */
+    font-family: "Poppins", sans-serif;
+    
     font-style: normal;
     color: var(--title-color);
     margin: 0;
@@ -492,10 +502,16 @@ a.licolor:hover, a.licolor:focus {
     white-space: nowrap;
     text-align: center;
  }
+
+ .btn.btn-link {
+   color: #303030
+ }
+
 .btn.btn-link:hover{
     background: inherit;
     background-clip: padding-box;
     color: #d52ecd;
+    
 }
 
 .btn.text-white.btn-link:hover {
@@ -587,19 +603,8 @@ a.licolor:hover, a.licolor:focus {
   outline: none;
   box-shadow: none;
 }
-button:active,
-.btn.btn-dark{
-    opacity: 100%;
-    background-color: #ffae74;
-    border-color: #ffae74;
-    color: #ffffff;
-}
-.btn.btn-dark:hover,
-.btn.btn-dark:active{
-  color: #ffae74;
-  background-color:#ffffff;
-  border-color: #ffae74;
-}
+
+
 .btn.btn-outline-primary{
     border-radius: 50px;
     background: var(--gradient-color);
@@ -643,6 +648,9 @@ button:active,
   border-color: #ffae74;
   border-radius: 5px;
 }
+.grecaptcha-badge { 
+  visibility: hidden;
+}
 .btn.btn-outline-light::after{
   position:absolute;
   top:-2px; left:-2px;
@@ -653,22 +661,18 @@ button:active,
   border-radius: 5px;
 }
 
-
-button:active,
 .btn.btn-outline-dark{
-    opacity: 100%;
-    background-color: #854fee;
-    border-color: #854fee;
-    color: #ffffff;
-    border-width: 0.1em;
+  background: transparent;
+  border: 1px solid #343a40;
+  color: #343a40;
+  transition: all 0s;
 }
-.btn.btn-outline-dark:hover,
-.btn.btn-outline-dark:active{
-  color: #854fee;
-  background-color:#ffffff;
-  border-color: #854fee;
-  border-width: 0.1em;
-} 
+.btn.btn.btn-outline-dark:hover{
+  border: 3px solid #343a40;
+  transition: all 0s;
+  color: #343a40;
+  border-color: #343a40;
+}
 
 
 .navbar{
@@ -681,9 +685,6 @@ button:active,
     padding-top: 20px;
 }
 
-.nav-link {
-    /* font-size: 1.1em !important; */
-}
 .nav-top-default {
     background: linear-gradient(90deg, #ff5f6d 0%,#ffc371 100%);
 }
@@ -765,6 +766,20 @@ button:active,
     background-color: #979797;
     border-radius: 0px 0px 25px 25px;
     
+  }
+
+  .ulnopadd {
+    padding: 0 !important;
+  }
+
+  .hovermeclick {
+    cursor: pointer;
+    padding-bottom: 1rem;
+  }
+
+  .hovermeclick:hover {
+    background-color: #FFe6D9;
+    padding-bottom: 1rem;
   }
   
   /*

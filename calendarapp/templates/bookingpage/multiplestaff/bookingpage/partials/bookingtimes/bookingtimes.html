@@ -1,0 +1,13 @@
+
+<div class="row">
+    {% for l in list %}
+        <div class="col-sm-3 col-lg-3 col-4 px-0 py-1">
+            <a class="btn btn-outline-dark bookingtimebutton" style="height:auto;" data-month="{{ month }}" data-day="{{ day }}" data-year="{{ year }}" data-time="{{ l|date:'g:i A' }}" data-staff="{{ staff.id }}" data-service="{{ service.id }}">{{ l|date:'g:i A' }}</a>
+        </div>
+    {% empty %}
+        <div class="col-12">
+            <p>No times are available</p>
+        </div>
+
+    {% endfor %}
+</div>

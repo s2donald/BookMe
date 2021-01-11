@@ -12,6 +12,31 @@ from gibele.utils import unique_slug_generator, unique_slug_generator_services
 import geocoder
 import pytz
 
+il8nl = ["AF", "AX", "AL", "DZ", "AS", "AD", "AO", "AI", "AQ", "AG", "AR",
+"AM", "AW", "AU", "AT", "AZ", "BS", "BH", "BD", "BB", "BY", "BE",
+"BZ", "BJ", "BM", "BT", "BO", "BQ", "BA", "BW", "BV", "BR", "IO",
+"BN", "BG", "BF", "BI", "CV", "KH", "CM", "CA", "KY", "CF", "TD",
+"CL", "CN", "CX", "CC", "CO", "KM", "CG", "CD", "CK", "CR", "CI",
+"HR", "CU", "CW", "CY", "CZ", "DK", "DJ", "DM", "DO", "EC", "EG",
+"SV", "GQ", "ER", "EE", "ET", "FK", "FO", "FJ", "FI", "FR", "GF",
+"PF", "TF", "GA", "GM", "GE", "DE", "GH", "GI", "GR", "GL", "GD",
+"GP", "GU", "GT", "GG", "GN", "GW", "GY", "HT", "HM", "VA", "HN",
+"HK", "HU", "IS", "IN", "ID", "IR", "IQ", "IE", "IM", "IL", "IT",
+"JM", "JP", "JE", "JO", "KZ", "KE", "KI", "KP", "KR", "KW", "KG",
+"LA", "LV", "LB", "LS", "LR", "LY", "LI", "LT", "LU", "MO", "MK",
+"MG", "MW", "MY", "MV", "ML", "MT", "MH", "MQ", "MR", "MU", "YT",
+"MX", "FM", "MD", "MC", "MN", "ME", "MS", "MA", "MZ", "MM", "NA",
+"NR", "NP", "NL", "NC", "NZ", "NI", "NE", "NG", "NU", "NF", "MP",
+"NO", "OM", "PK", "PW", "PS", "PA", "PG", "PY", "PE", "PH", "PN",
+"PL", "PT", "PR", "QA", "RE", "RO", "RU", "RW", "BL", "SH", "KN",
+"LC", "MF", "PM", "VC", "WS", "SM", "ST", "SA", "SN", "RS", "SC",
+"SL", "SG", "SX", "SK", "SI", "SB", "SO", "ZA", "GS", "SS", "ES",
+"LK", "SD", "SR", "SJ", "SZ", "SE", "CH", "SY", "TW", "TJ", "TZ",
+"TH", "TL", "TG", "TK", "TO", "TT", "TN", "TR", "TM", "TC", "TV",
+"UG", "UA", "AE", "GB", "US", "UM", "UY", "UZ", "VU", "VE", "VN",
+"VG", "VI", "WF", "EH", "YE", "ZM", "ZW"]
+il8nlist = sorted((item, item) for item in il8nl)
+
 # Create your models here.
 WEEKDAYS = [
   (0, ("Sunday")),
@@ -30,11 +55,14 @@ STAFF_ACCESS = [
 ]
 
 def calendar_staff_folder(instance, filename):
-    return "company/other/staff_{0}/calendar/{1}/".format(instance.user.id,"calendar.ics")
+    return "company/other/staff_{0}/calendar/{1}/".format(instance.company.id,"calendar.ics")
+
+def get_staff_image_folder(instance, filename):
+    return "company/other/staff_{0}/images/{1}/".format(instance.company.id, filename)
 
 class StaffMember(models.Model):
     company = models.ForeignKey(Company, on_delete=models.CASCADE,related_name='staffmembers')
-    user = models.ForeignKey(Account, on_delete=models.CASCADE, blank=True, null=True, related_name='working_for')
+    user = models.OneToOneField(Account, on_delete=models.CASCADE, blank=True, null=True, related_name='working_for')
     first_name = models.CharField(verbose_name="First Name", max_length=30, unique=False, null=True, blank=True)
     last_name = models.CharField(verbose_name="Last Name", max_length=30, unique=False, null=True, blank=True)
     phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$', message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
@@ -46,6 +74,7 @@ class StaffMember(models.Model):
     access = models.IntegerField(choices=STAFF_ACCESS, default=0)
     calendarics = models.FileField(upload_to=calendar_staff_folder,null=True, blank=True)
     services = models.ManyToManyField(Services, blank=True)
+    image = models.ImageField(upload_to=get_staff_image_folder, blank=True)
 
     class Meta:
         ordering = ('user',)
@@ -53,7 +82,7 @@ class StaffMember(models.Model):
     
     def __str__(self):
         if self.first_name==None:
-            return "ERROR-Staff NAME IS NULL"
+            return "Staff Member"
         return self.first_name
 
 class Breaks(models.Model):

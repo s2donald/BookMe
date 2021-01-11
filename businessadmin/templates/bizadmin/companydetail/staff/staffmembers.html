@@ -50,9 +50,16 @@
                                     <div id="collapseOne" class="collapse something" role="tabpanel" aria-labelledby="headingOne">
                                         <div class="card-body">
                                         <div class="col-12">
-                                            <ul class="nav nav-pills nav-pills-primary flex-column">
+                                            <ul class="nav nav-pills nav-pills-neutral flex-column">
                                                 {% for staff in company.staffmembers.all %}
-                                                    <li class="nav-item"><a class="nav-link stafflist {% if forloop.counter == 1 %}active{% endif %}" style="border-radius:10px;" href="#tab{{ staff.id }}" data-staff="{{ staff.id }}" id="tab{{ forloop.counter }}" data-toggle="tab">{{ staff.first_name }} {{ staff.last_name}}</a></li>
+                                                    <li class="nav-item">
+                                                        <a class="nav-link pillsize stafflist {% if forloop.counter == 1 %}active{% endif %}" style="border-radius:10px;" href="#tab{{ staff.id }}" data-staff="{{ staff.id }}" id="tab{{ forloop.counter }}" data-toggle="tab">
+                                                            <span class="align-items-center">
+                                                                <img class="avatar" src="{% if staff.image %}{{ staff.image.url }}{% else %}https://epicattorneymarketing.com/wp-content/uploads/2016/07/Headshot-Placeholder-1.png{% endif %} " alt="{{ staff.first_name }}">
+                                                                <p>{{ staff.first_name }}</p>
+                                                            </span>
+                                                        </a>
+                                                    </li>
                                                 {% endfor %}
                                             </ul>
                                         </div>
@@ -88,7 +95,12 @@
                                     </div>
                                 </div>
 
-                                <div class="card-header"><h4>{{ staff.first_name }}'s Details</h4></div>
+                                <div class="card-header">
+                                    <span>
+                                        <img class="avatar mx-2" src="{% if staff.image %}{{ staff.image.url }}{% else %}https://epicattorneymarketing.com/wp-content/uploads/2016/07/Headshot-Placeholder-1.png{% endif %} " alt="{{ staff.first_name }}">
+                                        <label><h4> {{ staff.first_name }}'s Details</h4></label>
+                                    </span>
+                                </div>
                                 <div class="card-body">
                                     <div class="justify-content-center my-auto align-items-center">
                                         <form method="POST" autocomplete="off">
@@ -334,18 +346,20 @@
                 "X-CSRFToken": csrftoken
             },
             success:function(data){
-                $this[0].classList.remove('removefromstaff')
-                $this[0].classList.add('addtostaff')
-                $this[0].classList.remove('btn-info')
+                if (data.success == 'success'){
+                    $this[0].classList.remove('removefromstaff')
+                    $this[0].classList.add('addtostaff')
+                    $this[0].classList.remove('btn-info')
+                }
                 var el = document.querySelector('#text_service_header');
                 el.innerHTML = data.text_service_header
                 $this[0].innerHTML = data.innerbtn
                 $.notify({
                     // options
-                    message: 'Staff removed from offering service'
+                    message: data.message
                 },{
                     // settings
-                    type: 'success',
+                    type: data.success,
                     delay: 50,
                 });
             }

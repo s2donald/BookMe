@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from .forms import BusinessRegistrationForm, AddHoursForm, UpdateCompanyForm, AddClientForm, AddNotesForm, CreateSmallBizForm, AddBookingForm, BusinessName, AddServiceCategoryForm, AddServiceToCategory
 from django.contrib.auth.decorators import login_required
 from django import forms
-from .models import StaffMember, Breaks
+from .models import StaffMember, Breaks, StaffWorkingHours
 from business.models import Company, SubCategory, OpeningHours, Services, Gallary, Amenities, Clients, CompanyReq, ServiceCategories
 from account.models import Account
 from account.forms import UpdatePersonalForm
@@ -22,6 +22,7 @@ from .forms import MainPhoto, AddServiceToCategory
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from businessadmin.tasks import addedOnCompanyList, requestToBeClient, appointmentCancelled
 from account.tasks import reminderEmail, confirmedEmail, consumerCreatedEmailSent
+import re
 # Create your views here.
 def businessadmin(request):
     user = request.user
@@ -35,6 +36,13 @@ def pricingViews(request):
 def faqBusinessViews(request):
     user = request.user
     return render(request, 'welcome/faq.html', {'user':user,'none':'d-none'})
+
+def createNewStaff(company_id, user_id, first_name, last_name, phone, email, slug, login, access):
+    company = Company.objects.get(pk=company_id)
+    if user_id:
+        acct = Account.objects.get(user_id)
+    return 'helo'
+    
 
 def createNewBusiness(request):
     user = request.user
@@ -76,6 +84,7 @@ def createNewBusiness(request):
     
     return render(request, 'account/createbusiness.html', {'user':user, 'none':'d-none', 'user_form':user_form})
 
+@login_required
 def completeViews(request):
     if not request.user.is_authenticated:
         user_form = AccountAuthenticationForm()
@@ -176,6 +185,7 @@ def completeViews(request):
                 OpeningHours.objects.get(company=company, weekday=5),
                 OpeningHours.objects.get(company=company, weekday=6),
             ]
+
             objs[0].is_closed = sun_closed
             objs[1].is_closed = mon_closed
             objs[2].is_closed = tues_closed
@@ -201,6 +211,44 @@ def completeViews(request):
             objs[6].to_hour = datetime.strptime(sat_to,"%I:%M %p")
 
             OpeningHours.objects.bulk_update(objs,['is_closed','from_hour','to_hour'])
+
+            staff = company.staffmembers.get(user=user)
+            objss = [
+                StaffWorkingHours.objects.get(staff=staff, weekday=0),
+                StaffWorkingHours.objects.get(staff=staff, weekday=1),
+                StaffWorkingHours.objects.get(staff=staff, weekday=2),
+                StaffWorkingHours.objects.get(staff=staff, weekday=3),
+                StaffWorkingHours.objects.get(staff=staff, weekday=4),
+                StaffWorkingHours.objects.get(staff=staff, weekday=5),
+                StaffWorkingHours.objects.get(staff=staff, weekday=6),
+            ]
+
+            objss[0].is_off = sun_closed
+            objss[1].is_off = mon_closed
+            objss[2].is_off = tues_closed
+            objss[3].is_off = wed_closed
+            objss[4].is_off = thurs_closed
+            objss[5].is_off = fri_closed
+            objss[6].is_off = sat_closed
+
+            objss[0].from_hour = datetime.strptime(sun_from,"%I:%M %p")
+            objss[1].from_hour = datetime.strptime(mon_from,"%I:%M %p")
+            objss[2].from_hour = datetime.strptime(tues_from,"%I:%M %p")
+            objs[3].from_hour = datetime.strptime(wed_from,"%I:%M %p")
+            objss[4].from_hour = datetime.strptime(thurs_from,"%I:%M %p")
+            objss[5].from_hour = datetime.strptime(fri_from,"%I:%M %p")
+            objss[6].from_hour = datetime.strptime(sat_from,"%I:%M %p")
+
+            objss[0].to_hour = datetime.strptime(sun_to,"%I:%M %p")
+            objss[1].to_hour = datetime.strptime(mon_to,"%I:%M %p")
+            objss[2].to_hour = datetime.strptime(tues_to,"%I:%M %p")
+            objss[3].to_hour = datetime.strptime(wed_to,"%I:%M %p")
+            objss[4].to_hour = datetime.strptime(thurs_to,"%I:%M %p")
+            objss[5].to_hour = datetime.strptime(fri_to,"%I:%M %p")
+            objss[6].to_hour = datetime.strptime(sat_to,"%I:%M %p")
+
+            StaffWorkingHours.objects.bulk_update(objss,['is_off','from_hour','to_hour'])
+
             for s in subcategory:
                 company.subcategory.add(s)
             bizCreatedEmailSent.delay(user.id)
@@ -263,6 +311,11 @@ def signupViews(request):
                                                 description='',address='',postal='',
                                                 state='',city='',status='draft')
             company.save()
+            first = user_form.cleaned_data.get('first_name')
+            last = user_form.cleaned_data.get('last_name')
+
+            staff = StaffMember.objects.create(company=company, user=account, first_name=first, last_name=last, phone=phone, email=email,slug=first,login=True,access=2)
+            staff.save()
             biz_hours = OpeningHours.objects.bulk_create([
                 OpeningHours(company=company, weekday=0,is_closed=True),
                 OpeningHours(company=company, weekday=1,is_closed=False),
@@ -271,6 +324,16 @@ def signupViews(request):
                 OpeningHours(company=company, weekday=4,is_closed=False),
                 OpeningHours(company=company, weekday=5,is_closed=False),
                 OpeningHours(company=company, weekday=6,is_closed=True),
+            ])
+
+            staff_hours = StaffWorkingHours.objects.bulk_create([
+                StaffWorkingHours(staff=staff, weekday=0,is_off=True),
+                StaffWorkingHours(staff=staff, weekday=1,is_off=False),
+                StaffWorkingHours(staff=staff, weekday=2,is_off=False),
+                StaffWorkingHours(staff=staff, weekday=3,is_off=False),
+                StaffWorkingHours(staff=staff, weekday=4,is_off=False),
+                StaffWorkingHours(staff=staff, weekday=5,is_off=False),
+                StaffWorkingHours(staff=staff, weekday=6,is_off=True),
             ])
             return redirect(reverse('completeprofile', host='bizadmin'))
         else:
@@ -441,6 +504,9 @@ def save_service_form(request, form, template_name):
                                                 padding=padding,paddingtime_hour=paddingtime_hour,paddingtime_minute=paddingtime_minute)
             
             service.save()
+            user = request.user
+            staff = StaffMember.objects.get(user=user)
+            staff.services.add(service)
             data['form_is_valid'] = True
             services = Services.objects.filter(business=company)
             data['html_service_list'] = render_to_string('bizadmin/dashboard/profile/services/partial_service_list.html', {'services':services, 'company':company})
@@ -874,7 +940,6 @@ class updateserviceAPI(View):
             data['html_service_list'] = render_to_string('bizadmin/companydetail/services/partial/partial_service_list.html', {'page':page,'services':services})
             data['view'] = 'Your service has been updated'
         else:
-            print(form.errors)
             data['form_is_valid'] = False
         services = Services.objects.filter(business=company)
         paginator = Paginator(services, 5)
@@ -1221,7 +1286,6 @@ def staffMemberView(request):
         return redirect(reverse('completeprofile', host='bizadmin'))
     elif not user.is_business:
         loginViews(request)
-    print(company.staffmembers.all())
     return render(request, 'bizadmin/companydetail/staff/staffmembers.html', {'company':company})
 
 
@@ -1650,6 +1714,7 @@ class addBooking(View):
         company = Company.objects.get(user=request.user)
         bform = AddBookingForm(request.POST,initial={'company':company})
         if bform.is_valid():
+            staff_id = request.POST.get('bookstaff')
             first_name = bform.cleaned_data.get('first_name')
             last_name = bform.cleaned_data.get('last_name')
             email = bform.cleaned_data.get('email')
@@ -1675,14 +1740,17 @@ class addBooking(View):
                 user = guest.user
             except ObjectDoesNotExist:
                 user = None
-            booking = Bookings.objects.create(user=user, guest=guest,service=service, company=company,start=start, end=end, price=price)
+            staff = StaffMember.objects.get(pk=int(staff_id))
+            booking = Bookings.objects.create(user=user, staffmem=staff, guest=guest,service=service, company=company,start=start, end=end, price=price)
             booking.save()
-            confirmedEmail.delay(booking.id)
+            if email:
+                confirmedEmail.delay(booking.id)
             confirmtime = 30
             if service.checkintime:
                 confirmtime = service.checkintime + 30
             startTime = start - timedelta(minutes=confirmtime)
-            reminderEmail.apply_async(args=[booking.id], eta=startTime, task_id=booking.slug)
+            if email:
+                reminderEmail.apply_async(args=[booking.id], eta=startTime, task_id=booking.slug)
             #Create the booking and then send an email to customer and company
         else:
             day = datetime.today().weekday() + 1
@@ -1726,8 +1794,10 @@ class load_events(View):
     def get(self, request):
         start = request.GET.get('start')
         end = request.GET.get('end')
+        staff_id = int(request.GET.get('staff_id'))
+        staff_member = StaffMember.objects.get(pk=staff_id)
         company= Company.objects.get(user=request.user)
-        bookings = Bookings.objects.filter(start__gte=start, end__lte=end, company=company, is_cancelled_user=False, is_cancelled_company=False).values()
+        bookings = Bookings.objects.filter(start__gte=start, staffmem=staff_member, end__lte=end, company=company, is_cancelled_user=False, is_cancelled_company=False).values()
         for b in bookings:
             b_id = b['id']
             booking = Bookings.objects.get(pk=b_id)
@@ -1761,8 +1831,8 @@ def integrationsView(request):
         loginViews(request)
     
     return render(request, 'bizadmin/dashboard/integrations/integrations.html',{'company':company})
-
 from icalendar import Calendar, Event
+
 #Below code is not used anywhere, just as an example on how to create an ics file for future purposes
 class createCalendarFile(View):
     def post(self, request):
@@ -1852,10 +1922,20 @@ class removestaffServicesViews(View):
         serv_id = request.POST.get('serv_id')
         staff = StaffMember.objects.get(id=int(staff_id))
         service = Services.objects.get(id=int(serv_id))
-        staff.services.remove(service)
-        text_service_header = 'All services that ' + str(staff.first_name) + ' ' + str(staff.last_name) + ' can provide(' + str(staff.services.count()) + '):'
-        innerbtn = ' <i class="fas fa-plus-circle "></i> ' + service.name
-        return JsonResponse({'innerbtn':innerbtn, 'text_service_header':text_service_header})
+        allstaff = StaffMember.objects.filter(services=service)
+        if allstaff.count() > 1:
+            staff.services.remove(service)
+            text_service_header = 'All services that ' + str(staff.first_name) + ' ' + str(staff.last_name) + ' can provide(' + str(staff.services.count()) + '):'
+            innerbtn = ' <i class="fas fa-plus-circle "></i> ' + service.name
+            message = str(staff.first_name) + ' is not assigned to ' + service.name +' service.'
+            success='success'
+        else:
+            text_service_header = 'All services that ' + str(staff.first_name) + ' ' + str(staff.last_name) + ' can provide(' + str(staff.services.count()) + '):'
+            innerbtn = ' <i class="fas fa-check-circle "></i> ' + service.name
+            message = 'Atleast one staff member needs to be assigned to a service'
+            success='danger'
+
+        return JsonResponse({'innerbtn':innerbtn, 'text_service_header':text_service_header, 'message':message,'success':success})
 
 class addstaffWorkingDaysViews(View):
     def post(self, request):
@@ -1942,15 +2022,13 @@ class savestaffBreakDaysViews(View):
         staff = StaffMember.objects.get(id=int(staff_id))
         hours = staff.staff_breaks.get(pk=breakid)
         savedtime = datetime.strptime(time,"%I:%M %p").time()
-        print(savedtime)
-        print(fromto)
+        
         if fromto == 'from':
             if savedtime > hours.to_hour:
                 innerbtn = 'Start time cannot be after end time'
                 success = 'danger'
             else:
                 innerbtn = staff.first_name + '\'s break time has changed'
-                print(hours.to_hour)
                 success = 'success'
                 hours.from_hour = savedtime
                 hours.save()
@@ -1960,7 +2038,6 @@ class savestaffBreakDaysViews(View):
                 success = 'danger'
             else:
                 innerbtn = staff.first_name + '\'s break time has changed'
-                print(hours.from_hour)
                 success = 'success'
                 hours.to_hour = savedtime
                 hours.save()

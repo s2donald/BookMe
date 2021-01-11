@@ -25,6 +25,15 @@ $(document).ready(function (){
             }
         });
     });
+    var $selectpicker = $('.selectpicker');
+
+    //    Activate bootstrap-select
+    if ($selectpicker.length != 0) {
+        $selectpicker.selectpicker({
+        iconBase: "fas",
+        tickIcon: "fa-check"
+        });
+    }
 
     // =====================================================
     //     Reset input

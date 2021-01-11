@@ -299,7 +299,7 @@
                   <li class="dropdown-divider"></li>
                   {% if request.user.on_board %}
                     <li class="nav-link">
-                      <a href="{% host_url 'business:company_detail' slug=company.slug id=company.id host 'www' %}" class="nav-item dropdown-item">Your Business Page</a>
+                      <a href="{% host_url 'bookingurls' host 'bookingurl' slug=company.slug %}" class="nav-item dropdown-item">Your Business Page</a>
                     </li>
                   {% endif %}
                   <li class="dropdown-divider"></li>

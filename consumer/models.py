@@ -59,7 +59,7 @@ class Bookings(models.Model):
     #The company which is offering this service
     company = models.ForeignKey(Company, on_delete=models.CASCADE, null=True)
     #Staff member booked
-    staffmem = models.ForeignKey(StaffMember, on_delete=models.CASCADE, null=True, blank=True)
+    staffmem = models.ForeignKey(StaffMember, on_delete=models.CASCADE, null=True, blank=True, related_name='staff_bookings')
     #We must add a timeslot for the booking
     #The amount the booking has been paid for
     price_paid = models.DecimalField(max_digits=10, decimal_places=2, default=0)

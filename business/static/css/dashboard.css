@@ -84,7 +84,7 @@
     }
 
     .fc-event {
-        height: 70px;
+        height: 90px;
         flex-wrap: wrap;
     }
 
@@ -98,6 +98,7 @@
         display: list-item;
         cursor: pointer;
         list-style: none;
+        padding: 5px;
     }
 
     .fc, .fc *, .fc *:before, .fc *:after {
@@ -105,8 +106,18 @@
     }
 
     .card-calendar .fc td:last-child {
-        padding-right: 12px !important;
+        /* padding-right: 12px !important; */
+        overflow: hidden;
     }
+
+
+.fc .fc-scroller-liquid-absolute .fc-scroller{
+    overflow: hidden scroll;
+}
+
+.fc-list-event-graphic {
+    display: none;
+}
 
     td.day div {
         color: black !important;
@@ -131,4 +142,38 @@
     .bootstrap-select.show-tick .dropdown-menu .selected span.check-mark {
         right: 30px !important;
         top: 10px !important;
+    }
+
+    /* .white-content .fc-button-group:hover .fc-prev-button, .white-content .fc-button-group:hover .fc-next-button {
+        color: #ffffff;
+        background: green;
+        border: 1px solid #2b3553;
+    } */
+
+    .fc-button:hover, .fc-button:focus, .fc-button:active, .fc-button.active, .fc-button:active:focus, .fc-button:active:hover, .fc-button.active:focus, .fc-button.active:hover, .fc-button.btn-warning:hover, .fc-button.btn-warning:focus, .fc-button.btn-warning:active, .fc-button.btn-warning.active, .fc-button.btn-warning:active:focus, .fc-button.btn-warning:active:hover, .fc-button.btn-warning.active:focus, .fc-button.btn-warning.active:hover {
+        background-color: #ff8d72 !important;
+        background-image: linear-gradient(to bottom left, #ff8d72, #ff6491, #ff8d72) !important;
+        background-image: -moz-linear-gradient(to bottom left, #ff8d72, #ff6491, #ff8d72) !important;
+        color: black;
+        box-shadow: none;
+    }
+
+    .pillsize {
+        height: 135px;
+    }
+
+    .avatar {
+        display: inline-block;
+        position: relative;
+        text-align: center;
+        border: #dee2e6;
+        border-radius: 50%;
+        background: #fff;
+        box-shadow: 0 0 1rem rgba(0, 0, 0, 0.15);
+        line-height: 3rem;
+      }
+
+      .fc .fc-list-empty {
+        background-color: transparent !important;
+        
     }

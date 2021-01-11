@@ -26,7 +26,7 @@ def requestToBeClient(req_id):
     client = requested.user
     firstname = acct.first_name
     email = acct.email
-    subject = f'New Request: Sign into Gibele to respond'
+    subject = f'New Request: Sign into BookMe to respond'
     html_message = render_to_string('bizadmin/home/emails/requestToCompany.html', {'acct':acct, 'client':client})
     plain_message = strip_tags(html_message)
     mail_sent = send_mail(subject, plain_message, 'BookMe.to <noreply@bookme.to>', [email], html_message=html_message, fail_silently=False)

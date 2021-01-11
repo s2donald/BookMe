@@ -1,0 +1,33 @@
+{% load business_tags %}
+<div class="text-block pb-3">
+    <div class="media align-items-center">
+        <div class="media-body">
+            <h5><a class="text-reset">{{ company.business_name }}</a></h5>
+            <div class="mt-n1">{% for x in '12345' %}<i class="fas fa-xs fa-star {% if forloop.counter|avg_reviews:company.id %}text-warning{% else %}text-gray-300{% endif %}"></i>{% endfor %}</div>
+            <h6> <a class="text-reset">{{ company.category }}</a></h6>
+            <p class="text-muted text-sm mb-0">Service Provider: {{ staff.first_name }} {{ staff.last_name}}</p>
+        </div>
+    </div>
+</div>
+<div class="text-block pt-3 pb-0">
+    <table class="w-100">
+    <tbody>
+        <tr>
+        {% with prctype=service.price_type prc=service.price %}
+        <th class="font-weight-normal py-2">{% if prctype == 'free' %}Free Service{% elif prctype == 'dont' %}Contact {{ company.business_name}} for pricing {% elif prctype == 'variable' %}Prices Varies From {% elif prctype == 'fixed' %}Fixed Price of {% else %}Prices start from {% endif %}</th>
+        <td class="text-right py-2">{% if prctype == 'free' %}{% elif prctype == 'dont' %}{% elif prctype == 'variable' %}${{ prc }}{% elif prctype == 'fixed' %}${{ prc }}{% else %}${{ prc }}{% endif %}</td>
+        </tr>
+        {% comment %} <tr>
+        <th class="font-weight-normal pt-2 pb-3">Service fee</th>
+        <td class="text-right pt-2 pb-3">$67.48</td>
+        </tr> {% endcomment %}
+    </tbody>
+    <tfoot>
+        <tr class="border-top">
+        <th class="pt-3">{% if prctype == 'variable' %}Estimated {% elif prctype == 'start' %}Estimated {% endif %}{% if not prctype == 'dont' %}Total{% endif %}</th>
+        <td class="font-weight-bold text-right pt-3">{% if prctype == 'free' %}Free{% elif prctype == 'dont' %}{% else %}${{ prc }}{% endif %}</td>
+        {% endwith %}
+        </tr>
+    </tfoot>
+    </table>
+</div>

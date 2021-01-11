@@ -26,7 +26,7 @@ GOOGLE_RECAPTCHA_SECRET_KEY = '6LcBkeEZAAAAAAKGHUafGtEV-xiuIWofHGQwSx0j' #your r
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 TIME_INPUT_FORMATS = ['%I:%M %p',]
 

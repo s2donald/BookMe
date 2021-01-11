@@ -231,8 +231,8 @@ class ImagesForm(forms.ModelForm):
         }
     
 class AddBookingForm(forms.Form):
-    service = forms.ModelChoiceField(queryset=Services.objects.all(),label='Service:', empty_label=None, widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control','title':'Service','data-size':'6'}))
-    clients = forms.ModelChoiceField(queryset=Clients.objects.all(),label='Client:', empty_label=None, required=False, widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control','title':'Select Client','data-size':'6'}))
+    service = forms.ModelChoiceField(queryset=Services.objects.all(),label='Service:', empty_label=None, widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control','title':'Service','data-size':'6','data-live-search':"true", 'data-live-search-placeholder':"Search Services"}))
+    clients = forms.ModelChoiceField(queryset=Clients.objects.all(),label='Client:', empty_label=None, required=False, widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control','title':'Select Client','data-size':'6','data-live-search':"true", 'data-live-search-placeholder':"Search from client list"}))
     timepick = forms.TimeField(label='Time',required=True, widget=forms.TextInput(attrs={'class':'form-control timepicker'}))
     datepick = forms.DateField(label='Date', required=True, widget=forms.TextInput(attrs={'class':'form-control datepicker'}))
     price = forms.DecimalField(label='Price ($)',max_digits=10, required=True, widget=forms.TextInput(attrs={'type':'number'}))
@@ -254,7 +254,7 @@ class AddBookingForm(forms.Form):
         
 
 class AddServiceCategoryForm(forms.Form):
-    services = forms.ModelMultipleChoiceField(queryset=Services.objects.none(),label='Select All Services:', widget=forms.SelectMultiple(attrs={'class':'selectcolor selectpicker show-tick form-control','title':'Service','data-size':'6', 'multiple':''}))
+    services = forms.ModelMultipleChoiceField(queryset=Services.objects.none(),label='Select All Services:', widget=forms.SelectMultiple(attrs={'class':'selectcolor selectpicker show-tick form-control','title':'Service','data-size':'6', 'multiple':'', 'data-live-search':"true"}))
     name = forms.CharField(required=False, label='Service Category Name',max_length=30,widget=forms.TextInput(attrs={'class':'form-control','id':'catname'}))
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

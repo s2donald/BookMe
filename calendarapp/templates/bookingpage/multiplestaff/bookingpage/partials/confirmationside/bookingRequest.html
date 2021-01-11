@@ -1,0 +1,15 @@
+{% load crispy_forms_tags %}
+
+<div class="row">
+    <div class="col-lg-12">
+        <form method="post" class="justify-content-center" id="RequestBookMeAdd" enctype="multipart/form-data">
+            {% csrf_token %}
+            <h1 class="h2 mb-2">{{ company.business_name }} only accepts returning clients</h1>
+            <p style="font-size:25px;">
+                Thank you for your interest in booking an appointment with {{ company.business_name }}.
+            </p>
+            <p>Click the request button below to get added onto the client list.</p>
+            <button id="addrequestclientlist" data-id="{{ service.id }}" type="submit" class="btn btn-outline-primary">Request to get added onto the list</button>
+        </form>
+    </div>
+</div>

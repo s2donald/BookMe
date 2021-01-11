@@ -73,3 +73,86 @@
         border: transparent !important;
         display: none;
     }
+
+    .fc .fc-more-popover .fc-popover-body {
+        overflow-y: auto !important;
+        height: 500px !important;
+    }
+
+    .fc .fc-scrollgrid-section-body table, .fc .fc-scrollgrid-section-footer table {
+        border-bottom-style: hidden;
+    }
+
+    .fc-event {
+        height: 70px;
+        flex-wrap: wrap;
+    }
+
+    .fc .fc-more-popover {
+        width: auto;
+    }
+
+    .fc .fc-daygrid-event {
+        flex-wrap: wrap;
+        white-space: break-spaces;
+        display: list-item;
+        cursor: pointer;
+        list-style: none;
+    }
+
+    .fc, .fc *, .fc *:before, .fc *:after {
+        /* padding-right: 6px; */
+    }
+
+    .card-calendar .fc td:last-child {
+        /* padding-right: 12px !important; */
+        overflow: hidden;
+    }
+
+
+.fc .fc-scroller-liquid-absolute .fc-scroller{
+    overflow: hidden scroll;
+}
+
+.fc-list-event-graphic {
+    display: none;
+}
+
+    td.day div {
+        color: black !important;
+    }
+    
+    td.day.active div {
+        color: white !important;
+    }
+
+    td.day.old div {
+        color: grey !important;
+    }
+
+    td.day.new div {
+        color: grey !important;
+    }
+
+    .card {
+        border-radius: 25px;
+    }
+
+    .bootstrap-select.show-tick .dropdown-menu .selected span.check-mark {
+        right: 30px !important;
+        top: 10px !important;
+    }
+
+    /* .white-content .fc-button-group:hover .fc-prev-button, .white-content .fc-button-group:hover .fc-next-button {
+        color: #ffffff;
+        background: green;
+        border: 1px solid #2b3553;
+    } */
+
+    .fc-button:hover, .fc-button:focus, .fc-button:active, .fc-button.active, .fc-button:active:focus, .fc-button:active:hover, .fc-button.active:focus, .fc-button.active:hover, .fc-button.btn-warning:hover, .fc-button.btn-warning:focus, .fc-button.btn-warning:active, .fc-button.btn-warning.active, .fc-button.btn-warning:active:focus, .fc-button.btn-warning:active:hover, .fc-button.btn-warning.active:focus, .fc-button.btn-warning.active:hover {
+        background-color: #ff8d72 !important;
+        background-image: linear-gradient(to bottom left, #ff8d72, #ff6491, #ff8d72) !important;
+        background-image: -moz-linear-gradient(to bottom left, #ff8d72, #ff6491, #ff8d72) !important;
+        color: black;
+        box-shadow: none;
+    }

@@ -90,7 +90,7 @@ def confirmedEmailCompany(booking_id):
     except:
         extra = None
     subject = f'You have a new appointment!'
-    html_message = render_to_string('emailSents/booking/companyReminder.html', {'staff':staff,acct':acct,'company':company,'service':service, 'booking':booking, 'extra':extra})
+    html_message = render_to_string('emailSents/booking/companyReminder.html', {'staff':staff,'acct':acct,'company':company,'service':service, 'booking':booking, 'extra':extra})
     plain_message = strip_tags(html_message)
 
     mail_sent = send_mail(subject, plain_message, 'BookMe.to <noreply@bookme.to>', [email], html_message=html_message, fail_silently=False)

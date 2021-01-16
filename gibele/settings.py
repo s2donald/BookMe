@@ -35,8 +35,8 @@ if DEBUG:
     SESSION_COOKIE_DOMAIN= 'gibele.com'
     DOMAIN_NAME= 'gibele.com'
 else:
-    SESSION_COOKIE_DOMAIN= 'gibele.com'
-    DOMAIN_NAME= 'gibele.com'
+    SESSION_COOKIE_DOMAIN= 'bookme.to'
+    DOMAIN_NAME= 'bookme.to'
 
 # Application definition
 

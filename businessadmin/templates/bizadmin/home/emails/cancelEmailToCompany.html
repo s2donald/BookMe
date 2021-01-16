@@ -2,7 +2,7 @@
 {% load hosts %}
 {% load static %}
 {% block emailcontent %}
-<h2>Hello {{ company.user.first_name }},</h2>
+<h2>Hello {{ user.first_name }},</h2>
 <p>Unfortunately your client, {{ client.first_name }} {{ client.last_name }}, has cancelled their appointment for a {{ booking.service.name }} service on {{ booking.start|date:'l, F j, Y' }} at {{ booking.start|date:'P' }}.</p>
 <p>BookMe is currently working on a premium feature which will help reduce the number of cancellations and no shows.</p>
 

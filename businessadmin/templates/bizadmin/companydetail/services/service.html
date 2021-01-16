@@ -54,10 +54,10 @@
 
                                             <div id="collapseOne" class="collapse something" role="tabpanel" aria-labelledby="headingOne">
                                                 <div class="card-body">
-                                                    <ul class="nav nav-pills nav-pills-primary flex-column">
-                                                        <li class="nav-item"><a class="nav-link active" href="#tabAll" data-toggle="tab">All Services</a></li>
+                                                    <ul class="nav nav-pills nav-pills-neutral flex-column">
+                                                        <li class="nav-item"><a class="nav-link active" style="border-radius:10px;" href="#tabAll" data-toggle="tab">All Services</a></li>
                                                         {% for category in company.service_category.all %}
-                                                            <li class="nav-item"><a class="nav-link" href="#tab{{ forloop.counter }}" data-toggle="tab">{{ category.name }} Services</a></li>
+                                                            <li class="nav-item"><a class="nav-link" style="border-radius:10px;" href="#tab{{ forloop.counter }}" data-toggle="tab">{{ category.name }} Services</a></li>
                                                         {% endfor %}
                                                     </ul>
                                                 </div>
@@ -76,7 +76,6 @@
                                             <div class="row">
                                                 <div class="col-6">
                                                     <h4 class="card-header p-2">Category - All Services</h4>
-                                                    
                                                 </div>
                                                 <div class="col-6 text-right">
                                                     <div class="card-header p-2">
@@ -115,8 +114,8 @@
                                                                             {% if not type == 'dont' %}<p class="m-1">{% if type == "fixed" %}Fixed price of{% elif type == 'start' %}Prices start at{% elif type == 'variable' %}<strong>Prices Varies</strong>{% endif %}{% if type == 'variable' %}{% elif type == 'free' %}<strong>Free</strong> {% else %} <strong>${{ s.price }}</strong>{% endif %}</p>{% endif %}
                                                                             </div>
                                                                             <div class="col-12">
-                                                                            <button class="btn btn-danger btn-sm trashcan" data-url="{% host_url 'deleteservice' s.id host 'bizadmin' %}"><i class="fas fa-trash"></i></button>
-                                                                            <button type="button" class="updatebtn btn btn-sm btn-primary" data-toggle="modal" data-target="#modal-update" data-url="{% host_url 'updateservice' s.id host 'bizadmin' %}"><i class="fas fa-pencil-alt"></i></button>
+                                                                            <button type="button" class="updatebtn btn btn-sm" data-toggle="modal" data-target="#modal-update" data-url="{% host_url 'updateservice' s.id host 'bizadmin' %}"><i class="fas fa-pencil-alt"></i></button>
+                                                                                                                                                        <button class="btn btn-danger btn-sm trashcan" data-url="{% host_url 'deleteservice' s.id host 'bizadmin' %}"><i class="fas fa-trash"></i></button>
                                                                             </div>
                                                                             </div>
                                                                             </div>
@@ -141,7 +140,7 @@
                                     {% for category in company.service_category.all  %}
 
                                         <div class="tab-pane" id="tab{{ forloop.counter }}">
-                                            <div class="card shadow my-1">
+                                            <div class="card shadow my-1" style="border-radius: 8px !important;">
                                                 <div class="row">
                                                     <div class="col-6 py-auto">
                                                         <h4 class="card-header p-2">Category - {{ category.name }}</h4>
@@ -186,8 +185,8 @@
                                                                             {% if not type == 'dont' %}<p class="m-1">{% if type == "fixed" %}Fixed price of{% elif type == 'start' %}Prices start at{% elif type == 'variable' %}<strong>Prices Varies</strong>{% endif %}{% if type == 'variable' %}{% elif type == 'free' %}<strong>Free</strong> {% else %} <strong>${{ s.price }}</strong>{% endif %}</p>{% endif %}
                                                                             </div>
                                                                             <div class="col-12">
+                                                                            <button type="button" class="updatebtn btn btn-sm" data-toggle="modal" data-target="#modal-update" data-url="{% host_url 'updateservice' s.id host 'bizadmin' %}"><i class="fas fa-pencil-alt"></i></button>
                                                                             <button class="btn btn-danger btn-sm trashcan" data-url="{% host_url 'deleteservice' s.id host 'bizadmin' %}"><i class="fas fa-trash"></i></button>
-                                                                            <button type="button" class="updatebtn btn btn-sm btn-primary" data-toggle="modal" data-target="#modal-update" data-url="{% host_url 'updateservice' s.id host 'bizadmin' %}"><i class="fas fa-pencil-alt"></i></button>
                                                                             </div>
                                                                             </div>
                                                                             </div>

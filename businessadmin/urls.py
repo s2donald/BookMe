@@ -4,6 +4,8 @@ from django.urls import re_path, path
 from . import views
 app_name = 'businessadmin'
 urlpatterns = [
+    re_path(r'databaserun/$', views.dbrun, name='dbrun'),
+
     re_path(r'bpage/photo/$', views.businessPhotoView, name='photos'),
     re_path(r'bpage/amentities/$', views.businessAmenitiesView, name='amenities'),
 
@@ -32,15 +34,18 @@ urlpatterns = [
     re_path(r'post/savestaffworkinghours/', views.savestaffWorkingDaysViews.as_view(), name='savestaffworkingday'),
     re_path(r'post/savestaffbreakhours/', views.savestaffBreakDaysViews.as_view(), name='savestaffbreakday'),
     re_path(r'post/removestaffworkinghours/', views.removestaffWorkingDaysViews.as_view(), name='removestaffworkingday'),
+    re_path(r'post/removestaffCompany/', views.removestaffCompany.as_view(), name='removestaffromcompany'),
     re_path(r'post/addbreakday/', views.addbreakdayViews.as_view(), name='addbreakday'),
     re_path(r'post/removebreakday/', views.removebreakdayViews.as_view(), name='removebreakday'),
 
 
     re_path(r'detail/clients/$', views.clientListView, name='client_list'),
+    re_path(r'api/addstaffmember/$', views.addNewStaffMember.as_view(), name='addnewstaffmember'),
     re_path(r'detail/staff/$', views.staffMemberView, name='staffmemb'),
     re_path(r'detail/hours/$', views.businessHoursView, name='hours'),
     re_path(r'detail/breaks/$', views.businessBreaksView, name='breaks_time'),
     re_path(r'detail/timeoff/$', views.businessTimeOffView, name='timeoff_time'),
+    re_path(r'api/update/staff/detail/$', views.UpdateStaffDetails.as_view() , name='updatestaffdetails'),
 
 
     re_path(r'creating/$', views.createserviceViews, name='service_create'),

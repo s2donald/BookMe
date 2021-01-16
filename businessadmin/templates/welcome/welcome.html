@@ -38,66 +38,67 @@
 {% block businesscontent %}
 
     <section class="py-lg-5">
+
+
       <div class="container">
-        <h1 class="hero-heading mb-0">BookMe can help your business thrive</h1>
         <div class="row">
-          <div class="col-12 col-md-6 col-lg-4 mb-3">
-            <div class="card h-100 border-0 shadow hover-animate">
-              <div class="card-body">
-                <object height="300px" width="100%" id="marketplace-welcome" data="{% static 'css/svg-img/bizpage-welcome/marketplace.svg' %}" type="image/svg+xml"></object>
-                <h5 class="card-title mb-3">Showcase your business on the BookMe marketplace</h5>
-                <p class="text-muted card-text text-sm">List your business on the BookMe marketplace for free and increase your exposure to new clients! You can also share your calendars on Facebook, Instagram, email or on your own website</p>
-              </div>
-            </div>
+          
+          <div class="col-lg-6">
+            <ul class="smlr p-0">
+              <li class="slmr_item">
+                <img height="150px" width="150px"src="{% static 'img/icons/computer.svg'%}" alt="">
+                <h3>Online Scheduling</h3>
+                <p class="d-md-none">Manage your schedule effortlessly by adding, rescheduling and cancelling appointments.</p>
+              </li>
+              <li class="slmr_item">
+                <img height="150px" width="150px"src="{% static 'img/icons/marketing.svg'%}" alt="">
+                <h3>Marketing</h3>
+                <p class="d-md-none">Share your calendar on Facebook and Instagram to get clients booking appointments instantly!</p>
+                <p class="d-md-none">Automatically re-engage with your clients to increase your bookings.</p>
+              </li>
+              <li class="slmr_item">
+                <img height="150px" width="150px"src="{% static 'img/icons/location.svg'%}" alt="">
+                <h3>Connect With Locals</h3>
+                <p class='d-md-none'>Get your business listed on the BookMe Marketplace and get exposure to new customers!</p>
+              </li>
+              <li class="slmr_item">
+                <img height="150px" width="150px"src="{% static 'img/icons/email.svg'%}" alt="">
+                <h3>Automated Reminders</h3>
+                <p class="d-md-none">Send reminder emails and text messages to your clients before their appointment to reduce the number of no shows.</p>
+              </li>
+            </ul>
           </div>
-         
-          <div class="col-12 col-md-6 col-lg-4 mb-3">
-            <div class="card h-100 border-0 shadow hover-animate">
-              <div class="card-body">
-                <object height="300px" width="100%" id="quality-welcome" data="{% static 'css/svg-img/bizpage-welcome/booking.svg' %}" type="image/svg+xml"></object>
-                <h5 class="card-title mb-3">Spend less time on schedules and more time on quality services</h5>
-                <p class="text-muted card-text text-sm">Give your new and returning clients the flexibility to choose when to book an appointment with you for any service that you offer without them having to contact you directly</p>
-              </div>
-            </div>
+          <div class="col-lg-6">
+            <h1 class="hero-heading welcome_intro">
+              BookMe can help your business thrive
+            </h1>
+            <p class="text-muted mt-3">Grow your business with BookMe. Allow your customers to conveniently book appointments with you.</p>
+            <p class="text-muted">We have simplified the scheduling process for you and your clients so you can spend more time providing services.</p>
           </div>
-          <div class="col-12 col-md-6 col-lg-4 mb-3">
-            <div class="card h-100 border-0 shadow hover-animate">
-              <div class="card-body">
-                <object height="300px" width="100%" id="communicate-welcome" data="{% static 'css/svg-img/bizpage-welcome/communicate.svg' %}" type="image/svg+xml"></object>
-                <h5 class="card-title mb-3">Communicate with your clients</h5>
-                <p class="text-muted card-text text-sm">Remind your clients of their appointments by sending automated reminder messages using text and email</p>
-              </div>
-            </div>
+          
+        </div>
+      </div>
+
+      
+    </section>
+
+    {% comment %} <section class="py-lg-5">
+      <div class="container">
+        <div class="row">
+          <div class="col-12">
+              <h1 class="hero-heading welcome_intro">
+                Personalize your booking page
+              </h1>
           </div>
-          <div class="col-12 col-md-6 col-lg-4 mb-3">
-            <div class="card h-100 border-0 shadow hover-animate">
-              <div class="card-body">
-                <object height="300px" width="100%" id="communicate-welcome" data="{% static 'css/svg-img/bizpage-welcome/payment.svg' %}" type="image/svg+xml"></object>
-                <h5 class="card-title mb-3">Process your payments</h5>
-                <p class="text-muted card-text text-sm">Protect your business against no shows by taking deposits on services and enforcing cancellation fees using Stripe or PayPal</p>
-              </div>
-            </div>
+          <div class="col-md-6">
+
           </div>
-          <div class="col-12 col-md-6 col-lg-4 mb-3">
-            <div class="card h-100 border-0 shadow hover-animate">
-              <div class="card-body">
-                <object height="300px" width="100%" id="communicate-welcome" data="{% static 'css/svg-img/bizpage-welcome/schedules.svg' %}" type="image/svg+xml"></object>
-                <h5 class="card-title mb-3">Manage your schedule</h5>
-                <p class="text-muted card-text text-sm">Change your availability anytime and reschedule appointments easily. Automatically notify clients of changes to appointments. </p>
-              </div>
-            </div>
-          </div>
-          <div class="col-12 col-md-6 col-lg-4 mb-3">
-            <div class="card h-100 border-0 shadow hover-animate">
-              <div class="card-body">
-                <object height="300px" width="100%" id="communicate-welcome" data="{% static 'css/svg-img/bizpage-welcome/charts-demo.svg' %}" type="image/svg+xml"></object>
-                <h5 class="card-title mb-3">Track Your Customers</h5>
-                <p class="text-muted card-text text-sm">View all of your customers past and future appointments. Take notes on their preferences, save appointment slots for individual customers or book them in yourself, send them legal forms to sign and allow them to write reviews on your business after a service is complete. </p>
-              </div>
-            </div>
+          <div class="col-md-6">
+
           </div>
         </div>
       </div>
-    </section>
+      
+    </section> {% endcomment %}
 
 {% endblock %}

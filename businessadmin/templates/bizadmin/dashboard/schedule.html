@@ -159,14 +159,14 @@
                         dayGridMonth: 'Month'
                     },
                     selectable: true,
-                    dayMaxEvents: 10,
+                    dayMaxEvents: 5,
                     aspectRatio: asprat,
 
                 events: function(start, successCallback, failureCallback) {
-                    
+                    staff_id = $('#staffmem').val()
                     $.ajax({
                         url: '{% host_url "ajax_load_events" host "bizadmin" %}',
-                        data: {start:start.startStr , end: start.endStr},
+                        data: {start:start.startStr , end: start.endStr, staff_id:staff_id},
                         success: function(data){
                             var events = [];
                             $.map(data, function(r){
@@ -189,13 +189,14 @@
                 },
                 loading: function (isLoading) {
                     if (isLoading) {
-                        $('.lds-facebook').show();
+                        $('#bm').show();
+                        animation.playSegments([15,40], true);
                     }
-                    else {                
-                        $('.lds-facebook').hide();
+                    else {           
+                        animation.stop()     
+                        $('#bm').hide();
                     }
                 },
-                timeFormat: 'h:mm',
                 eventClick: function(info) {
                     const serv_id = info.event.id
                     $.ajax({
@@ -208,57 +209,59 @@
                         },
                     })
                 },
-                noEventsClassNames: 'No bookings to display',
+                contentHeight:"auto",
                 initialView: initviewcal,
                 headerToolbar: {
                     center: rightitems,
                     left: 'title',
                     right: leftitems
-                },navLinks: true,
-                navLinkDayClick: function(date, jsEvent) {
-                    //When you click the day
-                }
+                },
+                
             });
-            calendar.render()
+            calendar.render();
+            $('#staffmem').change(function(){
+                calendar.refetchEvents()
+            });
         });
+
     </script>
         <!-- Main page content-->
         
         <div class="content">
         <div class="row">
-         <header class="page-header page-header-compact page-header-light mb-4">
-                            <div class="container-fluid">
-                                <div class="page-header-content">
-                                    <div class="row align-items-center justify-content-between pt-3">
-                                        <div class="col-12 mb-3">
-                                            <h1 class="page-header-title">
-                                                Schedule
-                                            </h1>
-                                        </div>
-
-                                        <button type="button" id="addbooking" class="btn btn-primary" data-toggle="modal" data-target="#add-booking" data-backdrop="static" data-keyboard="false" data-url="{% host_url 'add_booking' host 'bizadmin' %}">
-                            Add A Booking
-                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </header>
+        <header class="page-header page-header-compact page-header-light">
+            <div class="container-fluid">
+                <div class="page-header-content">
+                    <div class="row align-items-center justify-content-between pt-3">
+                        <div class="col-12">
+                            <h1 class="page-header-title">
+                                Schedule
+                            </h1>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </header>
                         
 
             <div class="col-md-12 ml-auto mr-auto">
                 <div class="card card-calendar">
                     <div class="card-header">
                         <h4>Staff:</h4>
-                            <nav class="nav nav-borders mt-0">
-                                {% for staff in company.staffmembers.all %}
-                                    <a class="nav-link my-0 py-0 {% if forloop.counter == 1 %}activate{% endif %}" href="{% host_url 'profile' host 'bizadmin'%}">{{ staff.first_name }} {{ staff.last_name}}</a>
-                                {% endfor %}
-                            </nav>
+                            <select name="selValue" id="staffmem" class="selectpicker" data-live-search='True' data-live-search-placeholder="Search Staff Member">
+                                {% if request.user.working_for.access > 0 %}
+                                    {% for staff in company.staffmembers.all %}
+                                        <option value="{{ staff.id }}">{{ staff.first_name }}</option>
+                                    {% endfor %}
+                                {% endif %}
+                            </select>
+                            <button type="button" id="addbooking" class="btn btn-primary " data-toggle="modal" data-target="#add-booking" data-backdrop="static" data-keyboard="false" data-url="{% host_url 'add_booking' host 'bizadmin' %}">
+                                Add a booking
+                            </button>
                     </div>
-                    
                         <div class="card-body">
-                            
-                            <div class="lds-facebook" style="display:none;"><div></div><div></div><div></div></div>
+                            <div id="bm" width="100px"></div>
                             <div id="calendar"></div>
                         </div>
                     </div>
@@ -286,6 +289,14 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     {{ addbooking.service|as_crispy_field }}
+                                </div>
+                                <div class="col-md-12">
+                                    <label for="">Staff Member:</label>
+                                    <select id="bookingstaff" class="selectpicker" name="bookstaff" data-live-search='True' data-live-search-placeholder="Search Staff Member">
+                                        {% for staff in company.staffmembers.all %}
+                                            <option value="{{ staff.id }}">{{ staff.first_name }}</option>
+                                        {% endfor %}
+                                    </select>
                                 </div>
                                 <div class="col-md-12 form-row">
                                     <div class="col-6">
@@ -369,6 +380,19 @@
         </div>
       </div>
       <script>
+
+        var animation = bodymovin.loadAnimation({
+            container: document.getElementById('bm'),
+            renderer: 'svg',
+            loop: true,
+            autoplay: false,
+            path: "{% static 'img/icons/bookme.json' %}",
+            rendererSettings: {
+                className: 'loading',
+                id: 'some-id',
+            }
+        })
+        
         $('#id_service').change(function(){
             service_id = $(this).val()
             $.ajax({
@@ -480,26 +504,6 @@
                 close: 'fa fa-remove'
             }
         });
-        {% comment %} 
-                events:[
-                {% for booking in bookings %}
-                    {
-                        title: 'Client: {{ booking.user.first_name}} Service: {{ booking.service.name }}',
-                        start: '{{ booking.start|date:"Y-m-d" }}'+'T'+'{{ booking.start|date:"H:i:s" }}',
-                        end: '{{ booking.end|date:"Y-m-d" }}'+'T'+'{{ booking.end|date:"H:i:s" }}',
-                        id: '{{ booking.id }}',
-                        className: 'event-green',
-                         {% if forloop.counter|divisibleby:"2" %}
-                            className: 'event-green',
-                        {% elif forloop.counter|divisibleby:"3" %}
-                            className: 'event-orange',
-                        {% else %}
-                            className:'event-red',
-                        {% endif %}
-                    },
-                {% endfor %}
-                ], 
-                {% endcomment %}
 
       </script>
 {% endblock %}

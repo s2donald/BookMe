@@ -1,0 +1,743 @@
+{% extends 'bookingpage/multiplestaff/bookingpage/main.html'%}
+{% load static %}
+{% load hosts %}
+{% load business_tags %}
+{% block title %}{{ company.business_name }} - BookMe.to{% endblock %}
+{% block companybizname %}{{ company.business_name }}{% endblock companybizname %}
+{% block booking %}
+
+ <div class="modal fade" id="getCodeModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+   <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">x</span>
+        </button>
+      </div>
+       <div class="modal-body" id="getCode" style="overflow-x: scroll;">
+        
+       </div>
+    </div>
+   </div>
+ </div>
+
+<section class="py-0">
+    <div id="sd" width="100px"></div>
+    <div class="container liblack" id="wholepage">
+        <div class="row">
+            <div id="bm" width="100px"></div>
+            <div class="col-lg-7" id="contentsarg">
+                <hr>
+                <ul class="navbar nav nav-pills" id="navlink-page" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active ml-0 service-link" data-toggle="pill" role="tab" href="#serviceList" aria-selected="true" id="aservice">Services</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link about-link" href="#aboutList" data-toggle="pill" role="tab" aria-selected="false" id="aabout">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link review-link" href="#reviewlist" data-toggle="pill" role="tab" aria-selected="false" id="areview">Reviews</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link gallary-link" href="#gallarylist" data-toggle="pill" role="tab" aria-selected="false" id="agallary">Gallary</a>
+                    </li>
+                </ul>
+                <hr>
+                <div class="tab-content" id="pillscontent">
+                    <div class="tab-pane fade show active" role="tabpanel" id="serviceList">
+                        <h2>All Services</h2>
+
+                        <div id="accordion" role="tablist" aria-multiselectable="true" class="card-collapse">
+                            <div class="card card-plain mb-2">
+                                {% for categories in company.service_category.all %}
+                                <div class="card-header p-2 mb-2" role="tab" id="heading{{ forloop.counter }}">
+                                    <p class="mb-0 text-sm text-left align-items-center justify-content-center">
+                                    <a data-toggle="collapse" href="#collapse{{ forloop.counter }}" aria-expanded="false" aria-controls="collapse{{ forloop.counter }}">
+                                        {{ categories.name }} Services
+                                        <i class="fas fa-chevron-down text-line"></i>
+                                    </a>
+                                    </p>
+                                </div>
+                                <div id="collapse{{ forloop.counter }}" class="collapse" role="tabpanel" aria-labelledby="heading{{ forloop.counter }}" data-parent="#accordion">
+                                    <div class="card-body text-left">
+                                    {% for s in categories.services.all %}
+                                        {% with hour=s.duration_hour min=s.duration_minute type=s.price_type %}                          
+                                        <div class="row p-0 justify-content-between text-left align-self-center">
+                                            <div class="col-8 p-0">
+                                            <p class="mb-1">{{ s.name }}</p>
+                                            <a data-id="{{ s.id }}" data-url="{% host_url 'staffofferingservice' host 'bookingurl' slug=company.slug%}" class="btn btn-outline-primary getserviceid">Book Now</a>
+                                            </div>
+                                            <div class="col-4 p-0 text-right">
+                                            <strong class="text-header m-1">{% if not hour == 0 %}{{ hour }}h{% endif %} {% if not min == 0 and not hour == 0 %}&amp;{% endif %} {% if not min == 0 %}{{ min }} min{% endif %}</strong>
+                                            {% if not type == 'dont' %}<p class="m-1">{% if type == "fixed" %}Fixed price of{% elif type == 'start' %}Prices start at{% elif type == 'variable' %}<strong>Prices Varies</strong>{% endif %}{% if type == 'variable' %}{% elif type == 'free' %}<strong>Free</strong> {% else %} <strong>${{ s.price }}</strong>{% endif %}</p>{% endif %}
+                                            </div>
+                                        </div>
+                                        <div class="col-12 p-0 mt-2">
+                                            <p class="text-muted">{{ s.description }}</p>
+                                        </div>
+                                        {% endwith %}  
+                                            <hr>
+                                    {% endfor %}
+                                    </div>
+                                </div>
+                                {% endfor %}
+                                <div class="card-header p-2 hover-animate" role="tab" id="headingAll">
+                                    <p class="mb-0 text-sm text-left align-items-center justify-content-center">
+                                    <a data-toggle="collapse" href="#collapseAll" aria-expanded="false" aria-controls="collapseAll">
+                                        All Services
+                                        <i class="fas fa-chevron-down text-line"></i>
+                                    </a>
+                                    </p>
+                                </div>
+                                <div id="collapseAll" class="collapse" role="tabpanel" aria-labelledby="headingAll" data-parent="#accordion">
+                                    <div class="card-body text-left">
+                                    {% for s in company.services_offered.all %}
+                                        {% with hour=s.duration_hour min=s.duration_minute type=s.price_type %}                          
+                                            <div class="row p-0 justify-content-between text-left align-self-center">
+                                                <div class="col-8 p-0">
+                                                <p class="mb-1">{{ s.name }}</p>
+                                                <a data-id="{{ s.id }}" class="btn btn-outline-primary getserviceid">Book Now</a>
+                                                </div>
+                                                <div class="col-4 p-0 text-right">
+                                                <strong class="text-header m-1">{% if not hour == 0 %}{{ hour }}h{% endif %} {% if not min == 0 and not hour == 0 %}&amp;{% endif %} {% if not min == 0 %}{{ min }} min{% endif %}</strong>
+                                                {% if not type == 'dont' %}<p class="m-1">{% if type == "fixed" %}Fixed price of{% elif type == 'start' %}Prices start at{% elif type == 'variable' %}<strong>Prices Varies</strong>{% endif %}{% if type == 'variable' %}{% elif type == 'free' %}<strong>Free</strong> {% else %} <strong>${{ s.price }}</strong>{% endif %}</p>{% endif %}
+                                                </div>
+                                            </div>
+
+                                            <div class="col-12 p-0 m-0 text-center">
+                                                <p class="text-muted text-left">{{ s.description }}</p>
+                                            </div>
+                                        {% endwith %}  
+                                            <hr>
+                                    {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    <!-- Amenities-->
+                    <div class="tab-pane fade" role="tabpanel" id="aboutList">
+                        {% if company.company_amenity %}
+                        <div class="text-block">
+                        <h3 class="mb-4">Amenities Offered</h3>
+                        <ul class="amenities-list list-inline">
+                            {% for a in company.company_amenity.all %}
+                            <li class="list-inline-item mb-3">
+                            <div class="d-flex align-items-center">
+                                <div class="icon-circle bg-secondary mr-2"><i class="fa fa-check"></i></div><span class="text-capitalize">{{ a.amenity }}</span>
+                            </div>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                        <hr>
+                        </div>
+                        {% endif %}
+
+                        <div class="text-block">
+                        {% if company.description %}
+                        <h3 class="mb-3">About</h3>
+                        <p class="text-muted text-left"> {{ company.description }}</p>
+                        <hr>
+                        {% endif %}
+                        </div>
+
+                        <div class="text-block">
+                            <h3 class="mb-3">Location</h3>
+                            <div id="map"></div>
+                            <hr>
+                        </div>
+                    </div>
+                    
+                    <div class="tab-pane fade" role="tabpanel" id="reviewlist">
+                        <div class="d-flex justify-content-center">
+                            <h3 class="mb-3">Reviews</h3>
+                        </div>
+                    {% if company.company_reviews %}
+                        {% for review in company.company_reviews.all %}
+                            <hr>
+                            {% with reviewer=review.reviewer %}
+                            <div class="media d-block d-sm-flex review">
+                                <div class="text-md-left mr-4 mr-xl-5"><img class="d-block avatar avatar-xl p-2 mb-2" src="{% if reviewer.avatar %}{{ reviewer.avatar.url }}{% else %}https://epicattorneymarketing.com/wp-content/uploads/2016/07/Headshot-Placeholder-1.png{% endif %} " alt="{{ reviewer.first_name }} {{ reviewer.last_name }}"><span class="text-uppercase text-muted text-sm">{{ review.created|date:"M d, Y"}}</span></div>
+                                <div class="media-body text-left">
+                                <h6 class="mt-2 mb-1">{{ reviewer.first_name }} {{ reviewer.last_name }}</h6>
+                                <div class="mb-2">{% for x in '12345' %}<i class="fas fa-star {% if forloop.counter <= review.star %}text-warning{% else %}text-gray-300{% endif %}"></i>{% endfor %}
+                                </div>
+                                <p class="text-muted text-sm">{{ review.review }}     </p>
+                                </div>
+                            </div>
+                            {% endwith %}
+                        {% endfor %}
+                        {% include 'business/company/pagination_review/pagination.html' with page=reviews %}
+                        <hr>
+                    {% else %}
+                        <h6>Be the first to write a review on this business after you complete a service with them.</h6>
+                        <hr>
+                    {% endif %}
+                    
+                    
+                    </div>
+
+                    <div class="tab-pane fade" role="tabpanel" id="gallarylist">
+                    <div class="row text-center justify-content-center" id="galphotos">
+                        {% for p in company.gallary.all %}
+                        <div class="col-sm-12 col-md-6 col-lg-4 mt-2">
+                            <div class="card hover-animate justify-content-center align-self-center show-image" id="{{ p.id }}">
+                            <img width="100%" class="rounded" src="{{ p.photos.url }}" alt="">
+                            </div>
+                        </div>
+                        {% empty %}
+                            <h6>No images have been uploaded by {{ company.business_name }}</h6>
+                        {% endfor %}
+                    </div>
+                    <br>
+                    {% include 'bizadmin/dashboard/reviews/pagination.html' with page=photos%}
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-5">
+                <div class="pl-xl-4">
+                    <!-- Opening Hours      -->
+                    <div class="card border-0 shadow mb-5">
+                        <div class="card-topcol bg-light"></div>
+                        <div class="card-body" id="bizhours">
+                            <div class="media align-items-center">
+                            <div class="media-body">
+                                <h4 class="mb-0">Business Hours </h4>
+                            </div>
+                            </div>
+                            <table class="table text-sm mb-0">
+                            {% for hours in company.hours.all %}
+                                <tr>
+                                    <th class="pl-0 border-0">{{ hours.get_weekday_display }}</th>
+                                    {% if hours.is_closed %}
+                                        <td class="pr-0 text-right border-0">Closed</td>
+                                    {% else %}
+                                        <td class="pr-0 text-right border-0">{{ hours.from_hour|date:'g:i A'}} - {{ hours.to_hour|date:'g:i A' }}</td>
+                                    {% endif %}
+                                </tr>
+                            {% endfor %}
+                            </table>
+                        </div>
+                    </div>
+                    <!-- Contact-->
+                    <div class="card border-0 shadow mb-5">
+                        <div class="card-topcol bg-light"></div>
+                        <div class="card-body" id="informationcompstaff">
+                            <div class="media align-items-center">
+                                <div class="media-body">
+                                    <h4 class="mb-0">Business Information</h4>
+                                </div>
+                            </div>
+                            <ul class="list-unstyled mb-4">
+                                <li class="mb-0 pb-0"> 
+                                    <a rel="nofollow" class="licolor text-sm text-decoration-none" href="tel:{{ company.phone }}">
+                                    <div class="row my-0 py-0">
+                                        <div class="col-2 mb-0 pb-0">
+                                        <i class="fa fa-phone mr-3"></i>
+                                        </div>
+                                        <div class="col-10 pb-0 text-left">
+                                        <span class="text-muted">{{ company.phone }}</span>
+                                        </div>
+                                    </div>
+                                    </a>
+                                </li>
+                                <li class="mb-2"> 
+                                    <a rel="nofollow" class="licolor text-sm text-decoration-none" href="mailto:{{ company.email }}">
+                                    <div class="row my-0 py-0">
+                                        <div class="col-2 my-0 pb-0">
+                                        <i class="fa fa-envelope mr-3"></i>
+                                        </div>
+                                        <div class="col-10 pb-0 text-left">
+                                        <span class="text-muted">{{ company.email }}</span>
+                                        </div>
+                                    </div>
+                                    </a>
+                                </li>
+                                {% if company.website_link %}
+                                    <li class="mb-2"> 
+                                    <a rel="nofollow" class="licolor text-sm text-decoration-none" href="{{ company.website_link }}">
+                                        <div class="row my-0 py-0">
+                                        <div class="col-2 my-0 pb-0">
+                                            <i class="fa fa-globe mr-3"></i>
+                                        </div>
+                                        <div class="col-10 pb-0 text-left">
+                                            <span class="text-muted">{{ company.website_link }}</span>
+                                        </div>
+                                        </div>
+                                    </a>
+                                    </li>
+                                {% endif %}
+                                {% if company.fb_link %}
+                                    <li class="mb-2"> 
+                                    <a rel="nofollow" class="licolor text-blue text-sm text-decoration-none" href="{{ company.fb_link}}">
+                                        <div class="row my-0 py-0">
+                                        <div class="col-2 my-0 pb-0">
+                                            <i class="fab fa-facebook mr-3"></i>
+                                        </div>
+                                        <div class="col-10 pb-0 text-left">
+                                            <span class="text-muted">Facebook</span>
+                                        </div>
+                                        </div>
+                                    </a>
+                                    </li>
+                                {% endif %}
+                                {% if company.twitter_link %}
+                                    <li class="mb-2"> 
+                                    <a rel="nofollow" class="licolor text-sm text-decoration-none" href="{{ company.twitter_link}}">
+                                        <div class="row my-0 py-0">
+                                        <div class="col-2 my-0 pb-0">
+                                            <i class="fab fa-twitter mr-3"></i>
+                                        </div>
+                                        <div class="col-10 pb-0 text-left">
+                                            <span class="text-muted">Twitter</span>
+                                        </div>
+                                        </div>
+                                    </a>
+                                    </li>
+                                {% endif %}
+                                {% if company.instagram_link %}
+                                    <li class="mb-2"> 
+                                        <a rel="nofollow" class="licolor text-sm text-decoration-none" href="{{ company.instagram_link}}">
+                                            <div class="row my-0 py-0">
+                                            <div class="col-2 my-0 pb-0">
+                                                <i class="fab fa-instagram licolor mr-3"></i>
+                                            </div>
+                                            <div class="col-10 pb-0 text-left">
+                                                <span class="text-muted">Instagram</span>
+                                            </div>
+                                            </div>
+                                        </a>
+                                    </li>
+                                {% endif %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+    <script>
+    var animation = bodymovin.loadAnimation({
+        container: document.getElementById('bm'),
+        renderer: 'svg',
+        loop: true,
+        autoplay: false,
+        path: "{% static 'img/icons/bookme.json' %}",
+        rendererSettings: {
+            className: 'loading',
+            id: 'some-id',
+        }
+    });
+    var sdanimation = bodymovin.loadAnimation({
+        container: document.getElementById('sd'),
+        renderer: 'svg',
+        loop: true,
+        autoplay: false,
+        path: "{% static 'img/icons/bookme.json' %}",
+        rendererSettings: {
+            className: 'loading',
+            id: 'some-id',
+        }
+    })
+
+    $(document).ready(function(){
+        $('#bm').hide()
+        $('#sd').hide()
+    })
+
+    function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+                                for (let i = 0; i < cookies.length; i++) {
+                                    const cookie = cookies[i].trim();
+                                    // Does this cookie string begin with the name we want?
+                                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                                        break;
+                                    }
+                                }
+                            }
+                                return cookieValue;
+                            }
+                            var csrftoken = getCookie('csrftoken');
+        function initMap() {
+            var map = new google.maps.Map(document.getElementById("map"), {
+                zoom: 16,
+                center: { lat: 43.790810, lng: -79.166140 }
+            });
+            var geocoder = new google.maps.Geocoder();
+            geocodeAddress(geocoder, map);
+            
+        }
+
+        function geocodeAddress(geocoder, resultsMap) {
+            var address = '{{ company.address }}, {{ company.state }}, {{ company.city }}, {{ company.postal }}';
+            geocoder.geocode({ address: address }, function(results, status) {
+                if (status === "OK") {
+                resultsMap.setCenter(results[0].geometry.location);
+                var marker = new google.maps.Marker({
+                    map: resultsMap,
+                    position: results[0].geometry.location
+                });
+                } else {
+
+                }
+            });
+        }
+
+        $(document).on('click', '.getserviceid',function(){
+            var $this = $(this)
+            var service_id =  $this.attr('data-id')
+            $.ajax({
+                type:'GET',
+                url: "{% host_url 'staffofferingservice' host 'bookingurl' slug=company.slug %}",
+                data: {
+                    'service_id': service_id
+                },
+                headers:{
+                    "X-CSRFToken": csrftoken
+                },
+                success:function(data){
+                    $('body, html, #contentsarg').scrollTop(0, "fast");
+                    if (data.returning){
+                        $("#getCode").html(data.html_content);
+                        $("#getCodeModal").modal('show');
+                    }
+                    else {
+                        var el = document.querySelector('#contentsarg');
+                        el.innerHTML = data.html_content
+                    }
+                }
+            });
+        });
+
+        $(document).on('submit', '#RequestBookMeAdd',function(e){
+            e.preventDefault()
+            var form = $('#RequestBookMeAdd')
+            var $this = $('#addrequestclientlist')
+            var service_id =  $this.attr('data-id')
+            object = [
+                { name: "service_id", value: service_id },
+            ]
+            $.ajax({
+                type:'POST',
+                url: "{% host_url 'requestSpotAsClient' host 'bookingurl' slug=company.slug %}",
+                data: form.serialize() + '&' + $.param(object),
+                success:function(data){
+                    $("#getCode").html(data.html_content);   
+                }
+            });
+        });
+
+        $(document).on('submit', '#loginBookMeformReturning',function(e){
+            e.preventDefault();
+            $('#bm').show()
+            animation.playSegments([15,40], true);
+            var form = $('#loginBookMeformReturning')
+            var $this = $('#loginbookmereturning');
+            var service_id =  $this.attr('data-id')
+            object = [
+                { name: "service_id", value: service_id },
+            ]
+            $.ajax({
+                type:'POST',
+                url: "{% host_url 'loginbookmereturning' host 'bookingurl' slug=company.slug %}",
+                data: form.serialize() + '&' + $.param(object),
+                success:function(data){
+                    setTimeout(function(){ 
+                        animation.stop()
+                        $('#bm').hide()
+                        if (data.notvalid){
+                            var el = document.querySelector('.texterror');
+                            el.innerHTML = data.errormsg
+                        }
+                        else if (data.loggedinuser) {
+                            $("#getCode").html();
+                            $("#getCode").html(data.html_content);
+                        }
+                        else {
+                            $("#getCode").html();
+                            $("#getCodeModal").modal('hide');
+                            var el = document.querySelector('#contentsarg');
+                            el.innerHTML = data.html_content
+                        }
+
+                    }, 500);
+                }
+            });
+        });
+
+
+        function selectedDateFunction(selected, service_id, staff_id) {
+            var el = document.querySelector('.bookingbutton');
+            $('#bm').show()
+            animation.playSegments([15,40], true);
+            el.classList.add("d-none")
+            const weekday = selected.getDay()
+            const month = selected.getMonth();
+            const day = selected.getDate();
+            const year = selected.getFullYear();
+            const newdate = selected.toJSON().substring(0,10)
+            $.ajax({
+                type: 'get',
+                url: "{% host_url 'getbookingbuttons' host 'bookingurl' slug=company.slug %}",
+                data: {
+                    'service_id': service_id, 'staff_id': staff_id, 'weekday':weekday, 'month':month, 'day':day, 'year':year
+                },
+                success:function(data){
+                    setTimeout(function(){ 
+                        animation.stop()
+                        $('#bm').hide()
+                        el.innerHTML = data.html_content
+                        el.classList.remove("d-none")
+                    }, 500);
+                    
+
+                }
+
+            })
+        }
+
+        $(document).on('click', '.hovermeclick',function(){
+            var $this = $(this)
+            var service_id =  $this.attr('data-service')
+            var staff_id =  $this.attr('data-staff')
+            $.ajax({
+                type:'GET',
+                url: "{% host_url 'getbookingtime' host 'bookingurl' slug=company.slug %}",
+                data: {
+                    'service_id': service_id, 'staff_id':staff_id
+                },
+                headers:{
+                    "X-CSRFToken": csrftoken
+                },
+                success:function(data){
+                    var el = document.querySelector('#contentsarg');
+                    el.innerHTML = data.html_content
+                    
+                    var hours = document.querySelector('#bizhours');
+                    hours.innerHTML = data.hours_content
+
+                    var info = document.querySelector('#informationcompstaff');
+                    info.innerHTML = data.info_content
+                    
+                    $( "#datepicker" ).flatpickr({
+                        dateFormat: "Y-m-d",
+                        inline:true,
+                        defaultHour: 12,
+                        minDate: 'today',
+                        position: "center",
+                        onChange: function(selectedDates, dateStr, instance) {
+                            selectedDateFunction(selectedDates[0], service_id, staff_id)
+                        },
+                    });
+                }
+            });
+        });
+
+
+        $(document).on('click', '.bookingtimebutton',function(){
+            var $this = $(this)
+            $('#bm').show()
+            animation.playSegments([15,40], true);
+            var service_id =  $this.attr('data-service')
+            var staff_id =  $this.attr('data-staff')
+            var month = $this.attr('data-month')
+            var year = $this.attr('data-year')
+            var day = $this.attr('data-day')
+            var time = $this.attr('data-time')
+            $.ajax({
+                type:'GET',
+                url: "{% host_url 'confirmationbooking' host 'bookingurl' slug=company.slug %}",
+                data: {
+                    'service_id': service_id, 'staff_id':staff_id, 'month':month, 'year':year, 'day':day, 'time':time
+                },
+                success:function(data){
+                    setTimeout(function(){ 
+                        animation.stop()
+                        $('#bm').hide()
+                        var el = document.querySelector('#contentsarg');
+                        el.innerHTML = data.html_content
+                        var hours = document.querySelector('#bizhours');
+                        hours.innerHTML = data.conf_content
+                    }, 500);
+                    
+                }
+            });
+        });
+
+        var cleave = null
+        $(document).on('click', '.confbtn',function(){
+            $('#sd').show()
+            sdanimation.playSegments([15,40], true);
+            var $this = $(this)
+            var service_id =  $this.attr('data-service')
+            var staff_id =  $this.attr('data-staff')
+            var month = $this.attr('data-month')
+            var year = $this.attr('data-year')
+            var day = $this.attr('data-day')
+            var time = $this.attr('data-time')
+            var el = document.querySelector('#wholepage');
+            el.innerHTML = ''
+            
+            $.ajax({
+                type:'POST',
+                url: "{% host_url 'confirmationbooking' host 'bookingurl' slug=company.slug %}",
+                data: {
+                    'service_id': service_id, 'staff_id':staff_id, 'month':month, 'year':year, 'day':day, 'time':time
+                },
+                headers:{
+                    "X-CSRFToken": csrftoken
+                },
+                success:function(data){
+                    sdanimation.stop()
+                    $('#sd').hide()
+                    var el = document.querySelector('#wholepage');
+                    el.innerHTML = data.html_content
+                    if (data.notauthenticated){
+                        cleave = new Cleave('#id_phone', {
+                            delimiters: ['(', ') ', '-'],
+                            blocks: [0, 3, 3, 4],
+                            numericOnly: true
+                        });
+                        $('#isocode').selectpicker({
+                            iconBase: "fas",
+                            tickIcon: "fa-check"
+                        });
+                    }
+                    
+
+
+                }
+            });
+        });
+
+        $(document).on('submit', '#guestform', function(e){
+            e.preventDefault()
+            var form = $('#guestform')
+            var cont = $('.cont')
+            var region = cleave.phoneRegionCode
+            var $this = $('#submitform')
+            var service_id =  $this.attr('data-service')
+            var staff_id =  $this.attr('data-staff')
+            var month = $this.attr('data-month')
+            var year = $this.attr('data-year')
+            var day = $this.attr('data-day')
+            var time = $this.attr('data-time')
+            object = [
+                { name: "staff_id", value: staff_id },
+                { name: "service_id", value: service_id },
+                { name: "month", value: month },
+                { name: "day", value: day },
+                { name: "year", value: year },
+                { name: "time", value: time },
+            ]
+
+            $('#id_phone').val(cleave.getRawValue());
+            grecaptcha.ready(function() {
+                grecaptcha.execute('6LeimeAZAAAAAE119rtvZivK4DW9csX6QhEo5Yla', {action: 'submit'}).then(function(token) {
+                    // Add your logic to submit to your backend server here.
+                    $.ajax({
+                        type:'POST',
+                        url: "{% host_url 'guestformrender' host 'bookingurl' slug=company.slug %}",
+                        data: form.serialize() + '&' + $.param(object),
+                        success:function(data){
+                            if (data.form_is_invalid)  {
+                                $(form).replaceWith(data['form_html']);
+                                $('form').attr('id','guestform')
+                                cleave = new Cleave('#id_phone', {
+                                    delimiters: ['(', ') ', '-'],
+                                    blocks: [0, 3, 3, 4],
+                                    numericOnly: true
+                                });
+                                $('#isocode').selectpicker({
+                                    iconBase: "fas",
+                                    tickIcon: "fa-check"
+                                });
+                            }
+                            else {
+                                var el = document.querySelector('#wholepage');
+                                el.innerHTML = data.html_content
+                            }
+
+                        }
+                    });
+                });
+            });
+        });
+
+        $(document).on('click', '#loginGibeleForm',function(){
+            var $this = $(this)
+            var service_id =  $this.attr('data-service')
+            var staff_id =  $this.attr('data-staff')
+            var month = $this.attr('data-month')
+            var year = $this.attr('data-year')
+            var day = $this.attr('data-day')
+            var time = $this.attr('data-time')
+            
+            $.ajax({
+                type:'GET',
+                url: "{% host_url 'renderloginpage' host 'bookingurl' slug=company.slug %}",
+                data: {
+                    'service_id': service_id, 'staff_id':staff_id, 'month':month, 'year':year, 'day':day, 'time':time
+                },
+                success:function(data){
+                    var el = document.querySelector('#wholepage');
+                    el.innerHTML = data.html_content
+                }
+            });
+        });
+
+        $(document).on('submit', '#loginBookMeform',function(e){
+            e.preventDefault()
+            var form = $('#loginBookMeform')
+            var cont = $('.cont')
+            var $this = $('#loginwithbookme')
+            var service_id =  $this.attr('data-service')
+            var staff_id =  $this.attr('data-staff')
+            var month = $this.attr('data-month')
+            var year = $this.attr('data-year')
+            var day = $this.attr('data-day')
+            var time = $this.attr('data-time')
+            object = [
+                { name: "staff_id", value: staff_id },
+                { name: "service_id", value: service_id },
+                { name: "month", value: month },
+                { name: "day", value: day },
+                { name: "year", value: year },
+                { name: "time", value: time },
+            ]
+            
+            $.ajax({
+                type:'POST',
+                url: "{% host_url 'renderloginpage' host 'bookingurl' slug=company.slug %}",
+                data: form.serialize() + '&' + $.param(object),
+                success:function(data){
+
+                    if (data.notvalid){
+                        var inv = document.querySelector('#invalidtxt')
+                        inv.innerHTML = 'Email and password combination is incorrect. Please try again.'
+                    }
+                    else {
+                        var el = document.querySelector('#wholepage');
+                        el.innerHTML = data.html_content
+                    }
+                    
+                }
+            });
+        });
+
+      
+
+
+    </script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBaZM_O3d1-xDrecS_fbcbvoT5qDmLmje0&callback=initMap"
+    type="text/javascript"></script>
+
+    {% endblock %}

@@ -80,13 +80,17 @@ def confirmedEmailCompany(booking_id):
         acct = booking.guest
     company = booking.company
     service = booking.service
-    email = company.email
+    staff = booking.staffmem
+    if staff.user:
+        email = staff.user.email
+    else:
+        email = staff.email
     try:
         extra = extraInformation.objects.get(booking=booking)
     except:
         extra = None
     subject = f'You have a new appointment!'
-    html_message = render_to_string('emailSents/booking/companyReminder.html', {'acct':acct,'company':company,'service':service, 'booking':booking, 'extra':extra})
+    html_message = render_to_string('emailSents/booking/companyReminder.html', {'staff':staff,acct':acct,'company':company,'service':service, 'booking':booking, 'extra':extra})
     plain_message = strip_tags(html_message)
 
     mail_sent = send_mail(subject, plain_message, 'BookMe.to <noreply@bookme.to>', [email], html_message=html_message, fail_silently=False)

@@ -1,0 +1,77 @@
+<div class="media align-items-center">
+    <div class="media-body">
+        <h4 class="mb-0">{{ staff.first_name }} Information</h4>
+    </div>
+</div>
+<ul class="list-unstyled mb-4">
+    {% if staff.phone %}
+        <li class="mb-0 pb-0">
+            <a rel="nofollow" class="licolor text-sm text-decoration-none" href="tel:{{ staff.phone }}">
+            <div class="row my-0 py-0">
+                <div class="col-2 mb-0 pb-0">
+                <i class="fa fa-phone mr-3"></i>
+                </div>
+                <div class="col-10 pb-0 text-left">
+                <span class="text-muted">{{ staff.phone }}</span>
+                </div>
+            </div>
+            </a>
+        </li>
+    {% endif %}
+    {% if staff.email %}
+        <li class="mb-2"> 
+            <a rel="nofollow" class="licolor text-sm text-decoration-none" href="mailto:{{ staff.email }}">
+            <div class="row my-0 py-0">
+                <div class="col-2 my-0 pb-0">
+                <i class="fa fa-envelope mr-3"></i>
+                </div>
+                <div class="col-10 pb-0 text-left">
+                <span class="text-muted">{{ staff.email }}</span>
+                </div>
+            </div>
+            </a>
+        </li>
+    {% endif %}
+    {% if staff.fb_link %}
+        <li class="mb-2"> 
+        <a rel="nofollow" class="licolor text-blue text-sm text-decoration-none" href="{{ staff.fb_link}}">
+            <div class="row my-0 py-0">
+            <div class="col-2 my-0 pb-0">
+                <i class="fab fa-facebook mr-3"></i>
+            </div>
+            <div class="col-10 pb-0 text-left">
+                <span class="text-muted">Facebook</span>
+            </div>
+            </div>
+        </a>
+        </li>
+    {% endif %}
+    {% if staff.twitter_link %}
+        <li class="mb-2"> 
+        <a rel="nofollow" class="licolor text-sm text-decoration-none" href="{{ staff.twitter_link}}">
+            <div class="row my-0 py-0">
+            <div class="col-2 my-0 pb-0">
+                <i class="fab fa-twitter mr-3"></i>
+            </div>
+            <div class="col-10 pb-0 text-left">
+                <span class="text-muted">Twitter</span>
+            </div>
+            </div>
+        </a>
+        </li>
+    {% endif %}
+    {% if staff.instagram_link %}
+        <li class="mb-2"> 
+            <a rel="nofollow" class="licolor text-sm text-decoration-none" href="{{ staff.instagram_link}}">
+                <div class="row my-0 py-0">
+                <div class="col-2 my-0 pb-0">
+                    <i class="fab fa-instagram licolor mr-3"></i>
+                </div>
+                <div class="col-10 pb-0 text-left">
+                    <span class="text-muted">Instagram</span>
+                </div>
+                </div>
+            </a>
+        </li>
+    {% endif %}
+</ul>

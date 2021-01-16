@@ -1,0 +1,29 @@
+{% load crispy_forms_tags %}
+<form method="post" class="justify-content-center" id="loginBookMeformReturning" enctype="multipart/form-data">
+{% csrf_token %}
+<div class="row">
+    <div class="col-12 col-md-8 mx-auto px-auto text-black">
+        <h1 class="h2 mb-2">{{ company.business_name }} does not accept new clients.</h1>
+        <p>Please log into BookMe to submit a request.</p>
+        <div class="row">
+            <div class="col-md-12 pb-0">
+                {{ account_form.email|as_crispy_field }}
+            </div>
+            <div class="col-md-12">
+                {{ account_form.password|as_crispy_field }}
+            </div>
+            <div class="col-md-12 py-0">
+                <p class="texterror text-center"style="color:red;"></p>
+            </div>
+            
+        </div>
+        
+        <div class="col-md-12">
+            <button id="loginbookmereturning" data-id="{{ service.id }}" type="submit" data-sitekey="6LeimeAZAAAAAE119rtvZivK4DW9csX6QhEo5Yla" data-callback='onSubmit' data-action='submit' class="g-recaptcha btn btn-outline-primary subbtn">Log into BookMe</button>
+        </div>
+        <div class="col-md-12">
+            <button id="createacctreturning" class="btn btn-warning ">Sign Up for BookMe</button>
+        </div>
+    </div>
+</div>
+</form>

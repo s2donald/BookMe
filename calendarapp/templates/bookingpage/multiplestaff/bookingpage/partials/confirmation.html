@@ -1,0 +1,33 @@
+<h1 class="h2 mb-2"> Confirm To Secure Spot <span class="text-muted"></span></h1>
+<div class="text-block">
+    <h5 class="mb-4">{{ service.name }}</h5>
+    <div class="row mb-3">
+        <div class="col-6 m-1 d-flex align-items-center mb-3 mb-md-0 bg-light rounded text-white">
+            <div class="date-tile mr-3">
+                <div class="text-uppercase"> <span class="text-sm" id="sm-mon">{{ date|date:'M' }}</span><br><strong class="text-lg" id="numdate">{{ date|date:'j' }}</strong></div>
+            </div>
+            <p class="text-sm mb-0" id="serDate">{{ date|date:'l' }}<br> {{ time }} </p>
+        </div>
+        <div class="col-5 m-1 d-flex align-items-left mb-3 mb-md-0 bg-light rounded text-white">
+            <p class="text-sm mb-0 text-left" id="serDate"> {% if service.duration_hour > 0 %}{{ service.duration_hour }} hour{% endif %} {% if service.duration_minute > 0 and service.duration_hour > 0 %}and{% endif %} {{ service.duration_minute}} minute service.</p>
+        </div>
+    </div>
+</div>
+
+<div class="row form-block flex-column flex-sm-row mb-4">
+    <div class="col text-center"><a data-staff="{{ staff.id }}" data-service="{{ service.id }}" data-month="{{ month }}" data-day="{{ day }}" data-year="{{ year }}" data-time="{{ time }}" class="btn btn-outline-primary px-3 confbtn"> Confirm and Secure Spot<i class="fa-chevron-right fa ml-2"></i></a></div>
+</div>
+
+{% if company.notes %}
+    <div class="text-block">
+        <h5 class="mb-4">Things to keep in mind</h5>
+        <ul class="list-unstyled">
+            <li class="mb-2"> 
+                <div class="media align-items-center mb-3">
+                    <div class="icon-rounded icon-rounded-sm bg-secondary-light mr-4"><i class="fa fas fa-info text-secondary fa-fw text-center"></i></div>
+                    <div class="media-body"><span class="text-sm">{{ company.notes }}</span></div>
+                </div>
+            </li>
+        </ul>
+    </div>
+{% endif %}

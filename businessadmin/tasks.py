@@ -26,7 +26,7 @@ def requestToBeClient(req_id):
     client = requested.user
     firstname = acct.first_name
     email = acct.email
-    subject = f'New Request: Sign into Gibele to respond'
+    subject = f'New Request: Sign into BookMe to respond'
     html_message = render_to_string('bizadmin/home/emails/requestToCompany.html', {'acct':acct, 'client':client})
     plain_message = strip_tags(html_message)
     mail_sent = send_mail(subject, plain_message, 'BookMe.to <noreply@bookme.to>', [email], html_message=html_message, fail_silently=False)
@@ -56,11 +56,18 @@ def appointmentCancelledCompany(booking_id):
     else:
         client = booking.guest
 
-    company = booking.company
+    staff = booking.staffmem
     service = booking.service
-    email = company.email
+    if staff.user:
+        usr = staff.user
+        email = staff.user.email
+    elif staff.email:
+        email = staff.email
+    else:
+        user = booking.company.user
+        email = booking.company.user.email
     subject = f'Appointment Cancelled: Your appointment with ' + client.first_name + ' has been cancelled.'
-    html_message = render_to_string('bizadmin/home/emails/cancelEmailToCompany.html', {'client':client, 'booking':booking , 'company':company})
+    html_message = render_to_string('bizadmin/home/emails/cancelEmailToCompany.html', {'client':client, 'booking':booking , 'user':usr})
     plain_message = strip_tags(html_message)
     mail_sent = send_mail(subject, plain_message, 'BookMe.to <noreply@bookme.to>', [email], html_message=html_message, fail_silently=False)
     return mail_sent

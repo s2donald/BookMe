@@ -1,0 +1,20 @@
+<div>
+    <h2>Choose a Provider</h2>
+    <ul class="ulnopadd">
+        {% for s in staff %}
+            <li class="hovermeclick" data-staff="{{ s.id }}" data-service="{{ service.id }}">
+                <div class="text-center row">
+                    <div class="col-12">
+                        <img class="avatar avatar-xl p-2" src="{% if s.image %}{{ s.image.url }}{% else %}https://epicattorneymarketing.com/wp-content/uploads/2016/07/Headshot-Placeholder-1.png{% endif %} " alt="{{ s.first_name }} {{ s.last_name }}">
+                    </div>
+                    <div class="col-12 p-0">
+                        {{ s.first_name }} {{ s.last_name }}
+                    </div>
+                </div>
+            </li>
+            <hr>
+        {% empty %}
+            <li>Unfortunately, no service providers offer this service anymore.</li>
+        {% endfor %}
+    </ul>
+</div>

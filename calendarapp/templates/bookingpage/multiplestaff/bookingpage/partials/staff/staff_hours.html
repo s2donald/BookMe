@@ -1,0 +1,17 @@
+<div class="media align-items-center">
+    <div class="media-body">
+        <h4 class="mb-0">{{ staff.first_name }}'s Hours </h4>
+    </div>
+</div>
+<table class="table text-sm mb-0">
+    {% for hours in staff.staff_hours.all %}
+        <tr>
+            <th class="pl-0 border-0">{{ hours.get_weekday_display }}</th>
+            {% if hours.is_off %}
+                <td class="pr-0 text-right border-0">Closed</td>
+            {% else %}
+                <td class="pr-0 text-right border-0">{{ hours.from_hour|date:'g:i A'}} - {{ hours.to_hour|date:'g:i A' }}</td>
+            {% endif %}
+        </tr>
+    {% endfor %}
+</table>

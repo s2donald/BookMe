@@ -15,10 +15,10 @@
 
         <div id="collapseOne" class="collapse something" role="tabpanel" aria-labelledby="headingOne">
             <div class="card-body">
-                <ul class="nav nav-pills nav-pills-primary flex-column">
-                    <li class="nav-item"><a class="nav-link active" href="#tabAll" data-toggle="tab">All Services</a></li>
+                <ul class="nav nav-pills nav-pills-neutral flex-column">
+                    <li class="nav-item"><a class="nav-link active" style="border-radius:10px;" href="#tabAll" data-toggle="tab">All Services</a></li>
                     {% for category in company.service_category.all %}
-                        <li class="nav-item"><a class="nav-link" href="#tab{{ forloop.counter }}" data-toggle="tab">{{ category.name }} Services</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#tab{{ forloop.counter }}" style="border-radius:10px;" data-toggle="tab">{{ category.name }} Services</a></li>
                     {% endfor %}
                 </ul>
             </div>

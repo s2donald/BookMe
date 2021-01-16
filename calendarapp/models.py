@@ -9,7 +9,9 @@ class formBuilder(models.Model):
     checkbox = models.BooleanField(null=True, default=False)
     text = models.TextField(max_length=100, null=True)
     order = models.PositiveIntegerField(default=1)
-    is_required = models.BooleanField(null=True, default=False)
+    is_integer = models.BooleanField(default=False)
+    integer = models.IntegerField(null=True)
+    is_required = models.BooleanField(default=False)
 
 
 

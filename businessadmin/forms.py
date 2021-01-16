@@ -1,4 +1,5 @@
 from account.models import Account
+from .models import StaffMember
 from business.models import Company, OpeningHours, Gallary, Services, ServiceCategories
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
@@ -271,3 +272,62 @@ class AddServiceToCategory(forms.Form):
             self.fields['category'].queryset = ServiceCategories.objects.filter(company=self.initial['company'].id).order_by('name')
         except AttributeError:
             pass
+from crispy_forms.helper import FormHelper
+from crispy_forms.layout import Layout, Fieldset, ButtonHolder, Submit, Button, Div
+from crispy_forms.bootstrap import StrictButton
+class StaffMemberForms(forms.Form):
+    first_name = forms.CharField(label='First Name',max_length=30, required=True)
+    last_name = forms.CharField(label='Last Name',max_length=30, required=True, widget=forms.TextInput(attrs={}))
+    phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$', message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
+    phone = forms.CharField(label='Phone Number',required=False, validators=[phone_regex], max_length=30,widget=forms.TextInput(attrs={}))
+    email = forms.EmailField(label='Email',required=False, widget=forms.TextInput(attrs={}))
+    services = forms.ModelMultipleChoiceField(required=False,queryset=ServiceCategories.objects.none(),label='Select the services this staff member can perform:', widget=forms.SelectMultiple(attrs={'class':'selectcolor selectpicker show-tick form-control','title':'Service','data-size':'6', 'multiple':'', 'data-live-search':"true", 'data-live-search-placeholder':"Search Services"}))
+
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_id = 'staffcontentform'
+        self.helper.layout = Layout(
+            Fieldset(
+                '',
+                'first_name',
+                'last_name',
+                'phone',
+                'email',
+                'services'
+            ),
+            Div(
+                StrictButton('Close', css_class='btn btn-secondary',data_dismiss="modal"),
+                StrictButton('Add Staff', type="submit", css_class='btn btn-primary'),
+                css_class="modal-footer"
+            )
+            
+        )
+
+        self.helper.form_method = 'POST'
+        try:
+            self.fields['services'].queryset = Services.objects.filter(business=self.initial['company'].id).order_by('name')
+        except AttributeError:
+            pass
+
+    def clean_email(self):
+        email = self.cleaned_data['email']
+        try:
+            acct = Account.objects.get(email=email)
+        except Account.DoesNotExist:
+            acct = None
+        if acct:
+            staff = StaffMember.objects.filter(user=acct)
+        else:
+            staff = None
+        
+        if staff:
+            raise forms.ValidationError("An account is already associated with this email. Please try a different email.")
+
+        emails = StaffMember.objects.filter(email=email).exists()
+
+        if emails:
+            raise forms.ValidationError("This email address is already associated with a staff member profile. Please try a different email.")
+            
+        return email

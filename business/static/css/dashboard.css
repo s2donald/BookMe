@@ -177,3 +177,12 @@
         background-color: transparent !important;
         
     }
+
+    #bm {
+        position: fixed;
+        z-index: 99999;
+        width: 300px;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+      }

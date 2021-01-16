@@ -56,29 +56,29 @@
         </div>
         <hr>
         <div class="py-4">
-          <h2 class="mb-5 licolororange">Payment</h2>
+          <h2 class="mb-5 list-item-title">Payment Processing</h2>
           <div class="row">
             <div class="col-md-6">
               <h5 class="list-item-title">Stripe</h5>
               <p class="text-muted mb-4">All payments will be handled with Stripe.</p>
-              <h5 class="list-item-title">Payment methods accepted</h5>
-              <p class="text-muted mb-4">Some payments.</p>
+              {% comment %} <h5 class="list-item-title">Payment methods accepted</h5>
+              <p class="text-muted mb-4">Credit Ca.</p> {% endcomment %}
             </div>
-            <div class="col-md-6">
+            {% comment %} <div class="col-md-6">
               <h5 class="list-item-title">BookMe Service Fees</h5>
               <p class="text-muted mb-4">For businesses under the 'BASIC TIER and PREMIUM TIER' plan, there is no BookMe service fee charged to your customers or to the business.</p>
               <p class="text-muted mb-4">For businesses under the 'MID TIER' plan, a service fee will only be charged when BookMe has to process a deposit for a service or process a cancellation fee. The service fee in this case will only be 1% of the processed deposit or cancellation fee. Businesses have the option to forward this cost to their clients.</p>
               <p class="text-muted mb-4">For businesses under all plans, Stripe fees are still included.</p>
-            </div>
+            </div> {% endcomment %}
           </div>
         </div>
         <hr>
-        <div class="py-4">
+        {% comment %} <div class="py-4">
           <h2 class="mb-5 list-item-title">Advertisement</h2>
           <div class="row">
             <div class="col-md-6">
               <h5 class="list-item-title">Why are there ads on my booking and business page?</h5>
-              <p class="text-muted mb-4">Ads are put on booking pages for businesses subscribed under the 'BASIC TIER' subscription plan. For businesses that are subscribed under our 'MID TIER' plan, ads will be placed on your business page. Ads allow BookMe to offer a free booking software for clients.</p>
+              <p class="text-muted mb-4">There are no ads placed on your booking pages.</p>
               <h5 class="list-item-title">How can I get more views on my business and booking pages</h5>
               <p class="text-muted mb-4">There are plenty of ways to market your pages. One way is to encourage your clients to book appointments using the BookMe web application by sharing your business pages to as many social media platforms. Contact our marketing department and we can work with you to help make your business known. Your success is also our success.</p>
             </div>
@@ -90,7 +90,7 @@
               <p class="text-muted mb-4">Subscribing to BookMe's 'PREMIUM TIER' plan removes ads from both your booking and business page.</p>
             </div>
           </div>
-        </div>
+        </div> {% endcomment %}
       </div>
     </section>
 {% endblock businesscontent %}

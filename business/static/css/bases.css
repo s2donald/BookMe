@@ -59,6 +59,15 @@
 }
 
 
+.modal-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 24px 24px 0 24px;
+  border-bottom: 1px solid #e9ecef;
+  border-top-left-radius: 0.2857rem;
+  border-top-right-radius: 0.2857rem;
+}
 
 .underlay {
   background-color: rgba(0, 0, 0, 0.5);
@@ -78,6 +87,10 @@ hr.hrwhite{
   background-position: center;
   background-repeat: repeat-y;
   background-size: cover; */
+}
+button:focus {
+  /* outline: 1px dotted; */
+  outline: none;
 }
 /* .threecol{
   -webkit-column-count: 3;
@@ -357,6 +370,14 @@ a:focus {
   #bm {
     position: fixed;
     z-index: 99999;
+  }
+  #sd {
+    position: fixed;
+    z-index: 99999;
+    width: 300px;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
   }
   
   .avatar.avatar-sm {

@@ -599,7 +599,7 @@ class confirmationMessageRender(View):
             # render out the login and user form retrieval
             personal_form = GuestPersonalForm(initial={'phone_code':"CA"})
             html_content = render_to_string('bookingpage/multiplestaff/bookingpage/partials/login/guest.html', {'company':company,'staff':staff,'service':service, 'date':date, 'time':time, 'month':month, 'year':year, 'day':day, 'personal_form':personal_form }, request)
-            return JsonResponse({'html_content':html_content})
+            return JsonResponse({'html_content':html_content, 'notauthenticated':True})
         
         price = service.price
         startdate = datetime.datetime(year,month,day)

@@ -9,7 +9,12 @@
  <div class="modal fade" id="getCodeModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
    <div class="modal-dialog modal-lg">
       <div class="modal-content">
-       <button type="button" class="close text-right pr-2" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <div class="modal-header">
+        <h5 class="modal-title"></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">x</span>
+        </button>
+      </div>
        <div class="modal-body" id="getCode" style="overflow-x: scroll;">
         
        </div>
@@ -18,6 +23,7 @@
  </div>
 
 <section class="py-0">
+    <div id="sd" width="100px"></div>
     <div class="container liblack" id="wholepage">
         <div class="row">
             <div id="bm" width="100px"></div>
@@ -326,11 +332,22 @@
             className: 'loading',
             id: 'some-id',
         }
-
-
+    });
+    var sdanimation = bodymovin.loadAnimation({
+        container: document.getElementById('sd'),
+        renderer: 'svg',
+        loop: true,
+        autoplay: false,
+        path: "{% static 'img/icons/bookme.json' %}",
+        rendererSettings: {
+            className: 'loading',
+            id: 'some-id',
+        }
     })
+
     $(document).ready(function(){
         $('#bm').hide()
+        $('#sd').hide()
     })
 
     function getCookie(name) {
@@ -557,8 +574,8 @@
 
         var cleave = null
         $(document).on('click', '.confbtn',function(){
-            $('#bm').show()
-            animation.playSegments([15,40], true);
+            $('#sd').show()
+            sdanimation.playSegments([15,40], true);
             var $this = $(this)
             var service_id =  $this.attr('data-service')
             var staff_id =  $this.attr('data-staff')
@@ -566,6 +583,8 @@
             var year = $this.attr('data-year')
             var day = $this.attr('data-day')
             var time = $this.attr('data-time')
+            var el = document.querySelector('#wholepage');
+            el.innerHTML = ''
             
             $.ajax({
                 type:'POST',
@@ -577,19 +596,22 @@
                     "X-CSRFToken": csrftoken
                 },
                 success:function(data){
-                    animation.stop()
-                    $('#bm').hide()
+                    sdanimation.stop()
+                    $('#sd').hide()
                     var el = document.querySelector('#wholepage');
                     el.innerHTML = data.html_content
-                    cleave = new Cleave('#id_phone', {
-                        delimiters: ['(', ') ', '-'],
-                        blocks: [0, 3, 3, 4],
-                        numericOnly: true
-                    });
-                    $('#isocode').selectpicker({
-                        iconBase: "fas",
-                        tickIcon: "fa-check"
-                    });
+                    if (data.notauthenticated){
+                        cleave = new Cleave('#id_phone', {
+                            delimiters: ['(', ') ', '-'],
+                            blocks: [0, 3, 3, 4],
+                            numericOnly: true
+                        });
+                        $('#isocode').selectpicker({
+                            iconBase: "fas",
+                            tickIcon: "fa-check"
+                        });
+                    }
+                    
 
 
                 }

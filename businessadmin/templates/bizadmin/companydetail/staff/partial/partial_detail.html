@@ -8,7 +8,7 @@
                 <a class="nav-link" id="services" data-staff="{{ staff.id }}" href="#services" data-toggle="tab">Services</a>
                 <a class="nav-link" id="hours" data-staff="{{ staff.id }}" href="#hours" data-toggle="tab">Working Hours</a>
                 <a class="nav-link" id="breaks" data-staff="{{ staff.id }}" href="#breaks" data-toggle="tab">Breaks</a>
-                <a class="nav-link" id="timeoff" data-staff="{{ staff.id }}" href="#timeoff" data-toggle="tab">Time Off</a>
+                {% comment %} <a class="nav-link" id="timeoff" data-staff="{{ staff.id }}" href="#timeoff" data-toggle="tab">Time Off</a> {% endcomment %}
                 {% comment %} <a class="nav-link" href="#">Staff Members</a> {% endcomment %}
             </nav>
             
@@ -16,7 +16,7 @@
         <div class="col-md-4 text-right">
             <div class="card-header p-2">
                     {% if company.staffmembers.count > 1 %}
-                        <button class="btn btn-link btn-danger btn-sm categorydelete" type="button" data-catename="{{ category.name }}" data-url="{% host_url 'category_delete_view' staff.id host 'bizadmin' %}">Remove Staff Member <i class="fas fa-trash"></i></button>
+                        <button class="btn btn-link btn-danger btn-sm staffdelete" type="button" data-staff="{{ staff.id }}">Remove Staff Member <i class="fas fa-trash"></i></button>
                     {% endif %}        
             </div>
         </div>
@@ -37,25 +37,25 @@
                 <div class="row">
                     <div class="col-lg-4 col-6">
                         <label for="first">First Name:</label>
-                        <input id="first_name" type="text" class="form-control" value="{{staff.first_name}}">
+                        <input data-staff="{{ staff.id }}" id="first_name" type="text" class="form-control" value="{{staff.first_name}}">
                     </div>
                     <div class="col-lg-4 col-6">
                         <label for="first">Last Name:</label>
-                        <input id="last_name" type="text" class="form-control" value="{{staff.last_name}}">
+                        <input data-staff="{{ staff.id }}" id="last_name" type="text" class="form-control" value="{{staff.last_name}}">
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-lg-4 col-6">
                         <label for="first">Email:</label>
-                        <input id="staff_email" type="text" class="form-control" value="{{staff.email}}">
+                        <input data-staff="{{ staff.id }}" id="staff_email" type="text" class="form-control" value="{{staff.email}}">
                     </div>
                     <div class="col-lg-4 col-6">
                         <label for="first">CC Emails To:</label>
-                        <input id="staff_cc_email" type="text" class="form-control" value=" {% if staff.cc_email %}{{staff.cc_email}}{% endif %}">
+                        <input data-staff="{{ staff.id }}" id="staff_cc_email" type="text" class="form-control" value=" {% if staff.cc_email %}{{staff.cc_email}}{% endif %}">
                     </div>
                     <div class="col-md-6 col-lg-8">
                         <label for="first">Phone Number:</label>
-                        <input id="phone_number" type="text" class="form-control" value="{{staff.phone}}">
+                        <input data-staff="{{ staff.id }}" id="phone_number" type="text" class="form-control" value="{{staff.phone}}">
                     </div>
                 </div>
             </form>

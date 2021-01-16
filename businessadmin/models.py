@@ -8,7 +8,7 @@ from django.utils.text import slugify
 from django.contrib.auth.models import AbstractBaseUser
 from django.utils import timezone
 from django.db.models.signals import pre_save, post_save
-from gibele.utils import unique_slug_generator, unique_slug_generator_services
+from gibele.utils import unique_slug_generator, unique_slug_generator_services, unique_slug_generator_staff
 import geocoder
 import pytz
 
@@ -84,6 +84,12 @@ class StaffMember(models.Model):
         if self.first_name==None:
             return "Staff Member"
         return self.first_name
+
+def slug_generators(sender, instance, *args, **kwargs):
+    if not instance.slug:
+        instance.slug = unique_slug_generator_staff(instance)
+
+pre_save.connect(slug_generators, sender=StaffMember)
 
 class Breaks(models.Model):
     staffmember = models.ForeignKey(StaffMember, on_delete=models.CASCADE, related_name='staff_breaks', null=True, blank=True)

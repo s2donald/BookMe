@@ -1,8 +1,36 @@
 {% extends 'bizadmin/index.html' %}
 {% load static %}
 {% load hosts %}
+{% load crispy_forms_tags %}
 {% block activecompinfo %}active{%endblock%}
 {% block businessadmin %}
+
+<div class="modal fade" id="modal-addstaff" tabindex="-1" role="dialog" aria-labelledby="modal-addstaffLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content card">
+      <div class="modal-header">
+        <h5 class="">Add staff</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" id="staffcontents">
+        <form method="POST" id="staffcontentform">
+            <div class="formstaffcontent">
+                {% csrf_token %}
+                {{ addstaff|crispy }}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary">Add Staff</button>
+            </div>
+        </form>
+      </div>
+      
+    </div>
+  </div>
+</div>
+
 <!-- Main page content-->
     <div class="content">
         <div class="row">
@@ -81,7 +109,7 @@
                                             <a class="nav-link" id="services" data-staff="{{ staff.id }}" href="#services" data-toggle="tab">Services</a>
                                             <a class="nav-link" id="hours" data-staff="{{ staff.id }}" href="#hours" data-toggle="tab">Working Hours</a>
                                             <a class="nav-link" id="breaks" data-staff="{{ staff.id }}" href="#breaks" data-toggle="tab">Breaks</a>
-                                            <a class="nav-link" id="timeoff" data-staff="{{ staff.id }}" href="#timeoff" data-toggle="tab">Time Off</a>
+                                            {% comment %} <a class="nav-link" id="timeoff" data-staff="{{ staff.id }}" href="#timeoff" data-toggle="tab">Time Off</a> {% endcomment %}
                                             {% comment %} <a class="nav-link" href="#">Staff Members</a> {% endcomment %}
                                         </nav>
                                         
@@ -89,7 +117,7 @@
                                     <div class="col-md-4 text-right">
                                         <div class="card-header p-2">
                                                 {% if company.staffmembers.count > 1 %}
-                                                    <button class="btn btn-link btn-danger btn-sm categorydelete" type="button" data-catename="{{ category.name }}" data-url="{% host_url 'category_delete_view' staff.id host 'bizadmin' %}">Remove Staff Member <i class="fas fa-trash"></i></button>
+                                                    <button class="btn btn-link btn-danger btn-sm staffdelete" type="button" data-staff="{{ staff.id }}">Remove Staff Member <i class="fas fa-trash"></i></button>
                                                 {% endif %}        
                                         </div>
                                     </div>
@@ -108,28 +136,28 @@
                                             <div class="row">
                                                 <div class="col-lg-4 col-6">
                                                     <label for="first">First Name:</label>
-                                                    <input autocomplete="off" id="first_name" type="text" class="form-control" value="{{staff.first_name}}">
+                                                    <input autocomplete="off" data-staff="{{ staff.id }}" id="first_name" type="text" class="form-control" value="{{staff.first_name}}">
                                                 </div>
                                                 <div class="col-lg-4 col-6">
                                                     <label for="first">Last Name:</label>
-                                                    <input autocomplete="off" id="last_name" type="text" class="form-control" value="{{staff.last_name}}">
+                                                    <input autocomplete="off" data-staff="{{ staff.id }}" id="last_name" type="text" class="form-control" value="{{staff.last_name}}">
                                                 </div>
                                             </div>
                                             <div class="row">
                                                 <div class="col-lg-4 col-6">
                                                     <label for="first">Email:</label>
-                                                    <input autocomplete="off" id="staff_email" type="text" class="form-control" value="{{staff.email}}">
+                                                    <input autocomplete="off" data-staff="{{ staff.id }}" id="staff_email" type="text" class="form-control" value="{{staff.email}}">
                                                 </div>
 
                                                 <div class="col-lg-4 col-6">
                                                     <label for="first">CC Emails To:</label>
-                                                    <input autocomplete="off" id="staff_cc_email" type="text" class="form-control" value=" {% if staff.cc_email %}{{staff.cc_email}}{% endif %}">
+                                                    <input autocomplete="off" data-staff="{{ staff.id }}" id="staff_cc_email" type="text" class="form-control" value=" {% if staff.cc_email %}{{staff.cc_email}}{% endif %}">
                                                 </div>
 
 
                                                 <div class="col-md-6 col-lg-8">
                                                     <label for="first">Phone Number:</label>
-                                                    <input autocomplete="off" id="phone_number" type="text" class="form-control" value="{{staff.phone}}">
+                                                    <input autocomplete="off" data-staff="{{ staff.id }}" id="phone_number" type="text" class="form-control" value="{{staff.phone}}">
                                                 </div>
                                             </div>
                                         </form>
@@ -161,25 +189,42 @@
     }
     {% comment %} const csrftoken = getCookie('csrftoken'); {% endcomment %}
 
-    $('#subhour').submit(function(e){
+    function my_func(e) {
+        e.preventDefault()
+    }
+
+    $(document).on("submit", "#staffcontentform", function(e){
         e.preventDefault();
+        var form = $('#staffcontentform')
+
         $.ajax({
             type:'POST',
-            url: "{% host_url 'businessHourSave' host 'bizadmin' %}",
-            data: $('#subhour').serialize(),
-            headers:{
-                "X-CSRFToken": csrftoken
-            },
+            url: "{% host_url 'addnewstaffmember' host 'bizadmin' %}",
+            data: form.serialize(),
             success:function(data){
-                Swal.fire({
-                    title:'Your business hours have been saved',
-                    icon: 'success',
-                    customClass:{
-                        confirmButton: 'btn btn-primary',
-                        cancelButton: 'btn btn-danger',
-                    },
-                    buttonsStyling: false,
-                });
+
+                if (!(data.success)){
+                    form.replaceWith(data.form_html)
+                    $('select').selectpicker();
+                }
+                else {
+                    $('#modal-addstaff').modal('hide')
+                    var staffinfo = document.querySelector('#staff-information');
+                    staffinfo.innerHTML = data.html_details
+                    var stafftab = document.querySelector('#categorylisttab');
+                    stafftab.innerHTML = data.html_members
+                    Swal.fire({
+                        title:'Staff member has been added',
+                        icon: 'success',
+                        customClass:{
+                            confirmButton: 'btn btn-primary',
+                            cancelButton: 'btn btn-danger',
+                        },
+                        buttonsStyling: false,
+                    });
+
+                }
+                
             }
         });
     });
@@ -194,6 +239,48 @@
         if (w<768){
             $('.collapse').collapse('hide')
         }        
+    });
+    $(document).on('click', '.removestaff', function(){
+        var staff_id =  $('.removestaff').attr("data-staff")
+        $.ajax({
+            type:'POST',
+            url:"{% host_url 'removestaffromcompany' host 'bizadmin' %}",
+            data: {
+                'staff_id':staff_id
+            },
+            headers:{
+                "X-CSRFToken": csrftoken
+            },
+            success:function(data){
+                if (data.success){
+                    var staffinfo = document.querySelector('#staff-information');
+                    staffinfo.innerHTML = data.html_details
+                    var stafftab = document.querySelector('#categorylisttab');
+                    stafftab.innerHTML = data.html_members
+                }
+                $.notify({
+                    // options
+                    message: data.msg
+                },{
+                    // settings
+                    type: data.successor,
+                    delay: 50,
+                });
+                
+            }
+        })
+    })
+    
+
+    $(document).on('click', '.staffdelete',function(){
+        var staff_id =  $('.staffdelete').attr("data-staff")
+        $('.staffdelete').popover({
+            trigger: 'focus',
+            html: true,
+            sanitize: false,
+            content: 'Are you sure you want to remove staff? <button class="btn btn-sm btn-danger removestaff" data-staff='+staff_id+' >Remove</button><button class="btn btn-sm">Cancel</button>',
+        })
+        $('.staffdelete').popover('show')
     });
 
     $(document).on('click', '#services',function(){
@@ -288,6 +375,12 @@
 
             success:function(data){
                 staffinfo.innerHTML = data.html_content
+                $('.staffdelete').popover({
+                    trigger: 'focus',
+                    html: true,
+                    sanitize: false,
+                    content: 'Are you sure you want to remove staff? <button class="btn btn-sm btn-danger removestaff" data-staff='+staff_id+' >Remove</button><button class="btn btn-sm">Cancel</button>',
+                })
             }
         });
     });
@@ -325,11 +418,137 @@
         });
     });
 
-    $(document).on('focus',"#first_name", function() {
-        console.log('in');
-    })
+    {% comment %} $(document).on('focus',"#first_name", function() {
+        
+    }) {% endcomment %}
     $(document).on('blur','#first_name',function() {
-        console.log('out');
+        var $this = $(this)
+        name = $this.val()
+        staff_id = $this.attr('data-staff')
+        $.ajax({
+            type:'POST',
+            url: "{% host_url 'updatestaffdetails' host 'bizadmin' %}",
+            data: {
+                'staff_id': staff_id, 'content': name, 'type':'first'
+            },
+            headers:{
+                "X-CSRFToken": csrftoken
+            },
+            success:function(data){
+                $.notify({
+                    // options
+                    message: data.message
+                },{
+                    // settings
+                    type: data.success,
+                    delay: 50,
+                });
+            }
+        });
+    });
+
+    $(document).on('blur','#last_name',function() {
+        var $this = $(this)
+        name = $this.val()
+        staff_id = $this.attr('data-staff')
+        $.ajax({
+            type:'POST',
+            url: "{% host_url 'updatestaffdetails' host 'bizadmin' %}",
+            data: {
+                'staff_id': staff_id, 'content': name, 'type':'last'
+            },
+            headers:{
+                "X-CSRFToken": csrftoken
+            },
+            success:function(data){
+                $.notify({
+                    // options
+                    message: data.message
+                },{
+                    // settings
+                    type: data.success,
+                    delay: 50,
+                });
+            }
+        });
+    });
+
+    $(document).on('blur','#staff_email',function() {
+        var $this = $(this)
+        name = $this.val()
+        staff_id = $this.attr('data-staff')
+        $.ajax({
+            type:'POST',
+            url: "{% host_url 'updatestaffdetails' host 'bizadmin' %}",
+            data: {
+                'staff_id': staff_id, 'content': name, 'type':'email'
+            },
+            headers:{
+                "X-CSRFToken": csrftoken
+            },
+            success:function(data){
+                $.notify({
+                    // options
+                    message: data.message
+                },{
+                    // settings
+                    type: data.success,
+                    delay: 50,
+                });
+            }
+        });
+    });
+
+    $(document).on('blur','#staff_cc_email',function() {
+        var $this = $(this)
+        name = $this.val()
+        staff_id = $this.attr('data-staff')
+        $.ajax({
+            type:'POST',
+            url: "{% host_url 'updatestaffdetails' host 'bizadmin' %}",
+            data: {
+                'staff_id': staff_id, 'content': name, 'type':'ccemail'
+            },
+            headers:{
+                "X-CSRFToken": csrftoken
+            },
+            success:function(data){
+                $.notify({
+                    // options
+                    message: data.message
+                },{
+                    // settings
+                    type: data.success,
+                    delay: 50,
+                });
+            }
+        });
+    });
+
+    $(document).on('blur','#phone_number',function() {
+        var $this = $(this)
+        name = $this.val()
+        staff_id = $this.attr('data-staff')
+        $.ajax({
+            type:'POST',
+            url: "{% host_url 'updatestaffdetails' host 'bizadmin' %}",
+            data: {
+                'staff_id': staff_id, 'content': name, 'type':'phone'
+            },
+            headers:{
+                "X-CSRFToken": csrftoken
+            },
+            success:function(data){
+                $.notify({
+                    // options
+                    message: data.message
+                },{
+                    // settings
+                    type: data.success,
+                    delay: 50,
+                });
+            }
+        });
     });
 
     $(document).on('click', '.removefromstaff',function(){
@@ -631,7 +850,6 @@
                     html: true,
                     sanitize: false,
                     content: 'Are you sure you want to delete? <button class="btn btn-sm btn-danger removebreak" data-breakid='+staff_id+' data-staff='+staff_id+' >Delete</button><button class="btn btn-sm">Cancel</button>',
-
                 })
                 $.notify({
                     // options

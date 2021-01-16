@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .forms import BusinessRegistrationForm, AddHoursForm, UpdateCompanyForm, AddClientForm, AddNotesForm, CreateSmallBizForm, AddBookingForm, BusinessName, AddServiceCategoryForm, AddServiceToCategory
+from .forms import StaffMemberForms, BusinessRegistrationForm, AddHoursForm, UpdateCompanyForm, AddClientForm, AddNotesForm, CreateSmallBizForm, AddBookingForm, BusinessName, AddServiceCategoryForm, AddServiceToCategory
 from django.contrib.auth.decorators import login_required
 from django import forms
 from .models import StaffMember, Breaks, StaffWorkingHours
@@ -1286,7 +1286,8 @@ def staffMemberView(request):
         return redirect(reverse('completeprofile', host='bizadmin'))
     elif not user.is_business:
         loginViews(request)
-    return render(request, 'bizadmin/companydetail/staff/staffmembers.html', {'company':company})
+    addstaff = StaffMemberForms(initial={'company':company})
+    return render(request, 'bizadmin/companydetail/staff/staffmembers.html', {'company':company, 'addstaff':addstaff})
 
 
 @login_required
@@ -2043,3 +2044,115 @@ class savestaffBreakDaysViews(View):
                 hours.save()
         
         return JsonResponse({'innerbtn':innerbtn, 'success':success})
+
+from validate_email import validate_email
+class UpdateStaffDetails(View):
+    def post(self, request):
+        staff_id = request.POST.get('staff_id')
+        content = request.POST.get('content')
+        types = request.POST.get('type')
+        staff = StaffMember.objects.get(pk=int(staff_id))
+        success = 'success'
+
+        if types == 'first':
+            staff.first_name = content
+            message = 'Staff\'s first name has been updated'
+        elif types == 'last':
+            staff.last_name = content
+            message = 'Staff\'s last name has been updated'
+        elif types == 'email':
+            staff.email = content
+            message = 'Staff\'s email has been updated'
+        elif types == 'ccemail':
+            staff.cc_email = content
+            message = 'Staff notifications will be forwarded to ' + content
+        else:
+            staff.phone = phone
+            message = 'Staff\'s phone number has been updated'
+        staff.save()
+
+        return JsonResponse({'success':success, 'message':message})
+
+from django.template.context_processors import csrf
+from crispy_forms.utils import render_crispy_form
+
+class addNewStaffMember(View):
+    def post(self, request):
+        staff = StaffMember.objects.get(user=request.user)
+        company = staff.company
+
+        form = StaffMemberForms(request.POST, initial={'company':company})
+        if form.is_valid():
+            first = form.cleaned_data['first_name']
+            last = form.cleaned_data['last_name']
+            email = form.cleaned_data['email']
+            phone = form.cleaned_data['phone']
+            services = form.cleaned_data['services']
+            newstaff = StaffMember.objects.create(company=company, first_name=first, last_name=last, phone=phone,
+                                                    email=email, access=0)
+            for s in services:
+                newstaff.services.add(s)
+            newstaff.save()
+            for hour in company.hours.all():
+                weekday=hour.weekday
+                froms=hour.from_hour
+                tos=hour.to_hour
+                dayoff = hour.is_closed
+                staffhours = StaffWorkingHours.objects.create(staff=newstaff, from_hour=froms, to_hour=tos,is_off=dayoff, weekday=weekday)
+                staffhours.save()
+
+            memberid = newstaff.id
+
+            html_details = render_to_string('bizadmin/companydetail/staff/partial/partial_detail.html', {'staff':newstaff,'company':company}, request)
+            html_members = render_to_string('bizadmin/companydetail/staff/partial/partial/staffmember.html', {'memberid':memberid,'company':company}, request)
+            return JsonResponse({'success':True, 'html_details':html_details,'html_members':html_members})
+        ctx = {}
+        ctx.update(csrf(request))
+        form_html = render_crispy_form(form, context=ctx)
+        return JsonResponse({'success': False, 'form_html': form_html})
+        
+
+def dbrun(request):
+    allcomp = Company.objects.all()
+
+    for comp in allcomp:
+        if not comp.staffmembers.all().exists():
+            user = comp.user
+            staff = StaffMember.objects.create(user=user, company=comp, first_name=user.first_name, last_name=user.last_name, phone=user.phone, email=user.email, access=2)
+            services = comp.services_offered.all()
+            for s in services:
+                staff.services.add(s)
+            staff.save()
+            for hour in comp.hours.all():
+                weekday=hour.weekday
+                froms=hour.from_hour
+                tos=hour.to_hour
+                dayoff = hour.is_closed
+                staffhours = StaffWorkingHours.objects.create(staff=staff, from_hour=froms, to_hour=tos,is_off=dayoff, weekday=weekday)
+                staffhours.save()
+            
+    return JsonResponse({'':''})
+
+class removestaffCompany(View):
+    def post(self, request):
+        staff_id = request.POST.get('staff_id')
+        staff = StaffMember.objects.get(pk=int(staff_id))
+        user = request.user
+        company=staff.company
+        if staff.user:
+            staffuserid=user.id
+        else:
+            staffuserid=-1
+        if staffuserid == user.id:
+            return JsonResponse({'success':False, 'msg':'You can\'t delete your own staff profile.', 'successor':'danger'}) 
+        elif company.staffmembers.filter(user=user).exists():
+            staff.delete()
+            newstaff = company.staffmembers.get(user=user)
+            memberid=newstaff.id
+            html_details = render_to_string('bizadmin/companydetail/staff/partial/partial_detail.html', {'staff':newstaff,'company':company}, request)
+            html_members = render_to_string('bizadmin/companydetail/staff/partial/partial/staffmember.html', {'memberid':memberid,'company':company}, request)
+            return JsonResponse({'success':True, 'html_details':html_details,'html_members':html_members, 'successor':'success', 'msg':'Staff profile has been removed.'})
+            
+        return JsonResponse({'success':False, 'msg':'There was an unexpected error. Please try again later.', 'successor':'danger'})
+
+

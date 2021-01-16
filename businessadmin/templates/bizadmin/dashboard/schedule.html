@@ -189,10 +189,12 @@
                 },
                 loading: function (isLoading) {
                     if (isLoading) {
-                        $('.lds-facebook').show();
+                        $('#bm').show();
+                        animation.playSegments([15,40], true);
                     }
-                    else {                
-                        $('.lds-facebook').hide();
+                    else {           
+                        animation.stop()     
+                        $('#bm').hide();
                     }
                 },
                 eventClick: function(info) {
@@ -258,10 +260,8 @@
                                 Add a booking
                             </button>
                     </div>
-                    
                         <div class="card-body">
-                            
-                            <div class="lds-facebook" style="display:none;"><div></div><div></div><div></div></div>
+                            <div id="bm" width="100px"></div>
                             <div id="calendar"></div>
                         </div>
                     </div>
@@ -380,6 +380,18 @@
         </div>
       </div>
       <script>
+
+        var animation = bodymovin.loadAnimation({
+            container: document.getElementById('bm'),
+            renderer: 'svg',
+            loop: true,
+            autoplay: false,
+            path: "{% static 'img/icons/bookme.json' %}",
+            rendererSettings: {
+                className: 'loading',
+                id: 'some-id',
+            }
+        })
         
         $('#id_service').change(function(){
             service_id = $(this).val()

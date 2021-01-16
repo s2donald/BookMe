@@ -28,7 +28,6 @@ urlpatterns = [
     path('social-auth/',include('social_django.urls',namespace='social')),
     path('',include('business.urls', namespace='business')),
 
-    
 ]
 
 if settings.DEBUG:

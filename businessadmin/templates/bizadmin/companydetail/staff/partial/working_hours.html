@@ -24,7 +24,7 @@
                 <a class="nav-link" id="services" data-staff="{{ staff.id }}" href="#services" data-toggle="tab">Services</a>
                 <a class="nav-link activate" id="hours" data-staff="{{ staff.id }}" href="#hours" data-toggle="tab">Working Hours</a>
                 <a class="nav-link" id="breaks" data-staff="{{ staff.id }}" href="#breaks" data-toggle="tab">Breaks</a>
-                <a class="nav-link" id="timeoff" data-staff="{{ staff.id }}" href="#timeoff" data-toggle="tab">Time Off</a>
+                {% comment %} <a class="nav-link" id="timeoff" data-staff="{{ staff.id }}" href="#timeoff" data-toggle="tab">Time Off</a> {% endcomment %}
                 {% comment %} <a class="nav-link" href="#">Staff Members</a> {% endcomment %}
             </nav>
             
@@ -32,7 +32,7 @@
         <div class="col-md-4 text-right">
             <div class="card-header p-2">
                     {% if company.staffmembers.count > 1 %}
-                        <button class="btn btn-link btn-danger btn-sm categorydelete" type="button" data-catename="{{ category.name }}" data-url="{% host_url 'category_delete_view' staff.id host 'bizadmin' %}">Remove Staff Member <i class="fas fa-trash"></i></button>
+                        <button class="btn btn-link btn-danger btn-sm staffdelete" type="button" data-catename="{{ category.name }}" data-url="{% host_url 'category_delete_view' staff.id host 'bizadmin' %}">Remove Staff Member <i class="fas fa-trash"></i></button>
                     {% endif %}        
             </div>
         </div>

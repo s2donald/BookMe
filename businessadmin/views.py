@@ -2045,7 +2045,6 @@ class savestaffBreakDaysViews(View):
         
         return JsonResponse({'innerbtn':innerbtn, 'success':success})
 
-from validate_email import validate_email
 class UpdateStaffDetails(View):
     def post(self, request):
         staff_id = request.POST.get('staff_id')

@@ -557,7 +557,6 @@ class bookingCalendarRender(View):
             for breaks in breakss:
                 if weekday == breaks.weekday:
                     staff_breaks.append(breaks)
-        print(staff_hours.is_off)
         if staff_hours.is_off==False:
             slist = list(time_slots(b_open,b_close,interval, duration_hour, duration_minute, year, month, day, company, staff_breaks, staff))
         else:

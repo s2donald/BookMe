@@ -57,7 +57,7 @@ class Bookings(models.Model):
     #The service booked (also contains the company the service is with)
     service = models.ForeignKey(Services, on_delete=models.CASCADE, null=True, related_name='bookings', related_query_name="bookings")
     #The company which is offering this service
-    company = models.ForeignKey(Company, on_delete=models.CASCADE, null=True)
+    company = models.ForeignKey(Company, on_delete=models.CASCADE, null=True, related_name='company_bookings', related_query_name='company_bookings')
     #Staff member booked
     staffmem = models.ForeignKey(StaffMember, on_delete=models.CASCADE, null=True, blank=True, related_name='staff_bookings')
     #We must add a timeslot for the booking

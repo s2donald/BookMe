@@ -2115,20 +2115,13 @@ def dbrun(request):
     allcomp = Company.objects.all()
 
     for comp in allcomp:
-        if not comp.staffmembers.all().exists():
-            user = comp.user
-            staff = StaffMember.objects.create(user=user, company=comp, first_name=user.first_name, last_name=user.last_name, phone=user.phone, email=user.email, access=2)
-            services = comp.services_offered.all()
-            for s in services:
-                staff.services.add(s)
-            staff.save()
-            for hour in comp.hours.all():
-                weekday=hour.weekday
-                froms=hour.from_hour
-                tos=hour.to_hour
-                dayoff = hour.is_closed
-                staffhours = StaffWorkingHours.objects.create(staff=staff, from_hour=froms, to_hour=tos,is_off=dayoff, weekday=weekday)
-                staffhours.save()
+        allbooking = comp.company_bookings.all()
+        usr = comp.user
+        staff = StaffMember.objects.get(user=usr)
+        for booking in allbooking:
+            if not booking.staffmem:
+                booking.staffmem = staff
+                booking.save()
             
     return JsonResponse({'':''})
 

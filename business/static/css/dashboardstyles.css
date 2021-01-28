@@ -11193,8 +11193,8 @@ fieldset[disabled]
 
 .has-success:after,
 .has-danger:after {
-  font-family: 'nucleo';
-  content: "\ea1b";
+  font-family: 'Font Awesome 5 Pro';
+  content: "\f00c";
   display: inline-block;
   position: absolute;
   right: 20px;
@@ -14069,8 +14069,8 @@ table.tablesorter thead tr .headerSortDown {
   background-color: #005B97; }
 
 .form-check .form-check-sign::after {
-  font-family: 'nucleo';
-  content: "\ea1b";
+  font-family: 'Font Awesome 5 Pro';
+  content: "\f00c";
   top: 0px;
   text-align: center;
   font-size: 14px;
@@ -18654,8 +18654,8 @@ select.selectpicker {
       opacity: 0;
       background-color: transparent; }
     .bootstrap-tagsinput .tag [data-role="remove"]:after {
-      font-family: 'Nucleo';
-      content: "\ea48";
+      font-family: 'Font Awesome 5 Pro';
+      content: "\f00c";
       padding: 0px 2px; }
 
 /*

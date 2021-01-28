@@ -7,6 +7,7 @@ from django.core.validators import RegexValidator
 from django.db import models
 import re
 from business.models import Company, Category, SubCategory
+from calendarapp.models import formBuilder
 hours_choices = (
         ('0','0 hours'),
         ('1', '1 hour'),
@@ -313,6 +314,8 @@ class StaffMemberForms(forms.Form):
 
     def clean_email(self):
         email = self.cleaned_data['email']
+        if email == '':
+            return None
         try:
             acct = Account.objects.get(email=email)
         except Account.DoesNotExist:
@@ -331,3 +334,29 @@ class StaffMemberForms(forms.Form):
             raise forms.ValidationError("This email address is already associated with a staff member profile. Please try a different email.")
             
         return email
+
+yesno = (
+        ('y', 'Yes'),
+        ('n', 'No')
+)
+
+class formBuilderForm(forms.ModelForm):
+    label = forms.CharField(label='Form Label',max_length=100, required=True)
+    services = forms.ModelMultipleChoiceField(required=False,queryset=Services.objects.none(),label='Select the services this form field applies too:', widget=forms.SelectMultiple(attrs={'class':'selectcolor selectpicker show-tick form-control','title':'Service','data-size':'6', 'multiple':'', 'data-live-search':"true", 'data-live-search-placeholder':"Search Services"}))
+    # is_checkbox = forms.ChoiceField(label='Is Checkbox Field?',initial='n',choices=yesno, widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control', 'data-size':'2'}))
+    # is_text = forms.ChoiceField(label='Is Text Field?',choices=yesno, widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control', 'data-size':'2'}))
+    # is_integer = forms.ChoiceField(label='Is Integer Field?',initial='n',choices=yesno, widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control', 'data-size':'2'}))
+    is_required = forms.ChoiceField(label='Is Required Field?',initial='n',choices=yesno, widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control', 'data-size':'2'}))
+    class Meta:
+        model = formBuilder
+        fields = ('label','services','is_required')
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        try:
+            self.fields['services'].queryset = Services.objects.filter(business=self.initial['company'].id).order_by('name')
+            self.fields['services'].initial = Services.objects.filter(business=self.initial['company'].id).order_by('name')
+        except AttributeError:
+            pass
+
+    

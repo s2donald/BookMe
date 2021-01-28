@@ -279,7 +279,7 @@
             html: true,
             sanitize: false,
             content: 'Are you sure you want to remove staff? <button class="btn btn-sm btn-danger removestaff" data-staff='+staff_id+' >Remove</button><button class="btn btn-sm">Cancel</button>',
-        })
+        });
         $('.staffdelete').popover('show')
     });
 
@@ -310,17 +310,16 @@
             success:function(data){
                 staffinfo.innerHTML = data.html_content
                 $('.hourtimepickr').datetimepicker({
-                    format: 'LT',
-                    icons: {
-                    time: "fas fa-clock",
-                    up: "fa fa-chevron-up",
-                    down: "fa fa-chevron-down",
-                    previous: 'tim-icons icon-minimal-left',
-                    next: 'tim-icons icon-minimal-right',
-                    today: 'fa fa-screenshot',
-                    clear: 'fa fa-trash',
-                    close: 'fa fa-remove',
-                    
+                        format: 'LT',
+                        icons: {
+                        time: "fas fa-clock",
+                        up: "fa fa-chevron-up",
+                        down: "fa fa-chevron-down",
+                        previous: 'tim-icons icon-minimal-left',
+                        next: 'tim-icons icon-minimal-right',
+                        today: 'fa fa-screenshot',
+                        clear: 'fa fa-trash',
+                        close: 'fa fa-remove',
                     }
                 });
             }
@@ -339,17 +338,16 @@
             success:function(data){
                 staffinfo.innerHTML = data.html_content
                 $('.breaktimepicker').datetimepicker({
-                    format: 'LT',
-                    icons: {
-                    time: "fas fa-clock",
-                    up: "fa fa-chevron-up",
-                    down: "fa fa-chevron-down",
-                    previous: 'tim-icons icon-minimal-left',
-                    next: 'tim-icons icon-minimal-right',
-                    today: 'fa fa-screenshot',
-                    clear: 'fa fa-trash',
-                    close: 'fa fa-remove',
-                    
+                        format: 'LT',
+                        icons: {
+                        time: "fas fa-clock",
+                        up: "fa fa-chevron-up",
+                        down: "fa fa-chevron-down",
+                        previous: 'tim-icons icon-minimal-left',
+                        next: 'tim-icons icon-minimal-right',
+                        today: 'fa fa-screenshot',
+                        clear: 'fa fa-trash',
+                        close: 'fa fa-remove',
                     }
                 });
                 $('.popover').popover({

@@ -54,7 +54,7 @@ class Bookings(models.Model):
     user = models.ForeignKey(Account, on_delete=models.CASCADE, null=True, blank=True)
     guest = models.ForeignKey(Clients, on_delete=models.CASCADE, null=True, blank=True)
     slug = models.SlugField(max_length=200, db_index=True, blank=True, unique=True)
-    #The service booked (also contains the company the service is with)
+    #The service booked (also contains the dcompany the service is with)
     service = models.ForeignKey(Services, on_delete=models.CASCADE, null=True, related_name='bookings', related_query_name="bookings")
     #The company which is offering this service
     company = models.ForeignKey(Company, on_delete=models.CASCADE, null=True, related_name='company_bookings', related_query_name='company_bookings')
@@ -119,6 +119,9 @@ class extraInformation(models.Model):
     car_make = models.CharField(max_length=30, blank=True, null=True)
     car_model = models.CharField(max_length=30, blank=True, null=True)
     car_year = models.IntegerField(blank=True, null=True)
+
+
+
 
 
     

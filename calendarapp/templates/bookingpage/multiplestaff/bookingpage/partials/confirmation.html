@@ -1,5 +1,7 @@
 <h1 class="h2 mb-2"> Confirm To Secure Spot <span class="text-muted"></span></h1>
 <div class="text-block">
+<form method="POST" id='fconfirmationform'>
+    {% csrf_token %}
     <h5 class="mb-4">{{ service.name }}</h5>
     <div class="row mb-3">
         <div class="col-6 m-1 d-flex align-items-center mb-3 mb-md-0 bg-light rounded text-white">
@@ -12,10 +14,39 @@
             <p class="text-sm mb-0 text-left" id="serDate"> {% if service.duration_hour > 0 %}{{ service.duration_hour }} hour{% endif %} {% if service.duration_minute > 0 and service.duration_hour > 0 %}and{% endif %} {{ service.duration_minute}} minute service.</p>
         </div>
     </div>
-</div>
+{% if company.company_forms.all or company.category.name == 'Automotive Services' %}
+    <h6>Fill out the following form</h6>
+{% endif %}
+{% if company.category.name == 'Automotive Services' %}
+    <div class="col-12 text-left">
+        <label for="">Vehicle Year:</label>
+        <select name="car-years" id="car-years" class="vehyearselect m-1" data-size='6' data-live-search='true' data-live-search-placeholder='Vehicle Year' ></select>  
+    </div>
+    <div class="col-12 text-left">
+        <label for="">Vehicle Make:</label>
+        <select name="car-makes" id="car-makes" class="vehmakeselect m-1" data-size='6' data-live-search='true' data-live-search-placeholder='Vehicle Make'></select> 
+    </div>
+    <div class="col-12 text-left">
+        <label for="">Vehicle Model:</label>
+        <select name="car-models" id="car-models" class="vehmodelselect m-1" data-size='6' data-live-search='true' data-live-search-placeholder='Vehicle Model'></select>
+    </div>
+    <div class="col-12 text-left">
+        <label for="">Vehicle Trim:</label>
+        <select name="car-model-trims" id="car-model-trims" class="vehtrimselect m-1" data-size='6' data-live-search='true' data-live-search-placeholder='Vehicle Trim'></select>
+    </div>
+{% endif %}
 
-<div class="row form-block flex-column flex-sm-row mb-4">
-    <div class="col text-center"><a data-staff="{{ staff.id }}" data-service="{{ service.id }}" data-month="{{ month }}" data-day="{{ day }}" data-year="{{ year }}" data-time="{{ time }}" class="btn btn-outline-primary px-3 confbtn"> Confirm and Secure Spot<i class="fa-chevron-right fa ml-2"></i></a></div>
+{% for formfield in service.service_forms.all %}
+    <div class="col-12 text-left">
+        <label for="">{{ formfield.label }}{% if formfield.is_required == 'y' %}*{% endif %}:</label>
+        <input type="text" name="{{ formfield.id }}" class="form-control {{ formfield.id }}" {% if formfield.is_required == 'y' %}required{% endif %}>
+    </div>
+{% endfor %}
+
+<div class="row form-block flex-column flex-sm-row my-4">
+    <div class="col text-center"><button type='submit' data-sitekey="6LeimeAZAAAAAE119rtvZivK4DW9csX6QhEo5Yla" data-callback='onSubmit' data-action='submit' data-staff="{{ staff.id }}" data-service="{{ service.id }}" data-month="{{ month }}" data-day="{{ day }}" data-year="{{ year }}" data-time="{{ time }}" class="btn btn-outline-primary px-3 confbtn"> Confirm and Secure Spot<i class="fa-chevron-right fa ml-2"></i></button></div>
+</div>
+</form>
 </div>
 
 {% if company.notes %}

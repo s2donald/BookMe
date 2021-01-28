@@ -1,10 +1,11 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .forms import StaffMemberForms, BusinessRegistrationForm, AddHoursForm, UpdateCompanyForm, AddClientForm, AddNotesForm, CreateSmallBizForm, AddBookingForm, BusinessName, AddServiceCategoryForm, AddServiceToCategory
+from .forms import formBuilderForm, StaffMemberForms, BusinessRegistrationForm, AddHoursForm, UpdateCompanyForm, AddClientForm, AddNotesForm, CreateSmallBizForm, AddBookingForm, BusinessName, AddServiceCategoryForm, AddServiceToCategory
 from django.contrib.auth.decorators import login_required
 from django import forms
 from .models import StaffMember, Breaks, StaffWorkingHours
 from business.models import Company, SubCategory, OpeningHours, Services, Gallary, Amenities, Clients, CompanyReq, ServiceCategories
 from account.models import Account
+from calendarapp.models import formBuilder, bookingForm
 from account.forms import UpdatePersonalForm
 from account.tasks import bizCreatedEmailSent, consumerCreatedEmailSent
 from consumer.models import Bookings, Reviews, extraInformation
@@ -1229,8 +1230,9 @@ from .forms import ImagesForm
 ##Business Page Views
 @login_required
 def businessPhotoView(request):
-    company = Company.objects.get(user=request.user)
     user=request.user
+    company = Company.objects.get(user=user)
+    
     if user.is_business and not user.on_board:
         return redirect(reverse('completeprofile', host='bizadmin'))
     elif not user.is_business:
@@ -1246,6 +1248,20 @@ def businessPhotoView(request):
         photos = paginator.page(paginator.num_pages)
 
     return render(request,'bizadmin/businesspage/photos.html',{'company':company, 'photos':photos})
+
+@login_required
+def businessPageCustomization(request):
+    user=request.user
+    staff = StaffMember.objects.get(user=request.user)
+    company = staff.company
+    if user.is_business and not user.on_board:
+        return redirect(reverse('completeprofile', host='bizadmin'))
+    elif not user.is_business:
+        loginViews(request)
+    formBuilderForms = formBuilderForm(initial={'company':company})
+    return render(request,'bizadmin/businesspage/customization.html',{'company':company, 'formBuilderForms':formBuilderForms})
+
+
 
 @login_required
 def businessAmenitiesView(request):
@@ -1632,7 +1648,8 @@ class getBooking(View):
         booking_id = request.GET.get('booking_id')
         booking = Bookings.objects.get(id=booking_id)
         try:
-            extra = extraInformation.objects.get(booking=booking)
+            # extra = extraInformation.objects.get(booking=booking)
+            extra = bookingForm.objects.filter(booking=booking)
         except:
             extra = None
         service = booking.service
@@ -2148,3 +2165,48 @@ class removestaffCompany(View):
         return JsonResponse({'success':False, 'msg':'There was an unexpected error. Please try again later.', 'successor':'danger'})
 
 
+class addNewFormFieldAPI(View):
+    def post(self, request):
+        user=request.user
+        staff = StaffMember.objects.get(user=request.user)
+        company = staff.company 
+        form = formBuilderForm(request.POST,initial={'company':company})
+        if form.is_valid():
+            label = form.cleaned_data['label']
+            is_required = form.cleaned_data['is_required']
+            services = form.cleaned_data['services']
+            formb = formBuilder.objects.create(company=company, label=label, is_required=is_required)
+            for s in services:
+                formb.services.add(s)
+            html_content = render_to_string('bizadmin/businesspage/partials/formfield.html', {'company':company}, request)
+            return JsonResponse({'is_valid':True, 'html_content':html_content})
+        
+        return JsonResponse({'is_valid':False})
+
+class toggleformrequiredAPI(View):
+    def post(self, request):
+        user=request.user
+        staff = StaffMember.objects.get(user=request.user)
+        company = staff.company
+        form_id = request.POST.get('formid')
+        form = formBuilder.objects.get(pk=int(form_id))
+        if form.is_required == 'y':
+            form.is_required = 'n'
+        else:
+            form.is_required = 'y'
+        form.save()
+        return JsonResponse({'is_valid':True})
+
+
+class editFormFieldAPI(View):
+    def post(self, request):
+        user=request.user
+        staff = StaffMember.objects.get(user=request.user)
+        company = staff.company
+        if staff.access == 2:
+            form_id = request.POST.get('formid')
+            form = formBuilder.objects.get(pk=int(form_id))
+            form.delete()
+
+        html_content = render_to_string('bizadmin/businesspage/partials/formfield.html', {'company':company}, request)
+        return JsonResponse({'is_valid':True, 'html_content':html_content})

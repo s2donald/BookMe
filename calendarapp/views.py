@@ -3,6 +3,7 @@ from account.models import Account
 from business.models import Company, Services, OpeningHours, Clients, CompanyReq, Gallary, Category, SubCategory, Amenities
 from businessadmin.models import StaffWorkingHours, StaffMember, Breaks
 from consumer.models import Bookings, extraInformation, Reviews
+from .models import bookingForm
 from django.db.models import Count
 from django.http import JsonResponse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -472,7 +473,6 @@ class createAccountView(View):
 def bookingurlupdated(request):
     user = request.user
     company = request.viewing_company
-    
     return render(request, 'bookingpage/multiplestaff/bookingpage/bookingpage.html',{'user':user,'company':company})
 
 def bookingStaffUrl(request, slug):
@@ -591,9 +591,16 @@ class confirmationMessageRender(View):
         month = int(request.POST.get('month'))
         year = int(request.POST.get('year'))
         day = int(request.POST.get('day'))
+        make = request.POST.get('make')
+        model = request.POST.get('model')
+        vehyear = request.POST.get('vehyear')
+        trim = request.POST.get('trim')
+        fors = request.POST.get('form')
+        
         date = datetime.date(year, month, day)
         staff = get_object_or_404(StaffMember, id=staff_id)
         service = get_object_or_404(Services, id=s_id)
+        print(fors)
         if not user.is_authenticated:
             # render out the login and user form retrieval
             personal_form = GuestPersonalForm(initial={'phone_code':"CA"})
@@ -652,6 +659,20 @@ class confirmationMessageRender(View):
             booking = Bookings.objects.create(user=user,guest=guest,service=service, staffmem=staff, company=company,start=start, end=end, price=price)
             booking.save()
 
+            if company.category.name == 'Automotive Services':
+                bookinform1 = bookingForm.objects.create(booking=booking, label='Vehicle Year', text=vehyear.replace('%20',' '))
+                bookinform2 = bookingForm.objects.create(booking=booking, label='Vehicle Make', text=make.replace('%20',' '))
+                bookinform3 = bookingForm.objects.create(booking=booking, label='Vehicle Model', text=model.replace('%20',' '))
+                bookinform4 = bookingForm.objects.create(booking=booking, label='Vehicle Trim', text=trim.replace('%20',' '))
+                bookinform1.save()
+                bookinform2.save()
+                bookinform3.save()
+                bookinform4.save()
+            
+            for newformfield in service.service_forms.all():
+                fieldname = request.POST.get(str(newformfield.id))
+                bookinform = bookingForm.objects.create(booking=booking, label=newformfield.label, text=fieldname.replace('%20',' '))
+                bookinform.save()
             # saveformhere
 
             confirmedEmail.delay(booking.id)
@@ -731,6 +752,10 @@ class guestFormRender(View):
         month = int(request.POST.get('month'))
         year = int(request.POST.get('year'))
         day = int(request.POST.get('day'))
+        make = request.POST.get('make')
+        model = request.POST.get('model')
+        vehyear = request.POST.get('vehyear')
+        trim = request.POST.get('trim')
         date = datetime.date(year, month, day)
         service = Services.objects.get(pk=s_id)
         staff=StaffMember.objects.get(company=company, pk=staff_id)
@@ -766,15 +791,29 @@ class guestFormRender(View):
 
                 booking = Bookings.objects.create(guest=guest,service=service, company=company,staffmem=staff, start=start, end=end, price=price)
                 booking.save()
+
+                if company.category.name == 'Automotive Services':
+                    bookinform1 = bookingForm.objects.create(booking=booking, label='Vehicle Year', text=vehyear.replace('%20',' '))
+                    bookinform2 = bookingForm.objects.create(booking=booking, label='Vehicle Make', text=make.replace('%20',' '))
+                    bookinform3 = bookingForm.objects.create(booking=booking, label='Vehicle Model', text=model.replace('%20',' '))
+                    bookinform4 = bookingForm.objects.create(booking=booking, label='Vehicle Trim', text=trim.replace('%20',' '))
+                    bookinform1.save()
+                    bookinform2.save()
+                    bookinform3.save()
+                    bookinform4.save()
+                
+                for newformfield in service.service_forms.all():
+                    fieldname = request.POST.get(str(newformfield.id))
+                    bookinform = bookingForm.objects.create(booking=booking, label=newformfield.label, text=fieldname.replace('%20',' '))
+                    bookinform.save()
                 # if company.category.name == 'Automotive Services':
                 #     make = data['vehmake']
                 #     model = data['vehmodel']
                 #     vehyear = data['vehyear']
                 #     extraInformation.objects.create(car_make=make, car_model=model, car_year=vehyear, booking=booking)
-                    
+                confirmedEmailCompany.delay(booking.id)
                 if email:
                     confirmedEmail.delay(booking.id)
-                    confirmedEmailCompany.delay(booking.id)
                     confirmtime = 30
                     if service.checkintime:
                         confirmtime = service.checkintime + 30
@@ -814,6 +853,10 @@ class renderLoginPage(View):
         date = datetime.date(year, month, day)
         staff = StaffMember.objects.get(pk=staff_id)
         service = Services.objects.get(pk=s_id)
+        make = request.POST.get('make')
+        model = request.POST.get('model')
+        vehyear = request.POST.get('vehyear')
+        trim = request.POST.get('trim')
 
         email = request.POST.get('email')
         password = request.POST.get('password')
@@ -878,6 +921,20 @@ class renderLoginPage(View):
                 company.save()
             booking = Bookings.objects.create(user=user,guest=guest,service=service, staffmem=staff, company=company,start=start, end=end, price=price)
             booking.save()
+            if company.category.name == 'Automotive Services':
+                bookinform1 = bookingForm.objects.create(booking=booking, label='Vehicle Year', text=vehyear.replace('%20',' '))
+                bookinform2 = bookingForm.objects.create(booking=booking, label='Vehicle Make', text=make.replace('%20',' '))
+                bookinform3 = bookingForm.objects.create(booking=booking, label='Vehicle Model', text=model.replace('%20',' '))
+                bookinform4 = bookingForm.objects.create(booking=booking, label='Vehicle Trim', text=trim.replace('%20',' '))
+                bookinform1.save()
+                bookinform2.save()
+                bookinform3.save()
+                bookinform4.save()
+            
+            for newformfield in service.service_forms.all():
+                fieldname = request.POST.get(str(newformfield.id))
+                bookinform = bookingForm.objects.create(booking=booking, label=newformfield.label, text=fieldname.replace('%20',' '))
+                bookinform.save()
 
             # saveformhere
 

@@ -5,6 +5,11 @@
 {% block title %}{{ company.business_name }} - BookMe.to{% endblock %}
 {% block companybizname %}{{ company.business_name }}{% endblock companybizname %}
 {% block booking %}
+<script type="text/javascript">
+$(document).ready(
+);
+</script>
+
 
  <div class="modal fade" id="getCodeModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
    <div class="modal-dialog modal-lg">
@@ -40,16 +45,16 @@
                         <a class="nav-link review-link" href="#reviewlist" data-toggle="pill" role="tab" aria-selected="false" id="areview">Reviews</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link gallary-link" href="#gallarylist" data-toggle="pill" role="tab" aria-selected="false" id="agallary">Gallary</a>
+                        <a class="nav-link gallary-link" href="#gallarylist" data-toggle="pill" role="tab" aria-selected="false" id="agallary">Gallery</a>
                     </li>
                 </ul>
                 <hr>
                 <div class="tab-content" id="pillscontent">
                     <div class="tab-pane fade show active" role="tabpanel" id="serviceList">
                         <h2>All Services</h2>
-
                         <div id="accordion" role="tablist" aria-multiselectable="true" class="card-collapse">
                             <div class="card card-plain mb-2">
+                                
                                 {% for categories in company.service_category.all %}
                                 <div class="card-header p-2 mb-2" role="tab" id="heading{{ forloop.counter }}">
                                     <p class="mb-0 text-sm text-left align-items-center justify-content-center">
@@ -348,24 +353,54 @@
     $(document).ready(function(){
         $('#bm').hide()
         $('#sd').hide()
-    })
+        
+    });
+
+    function carQueryFunctionInit() {
+        //Create a variable for the CarQuery object.  You can call it whatever you like.
+        var carquery = new CarQuery();
+
+        //Run the carquery init function to get things started:
+        carquery.init();
+        
+        //Optionally, you can pre-select a vehicle by passing year / make / model / trim to the init function:
+        //carquery.init('2000', 'dodge', 'Viper', 11636);
+
+        //Optional: Pass sold_in_us:true to the setFilters method to show only US models. 
+        carquery.setFilters( {sold_in_us:true} );
+        carquery.initYearMakeModelTrim('car-years', 'car-makes', 'car-models', 'car-model-trims');
+        //Optional: set minimum and/or maximum year options.
+        carquery.year_select_min=1900;
+        carquery.year_select_max=2021;
+
+        $('.vehyearselect').selectpicker();
+        $('.vehmakeselect').selectpicker();
+        $('.vehmodelselect').selectpicker();
+        $('.vehtrimselect').selectpicker();
+        $('.vehyearselect').selectpicker('refresh');
+        $('.vehmakeselect').selectpicker('refresh');
+        $('.vehmodelselect').selectpicker('refresh');
+        $('.vehtrimselect').selectpicker('refresh');
+    }
 
     function getCookie(name) {
-    let cookieValue = null;
-    if (document.cookie && document.cookie !== '') {
-        const cookies = document.cookie.split(';');
-                                for (let i = 0; i < cookies.length; i++) {
-                                    const cookie = cookies[i].trim();
-                                    // Does this cookie string begin with the name we want?
-                                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                                        break;
-                                    }
-                                }
-                            }
-                                return cookieValue;
-                            }
-                            var csrftoken = getCookie('csrftoken');
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+            return cookieValue;
+    }
+        var csrftoken = getCookie('csrftoken');
+
+    
         function initMap() {
             var map = new google.maps.Map(document.getElementById("map"), {
                 zoom: 16,
@@ -374,6 +409,29 @@
             var geocoder = new google.maps.Geocoder();
             geocodeAddress(geocoder, map);
             
+        }
+        function createCookie(key, value) {
+            let cookie = escape(key) + "=" + escape(value) + ";";
+            document.cookie = cookie;
+        }
+        function deleteCookie(name) {
+            createCookie(name, "", -1);
+        }
+        
+
+        function readCookie(name) {
+            let key = name + "=";
+            let cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                let cookie = cookies[i];
+                while (cookie.charAt(0) === ' ') {
+                    cookie = cookie.substring(1, cookie.length);
+                }
+                if (cookie.indexOf(key) === 0) {
+                    return cookie.substring(key.length, cookie.length);
+                }
+            }
+            return null;
         }
 
         function geocodeAddress(geocoder, resultsMap) {
@@ -386,7 +444,7 @@
                     position: results[0].geometry.location
                 });
                 } else {
-
+                    
                 }
             });
         }
@@ -399,9 +457,6 @@
                 url: "{% host_url 'staffofferingservice' host 'bookingurl' slug=company.slug %}",
                 data: {
                     'service_id': service_id
-                },
-                headers:{
-                    "X-CSRFToken": csrftoken
                 },
                 success:function(data){
                     $('body, html, #contentsarg').scrollTop(0, "fast");
@@ -514,9 +569,6 @@
                 data: {
                     'service_id': service_id, 'staff_id':staff_id
                 },
-                headers:{
-                    "X-CSRFToken": csrftoken
-                },
                 success:function(data){
                     var el = document.querySelector('#contentsarg');
                     el.innerHTML = data.html_content
@@ -562,10 +614,15 @@
                     setTimeout(function(){ 
                         animation.stop()
                         $('#bm').hide()
+                        deleteCookie('cq-settings')
                         var el = document.querySelector('#contentsarg');
                         el.innerHTML = data.html_content
                         var hours = document.querySelector('#bizhours');
                         hours.innerHTML = data.conf_content
+                        {% if company.category.name == 'Automotive Services' %}
+                            carQueryFunctionInit();
+                        {% endif %}
+                        
                     }, 500);
                     
                 }
@@ -573,48 +630,83 @@
         });
 
         var cleave = null
-        $(document).on('click', '.confbtn',function(){
+        var someform;
+        $(document).on('submit', '#fconfirmationform',function(e){
+            e.preventDefault()
             $('#sd').show()
             sdanimation.playSegments([15,40], true);
-            var $this = $(this)
+            var $this = $('.confbtn')
+            var form = $(this)
+            someform=$('#fconfirmationform').serializeArray()
             var service_id =  $this.attr('data-service')
             var staff_id =  $this.attr('data-staff')
             var month = $this.attr('data-month')
             var year = $this.attr('data-year')
             var day = $this.attr('data-day')
             var time = $this.attr('data-time')
+            var make = null
+            var vehyear = null
+            var model = null
+            var trimVal = null
+            var options = null
+            var trim = null
+            {% if company.category.name == 'Automotive Services' %}
+                make = document.getElementById("car-makes").value;
+                vehyear = document.getElementById("car-years").value;
+                model = document.getElementById("car-models").value;
+                trimVal = document.getElementById("car-model-trims");
+                options = trimVal.getElementsByTagName("option");
+                trim = options[trimVal.selectedIndex].innerHTML;
+            {% endif %}
+            var values = {};
+            $.each(someform, function(i, field) {
+                createCookie(field.name, field.value)
+            });
+            createCookie('make',make);
+            createCookie('vehyear',vehyear);
+            createCookie('model',model);
+            createCookie('trim',trim);
+
+            object = [
+                { name: "staff_id", value: staff_id },
+                { name: "service_id", value: service_id },
+                { name: "month", value: month },
+                { name: "day", value: day },
+                { name: "year", value: year },
+                { name: "time", value: time },
+                { name: "vehyear", value: readCookie('vehyear')},
+                { name: "trim", value: readCookie('trim')},
+                { name: "model", value: readCookie('model')},
+                { name: "make", value: readCookie('make')}
+            ]
+            
             var el = document.querySelector('#wholepage');
             el.innerHTML = ''
-            
-            $.ajax({
-                type:'POST',
-                url: "{% host_url 'confirmationbooking' host 'bookingurl' slug=company.slug %}",
-                data: {
-                    'service_id': service_id, 'staff_id':staff_id, 'month':month, 'year':year, 'day':day, 'time':time
-                },
-                headers:{
-                    "X-CSRFToken": csrftoken
-                },
-                success:function(data){
-                    sdanimation.stop()
-                    $('#sd').hide()
-                    var el = document.querySelector('#wholepage');
-                    el.innerHTML = data.html_content
-                    if (data.notauthenticated){
-                        cleave = new Cleave('#id_phone', {
-                            delimiters: ['(', ') ', '-'],
-                            blocks: [0, 3, 3, 4],
-                            numericOnly: true
-                        });
-                        $('#isocode').selectpicker({
-                            iconBase: "fas",
-                            tickIcon: "fa-check"
-                        });
+            grecaptcha.ready(function() {
+            grecaptcha.execute('6LeimeAZAAAAAE119rtvZivK4DW9csX6QhEo5Yla', {action: 'submit'}).then(function(token) {
+                $.ajax({
+                    type:'POST',
+                    url: "{% host_url 'confirmationbooking' host 'bookingurl' slug=company.slug %}",
+                    data: form.serialize() + '&' + $.param(object),
+                    success:function(data){
+                        sdanimation.stop()
+                        $('#sd').hide()
+                        var el = document.querySelector('#wholepage');
+                        el.innerHTML = data.html_content
+                        if (data.notauthenticated){
+                            cleave = new Cleave('#id_phone', {
+                                delimiters: ['(', ') ', '-'],
+                                blocks: [0, 3, 3, 4],
+                                numericOnly: true
+                            });
+                            $('#isocode').selectpicker({
+                                iconBase: "fas",
+                                tickIcon: "fa-check"
+                            });
+                        }
                     }
-                    
-
-
-                }
+                });
+            });
             });
         });
 
@@ -637,7 +729,17 @@
                 { name: "day", value: day },
                 { name: "year", value: year },
                 { name: "time", value: time },
+                { name: "vehyear", value: readCookie('vehyear')},
+                { name: "trim", value: readCookie('trim')},
+                { name: "model", value: readCookie('model')},
+                { name: "make", value: readCookie('make')},
             ]
+            $.each(someform, function(i, field) {
+                object.push({
+                    name: field.name,
+                    value: readCookie(field.name)
+                })
+            });
 
             $('#id_phone').val(cleave.getRawValue());
             grecaptcha.ready(function() {
@@ -665,7 +767,6 @@
                                 var el = document.querySelector('#wholepage');
                                 el.innerHTML = data.html_content
                             }
-
                         }
                     });
                 });
@@ -674,6 +775,7 @@
 
         $(document).on('click', '#loginGibeleForm',function(){
             var $this = $(this)
+            console.log(someform)
             var service_id =  $this.attr('data-service')
             var staff_id =  $this.attr('data-staff')
             var month = $this.attr('data-month')
@@ -712,7 +814,17 @@
                 { name: "day", value: day },
                 { name: "year", value: year },
                 { name: "time", value: time },
+                { name: "vehyear", value: readCookie('vehyear')},
+                { name: "trim", value: readCookie('trim')},
+                { name: "model", value: readCookie('model')},
+                { name: "make", value: readCookie('make')},
             ]
+            $.each(someform, function(i, field) {
+                object.push({
+                    name: field.name,
+                    value: readCookie(field.name)
+                })
+            });
             
             $.ajax({
                 type:'POST',

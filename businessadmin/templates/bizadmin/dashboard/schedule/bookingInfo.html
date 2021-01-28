@@ -10,15 +10,15 @@
             {% endwith %}
             <br>
             {% if extra %}
-                {% if company.category.name == 'Automotive Services' %}
-                    <li class="mb-1"><strong>Vehicle Make:</strong> {{ extra.car_make }}</li>
-                    <li class="mb-1"><strong>Vehicle Model:</strong> {{ extra.car_model }}</li>
-                    <li class="mb-1"><strong>Vehicle Year:</strong> {{ extra.car_year }}</li>
-                {% endif %}
+                {% for x in extra %}
+                    <li class="mb-1"><strong>{{ x.label }}:</strong> {{ x.text }}</li>
+                {% endfor %}
+                    {% comment %} <li class="mb-1"><strong>{{ extra.label }}:</strong> {{ extra.car_make }}</li>
+                    <li class="mb-1"><strong>{{ extra.label }}:</strong> {{ extra.car_model }}</li>
+                    <li class="mb-1"><strong>Vehicle Year:</strong> {{ extra.car_year }}</li> {% endcomment %}
                 <br>
             {% endif %}
             <li class="mb-1"><strong>Booking ID:</strong> {{ booking.slug }}</li>
-
             <li class="mb-1"><strong>Service:</strong> {{ service.name }}</li>
             <li class="mb-1"><strong>Cost:</strong> ${{ booking.price }}</li>
             {% endwith %}

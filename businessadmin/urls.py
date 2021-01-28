@@ -6,8 +6,12 @@ app_name = 'businessadmin'
 urlpatterns = [
     re_path(r'databaserun/$', views.dbrun, name='dbrun'),
 
-    re_path(r'bpage/photo/$', views.businessPhotoView, name='photos'),
-    re_path(r'bpage/amentities/$', views.businessAmenitiesView, name='amenities'),
+    re_path(r'businesspage/photo/$', views.businessPhotoView, name='photos'),
+    re_path(r'businesspage/amentities/$', views.businessAmenitiesView, name='amenities'),
+    re_path(r'businesspage/customization/$', views.businessPageCustomization, name='bpagecustomization'),
+    re_path(r'api/addnewformfield/$', views.addNewFormFieldAPI.as_view(), name='addnewformfield'),
+    re_path(r'api/togglepath/$', views.toggleformrequiredAPI.as_view(), name='toggleformrequired'),
+    re_path(r'api/editformfield/$', views.editFormFieldAPI.as_view(), name='editformrequired'),
 
     re_path(r'dashboard/schedule/$', views.scheduleView, name='schedule'),
     re_path(r'dashboard/profile/booking/$', views.bookingSettingViews, name='bookingSetting'),

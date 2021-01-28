@@ -18,7 +18,7 @@ class formBuilder(models.Model):
     is_integer = models.CharField(max_length=3,default='n', choices=yesno)
     is_required = models.CharField(max_length=3,default='n', choices=yesno)
     class Meta:
-        ordering = ["label"]
+        ordering = ["order"]
     def __str__(self):
         return self.label
     def clean(self):

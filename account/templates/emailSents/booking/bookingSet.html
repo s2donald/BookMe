@@ -29,10 +29,6 @@
                                         <span style="font-size:14px; color:#616161 !important;">Service: {{ service.name }}</span><br>
                                         &nbsp;
                                         <hr><br>
-                                        {% for formfield in booking.booking_forms.all %}
-                                            <span style="font-size:14px; color:#616161 !important;">{{ formfield.label }}: {{ formfield.text }}</span><br>
-                                        {% endfor %}
-                                        <hr><br>
                                         <span style="font-size:14px; color:#616161 !important;">Company Email: {{ company.email }}</span><br>
                                         <span style="font-size:14px; color:#616161 !important;">Company Phone Number: {{ company.phone }}</span><br>
                                         <span style="font-size:14px; color:#616161 !important;">Company Address: {{ company.address }}, {{ company.postal }}, {{ company.city }}, {{ company.state }}</span><br>

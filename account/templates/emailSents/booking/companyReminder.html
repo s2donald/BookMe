@@ -37,16 +37,14 @@
 
                                         &nbsp;
                                         <hr><br>
-                                        {% if company.category.name == 'Automotive Services' %}
-                                            {% if extra %}
-                                                Additional Info:
-                                                <ul>
-                                                    <li> <strong>Vehicle Make:</strong>{{ extra.car_make }}</li>
-                                                    <li> <strong>Vehicle Model:</strong>{{ extra.car_model }} <strong></li>
-                                                    <li> <strong>Vehicle Year:</strong>{{ extra.car_year }}</li>
-                                                </ul>
-                                                <hr>
-                                            {% endif %}
+                                        {% if booking.booking_forms %}
+                                            Additional Info:
+                                            <ul style="list-style: none;">
+                                                {% for formfield in booking.booking_forms.all %}
+                                                    <li style="list-style: none;"><span style="font-size:14px; color:#616161 !important;"><strong>{{ formfield.label }}</strong>: {{ formfield.text }}</span></li>
+                                                {% endfor %}
+                                            </ul>
+                                            <hr>
                                         {% endif %}
                                         {% if service.checkintime > 0 %}
                                             <p><strong>NOTE:</strong>Please arrive {{ service.checkintime }} minutes before your service starts to check in.</p>

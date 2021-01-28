@@ -1,10 +1,16 @@
 from django.conf.urls import url, include
+from django.contrib import admin
 from django.urls import re_path, path
-
+from django.contrib.auth import views as auth_views
 from . import views
 app_name = 'businessadmin'
 urlpatterns = [
-    re_path(r'databaserun/$', views.dbrun, name='dbrun'),
+    path('password_reset/', auth_views.PasswordResetView.as_view(),name='password_reset'),
+    path('password_reset/done/', auth_views.PasswordResetDoneView.as_view(), name='password_reset_done'),
+    path('reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
+    path('reset/done/', auth_views.PasswordResetCompleteView.as_view(), name='password_reset_complete'),
+    path('adminpagefordjangosuuwoop/', admin.site.urls),
+    # re_path(r'databaserun/$', views.dbrun, name='dbrun'),
 
     re_path(r'businesspage/photo/$', views.businessPhotoView, name='photos'),
     re_path(r'businesspage/amentities/$', views.businessAmenitiesView, name='amenities'),
@@ -99,7 +105,6 @@ urlpatterns = [
     re_path(r'login/$', views.loginViews, name='bizadminlogin'),
 
     re_path(r'^faq/$', views.faqBusinessViews, name='faqbusiness'),
-
     re_path(r'addbooking/', views.addBooking.as_view(), name='add_booking'),
 
     re_path(r'requests/', views.requestListViews, name='requestList'),

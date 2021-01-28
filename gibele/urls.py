@@ -19,11 +19,17 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.auth import views as auth_views
 from account import views as acct_views
+from django.contrib import auth
+
 
 urlpatterns = [
     path('login', acct_views.LoginView, name='login'),
     path('logout/', acct_views.LogoutView, name='logout'),
     path('account/', include('account.urls', namespace='account')),
+    path('password_reset/', auth_views.PasswordResetView.as_view(),name='password_reset'),
+    path('password_reset/done/', auth_views.PasswordResetDoneView.as_view(), name='password_reset_done'),
+    path('reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
+    path('reset/done/', auth_views.PasswordResetCompleteView.as_view(), name='password_reset_complete'),
     path('adminpagefordjangosuuwoop/', admin.site.urls),
     path('social-auth/',include('social_django.urls',namespace='social')),
     path('',include('business.urls', namespace='business')),

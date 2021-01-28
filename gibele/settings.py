@@ -42,6 +42,7 @@ else:
 
 INSTALLED_APPS = [
     'django_hosts',
+    'corsheaders',
     'sslserver',
     'social_django',
     'widget_tweaks',
@@ -76,6 +77,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django_hosts.middleware.HostsResponseMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
 ]
 
 SESSION_EXPIRE_AT_BROWSER = True
@@ -214,6 +217,8 @@ EMAIL_HOST_USER = 'noreply@bookme.to'
 EMAIL_HOST_PASSWORD = 'vEK97wFvxY27jTEhqQY8Qv6L!'
 EMAIL_USE_TLS = False
 EMAIL_USE_SSL = True
+DEFAULT_FROM_EMAIL = 'BookMe.to < noreply@bookme.to >'
+
 
 if not DEBUG:
     CELERY_BROKER_URL = 'amqps://dtkacyby:r-kSQJMm0h2BksbAYs4l1PgXWlqSrYdo@grouse.rmq.cloudamqp.com/dtkacyby'

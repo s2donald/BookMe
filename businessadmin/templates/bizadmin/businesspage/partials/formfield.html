@@ -62,7 +62,7 @@
     </td>
     <td class="text-center">
         {% comment %} <button data-id="{{ field.id }}" role="button" class='btn btn-icon btn-sm editformfield'><i class="fas fa-pen"></i></button> {% endcomment %}
-        <button data-id="{{ field.id }}" class='btn btn-icon btn-danger btn-sm deleteformfield'><i class="fas fa-trash"></i></button>
+        <button data-id="{{ field.id }}" class='btn btn-icon btn-danger btn-sm deleteformfield' role="button" data-toggle="popover" data-trigger="focus" title="Delete?" data-html='true'><i class="fas fa-trash"></i></button>
     </td>
 </tr>
 {% empty %}

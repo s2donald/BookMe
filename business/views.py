@@ -142,7 +142,7 @@ def company_list(request, category_slug=None, company_slug=None, tag_slug=None):
         result = request.session["lat"]
     else:
         result = None
-    print(result)
+    # print(result)
     if category_slug:
         try:
             category = get_object_or_404(Category, slug=category_slug)

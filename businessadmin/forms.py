@@ -267,12 +267,24 @@ class AddServiceCategoryForm(forms.Form):
 
 class AddServiceToCategory(forms.Form):
     category = forms.ModelMultipleChoiceField(required=False,queryset=ServiceCategories.objects.none(),label='Select the categories this service belongs to:', widget=forms.SelectMultiple(attrs={'class':'selectcolor selectpicker show-tick form-control','title':'Service','data-size':'6', 'multiple':''}))
+    staff = forms.ModelMultipleChoiceField(required=False,queryset=StaffMember.objects.none(),label='Select the staff who can perform this service:', widget=forms.SelectMultiple(attrs={'class':'selectcolor selectpicker show-tick form-control','title':'Staff','data-size':'6', 'multiple':''}))
+    formfield = forms.ModelMultipleChoiceField(required=False,queryset=formBuilder.objects.none(),label='Select the form fields that apply to this service:', widget=forms.SelectMultiple(attrs={'class':'selectcolor selectpicker show-tick form-control','title':'Form Fields','data-size':'6', 'multiple':''}))
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         try:
             self.fields['category'].queryset = ServiceCategories.objects.filter(company=self.initial['company'].id).order_by('name')
         except AttributeError:
             pass
+        try:
+            self.fields['staff'].queryset = StaffMember.objects.filter(company=self.initial['company'].id).order_by('first_name')
+        except AttributeError:
+            pass
+        try:
+            self.fields['formfield'].queryset = formBuilder.objects.filter(company=self.initial['company'].id).order_by('label')
+        except AttributeError:
+            pass
+
+
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Fieldset, ButtonHolder, Submit, Button, Div
 from crispy_forms.bootstrap import StrictButton

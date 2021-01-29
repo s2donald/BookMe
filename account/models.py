@@ -59,7 +59,6 @@ class Account(AbstractBaseUser):
     is_active = models.BooleanField(default=True)
     is_superuser = models.BooleanField(default=False)
 
-
     USERNAME_FIELD = 'email'
     ordering = ('email',)
     REQUIRED_FIELDS = ['phone',]

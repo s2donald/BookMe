@@ -19,7 +19,7 @@ from business.forms import AddCompanyForm, AddServiceForm, UpdateServiceForm, Bo
 from django.forms import inlineformset_factory
 from django.views import View
 from slugify import slugify
-from .forms import MainPhoto, AddServiceToCategory
+from .forms import MainPhoto
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from businessadmin.tasks import addedOnCompanyList, requestToBeClient, appointmentCancelled
 from account.tasks import reminderEmail, confirmedEmail, consumerCreatedEmailSent
@@ -551,10 +551,20 @@ class createserviceAPI(View):
                                                 price_type=price_type,duration_hour=duration_hour,duration_minute=duration_minute,checkintime=checkintime,
                                                 padding=padding,paddingtime_hour=paddingtime_hour,paddingtime_minute=paddingtime_minute)
             service.save()
+
             catename = form2.cleaned_data.get('category')
             for cate in catename:
                 sc = ServiceCategories.objects.get(name=cate.name, company=company)
                 sc.services.add(service)
+            staffname = form2.cleaned_data.get('staff')
+            for staff in staffname:
+                staffmem = StaffMember.objects.get(id=staff.id)
+                staffmem.services.add(service)
+
+            formfieldname = form2.cleaned_data.get('formfield')
+            for ff in formfieldname:
+                formfields = formBuilder.objects.get(id=ff.id)
+                formfields.services.add(service)
 
             data['form_is_valid'] = True
             data['view'] = 'Your service has been created!'
@@ -600,10 +610,12 @@ class createserviceAPII(View):
         company = Company.objects.get(user=request.user)
         if int(pk)==0:
             sc = company.service_category.none()
+            allstaff = company.staffmembers.none()
+            allformfields = company.company_forms.none()
         else:
             sc = company.service_category.filter(id=pk)
         form = AddServiceForm()
-        form2 = AddServiceToCategory(initial={'company':company, 'category':sc})
+        form2 = AddServiceToCategory(initial={'company':company, 'category':sc, 'staff':allstaff, 'formfield':allformfields})
         context = {'company':company}
         html2 = render_to_string('bizadmin/companydetail/services/partial_category/category_list.html', context, request=request)
         context = {'service_form':form, 'category_form':form2,'company':company}
@@ -877,7 +889,7 @@ class updateserviceAPI(View):
         dat = {'name': service.name, 'description': service.description, 'price_type':service.price_type, 'price':service.price, 'available':service.available, 'duration_hour':service.duration_hour, 'duration_minute':service.duration_minute, 'checkintime':service.checkintime, 'padding':service.padding, 'paddingtime_hour':service.paddingtime_hour, 'paddingtime_minute':service.paddingtime_minute}
         data=dict()
         form = UpdateServiceForm(initial=dat)
-        form2 = AddServiceToCategory(initial={'company':company, 'category':company.service_category.filter(services=service)})
+        form2 = AddServiceToCategory(initial={'company':company, 'category':company.service_category.filter(services=service), 'staff':company.staffmembers.filter(services=service),'formfield':company.company_forms.filter(services=service)})
         
         context = {'service_form':form, 'category_form':form2,'service':service,'company':company}
         data['html_form'] = render_to_string('bizadmin/companydetail/services/partial/partial_service_update.html', context, request=request)

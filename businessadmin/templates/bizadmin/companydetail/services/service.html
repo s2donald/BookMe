@@ -244,6 +244,9 @@
         {% csrf_token %}
         {{ service_form.name|as_crispy_field }}
         {{ service_form.description|as_crispy_field }}
+        {% if company.service_category.all %}
+            {{ category_form.category|as_crispy_field }}
+        {% endif %}
         <div class="form-row">
             <div class="form-group col mb-0">
                         {{ service_form.price_type|as_crispy_field }}
@@ -263,9 +266,6 @@
                 <a class="licolor" href="#simpleCollapse" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="simpleCollapse">Advanced Options</a>
                 <div class="collapse" id="simpleCollapse">
                     {{ service_form.checkintime|as_crispy_field }}
-                    {% if company.service_category.all %}
-                        {{ category_form.category|as_crispy_field }}
-                    {% endif %}
                     <div id="padd">
                         {{ service_form.padding|as_crispy_field }}
                     </div>

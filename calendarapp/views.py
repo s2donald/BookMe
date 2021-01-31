@@ -246,123 +246,124 @@ def checkRecaptcha(self, request):
     else:
         return False
 
-class createAppointment(View):
-    def post(self, request):
-        data=json.loads(request.body)
-        date = data['date']
-        time = data['time']
-        month = data['month']+1
-        day = data['day']
-        year = data['year']
-        s_id = data['s_id']
-        company = request.viewing_company
-        user = request.user
-        service = get_object_or_404(Services, id=s_id)
-        price = service.price
-        startdate = datetime.datetime(year,month,day)
-        starttime = datetime.datetime.strptime(time,'%I:%M %p').time()
-        start = datetime.datetime.combine(startdate, starttime)
-        end = start + datetime.timedelta(hours=service.duration_hour,minutes=service.duration_minute)
-        start = timezone.localtime(timezone.make_aware(start))
-        end = timezone.localtime(timezone.make_aware(end))
-        if user.is_authenticated:
-            if company.returning:
-                if company.clients.filter(user=user, first_name=user.first_name).exists():
-                    pass
-                #Check if the client object was already created by the company
-                elif company.clients.filter(phone=user.phone, first_name=user.first_name).exists():
-                    pass
-                elif company.clients.filter(email=user.email, first_name=user.first_name).exists():
-                    pass
-                else:
-                    return JsonResponse({'time':time, 's_id':s_id,'start':start,'date':date,'time':time, 'emailerr':True, 'notonclientlist':True})
-            if Bookings.objects.filter(company=company, start=start, end=end, is_cancelled_user=False,is_cancelled_company=False).count()<1:
-                #Check if the user is already a client
-                if company.clients.filter(user=user, first_name=user.first_name).exists():
-                    guest = company.clients.get(user=user, first_name=user.first_name)
-                    guest.last_name = user.last_name
-                    guest.email = user.email
-                    guest.phone = user.phone
-                    guest.save()
+#Maybe delete
+# class createAppointment(View):
+#     def post(self, request):
+#         data=json.loads(request.body)
+#         date = data['date']
+#         time = data['time']
+#         month = data['month']+1
+#         day = data['day']
+#         year = data['year']
+#         s_id = data['s_id']
+#         company = request.viewing_company
+#         user = request.user
+#         service = get_object_or_404(Services, id=s_id)
+#         price = service.price
+#         startdate = datetime.datetime(year,month,day)
+#         starttime = datetime.datetime.strptime(time,'%I:%M %p').time()
+#         start = datetime.datetime.combine(startdate, starttime)
+#         end = start + datetime.timedelta(hours=service.duration_hour,minutes=service.duration_minute)
+#         start = timezone.localtime(timezone.make_aware(start))
+#         end = timezone.localtime(timezone.make_aware(end))
+#         if user.is_authenticated:
+#             if company.returning:
+#                 if company.clients.filter(user=user, first_name=user.first_name).exists():
+#                     pass
+#                 #Check if the client object was already created by the company
+#                 elif company.clients.filter(phone=user.phone, first_name=user.first_name).exists():
+#                     pass
+#                 elif company.clients.filter(email=user.email, first_name=user.first_name).exists():
+#                     pass
+#                 else:
+#                     return JsonResponse({'time':time, 's_id':s_id,'start':start,'date':date,'time':time, 'emailerr':True, 'notonclientlist':True})
+#             if Bookings.objects.filter(company=company, start=start, end=end, is_cancelled_user=False,is_cancelled_company=False).count()<1:
+#                 #Check if the user is already a client
+#                 if company.clients.filter(user=user, first_name=user.first_name).exists():
+#                     guest = company.clients.get(user=user, first_name=user.first_name)
+#                     guest.last_name = user.last_name
+#                     guest.email = user.email
+#                     guest.phone = user.phone
+#                     guest.save()
 
-                #Check if the client object was already created by the company
-                elif company.clients.filter(phone=user.phone, first_name=user.first_name).exists():
-                    guest = company.clients.filter(phone=user.phone, first_name=user.first_name).first()
-                    guest.user = user
-                    guest.email = user.email
-                    guest.last_name = user.last_name
-                    guest.save()
+#                 #Check if the client object was already created by the company
+#                 elif company.clients.filter(phone=user.phone, first_name=user.first_name).exists():
+#                     guest = company.clients.filter(phone=user.phone, first_name=user.first_name).first()
+#                     guest.user = user
+#                     guest.email = user.email
+#                     guest.last_name = user.last_name
+#                     guest.save()
 
-                elif company.clients.filter(email=user.email, first_name=user.first_name).exists():
-                    guest = company.clients.filter(email=user.email, first=user.first_name).first()
-                    guest.user = user
-                    guest.phone = user.phone
-                    guest.last_name = user.last_name
-                    guest.save()
-                else:
-                    guest = Clients.objects.create(company=company, user=user, first_name=user.first_name,last_name=user.last_name,phone=user.phone,email=user.email)
-                    guest.save()
-                    company.clients.add(guest)
-                    company.save()
-                booking = Bookings.objects.create(user=user,guest=guest,service=service, company=company,start=start, end=end, price=price)
-                booking.save()
-                if company.category.name == 'Automotive Services':
-                    make = data['vehmake']
-                    model = data['vehmodel']
-                    vehyear = data['vehyear']
-                    extraInformation.objects.create(car_make=make, car_model=model, car_year=vehyear, booking=booking)
+#                 elif company.clients.filter(email=user.email, first_name=user.first_name).exists():
+#                     guest = company.clients.filter(email=user.email, first=user.first_name).first()
+#                     guest.user = user
+#                     guest.phone = user.phone
+#                     guest.last_name = user.last_name
+#                     guest.save()
+#                 else:
+#                     guest = Clients.objects.create(company=company, user=user, first_name=user.first_name,last_name=user.last_name,phone=user.phone,email=user.email)
+#                     guest.save()
+#                     company.clients.add(guest)
+#                     company.save()
+#                 booking = Bookings.objects.create(user=user,guest=guest,service=service, company=company,start=start, end=end, price=price)
+#                 booking.save()
+#                 if company.category.name == 'Automotive Services':
+#                     make = data['vehmake']
+#                     model = data['vehmodel']
+#                     vehyear = data['vehyear']
+#                     extraInformation.objects.create(car_make=make, car_model=model, car_year=vehyear, booking=booking)
 
-                confirmedEmail.delay(booking.id)
-                confirmedEmailCompany.delay(booking.id)
-                confirmtime = 30
-                if service.checkintime:
-                    confirmtime = service.checkintime + 30
-                startTime = timezone.localtime(start - datetime.timedelta(minutes=confirmtime))
-                reminderEmail.apply_async(args=[booking.id], eta=startTime, task_id=booking.slug)
-                good = True
-            else:
-                good = False
-        else:
-            email = data['email']
-            first_name = data['first_name']
-            last_name = data['last_name']
-            phone = data['phone']
-            if company.returning:
-                return JsonResponse({'time':time, 's_id':s_id,'start':start,'date':date,'time':time, 'emailerr':True, 'notonclientlist':True})
-            if Bookings.objects.filter(company=company, start_gte=start, end_lte=end, is_cancelled_user=False,is_cancelled_company=False).count()<1:
-                if Account.objects.filter(email=email).exists():
-                    return JsonResponse({'time':time, 's_id':s_id,'start':start,'date':date,'time':time, 'good':False, 'emailerr':'The email you have provided has already been used to create an account. Please sign into BookMe then try booking again later.'})
+#                 confirmedEmail.delay(booking.id)
+#                 confirmedEmailCompany.delay(booking.id)
+#                 confirmtime = 30
+#                 if service.checkintime:
+#                     confirmtime = service.checkintime + 30
+#                 startTime = timezone.localtime(start - datetime.timedelta(minutes=confirmtime))
+#                 reminderEmail.apply_async(args=[booking.id], eta=startTime, task_id=booking.slug)
+#                 good = True
+#             else:
+#                 good = False
+#         else:
+#             email = data['email']
+#             first_name = data['first_name']
+#             last_name = data['last_name']
+#             phone = data['phone']
+#             if company.returning:
+#                 return JsonResponse({'time':time, 's_id':s_id,'start':start,'date':date,'time':time, 'emailerr':True, 'notonclientlist':True})
+#             if Bookings.objects.filter(company=company, start_gte=start, end_lte=end, is_cancelled_user=False,is_cancelled_company=False).count()<1:
+#                 if Account.objects.filter(email=email).exists():
+#                     return JsonResponse({'time':time, 's_id':s_id,'start':start,'date':date,'time':time, 'good':False, 'emailerr':'The email you have provided has already been used to create an account. Please sign into BookMe then try booking again later.'})
                 
-                if Clients.objects.filter(email=email, user=None,first_name=first_name, last_name=last_name,phone=phone, company=company).exists():
-                    guest = Clients.objects.get(company=company, email=email, first_name=first_name,last_name=last_name,phone=phone)
-                else:
-                    guest = Clients.objects.create(company=company,first_name=first_name,last_name=last_name,phone=phone,email=email)
-                    guest.save()
-                    company.clients.add(guest)
-                    company.save()
+#                 if Clients.objects.filter(email=email, user=None,first_name=first_name, last_name=last_name,phone=phone, company=company).exists():
+#                     guest = Clients.objects.get(company=company, email=email, first_name=first_name,last_name=last_name,phone=phone)
+#                 else:
+#                     guest = Clients.objects.create(company=company,first_name=first_name,last_name=last_name,phone=phone,email=email)
+#                     guest.save()
+#                     company.clients.add(guest)
+#                     company.save()
 
-                booking = Bookings.objects.create(guest=guest,service=service, company=company,
-                                                start=start, end=end, price=price)
-                booking.save()
-                if company.category.name == 'Automotive Services':
-                    make = data['vehmake']
-                    model = data['vehmodel']
-                    vehyear = data['vehyear']
-                    extraInformation.objects.create(car_make=make, car_model=model, car_year=vehyear, booking=booking)
+#                 booking = Bookings.objects.create(guest=guest,service=service, company=company,
+#                                                 start=start, end=end, price=price)
+#                 booking.save()
+#                 if company.category.name == 'Automotive Services':
+#                     make = data['vehmake']
+#                     model = data['vehmodel']
+#                     vehyear = data['vehyear']
+#                     extraInformation.objects.create(car_make=make, car_model=model, car_year=vehyear, booking=booking)
                     
-                if email:
-                    confirmedEmail.delay(booking.id)
-                    confirmedEmailCompany.delay(booking.id)
-                    confirmtime = 30
-                    if service.checkintime:
-                        confirmtime = service.checkintime + 30
-                    startTime = start - datetime.timedelta(minutes=confirmtime)
-                    reminderEmail.apply_async(args=[booking.id], eta=startTime)
-                good = True
-            else:
-                good = False
+#                 if email:
+#                     confirmedEmail.delay(booking.id)
+#                     confirmedEmailCompany.delay(booking.id)
+#                     confirmtime = 30
+#                     if service.checkintime:
+#                         confirmtime = service.checkintime + 30
+#                     startTime = start - datetime.timedelta(minutes=confirmtime)
+#                     reminderEmail.apply_async(args=[booking.id], eta=startTime)
+#                 good = True
+#             else:
+#                 good = False
 
-        return JsonResponse({'time':time, 's_id':s_id,'start':start,'date':date,'time':time, 'good':good})
+#         return JsonResponse({'time':time, 's_id':s_id,'start':start,'date':date,'time':time, 'good':good})
 
 class LoginView(View):
     def post(self, request):
@@ -600,7 +601,6 @@ class confirmationMessageRender(View):
         date = datetime.date(year, month, day)
         staff = get_object_or_404(StaffMember, id=staff_id)
         service = get_object_or_404(Services, id=s_id)
-        print(fors)
         if not user.is_authenticated:
             # render out the login and user form retrieval
             personal_form = GuestPersonalForm(initial={'phone_code':"CA"})
@@ -627,7 +627,7 @@ class confirmationMessageRender(View):
             else:
                 return JsonResponse({'notonclientlist':True})
 
-        bcount = Bookings.objects.filter(company=company, start__gte=start, end__lte=end, is_cancelled_user=False,is_cancelled_company=False).count()
+        bcount = Bookings.objects.filter(company=company, staffmem=staff, start__gte=start, end__lte=end, is_cancelled_user=False,is_cancelled_company=False).count()
         if bcount<1:
             #Check if the user is already a client
             if company.clients.filter(user=user, first_name=user.first_name).exists():
@@ -777,7 +777,7 @@ class guestFormRender(View):
             if company.returning:
                 html_content = render_to_string('bookingpage/multiplestaff/bookingpage/partials/confirmationside/bookingReturningClient.html', {'company':company,'staff':staff,'service':service, 'date':date, 'time':time, 'month':month, 'year':year, 'day':day }, request)
                 return JsonResponse({'notonclientlist':True, 'html_content':html_content})
-            if Bookings.objects.filter(company=company, start__gte=start, end__lte=end, is_cancelled_user=False,is_cancelled_company=False).count()<1:
+            if Bookings.objects.filter(company=company, staffmem=staff, start__gte=start, end__lte=end, is_cancelled_user=False,is_cancelled_company=False).count()<1:
                 if Account.objects.filter(email=email).exists():
                     return JsonResponse({'time':time, 's_id':s_id,'start':start,'date':date,'time':time, 'good':False, 'emailerr':'The email you have provided has already been used to create an account. Please sign into BookMe then try booking again later.'})
                 
@@ -824,8 +824,6 @@ class guestFormRender(View):
                 html_content = render_to_string('bookingpage/multiplestaff/bookingpage/partials/confirmationside/bookingerror.html', {'company':company,'staff':staff,'service':service, 'date':date, 'time':time, 'month':month, 'year':year, 'day':day }, request)
         return JsonResponse({'form_is_invalid':False, 'html_content': html_content})
          
-
-
 class renderLoginPage(View):
     def get(self, request):
         company = request.viewing_company
@@ -840,8 +838,8 @@ class renderLoginPage(View):
         service = Services.objects.get(pk=s_id)
         account_form = AccountAuthenticationForm()
         html_content = render_to_string('bookingpage/multiplestaff/bookingpage/partials/login/bookmeuser.html', {'account_form':account_form, 'company':company,'staff':staff,'service':service, 'date':date, 'time':time, 'month':month, 'year':year, 'day':day }, request)
-        
         return JsonResponse({'html_content': html_content})
+
     def post(self, request):
         company = request.viewing_company
         s_id = int(request.POST.get('service_id'))
@@ -890,7 +888,7 @@ class renderLoginPage(View):
             else:
                 return JsonResponse({'notonclientlist':True})
 
-        bcount = Bookings.objects.filter(company=company, start__gte=start, end__lte=end, is_cancelled_user=False,is_cancelled_company=False).count()
+        bcount = Bookings.objects.filter(company=company, staffmem=staff, start__gte=start, end__lte=end, is_cancelled_user=False,is_cancelled_company=False).count()
         if bcount<1:
             #Check if the user is already a client
             if company.clients.filter(user=user, first_name=user.first_name).exists():
@@ -935,9 +933,7 @@ class renderLoginPage(View):
                 fieldname = request.POST.get(str(newformfield.id))
                 bookinform = bookingForm.objects.create(booking=booking, label=newformfield.label, text=fieldname.replace('%20',' '))
                 bookinform.save()
-
             # saveformhere
-
             confirmedEmail.delay(booking.id)
             confirmedEmailCompany.delay(booking.id)
             confirmtime = 30

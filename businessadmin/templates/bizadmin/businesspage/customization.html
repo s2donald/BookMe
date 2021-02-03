@@ -209,6 +209,12 @@
                             type: 'success',
                             delay: 50,
                         });
+                        $('.deleteformfield').popover({
+                            trigger: 'focus',
+                            html: true,
+                            sanitize: false,
+                            content: 'Are you sure you want to delete? <button class="btn btn-sm btn-danger removeformfield">Delete</button><button class="btn btn-sm">Cancel</button>',
+                        });
                     }
                 }
             })
@@ -278,6 +284,12 @@
                         var el = document.querySelector('#formfieldtable')
                         el.innerHTML = data.html_content
                         $('.addformfield')[0].reset();
+                        $('.deleteformfield').popover({
+                            trigger: 'focus',
+                            html: true,
+                            sanitize: false,
+                            content: 'Are you sure you want to delete? <button class="btn btn-sm btn-danger removeformfield">Delete</button><button class="btn btn-sm">Cancel</button>',
+                        });
                     }
                 }
             })

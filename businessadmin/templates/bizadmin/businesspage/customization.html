@@ -283,6 +283,15 @@
                         $('#modal-addformfield').modal('hide')
                         var el = document.querySelector('#formfieldtable')
                         el.innerHTML = data.html_content
+                        document.getElementById('id_label').value = ''
+                        $.notify({
+                            // options
+                            message: 'Form Field Added'
+                        },{
+                            // settings
+                            type: 'success',
+                            delay: 50,
+                        });
                         $('.deleteformfield').popover({
                             trigger: 'focus',
                             html: true,

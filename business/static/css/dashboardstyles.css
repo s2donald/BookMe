@@ -1687,12 +1687,12 @@ textarea.form-control {
   border-color: #00f2c3;
   box-shadow: 0 0 0 0 rgba(0, 242, 195, 0.25); }
 
-.invalid-feedback {
+.invalid-feedback, #id_addcompany-description-error, #id_addcompany-address-error, #id_addcompany-state {
   display: none;
   width: 100%;
   margin-top: 0.25rem;
   font-size: 80%;
-  color: #ff8d72; }
+  color: #ff8d72 !important; }
 
 .invalid-tooltip {
   position: absolute;

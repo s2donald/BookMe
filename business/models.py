@@ -193,7 +193,7 @@ class Company(models.Model):
     phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$', message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
     phone = models.CharField("Business Phone Number",validators=[phone_regex], max_length=17)
     postal_regex = RegexValidator(regex=r"^[ABCEGHJKLMNPRSTVXYabcdefghijklmnopqrstuvwxyz]{1}\d{1}[A-Z]{1} *\d{1}[A-Z]{1}\d{1}$", message="A valid postal code/ZIP Code must be entered, letters must be in all caps")
-    postal = models.CharField(max_length=10, validators=[postal_regex])
+    postal = models.CharField(max_length=10)
     state = models.CharField(max_length=2)
     city = models.CharField(max_length=30)
     slug = models.SlugField(max_length=200, db_index=True, blank=True, unique=True)
@@ -255,9 +255,13 @@ def location_update(sender, instance, *args, **kwargs):
         g = geocoder.ipinfo('me')
     else:
         g = geocoder.google(address + "," + instance.city,key="AIzaSyBaZM_O3d1-xDrecS_fbcbvoT5qDmLmje0")
-    lat = g.latlng[0]
-    lng = g.latlng[1]
-    instance.location = "POINT(" + str(lng) + " " + str(lat) +")"
+    try:
+        lat = g.latlng[0]
+        lng = g.latlng[1]
+        instance.location = "POINT(" + str(lng) + " " + str(lat) +")"
+    except TypeError:
+        raise ValueError("Must have a valid address")
+    
     
 pre_save.connect(slug_generator, sender=Company)
 pre_save.connect(location_update, sender=Company)

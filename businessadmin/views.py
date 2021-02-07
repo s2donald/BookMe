@@ -174,7 +174,17 @@ def completeViews(request):
             if subdomain != company.slug:
                 if not Company.objects.filter(slug=subdomain).exists():
                     company.slug = slugify(subdomain)
-            company.save()
+            try:
+                company.save()
+            except ValueError:
+                biz_form.add_error('address','Check your address again. Could not find the location.')
+                biz_form.add_error('postal','Check your postal code')
+                biz_form.add_error('city','Check the city')
+                subcategories = SubCategory.objects.all()
+                services = Services.objects.filter(business=company)
+                return render(request, 'bizadmin/dashboard/profile/addcompany.html', {'sundayform':sundayform,'saturdayform':saturdayform,'mondayform':mondayform,'tuesdayform':tuesdayform,'wednesdayform':wednesdayform,'thursdayform':thursdayform,'fridayform':fridayform,
+                                                                                'booking_form':booking_form,'biz_form':biz_form, 'service_form':service_form,'subcategories':subcategories,'company':company,
+                                                                                'services':services})
             user.on_board = True
             user.save()
             objs = [

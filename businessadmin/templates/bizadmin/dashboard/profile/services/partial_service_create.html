@@ -12,6 +12,9 @@
         </div>
         <div class="modal-body">
             {{ service_form.name|as_crispy_field }}
+            {% if company.staffmembers.all %}
+                {{ category_form.staff|as_crispy_field }}
+            {% endif %}
             {{ service_form.description|as_crispy_field }}
         <div class="form-row">
             <div class="form-group col mb-0">

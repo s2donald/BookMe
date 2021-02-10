@@ -18,8 +18,10 @@ import json, geocoder
 from django.views import View
 from django.contrib.gis.geos import GEOSGeometry, Point
 from django.contrib.gis.db.models.functions import Distance, GeometryDistance
+
 from django.contrib.postgres.search import TrigramSimilarity
 from businessadmin.tasks import appointmentCancelledCompany, sendMassEmail
+# /ipware 3.0.2
 def privacyViews(request):
     category = None
     categories = Category.objects.all()
@@ -38,6 +40,7 @@ def tosViews(request):
     user = request.user
     return render(request, 'legal/termsofservice.html', {'user':user,'search':search, 'category':category, 'categories':categories, 'subcategories':subcategories,'form':form})
 
+
 def allsearch(request):
     category = None
     categories = Category.objects.all()
@@ -51,6 +54,7 @@ def allsearch(request):
     loc = None
     lat = None
     lon = None
+    
     if 'Search' in request.GET:
         form = SearchForm(request.GET)
         if 'Location' in request.GET:

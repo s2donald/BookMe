@@ -8,9 +8,12 @@ urlpatterns = [
     # re_path(r'^createbook/$', views.createAppointment.as_view(), name='creatingBooking'),
     # re_path(r'^confirmbook/$', views.confbook.as_view(), name='confbook'),
     re_path(r'^confirmationbookingmessage/$', views.confirmationMessageRender.as_view(), name='confirmationbooking'),
+    re_path(r'^guestbookingformload/$', views.guestNewFormRender.as_view(), name='guestbookingformload'),
     re_path(r'^bookingtime/$', views.bookingTimes.as_view(), name='bookingtimeretrieval'),
     re_path(r'^renderguestformsub/$', views.guestFormRender.as_view(), name='guestformrender'),
     re_path(r'^renderloginpage/$', views.renderLoginPage.as_view(), name='renderloginpage'),
+    re_path(r'^loadsignupform/$', views.loadSignUpForm.as_view(), name='loadsignupform'),
+    re_path(r'^loadloginformreq/$', views.loadLoginFormRequest.as_view(), name='loadloginformreq'),
     re_path(r'^facebookLoginBooked/$', views.facebookLogin.as_view(), name='facebookLogin'),
     re_path(r'^requestclient/$', views.requestSpot.as_view(), name='requestSpotAsClient'),
     re_path(r'^checkIfClient/$', views.checkIfClientView.as_view(), name='checkIfClient'),
@@ -20,8 +23,8 @@ urlpatterns = [
     re_path(r'^renderbookingtimes/$', views.bookingTimesView.as_view(), name='getbookingtime'),
     re_path(r'^bookingbutton/$', views.bookingCalendarRender.as_view(), name='getbookingbuttons'),
     path('social-auth/',include('social_django.urls',namespace='social'), name='fb'),
-    re_path(r'^service(?P<pk>\d+)/$', views.bookingServiceView, name='bookingserviceurls'),
-    path('<slug:slug>/',views.bookingStaffUrl,name='getstaffurl'),
+    # re_path(r'^service(?P<pk>\d+)/$', views.bookingServiceView, name='bookingserviceurls'),
+    # path('<slug:slug>/',views.bookingStaffUrl,name='getstaffurl'),
     re_path(r'^$', views.bookingurlupdated, name='bookingurls'),
 ]
 

@@ -220,6 +220,7 @@ class Company(models.Model):
     darkmode = models.BooleanField(default=False)
     tz = models.CharField(choices=ALL_TIMEZONES, max_length=64, default="America/Toronto")
     showAddress = models.BooleanField(default=True)
+    
 
     class Meta:
         ordering = ('-updated',)

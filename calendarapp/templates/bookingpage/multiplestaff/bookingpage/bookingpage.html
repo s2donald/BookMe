@@ -89,13 +89,13 @@ $(document).ready(
                                 {% endfor %}
                                 <div class="card-header p-2 hover-animate" role="tab" id="headingAll">
                                     <p class="mb-0 text-sm text-left align-items-center justify-content-center">
-                                    <a data-toggle="collapse" href="#collapseAll" aria-expanded="false" aria-controls="collapseAll">
+                                    <a data-toggle="collapse" href="#collapseAll" aria-expanded="true" aria-controls="collapseAll">
                                         All Services
                                         <i class="fas fa-chevron-down text-line"></i>
                                     </a>
                                     </p>
                                 </div>
-                                <div id="collapseAll" class="collapse" role="tabpanel" aria-labelledby="headingAll" data-parent="#accordion">
+                                <div id="collapseAll" class="collapse show" role="tabpanel" aria-labelledby="headingAll" data-parent="#accordion">
                                     <div class="card-body text-left">
                                     {% for s in company.services_offered.all %}
                                         {% with hour=s.duration_hour min=s.duration_minute type=s.price_type %}                          
@@ -476,34 +476,81 @@ $(document).ready(
             e.preventDefault()
             var form = $('#RequestBookMeAdd')
             var $this = $('#addrequestclientlist')
-            var service_id =  $this.attr('data-id')
-            object = [
-                { name: "service_id", value: service_id },
-            ]
             $.ajax({
                 type:'POST',
                 url: "{% host_url 'requestSpotAsClient' host 'bookingurl' slug=company.slug %}",
-                data: form.serialize() + '&' + $.param(object),
+                data: form.serialize(),
                 success:function(data){
                     $("#getCode").html(data.html_content);   
                 }
             });
         });
 
+        $(document).on('click', '#createacctreturning', function(e){
+            $.ajax({
+                type:'get',
+                url: "{% host_url 'loadsignupform' host 'bookingurl' slug=company.slug %}",
+                success:function(data){
+                    $("#getCode").html(data.html_content);   
+                }
+            });
+        });
+
+        $(document).on('click', '#gobacklogin', function(e){
+            $.ajax({
+                type:'get',
+                url: "{% host_url 'loadloginformreq' host 'bookingurl' slug=company.slug %}",
+                success:function(data){
+                    $("#getCode").html(data.html_content);   
+                }
+            });
+        });
+
+        $(document).on('submit', '#createBookMeAccountReturning', function(e){
+            e.preventDefault();
+            $('#bm').show()
+            animation.playSegments([15,40], true);
+            var form = $('#createBookMeAccountReturning')
+            $.ajax({
+                type:'post',
+                url: "{% host_url 'loadsignupform' host 'bookingurl' slug=company.slug %}",
+                data: form.serialize(),
+                success:function(data){
+                    animation.stop()
+                    $('#bm').hide()
+                    if (data.error == 'notanemail' ){
+                        var el = document.querySelector('.errormsg');
+                        el.innerHTML = 'Please enter a proper email.'
+                    }
+                    else if (data.error == 'passnotsame' ){
+                        var el = document.querySelector('.errormsg');
+                        el.innerHTML = 'Passwords do not match please try again.'
+
+                    }
+                    else if (data.error == 'taken' ){
+                        var el = document.querySelector('.errormsg');
+                        el.innerHTML = 'Email already in use. Try another email address.'
+                    }
+                    else if (data.error){
+                        var el = document.querySelector('.errormsg');
+                        el.innerHTML = 'Please enter a stronger password. Passwords must be atleast 8 characters long that contains atleast 1 digit, a symbol, uppercase and lower case letters.'
+                    }
+                    else {
+                        $("#getCode").html(data.html_content);
+                    }
+                }
+            });
+        })
+
         $(document).on('submit', '#loginBookMeformReturning',function(e){
             e.preventDefault();
             $('#bm').show()
             animation.playSegments([15,40], true);
             var form = $('#loginBookMeformReturning')
-            var $this = $('#loginbookmereturning');
-            var service_id =  $this.attr('data-id')
-            object = [
-                { name: "service_id", value: service_id },
-            ]
             $.ajax({
                 type:'POST',
                 url: "{% host_url 'loginbookmereturning' host 'bookingurl' slug=company.slug %}",
-                data: form.serialize() + '&' + $.param(object),
+                data: form.serialize(),
                 success:function(data){
                     setTimeout(function(){ 
                         animation.stop()
@@ -561,13 +608,12 @@ $(document).ready(
 
         $(document).on('click', '.hovermeclick',function(){
             var $this = $(this)
-            var service_id =  $this.attr('data-service')
             var staff_id =  $this.attr('data-staff')
             $.ajax({
                 type:'GET',
                 url: "{% host_url 'getbookingtime' host 'bookingurl' slug=company.slug %}",
                 data: {
-                    'service_id': service_id, 'staff_id':staff_id
+                    'staff_id':staff_id
                 },
                 success:function(data){
                     var el = document.querySelector('#contentsarg');
@@ -586,7 +632,7 @@ $(document).ready(
                         minDate: 'today',
                         position: "center",
                         onChange: function(selectedDates, dateStr, instance) {
-                            selectedDateFunction(selectedDates[0], service_id, staff_id)
+                            selectedDateFunction(selectedDates[0], data.service_id, staff_id)
                         },
                     });
                 }
@@ -598,8 +644,6 @@ $(document).ready(
             var $this = $(this)
             $('#bm').show()
             animation.playSegments([15,40], true);
-            var service_id =  $this.attr('data-service')
-            var staff_id =  $this.attr('data-staff')
             var month = $this.attr('data-month')
             var year = $this.attr('data-year')
             var day = $this.attr('data-day')
@@ -608,7 +652,7 @@ $(document).ready(
                 type:'GET',
                 url: "{% host_url 'confirmationbooking' host 'bookingurl' slug=company.slug %}",
                 data: {
-                    'service_id': service_id, 'staff_id':staff_id, 'month':month, 'year':year, 'day':day, 'time':time
+                    'month':month, 'year':year, 'day':day, 'time':time
                 },
                 success:function(data){
                     setTimeout(function(){ 
@@ -629,6 +673,33 @@ $(document).ready(
             });
         });
 
+        $(document).on('click', '.guestbtn', function(){
+            $('#sd').show()
+            sdanimation.playSegments([15,40], true);
+            $.ajax({
+                type:'GET',
+                url: "{% host_url 'guestbookingformload' host 'bookingurl' slug=company.slug %}",
+                success:function(data){
+                    var el = document.querySelector('#wholepage');
+                    el.innerHTML = data.html_content
+                    sdanimation.stop()
+                    $('#sd').hide()
+                    if (data.notauthenticated){
+
+                        cleave = new Cleave('#id_phone', {
+                            delimiters: ['(', ') ', '-'],
+                            blocks: [0, 3, 3, 4],
+                            numericOnly: true
+                        });
+                        $('#isocode').selectpicker({
+                            iconBase: "fas",
+                            tickIcon: "fa-check"
+                        });
+                    }
+                }
+            });
+        })
+
         var cleave = null
         var someform;
         $(document).on('submit', '#fconfirmationform',function(e){
@@ -638,12 +709,6 @@ $(document).ready(
             var $this = $('.confbtn')
             var form = $(this)
             someform=$('#fconfirmationform').serializeArray()
-            var service_id =  $this.attr('data-service')
-            var staff_id =  $this.attr('data-staff')
-            var month = $this.attr('data-month')
-            var year = $this.attr('data-year')
-            var day = $this.attr('data-day')
-            var time = $this.attr('data-time')
             var make = null
             var vehyear = null
             var model = null
@@ -668,12 +733,6 @@ $(document).ready(
             createCookie('trim',trim);
 
             object = [
-                { name: "staff_id", value: staff_id },
-                { name: "service_id", value: service_id },
-                { name: "month", value: month },
-                { name: "day", value: day },
-                { name: "year", value: year },
-                { name: "time", value: time },
                 { name: "vehyear", value: readCookie('vehyear')},
                 { name: "trim", value: readCookie('trim')},
                 { name: "model", value: readCookie('model')},
@@ -715,32 +774,6 @@ $(document).ready(
             var form = $('#guestform')
             var cont = $('.cont')
             var region = cleave.phoneRegionCode
-            var $this = $('#submitform')
-            var service_id =  $this.attr('data-service')
-            var staff_id =  $this.attr('data-staff')
-            var month = $this.attr('data-month')
-            var year = $this.attr('data-year')
-            var day = $this.attr('data-day')
-            var time = $this.attr('data-time')
-            object = [
-                { name: "staff_id", value: staff_id },
-                { name: "service_id", value: service_id },
-                { name: "month", value: month },
-                { name: "day", value: day },
-                { name: "year", value: year },
-                { name: "time", value: time },
-                { name: "vehyear", value: readCookie('vehyear')},
-                { name: "trim", value: readCookie('trim')},
-                { name: "model", value: readCookie('model')},
-                { name: "make", value: readCookie('make')},
-            ]
-            $.each(someform, function(i, field) {
-                object.push({
-                    name: field.name,
-                    value: readCookie(field.name)
-                })
-            });
-
             $('#id_phone').val(cleave.getRawValue());
             grecaptcha.ready(function() {
                 grecaptcha.execute('6LeimeAZAAAAAE119rtvZivK4DW9csX6QhEo5Yla', {action: 'submit'}).then(function(token) {
@@ -748,7 +781,7 @@ $(document).ready(
                     $.ajax({
                         type:'POST',
                         url: "{% host_url 'guestformrender' host 'bookingurl' slug=company.slug %}",
-                        data: form.serialize() + '&' + $.param(object),
+                        data: form.serialize(),
                         success:function(data){
                             if (data.form_is_invalid)  {
                                 $(form).replaceWith(data['form_html']);
@@ -775,7 +808,6 @@ $(document).ready(
 
         $(document).on('click', '#loginGibeleForm',function(){
             var $this = $(this)
-            console.log(someform)
             var service_id =  $this.attr('data-service')
             var staff_id =  $this.attr('data-staff')
             var month = $this.attr('data-month')
@@ -807,29 +839,11 @@ $(document).ready(
             var year = $this.attr('data-year')
             var day = $this.attr('data-day')
             var time = $this.attr('data-time')
-            object = [
-                { name: "staff_id", value: staff_id },
-                { name: "service_id", value: service_id },
-                { name: "month", value: month },
-                { name: "day", value: day },
-                { name: "year", value: year },
-                { name: "time", value: time },
-                { name: "vehyear", value: readCookie('vehyear')},
-                { name: "trim", value: readCookie('trim')},
-                { name: "model", value: readCookie('model')},
-                { name: "make", value: readCookie('make')},
-            ]
-            $.each(someform, function(i, field) {
-                object.push({
-                    name: field.name,
-                    value: readCookie(field.name)
-                })
-            });
             
             $.ajax({
                 type:'POST',
                 url: "{% host_url 'renderloginpage' host 'bookingurl' slug=company.slug %}",
-                data: form.serialize() + '&' + $.param(object),
+                data: form.serialize(),
                 success:function(data){
 
                     if (data.notvalid){

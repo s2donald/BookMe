@@ -110,13 +110,16 @@
             setTimeout(typeWriter, 1000)
             $('#fullSearch').submit(function(e){
                 e.preventDefault();
+                console.log('he')
                 if (navigator.geolocation) {
+                    console.log('eh')
                     navigator.geolocation.getCurrentPosition(
                     function showPosition(position) {
+                        console.log('he')
                         document.getElementById("id_lat").value = position.coords.latitude
                         document.getElementById("id_lon").value = position.coords.longitude
                         $('#fullSearch').unbind('submit').submit()
-                    });
+                    }, error);
                 }
             });
             $('.categoryselect').click(function(e){

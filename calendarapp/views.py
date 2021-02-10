@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from account.models import Account
+from account.forms import ConsumerRegistrationForm
 from business.models import Company, Services, OpeningHours, Clients, CompanyReq, Gallary, Category, SubCategory, Amenities
 from businessadmin.models import StaffWorkingHours, StaffMember, Breaks
 from consumer.models import Bookings, extraInformation, Reviews
@@ -14,6 +15,8 @@ import datetime, pytz
 from django.utils import timezone
 from account.forms import UpdatePersonalForm, AccountAuthenticationForm, AccountAuthenticationFormId,GuestPersonalForm
 from django.contrib.auth import authenticate, login
+from django.core.validators import validate_email
+from django import forms
 from account.tasks import reminderEmail, confirmedEmail, consumerCreatedEmailSent, confirmedEmailCompany
 from businessadmin.tasks import requestToBeClient
 from business.forms import VehicleMakeModelForm, AddressForm
@@ -214,6 +217,66 @@ class confbook(View):
     def post(self, request):
         data=json.loads(request.body)
         return JsonResponse({'sdata':'It Works'})
+
+class loadSignUpForm(View):
+    def post(self, request):
+        company = request.viewing_company
+        print(request.POST)
+        first_name = request.POST.get('first_name')
+        last_name = request.POST.get('last_name')
+        email = request.POST.get('email')
+        password = request.POST.get('password1')
+        pass2 = request.POST.get('password2')
+        if not (password == pass2):
+            return JsonResponse({'error':'passnotsame'})
+        # calculating the length
+        length_error = len(password) < 8
+        # searching for digits
+        digit_error = re.search(r"\d", password) is None
+        # searching for uppercase
+        uppercase_error = re.search(r"[A-Z]", password) is None
+        # searching for lowercase
+        lowercase_error = re.search(r"[a-z]", password) is None
+        # searching for symbols
+        symbol_error = re.search(r"[ !#?<>:$%&'()*+,-./[\\\]^_`{|}~"+r'"]', password) is None
+        # overall result
+        password_ok = not ( length_error or digit_error or uppercase_error or lowercase_error or symbol_error )
+        try:
+            validate_email(email)
+        except forms.ValidationError:
+            return JsonResponse({'error':'notanemail'})
+        
+        if Account.objects.filter(email=email).exists():
+            return JsonResponse({'error':'taken'})
+        elif not password_ok:
+            return JsonResponse({'error':'notgoodpass'})
+        else:
+            acct = Account.objects.create_user(email=email,password=password)
+            acct.first_name = first_name
+            acct.last_name= last_name
+            acct.is_consumer=True
+            acct.save()
+            consumerCreatedEmailSent.delay(acct.id)
+            account = authenticate(email=email, password=password)
+            service_id = request.session.get('service_id')
+            login(request, account)
+            request.session['service_id'] = service_id
+            html = render_to_string('bookingpage/multiplestaff/bookingpage/partials/confirmationside/bookingRequest.html', {'company':company}, request)
+            return JsonResponse({'html_content':html, 'loggedinuser':True})
+    def get(self, request):
+        company = request.viewing_company
+        reg_form = ConsumerRegistrationForm()
+        html = render_to_string('bookingpage/multiplestaff/bookingpage/partials/login/returningguest.html', {'company':company, 'reg_form':reg_form}, request)
+        return JsonResponse({'html_content':html, 'loggedinuser':True})
+
+class loadLoginFormRequest(View):
+    def get(self, request):
+        company = request.viewing_company
+        account_form = AccountAuthenticationForm()
+        reg_form = ConsumerRegistrationForm()
+        html = render_to_string('bookingpage/multiplestaff/bookingpage/partials/login/returnClient.html', {'company':company, 'account_form':account_form, 'reg_form':reg_form}, request)
+        return JsonResponse({'html_content':html, 'loggedinuser':True})
+
 
 class phoneValidationView(View):
     def post(self, request):
@@ -431,8 +494,7 @@ class checkIfClientView(View):
 
         return JsonResponse({'data':'notclient'})
 
-from django.core.validators import validate_email
-from django import forms
+
 class createAccountView(View):
     def post(self, request):
         email = request.POST.get('email')
@@ -490,6 +552,7 @@ class staffofferingservice(View):
     def get(self, request):
         company = request.viewing_company
         service_id = request.GET.get('service_id')
+        request.session['service_id'] = service_id
         service = Services.objects.get(pk=service_id)
         staff = company.staffmembers.filter(services=service)
         user=request.user
@@ -516,16 +579,17 @@ class staffofferingservice(View):
 
 class bookingTimesView(View):
     def get(self, request):
+        service_id = request.session.get('service_id')
         company = request.viewing_company
-        service_id = request.GET.get('service_id')
         staff_id = request.GET.get('staff_id')
+        request.session['staff_id'] = staff_id
         service = Services.objects.get(pk=service_id)
         staff = company.staffmembers.filter(services=service)
         html = render_to_string('bookingpage/multiplestaff/bookingpage/partials/bookingCalendar.html', {'company':company,'staff':staff, 'service':service}, request)
         staffmem = StaffMember.objects.get(pk=staff_id)
         hours = render_to_string('bookingpage/multiplestaff/bookingpage/partials/staff/staff_hours.html', {'staff':staffmem}, request)
         info = render_to_string('bookingpage/multiplestaff/bookingpage/partials/staff/staff_information.html', {'staff':staffmem}, request)
-        return JsonResponse({'html_content':html, 'hours_content':hours, 'info_content':info})
+        return JsonResponse({'html_content':html, 'hours_content':hours, 'info_content':info, 'service_id':service_id})
 
 
 class bookingCalendarRender(View):
@@ -569,13 +633,20 @@ class bookingCalendarRender(View):
 class confirmationMessageRender(View):
     def get(self, request):
         company = request.viewing_company
-        s_id = int(request.GET.get('service_id'))
-        staff_id = int(request.GET.get('staff_id'))
+        s_id = request.session.get('service_id')
+        staff_id = request.session.get('staff_id')
+        # s_id = int(request.GET.get('service_id'))
+        # staff_id = int(request.GET.get('staff_id'))
         time = request.GET.get('time')
         month = int(request.GET.get('month'))
         year = int(request.GET.get('year'))
         day = int(request.GET.get('day'))
-        date = datetime.date(year, month, day)
+        request.session['time'] = time
+        request.session['month'] = month
+        request.session['year'] = year
+        request.session['day'] = day
+        date = datetime.datetime(year, month, day)
+
         staff = StaffMember.objects.get(pk=staff_id)
         service = Services.objects.get(pk=s_id)
         html_content = render_to_string('bookingpage/multiplestaff/bookingpage/partials/confirmation.html', {'company':company,'staff':staff,'service':service, 'date':date, 'time':time, 'month':month, 'year':year, 'day':day }, request)
@@ -586,21 +657,34 @@ class confirmationMessageRender(View):
     def post(self, request):
         user = request.user
         company = request.viewing_company
-        staff_id = int(request.POST.get('staff_id'))
-        s_id = int(request.POST.get('service_id'))
-        time = request.POST.get('time')
-        month = int(request.POST.get('month'))
-        year = int(request.POST.get('year'))
-        day = int(request.POST.get('day'))
-        make = request.POST.get('make')
-        model = request.POST.get('model')
-        vehyear = request.POST.get('vehyear')
-        trim = request.POST.get('trim')
-        fors = request.POST.get('form')
+        s_id = request.session.get('service_id')
+        staff_id = request.session.get('staff_id')
+        month = request.session.get('month')
+        year = request.session.get('year')
+        day = request.session.get('day')
+        time = request.session.get('time')
+        if company.category.name == 'Automotive Services':
+            make = request.POST.get('make')
+            model = request.POST.get('model')
+            vehyear = request.POST.get('vehyear')
+            trim = request.POST.get('trim')
+            request.session['vehmake'] = make.replace('%20',' ').replace('%28','(').replace('%29',')')
+            request.session['vehmodel'] = model.replace('%20',' ').replace('%28','(').replace('%29',')')
+            request.session['vehyear'] = vehyear.replace('%20',' ').replace('%28','(').replace('%29',')')
+            request.session['vehtrim'] = trim.replace('%20',' ').replace('%28','(').replace('%29',')')
         
+
+        starttime = datetime.datetime.strptime(time,'%I:%M %p').time()
+        startdate = datetime.datetime(year, month, day)
         date = datetime.date(year, month, day)
         staff = get_object_or_404(StaffMember, id=staff_id)
         service = get_object_or_404(Services, id=s_id)
+        bookinglist = []
+        for newformfield in service.service_forms.all():
+            fieldname = request.POST.get(str(newformfield.id)).replace('%20',' ').replace('%28','(').replace('%29',')')
+            label = newformfield.label
+            bookinglist.append([fieldname, label])
+        request.session['formlist'] = bookinglist
         if not user.is_authenticated:
             # render out the login and user form retrieval
             personal_form = GuestPersonalForm(initial={'phone_code':"CA"})
@@ -608,8 +692,7 @@ class confirmationMessageRender(View):
             return JsonResponse({'html_content':html_content, 'notauthenticated':True})
         
         price = service.price
-        startdate = datetime.datetime(year,month,day)
-        starttime = datetime.datetime.strptime(time,'%I:%M %p').time()
+        
         start = datetime.datetime.combine(startdate, starttime)
         end = start + datetime.timedelta(hours=service.duration_hour,minutes=service.duration_minute)
         start = timezone.localtime(timezone.make_aware(start))
@@ -669,9 +752,8 @@ class confirmationMessageRender(View):
                 bookinform3.save()
                 bookinform4.save()
             
-            for newformfield in service.service_forms.all():
-                fieldname = request.POST.get(str(newformfield.id))
-                bookinform = bookingForm.objects.create(booking=booking, label=newformfield.label, text=fieldname.replace('%20',' '))
+            for newformfield in bookinglist:
+                bookinform = bookingForm.objects.create(booking=booking, label=newformfield[1], text=newformfield[0])
                 bookinform.save()
             # saveformhere
 
@@ -738,6 +820,22 @@ def guestformlayout(staff_id, s_id, time, month, year, day, date):
 
             )
 
+class guestNewFormRender(View):
+    def get(self, request):
+        company=request.viewing_company
+        s_id = request.session.get('service_id')
+        staff_id = request.session.get('staff_id')
+        month = request.session.get('month')
+        year = request.session.get('year')
+        day = request.session.get('day')
+        time = request.session.get('time')
+        staff = get_object_or_404(StaffMember, id=staff_id)
+        service = get_object_or_404(Services, id=s_id)
+        date = datetime.date(year, month, day)
+        personal_form = GuestPersonalForm(initial={'phone_code':"CA"})
+        html_content = render_to_string('bookingpage/multiplestaff/bookingpage/partials/login/guest.html', {'company':company,'staff':staff,'service':service, 'date':date, 'time':time, 'month':month, 'year':year, 'day':day, 'personal_form':personal_form }, request)
+        return JsonResponse({'html_content':html_content, 'notauthenticated':True})
+
 class guestFormRender(View):
     def post(self, request):
         company=request.viewing_company
@@ -746,16 +844,29 @@ class guestFormRender(View):
         email = request.POST.get('email')
         phone = request.POST.get('phone')
         personal_form = GuestPersonalForm(request.POST)
-        staff_id = int(request.POST.get('staff_id'))
-        s_id = int(request.POST.get('service_id'))
-        time = request.POST.get('time')
-        month = int(request.POST.get('month'))
-        year = int(request.POST.get('year'))
-        day = int(request.POST.get('day'))
-        make = request.POST.get('make')
-        model = request.POST.get('model')
-        vehyear = request.POST.get('vehyear')
-        trim = request.POST.get('trim')
+
+        s_id = request.session.get('service_id')
+        staff_id = request.session.get('staff_id')
+        month = request.session.get('month')
+        year = request.session.get('year')
+        day = request.session.get('day')
+        time = request.session.get('time')
+        make = request.session.get('vehmake')
+        model = request.session.get('vehmodel')
+        vehyear = request.session.get('vehyear')
+        trim = request.session.get('vehtrim')
+        bookinglist = request.session.get('formlist')
+
+        # staff_id = int(request.POST.get('staff_id'))
+        # s_id = int(request.POST.get('service_id'))
+        # time = request.POST.get('time')
+        # month = int(request.POST.get('month'))
+        # year = int(request.POST.get('year'))
+        # day = int(request.POST.get('day'))
+        # make = request.POST.get('make')
+        # model = request.POST.get('model')
+        # vehyear = request.POST.get('vehyear')
+        # trim = request.POST.get('trim')
         date = datetime.date(year, month, day)
         service = Services.objects.get(pk=s_id)
         staff=StaffMember.objects.get(company=company, pk=staff_id)
@@ -802,10 +913,10 @@ class guestFormRender(View):
                     bookinform3.save()
                     bookinform4.save()
                 
-                for newformfield in service.service_forms.all():
-                    fieldname = request.POST.get(str(newformfield.id))
-                    bookinform = bookingForm.objects.create(booking=booking, label=newformfield.label, text=fieldname.replace('%20',' '))
+                for newformfield in bookinglist:
+                    bookinform = bookingForm.objects.create(booking=booking, label=newformfield[1], text=newformfield[0])
                     bookinform.save()
+                
                 # if company.category.name == 'Automotive Services':
                 #     make = data['vehmake']
                 #     model = data['vehmodel']
@@ -827,34 +938,39 @@ class guestFormRender(View):
 class renderLoginPage(View):
     def get(self, request):
         company = request.viewing_company
-        s_id = int(request.GET.get('service_id'))
-        staff_id = int(request.GET.get('staff_id'))
-        time = request.GET.get('time')
-        month = int(request.GET.get('month'))
-        year = int(request.GET.get('year'))
-        day = int(request.GET.get('day'))
-        date = datetime.date(year, month, day)
-        staff = StaffMember.objects.get(pk=staff_id)
-        service = Services.objects.get(pk=s_id)
         account_form = AccountAuthenticationForm()
-        html_content = render_to_string('bookingpage/multiplestaff/bookingpage/partials/login/bookmeuser.html', {'account_form':account_form, 'company':company,'staff':staff,'service':service, 'date':date, 'time':time, 'month':month, 'year':year, 'day':day }, request)
+        html_content = render_to_string('bookingpage/multiplestaff/bookingpage/partials/login/bookmeuser.html', {'account_form':account_form, 'company':company }, request)
         return JsonResponse({'html_content': html_content})
 
     def post(self, request):
         company = request.viewing_company
-        s_id = int(request.POST.get('service_id'))
-        staff_id = int(request.POST.get('staff_id'))
-        time = request.POST.get('time')
-        month = int(request.POST.get('month'))
-        year = int(request.POST.get('year'))
-        day = int(request.POST.get('day'))
+
+        s_id = request.session.get('service_id')
+        staff_id = request.session.get('staff_id')
+        month = request.session.get('month')
+        year = request.session.get('year')
+        day = request.session.get('day')
+        time = request.session.get('time')
+        make = request.session.get('vehmake')
+        model = request.session.get('vehmodel')
+        vehyear = request.session.get('vehyear')
+        trim = request.session.get('vehtrim')
+        bookinglist = request.session.get('formlist')
+
+
+        # s_id = int(request.POST.get('service_id'))
+        # staff_id = int(request.POST.get('staff_id'))
+        # time = request.POST.get('time')
+        # month = int(request.POST.get('month'))
+        # year = int(request.POST.get('year'))
+        # day = int(request.POST.get('day'))
         date = datetime.date(year, month, day)
         staff = StaffMember.objects.get(pk=staff_id)
         service = Services.objects.get(pk=s_id)
-        make = request.POST.get('make')
-        model = request.POST.get('model')
-        vehyear = request.POST.get('vehyear')
-        trim = request.POST.get('trim')
+        # make = request.POST.get('make')
+        # model = request.POST.get('model')
+        # vehyear = request.POST.get('vehyear')
+        # trim = request.POST.get('trim')
 
         email = request.POST.get('email')
         password = request.POST.get('password')
@@ -929,9 +1045,9 @@ class renderLoginPage(View):
                 bookinform3.save()
                 bookinform4.save()
             
-            for newformfield in service.service_forms.all():
-                fieldname = request.POST.get(str(newformfield.id))
-                bookinform = bookingForm.objects.create(booking=booking, label=newformfield.label, text=fieldname.replace('%20',' '))
+            for newformfield in bookinglist:
+                # fieldname = request.POST.get(str(newformfield.id))
+                bookinform = bookingForm.objects.create(booking=booking, label=newformfield[1], text=newformfield[0])
                 bookinform.save()
             # saveformhere
             confirmedEmail.delay(booking.id)
@@ -950,13 +1066,15 @@ class renderLoginPage(View):
 class loginReturningCustomer(View):
     def post(self, request):
         company = request.viewing_company
-        s_id = int(request.POST.get('service_id'))
+        # s_id = int(request.POST.get('service_id'))
+        s_id = request.session.get('service_id')
 
         service = Services.objects.get(pk=s_id)
 
         email = request.POST.get('email')
         password = request.POST.get('password')
         user = authenticate(email=email, password=password)
+        request.session['service_id'] = s_id
 
 
         
@@ -987,7 +1105,8 @@ class loginReturningCustomer(View):
 
 class requestSpot(View):
     def post(self, request):
-        s_id = int(request.POST.get('service_id'))
+        # s_id = int(request.POST.get('service_id'))
+        s_id = request.session.get('service_id')
         service = Services.objects.get(pk=s_id)
         if request.user.is_authenticated:
             user = get_object_or_404(Account, email=request.user.email)

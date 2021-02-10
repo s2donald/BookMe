@@ -1,0 +1,38 @@
+{% load crispy_forms_tags %}
+<form method="post" class="justify-content-center" id="createBookMeAccountReturning" enctype="multipart/form-data">
+{% csrf_token %}
+<div class="row">
+    <div class="col-12 col-md-8 mx-auto px-auto text-black">
+        <h1 class="h2 mb-2">{{ company.business_name }} does not accept new clients.</h1>
+        <p>Please sign up for BookMe to place a request.</p>
+        <div class="row swalPadding">
+            <div class="col-md-6 swalPadding">
+                {{ reg_form.first_name|as_crispy_field }}
+            </div>
+            <div class="col-md-6 swalPadding">
+                {{ reg_form.last_name|as_crispy_field }}
+            </div>
+            <div class="col-md-12 swalPadding">
+                {{ reg_form.email|as_crispy_field }}
+            </div>
+            <div class="col-md-6 swalPadding">
+                {{ reg_form.password1|as_crispy_field }}
+            </div>
+            <div class="col-md-6 swalPadding">
+                {{ reg_form.password2|as_crispy_field }}
+            </div>
+            <div class="col-md-12 swalPadding">
+                <strong style="color:red" class="errormsg"></strong>
+            </div>
+
+        </div>
+        
+        <div class="col-md-12">
+            <button id="requestnewacct" type="submit" data-sitekey="6LeimeAZAAAAAE119rtvZivK4DW9csX6QhEo5Yla" data-callback='onSubmit' data-action='submit' class="g-recaptcha btn btn-outline-primary subbtn">Create account and place request</button>
+        </div>
+        <div class="col-md-12">
+            <button id="gobacklogin" type="button" class="btn btn-warning">Login with a BookMe Account</button>
+        </div>
+    </div>
+</div>
+</form>

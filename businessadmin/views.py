@@ -2232,3 +2232,23 @@ class editFormFieldAPI(View):
 
         html_content = render_to_string('bizadmin/businesspage/partials/formfield.html', {'company':company}, request)
         return JsonResponse({'is_valid':True, 'html_content':html_content})
+
+class customThemeAPI(View):
+    def post(self, request):
+        user=request.user
+        staff = StaffMember.objects.get(user=request.user)
+        company = staff.company
+        if staff.access == 2:
+            bg = '.' + company.background + 'background'
+            background = request.POST.get('background')
+            
+            if background == 'primary':
+                company.background = 'primary'
+                print(background)
+            elif background == 'carbon':
+                company.background = 'carbon'
+                print(background)
+            else:
+                company.background = 'hexagon'
+            company.save()
+        return JsonResponse({'oldbackground':bg})

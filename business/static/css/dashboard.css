@@ -191,3 +191,76 @@
         background: rgba(0, 0, 0, 0.1);
         cursor: pointer;
     }
+
+    .primarybackground {
+        background: linear-gradient(90deg, #ff5f6d 0%, #ff5f6d 100%) !important;
+        background-color: #ff5f6d;
+    }
+    .carbonbackground {
+        background-color: rgb(32, 32, 32);
+        background-image: linear-gradient(to right, rgba(0,0,0,1), rgba(0,0,0,0) 20%, rgba(0,0,0,0) 80%, rgba(0,0,0,1)), linear-gradient(-45deg, black 25%, transparent 25%, transparent 75%, black 75%, black), linear-gradient(-45deg, black 25%, transparent 25%, transparent 75%, black 75%, black), linear-gradient(to bottom, rgb(8, 8, 8), rgb(32, 32, 32));
+        background-size: 100% 100%, 20px 20px, 20px 20px, 20px 10px;
+        background-position: 0px 0px, 0px 0px, 10px 10px, 0px 0px;
+    }
+    .hexagonbackground {
+        background:
+        radial-gradient(circle farthest-side at 0% 50%,#131313 23.5%,rgba(240,166,17,0) 0)21px 30px,
+        radial-gradient(circle farthest-side at 0% 50%,rgba(0,0,0,1) 24%,rgba(240,166,17,0) 0)19px 30px,
+        linear-gradient(#131313 14%,rgba(240,166,17,0) 0, rgba(240,166,17,0) 85%,#131313 0)0 0,
+        linear-gradient(150deg,#131313 24%,rgba(0,0,0,1) 0,rgba(0,0,0,1) 26%,rgba(240,166,17,0) 0,rgba(240,166,17,0) 74%,rgba(0,0,0,1) 0,rgba(0,0,0,1) 76%,#131313 0)0 0,
+        linear-gradient(30deg,#131313 24%,rgba(0,0,0,1) 0,rgba(0,0,0,1) 26%,rgba(240,166,17,0) 0,rgba(240,166,17,0) 74%,rgba(0,0,0,1) 0,rgba(0,0,0,1) 76%,#131313 0)0 0,
+        linear-gradient(90deg,rgba(0,0,0,1) 2%,#131313 0,#131313 98%,rgba(0,0,0,1) 0%)0 0 #131313;
+        background-size: 40px 60px;
+    }
+
+    .bgcollection {
+        display: block;
+        list-style-type: disc;
+        margin-block-start: 1em;
+        margin-block-end: 1em;
+        margin-inline-start: 0px;
+        margin-inline-end: 0px;
+        padding-inline-start: 40px;
+    }
+
+    .bgcollection > li:not(:target) {
+        cursor: pointer;
+        background-color: gray;
+        border-radius: 150px;
+        box-shadow: -3px -3px 10px 2px rgb(0 0 0 / 30%) inset, 0 0 0 15px rgb(255 255 255 / 60%) inset, 0 0 0 1px rgb(0 0 0 / 50%), 2px 2px 10px rgb(0 0 0 / 60%);
+        -webkit-box-shadow: 0 0 0 15px rgb(255 255 255 / 60%) inset, 0 0 0 1px rgb(0 0 0 / 50%), 2px 2px 10px rgb(0 0 0 / 60%);
+    }
+
+    .bgcollection > li.applied:not(:target) {
+        cursor: pointer;
+        background-color: rgb(0,250,154);
+        border-radius: 150px;
+        box-shadow: -3px -3px 10px 2px rgb(0 0 0 / 30%) inset, 0 0 0 15px rgb(0 250 154 / 60%) inset, 0 0 0 1px rgb(0 0 0 / 50%), 2px 2px 10px rgb(0 0 0 / 60%);
+        -webkit-box-shadow: 0 0 0 15px rgb(0 250 154 / 60%) inset, 0 0 0 1px rgb(0 0 0 / 50%), 2px 2px 10px rgb(0 0 0 / 60%);
+    }
+    
+    .bgcollection > li {
+        position: relative;
+        width: 150px;
+        height: 150px;
+        float: left;
+        margin-top: 20px;
+        margin-bottom: 20px;
+        margin: 0px 0px 20px 20px;
+        list-style: none;
+    }
+    @media (min-width: 425px) { 
+        .bgcollection > li {
+            width: 200px;
+            height: 200px;
+        }
+    }
+    @media (min-width: 768px) { 
+        .bgcollection > li {
+            position: relative;
+            width: 300px;
+            height: 300px;
+            float: left;
+            list-style: none;
+        }
+    }

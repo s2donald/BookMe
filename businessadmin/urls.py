@@ -15,6 +15,7 @@ urlpatterns = [
     re_path(r'businesspage/photo/$', views.businessPhotoView, name='photos'),
     re_path(r'businesspage/amentities/$', views.businessAmenitiesView, name='amenities'),
     re_path(r'businesspage/customization/$', views.businessPageCustomization, name='bpagecustomization'),
+    re_path(r'api/addcustomize/theme/$', views.customThemeAPI.as_view(), name='toggletheme'),
     re_path(r'api/addnewformfield/$', views.addNewFormFieldAPI.as_view(), name='addnewformfield'),
     re_path(r'api/togglepath/$', views.toggleformrequiredAPI.as_view(), name='toggleformrequired'),
     re_path(r'api/editformfield/$', views.editFormFieldAPI.as_view(), name='editformrequired'),

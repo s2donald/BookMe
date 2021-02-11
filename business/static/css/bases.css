@@ -579,7 +579,7 @@ a.licolor:hover, a.licolor:focus {
         .card-collapse .card .card-header a[data-toggle="collapse"] i {
           float: right;
           position: relative;
-          color: #e14eca;
+          color: black;
           top: 1px; }
       .card-collapse .card .card-header:after {
         content: "";
@@ -709,10 +709,29 @@ a.licolor:hover, a.licolor:focus {
 .nav-top-default {
     background: linear-gradient(90deg, #ff5f6d 0%,#ffc371 100%);
 }
-.bg-light {
-    background: linear-gradient(90deg, #ff5f6d 0%, #ff5f6d 100%) !important;
+.mainpage[data-background="primary"] .bg-light, .bg-light {
+    background: linear-gradient(90deg, #ff5f6d 0%, #ff5f6d 100%);
     background-color: #ff5f6d;
 }
+
+.mainpage[data-background="carbon"] .bg-light {
+  background-color: rgb(32, 32, 32) !important;
+  background-image: linear-gradient(to right, rgba(0,0,0,1), rgba(0,0,0,0) 20%, rgba(0,0,0,0) 80%, rgba(0,0,0,1)), linear-gradient(-45deg, black 25%, transparent 25%, transparent 75%, black 75%, black), linear-gradient(-45deg, black 25%, transparent 25%, transparent 75%, black 75%, black), linear-gradient(to bottom, rgb(8, 8, 8), rgb(32, 32, 32)) !important;
+  background-size: 100% 100%, 20px 20px, 20px 20px, 20px 10px !important;
+  background-position: 0px 0px, 0px 0px, 10px 10px, 0px 0px !important;
+}
+
+.mainpage[data-background="hexagon"] .bg-light {
+  background:
+  radial-gradient(circle farthest-side at 0% 50%,#131313 23.5%,rgba(240,166,17,0) 0)21px 30px,
+  radial-gradient(circle farthest-side at 0% 50%,rgba(0,0,0,1) 24%,rgba(240,166,17,0) 0)19px 30px,
+  linear-gradient(#131313 14%,rgba(240,166,17,0) 0, rgba(240,166,17,0) 85%,#131313 0)0 0,
+  linear-gradient(150deg,#131313 24%,rgba(0,0,0,1) 0,rgba(0,0,0,1) 26%,rgba(240,166,17,0) 0,rgba(240,166,17,0) 74%,rgba(0,0,0,1) 0,rgba(0,0,0,1) 76%,#131313 0)0 0,
+  linear-gradient(30deg,#131313 24%,rgba(0,0,0,1) 0,rgba(0,0,0,1) 26%,rgba(240,166,17,0) 0,rgba(240,166,17,0) 74%,rgba(0,0,0,1) 0,rgba(0,0,0,1) 76%,#131313 0)0 0,
+  linear-gradient(90deg,rgba(0,0,0,1) 2%,#131313 0,#131313 98%,rgba(0,0,0,1) 0%)0 0 #131313 !important;
+  background-size: 40px 60px !important;
+}
+
 .nav-pills .nav-link {
   border-radius: .25rem;
   padding-top: 5px;
@@ -730,8 +749,28 @@ a.licolor:hover, a.licolor:focus {
 }
 
 /* active*/
-.nav-pills .nav-link.active {
+.mainpage[data-background="primary"] .nav-pills .nav-link.active, .nav-pills .nav-link.active {
   background: linear-gradient(90deg, #ff5f6d 0%, #ff5f6d 100%) !important;
+  color: white !important;
+}
+
+.mainpage[data-background="carbon"] .nav-pills .nav-link.active {
+  background-color: rgb(32, 32, 32) !important;
+  background-image: linear-gradient(to right, rgba(0,0,0,1), rgba(0,0,0,0) 20%, rgba(0,0,0,0) 80%, rgba(0,0,0,1)), linear-gradient(45deg, black 25%, transparent 25%, transparent 75%, black 75%, black), linear-gradient(45deg, black 25%, transparent 25%, transparent 75%, black 75%, black), linear-gradient(to bottom, rgb(8, 8, 8), rgb(32, 32, 32)) !important;
+  background-size: 100% 100%, 10px 10px, 10px 10px, 10px 5px !important;
+  background-position: 0px 0px, 0px 0px, 5px 5px, 0px 0px !important;
+  color: white !important;
+}
+
+.mainpage[data-background="hexagon"] .nav-pills .nav-link.active {
+  background:
+  radial-gradient(circle farthest-side at 0% 50%,#131313 23.5%,rgba(240,166,17,0) 0)21px 30px,
+  radial-gradient(circle farthest-side at 0% 50%,rgba(0,0,0,1) 24%,rgba(240,166,17,0) 0)19px 30px,
+  linear-gradient(#131313 14%,rgba(240,166,17,0) 0, rgba(240,166,17,0) 85%,#131313 0)0 0,
+  linear-gradient(150deg,#131313 24%,rgba(0,0,0,1) 0,rgba(0,0,0,1) 26%,rgba(240,166,17,0) 0,rgba(240,166,17,0) 74%,rgba(0,0,0,1) 0,rgba(0,0,0,1) 76%,#131313 0)0 0,
+  linear-gradient(30deg,#131313 24%,rgba(0,0,0,1) 0,rgba(0,0,0,1) 26%,rgba(240,166,17,0) 0,rgba(240,166,17,0) 74%,rgba(0,0,0,1) 0,rgba(0,0,0,1) 76%,#131313 0)0 0,
+  linear-gradient(90deg,rgba(0,0,0,1) 2%,#131313 0,#131313 98%,rgba(0,0,0,1) 0%)0 0 #131313 !important;
+  background-size: 40px 60px !important;
   color: white !important;
 }
 

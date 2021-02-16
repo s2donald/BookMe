@@ -34,9 +34,10 @@
 {% endblock header %}
 
 {% block businesscontent %}
-<section>
-      <div class="container">
-        <div class="py-4">
+<section class="mb-5 z-4 list-item-title" style="z-index: 99999994!important;">
+      <div class="container" style="z-index: 99999994!important;">
+        <h1 class="mb-5 z-4 list-item-title" style="z-index: 4!important;">Knowledge base coming soon! Contact <a style="color:#854fee;" href="mailto:suppot@bookme.to"><strong>support@bookme.to</strong></a> for any questions or concerns.</h1>
+        {% comment %} <div class="py-4">
           <h2 class="mb-5 z-4 list-item-title" style="z-index: 4!important;">Client First Booking Approach</h2>
           <div class="row">
             <div class="col-md-6">
@@ -60,19 +61,19 @@
           <div class="row">
             <div class="col-md-6">
               <h5 class="list-item-title">Stripe</h5>
-              <p class="text-muted mb-4">All payments will be handled with Stripe.</p>
+              <p class="text-muted mb-4">All payments will be handled with Stripe.</p> {% endcomment %}
               {% comment %} <h5 class="list-item-title">Payment methods accepted</h5>
               <p class="text-muted mb-4">Credit Ca.</p> {% endcomment %}
-            </div>
+            {% comment %} </div> {% endcomment %}
             {% comment %} <div class="col-md-6">
               <h5 class="list-item-title">BookMe Service Fees</h5>
               <p class="text-muted mb-4">For businesses under the 'BASIC TIER and PREMIUM TIER' plan, there is no BookMe service fee charged to your customers or to the business.</p>
               <p class="text-muted mb-4">For businesses under the 'MID TIER' plan, a service fee will only be charged when BookMe has to process a deposit for a service or process a cancellation fee. The service fee in this case will only be 1% of the processed deposit or cancellation fee. Businesses have the option to forward this cost to their clients.</p>
               <p class="text-muted mb-4">For businesses under all plans, Stripe fees are still included.</p>
             </div> {% endcomment %}
-          </div>
+          {% comment %} </div>
         </div>
-        <hr>
+        <hr> {% endcomment %}
         {% comment %} <div class="py-4">
           <h2 class="mb-5 list-item-title">Advertisement</h2>
           <div class="row">

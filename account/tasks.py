@@ -136,6 +136,9 @@ def send_sms_reminder_client(booking_id):
         booking = Bookings.objects.get(id=booking_id)
     except Bookings.DoesNotExist:
         return
+    if booking.is_cancelled_user or booking.is_cancelled_company:
+        return
+         
     if booking.user:
         acct = booking.user
     else:

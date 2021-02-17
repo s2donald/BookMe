@@ -22,7 +22,7 @@ from slugify import slugify
 from .forms import MainPhoto
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from businessadmin.tasks import addedOnCompanyList, requestToBeClient, appointmentCancelled
-from account.tasks import reminderEmail, confirmedEmail, consumerCreatedEmailSent
+from account.tasks import reminderEmail, confirmedEmail, consumerCreatedEmailSent, send_sms_confirmed_client, send_sms_reminder_client
 import re
 # Create your views here.
 def businessadmin(request):
@@ -1791,6 +1791,9 @@ class addBooking(View):
             startTime = start - timedelta(minutes=confirmtime)
             if email:
                 reminderEmail.apply_async(args=[booking.id], eta=startTime, task_id=booking.slug)
+            if company.subscriptionplan >= 1:
+                send_sms_confirmed_client.delay(booking.id)
+                send_sms_reminder_client.apply_async(args=[booking.id], eta=startTime)
             #Create the booking and then send an email to customer and company
         else:
             day = datetime.today().weekday() + 1

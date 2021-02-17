@@ -74,7 +74,7 @@ class Bookings(models.Model):
     #We must also create a receipt model to handle the reciepts and link to the booking
     start = models.DateTimeField(default=timezone.now)
     end = models.DateTimeField(default=timezone.now)
-    time_zone = TimeZoneField(default='America/Toronto')
+    # time_zone = TimeZoneField(default='America/Toronto')
 
 
     class Meta:

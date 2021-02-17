@@ -230,7 +230,8 @@ class Company(models.Model):
     tags = TaggableManager(blank=True)
     location = models.PointField(blank=True, null=True)
     darkmode = models.BooleanField(default=False)
-    tz = TimeZoneField(default='America/Toronto')
+    # tz = TimeZoneField(default='America/Toronto')
+    tz = models.CharField(choices=ALL_TIMEZONES, max_length=64, default="America/Toronto")
     showAddress = models.BooleanField(default=True)
     subscriptionplan = models.IntegerField(choices=subscriptionplan, default=0)
     

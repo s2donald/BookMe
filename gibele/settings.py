@@ -233,3 +233,16 @@ if not DEBUG:
     CSRF_COOKIE_SECURE = True
     SECURE_SSL_REDIRECT=True
 
+#Twilio
+if not DEBUG:
+    # Your Account SID from twilio.com/console ACCOUNT_SID
+    TWILIO_ACCOUNT_SID = "AC089509b15cb85ff823844c9407dbd1a1"
+    # Your Auth Token from twilio.com/console
+    TWILIO_AUTH_TOKEN  = "a1caf1d0f007d77614731a2384762a6a"
+    TWILIO_PHONE = "+13253993572"
+else:
+    # Your Trial Account SID from twilio.com/console
+    TWILIO_ACCOUNT_SID = "AC712a29e67ecd6959a2c012000762a4a4"
+    # Your Trail Auth Token from twilio.com/console
+    TWILIO_AUTH_TOKEN  = "c63173775623ac34e0dfe724061cc6e3"
+    TWILIO_PHONE = "+13656509721"

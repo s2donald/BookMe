@@ -11,6 +11,7 @@ from django.db.models.signals import pre_save, post_save
 from gibele.utils import unique_slug_generator, unique_slug_generator_services
 import geocoder
 import pytz
+from timezone_field import TimeZoneField
 ALL_TIMEZONES = sorted((item, item) for item in pytz.all_timezones)
 
 # This category holds our different types of services such as
@@ -164,6 +165,11 @@ cancellationtime = (
     (168, '1 week'),
     (10000, 'never'),
 )
+subscriptionplan = (
+    (0,'Free'),
+    (1, 'Pro'),
+    (2, 'Premium'),
+)
 backgroundstyle = (
     ('primary', 'primary'),
     ('carbon', 'carbon'),
@@ -224,8 +230,9 @@ class Company(models.Model):
     tags = TaggableManager(blank=True)
     location = models.PointField(blank=True, null=True)
     darkmode = models.BooleanField(default=False)
-    tz = models.CharField(choices=ALL_TIMEZONES, max_length=64, default="America/Toronto")
+    tz = TimeZoneField(default='America/Toronto')
     showAddress = models.BooleanField(default=True)
+    subscriptionplan = models.IntegerField(choices=subscriptionplan, default=0)
     
 
     class Meta:

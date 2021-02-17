@@ -17,7 +17,7 @@ from account.forms import UpdatePersonalForm, AccountAuthenticationForm, Account
 from django.contrib.auth import authenticate, login
 from django.core.validators import validate_email
 from django import forms
-from account.tasks import reminderEmail, confirmedEmail, consumerCreatedEmailSent, confirmedEmailCompany
+from account.tasks import reminderEmail, confirmedEmail, consumerCreatedEmailSent, confirmedEmailCompany, send_sms_reminder_client, send_sms_confirmed_client
 from businessadmin.tasks import requestToBeClient
 from business.forms import VehicleMakeModelForm, AddressForm
 import re
@@ -759,11 +759,16 @@ class confirmationMessageRender(View):
 
             confirmedEmail.delay(booking.id)
             confirmedEmailCompany.delay(booking.id)
+
             confirmtime = 30
             if service.checkintime:
                 confirmtime = service.checkintime + 30
             startTime = timezone.localtime(start - datetime.timedelta(minutes=confirmtime))
             reminderEmail.apply_async(args=[booking.id], eta=startTime, task_id=booking.slug)
+            # Confirm the appointment through texts with the client
+            if company.subscriptionplan >= 1:
+                send_sms_confirmed_client.delay(booking.id)
+                send_sms_reminder_client.apply_async(args=[booking.id], eta=startTime)
             html_content = render_to_string('bookingpage/multiplestaff/bookingpage/partials/confirmationside/bookingset.html', {'company':company,'staff':staff,'service':service, 'date':date, 'time':time, 'month':month, 'year':year, 'day':day }, request)
         else:
             html_content = render_to_string('bookingpage/multiplestaff/bookingpage/partials/confirmationside/bookingerror.html', {'company':company,'staff':staff,'service':service, 'date':date, 'time':time, 'month':month, 'year':year, 'day':day }, request)
@@ -930,6 +935,10 @@ class guestFormRender(View):
                         confirmtime = service.checkintime + 30
                     startTime = start - datetime.timedelta(minutes=confirmtime)
                     reminderEmail.apply_async(args=[booking.id], eta=startTime)
+                    # Confirm the appointment through texts with the client
+                    if company.subscriptionplan >= 1:
+                        send_sms_confirmed_client.delay(booking.id)
+                        send_sms_reminder_client.apply_async(args=[booking.id], eta=startTime)
                 html_content = render_to_string('bookingpage/multiplestaff/bookingpage/partials/confirmationside/bookingset.html', {'company':company,'staff':staff,'service':service, 'date':date, 'time':time, 'month':month, 'year':year, 'day':day }, request)
             else:
                 html_content = render_to_string('bookingpage/multiplestaff/bookingpage/partials/confirmationside/bookingerror.html', {'company':company,'staff':staff,'service':service, 'date':date, 'time':time, 'month':month, 'year':year, 'day':day }, request)
@@ -1057,6 +1066,11 @@ class renderLoginPage(View):
                 confirmtime = service.checkintime + 30
             startTime = timezone.localtime(start - datetime.timedelta(minutes=confirmtime))
             reminderEmail.apply_async(args=[booking.id], eta=startTime, task_id=booking.slug)
+            # Confirm the appointment through texts with the client
+            if company.subscriptionplan >= 1:
+                send_sms_confirmed_client.delay(booking.id)
+                send_sms_reminder_client.apply_async(args=[booking.id], eta=startTime)
+
             html_content = render_to_string('bookingpage/multiplestaff/bookingpage/partials/confirmationside/bookingset.html', {'company':company,'staff':staff,'service':service, 'date':date, 'time':time, 'month':month, 'year':year, 'day':day }, request)
         else:
             html_content = render_to_string('bookingpage/multiplestaff/bookingpage/partials/confirmationside/bookingerror.html', {'company':company,'staff':staff,'service':service, 'date':date, 'time':time, 'month':month, 'year':year, 'day':day }, request)

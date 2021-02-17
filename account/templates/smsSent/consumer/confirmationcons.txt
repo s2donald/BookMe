@@ -1,0 +1,1 @@
+Appointment confirmed on {{ booking.start|date:'D, N j, Y' }}, {{ booking.start|date:'g:i A e' }} with {{ staff_name }} for a {{ booking.service }} at {{ booking.company }}

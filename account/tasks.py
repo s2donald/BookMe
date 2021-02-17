@@ -1,10 +1,12 @@
 from celery import task
 from django.core.mail import send_mail
+from django.conf import settings
 from .models import Account
 from business.models import Company
 from consumer.models import Bookings, extraInformation
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
+from twilio.rest import Client
 
 @task
 def bizCreatedEmailSent(user_id):
@@ -40,9 +42,10 @@ def reminderEmail(booking_id):
     service = booking.service
     email = acct.email
     if booking.is_cancelled_user or booking.is_cancelled_company:
-        email = f'noreply@bookme.to'
-        subject = f'Book some '+ company.category.name +' on BookMe!'
-        html_message = render_to_string('emailSents/booking/budge.html', {'acct':acct,'company':company,'service':service, 'booking':booking})
+        return
+        # email = f'noreply@bookme.to'
+        # subject = f'Book some '+ company.category.name +' on BookMe!'
+        # html_message = render_to_string('emailSents/booking/budge.html', {'acct':acct,'company':company,'service':service, 'booking':booking})
     else:
         subject = f'REMINDER: You have an upcoming appointment with ' + company.business_name + '!'
         html_message = render_to_string('emailSents/booking/reminder.html', {'acct':acct,'company':company,'service':service, 'booking':booking})
@@ -95,3 +98,70 @@ def confirmedEmailCompany(booking_id):
 
     mail_sent = send_mail(subject, plain_message, 'BookMe.to <noreply@bookme.to>', [email], html_message=html_message, fail_silently=False)
     return mail_sent
+
+@task
+def send_sms_confirmed_client(booking_id):
+    try:
+        booking = Bookings.objects.get(id=booking_id)
+    except Bookings.DoesNotExist:
+        return
+    if booking.user:
+        acct = booking.user
+    else:
+        acct = booking.guest
+    
+    phone = acct.phone
+    if phone:
+        phone = "+1" + str(phone)
+    else:
+        return
+    client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
+    staff = booking.staffmem
+    if staff.user:
+        staff_name = staff.user.first_name
+    else:
+        staff_name = staff.first_name
+    bodymessage = render_to_string('smsSent/consumer/confirmationcons.txt', {'staff_name':staff_name,'booking':booking})
+    try:
+        message = client.messages.create(
+            to=phone, 
+            from_=settings.TWILIO_PHONE,
+            body=bodymessage)
+    except:
+        return
+
+@task
+def send_sms_reminder_client(booking_id):
+    try:
+        booking = Bookings.objects.get(id=booking_id)
+    except Bookings.DoesNotExist:
+        return
+    if booking.user:
+        acct = booking.user
+    else:
+        acct = booking.guest
+    
+    phone = acct.phone
+    if phone:
+        phone = "+1" + str(phone)
+    else:
+        return
+    client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
+    staff = booking.staffmem
+    if staff.user:
+        staff_name = staff.user.first_name
+    else:
+        staff_name = staff.first_name
+    bodymessage = render_to_string('smsSent/consumer/remindercons.txt', {'staff_name':staff_name,'booking':booking})
+    try:
+        message = client.messages.create(
+            to=phone, 
+            from_=settings.TWILIO_PHONE,
+            body=bodymessage)
+    except:
+        return
+        
+
+
+            
+            

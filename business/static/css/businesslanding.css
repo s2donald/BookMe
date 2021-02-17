@@ -1804,6 +1804,7 @@ a:hover.back-to-top {
 		"C C";
 		text-align: center;
 		min-height: 263px;
+	list-style: none;
 }
 @media (min-width: 768px) {
 	.smlr {

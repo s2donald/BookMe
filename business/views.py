@@ -18,7 +18,7 @@ import json, geocoder
 from django.views import View
 from django.contrib.gis.geos import GEOSGeometry, Point
 from django.contrib.gis.db.models.functions import Distance, GeometryDistance
-
+from django.conf import settings
 from django.contrib.postgres.search import TrigramSimilarity
 from businessadmin.tasks import appointmentCancelledCompany, sendMassEmail
 # /ipware 3.0.2

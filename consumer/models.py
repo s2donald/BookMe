@@ -6,6 +6,8 @@ from django.core.validators import MinValueValidator, MaxValueValidator,RegexVal
 from django.db.models.signals import pre_save
 from gibele.utils import unique_slug_generator_booking
 from django.core.exceptions import ValidationError
+from timezone_field import TimeZoneField
+
 # Create your models here.
 hours_choices = (
     (0,'0 Hours'),
@@ -72,6 +74,7 @@ class Bookings(models.Model):
     #We must also create a receipt model to handle the reciepts and link to the booking
     start = models.DateTimeField(default=timezone.now)
     end = models.DateTimeField(default=timezone.now)
+    time_zone = TimeZoneField(default='America/Toronto')
 
 
     class Meta:

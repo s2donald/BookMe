@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'storages',
     'taggit',
+    'timezone_field',
     'rest_framework',
 ]
 

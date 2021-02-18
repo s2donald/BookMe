@@ -24,6 +24,7 @@ import re
 from gibele import settings
 from django.views.decorators.clickjacking import xframe_options_exempt
 from django.template.loader import render_to_string
+import multiprocessing
 
 # from account.models import Account
 # Create your views here.
@@ -709,7 +710,8 @@ class confirmationMessageRender(View):
                 pass
             else:
                 return JsonResponse({'notonclientlist':True})
-
+        lock = multiprocessing.Lock()
+        lock.acquire()
         bcount = Bookings.objects.filter(company=company, staffmem=staff, start__gte=start, end__lte=end, is_cancelled_user=False,is_cancelled_company=False).count()
         if bcount<1:
             #Check if the user is already a client
@@ -772,7 +774,7 @@ class confirmationMessageRender(View):
             html_content = render_to_string('bookingpage/multiplestaff/bookingpage/partials/confirmationside/bookingset.html', {'company':company,'staff':staff,'service':service, 'date':date, 'time':time, 'month':month, 'year':year, 'day':day }, request)
         else:
             html_content = render_to_string('bookingpage/multiplestaff/bookingpage/partials/confirmationside/bookingerror.html', {'company':company,'staff':staff,'service':service, 'date':date, 'time':time, 'month':month, 'year':year, 'day':day }, request)
-
+        lock.release()
         return JsonResponse({'html_content':html_content})
 
 from django.template.context_processors import csrf
@@ -893,6 +895,8 @@ class guestFormRender(View):
             if company.returning:
                 html_content = render_to_string('bookingpage/multiplestaff/bookingpage/partials/confirmationside/bookingReturningClient.html', {'company':company,'staff':staff,'service':service, 'date':date, 'time':time, 'month':month, 'year':year, 'day':day }, request)
                 return JsonResponse({'notonclientlist':True, 'html_content':html_content})
+            lock = multiprocessing.Lock()
+            lock.acquire()
             if Bookings.objects.filter(company=company, staffmem=staff, start__gte=start, end__lte=end, is_cancelled_user=False,is_cancelled_company=False).count()<1:
                 if Account.objects.filter(email=email).exists():
                     return JsonResponse({'time':time, 's_id':s_id,'start':start,'date':date,'time':time, 'good':False, 'emailerr':'The email you have provided has already been used to create an account. Please sign into BookMe then try booking again later.'})
@@ -942,6 +946,7 @@ class guestFormRender(View):
                 html_content = render_to_string('bookingpage/multiplestaff/bookingpage/partials/confirmationside/bookingset.html', {'company':company,'staff':staff,'service':service, 'date':date, 'time':time, 'month':month, 'year':year, 'day':day }, request)
             else:
                 html_content = render_to_string('bookingpage/multiplestaff/bookingpage/partials/confirmationside/bookingerror.html', {'company':company,'staff':staff,'service':service, 'date':date, 'time':time, 'month':month, 'year':year, 'day':day }, request)
+            lock.release()
         return JsonResponse({'form_is_invalid':False, 'html_content': html_content})
          
 class renderLoginPage(View):
@@ -1012,7 +1017,8 @@ class renderLoginPage(View):
                 pass
             else:
                 return JsonResponse({'notonclientlist':True})
-
+        lock = multiprocessing.Lock()
+        lock.acquire()
         bcount = Bookings.objects.filter(company=company, staffmem=staff, start__gte=start, end__lte=end, is_cancelled_user=False,is_cancelled_company=False).count()
         if bcount<1:
             #Check if the user is already a client
@@ -1074,7 +1080,7 @@ class renderLoginPage(View):
             html_content = render_to_string('bookingpage/multiplestaff/bookingpage/partials/confirmationside/bookingset.html', {'company':company,'staff':staff,'service':service, 'date':date, 'time':time, 'month':month, 'year':year, 'day':day }, request)
         else:
             html_content = render_to_string('bookingpage/multiplestaff/bookingpage/partials/confirmationside/bookingerror.html', {'company':company,'staff':staff,'service':service, 'date':date, 'time':time, 'month':month, 'year':year, 'day':day }, request)
-
+        lock.release()
         return JsonResponse({'notvalid':False, 'html_content':html_content})
 
 class loginReturningCustomer(View):

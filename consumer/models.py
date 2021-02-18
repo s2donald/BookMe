@@ -91,6 +91,17 @@ class Bookings(models.Model):
         super().clean()
         if self.user is None and self.guest is None:
             raise ValidationError('You must add a client to the booking!')
+        if self.staffmem is None:
+            raise ValidationError('You must add a staff member to the booking')
+        staff = self.staffmem
+        if staff.staff_bookings.filter(company=self.company, start__gt=self.start, end__lt=self.end, is_cancelled_user=False, is_cancelled_company=False).exists():
+            raise ValidationError('Booking already exists')
+
+    def save(self, *args, **kwargs):
+        staff = self.staffmem
+        if staff.staff_bookings.filter(company=self.company, start__gt=self.start, end__lt=self.end, is_cancelled_user=False, is_cancelled_company=False).exists():
+            raise ValidationError('Booking already exists')
+        super().save(*args, **kwargs)
 
 def slug_generator(sender, instance, *args, **kwargs):
     if not instance.slug:

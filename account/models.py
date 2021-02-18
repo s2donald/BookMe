@@ -71,8 +71,8 @@ class Account(AbstractBaseUser):
     province = models.CharField(max_length=35)
     city = models.CharField(max_length=35)
     avatar = models.ImageField(upload_to='users/profilepic/', blank=True)
-    tz = TimeZoneField(default='America/Toronto')
-    # tz = models.CharField(choices=ALL_TIMEZONES, max_length=64, default="America/Toronto")
+    # tz = TimeZoneField(default='America/Toronto')
+    tz = models.CharField(choices=ALL_TIMEZONES, max_length=64, default="America/Toronto")
 
     is_business= models.BooleanField(default=False)
     on_board= models.BooleanField(default=False)

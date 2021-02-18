@@ -24,6 +24,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from businessadmin.tasks import addedOnCompanyList, requestToBeClient, appointmentCancelled
 from account.tasks import reminderEmail, confirmedEmail, consumerCreatedEmailSent, send_sms_confirmed_client, send_sms_reminder_client
 import re
+from django.db import transaction
 # Create your views here.
 def businessadmin(request):
     user = request.user

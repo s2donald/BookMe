@@ -1,31 +1,31 @@
 {% load static %}
 {% load hosts %}
 {% for req in requested %}
-                                                <div class="card">
-                                                    <div class="row">
-                                                        <div class="col-12">
-                                                            {% with user=req.user  %}
-                                                            <div class="card-body d-lg-flex justify-content-between text-center">
-                                                                <div class="row">
-                                                                    <div class="col-sm-12 d-flex pull-right">
-                                                                        <p class="subtitle text-left mr-3"><strong class="text-danger">{{user.first_name}} {{ user.last_name }} </strong>{% if req.add_to_list %}wants to be added to your client list.{% endif %}</p>
-                                                                    </div>
-                                                                    <div>
-                                                                        <p class='subtitle text-left mr-3'>Contact Info:</p>
-                                                                    </div>
-                                                                        <p class="text-left text-info">Email: {{ user.email }}, Phone:{{ user.phone }}</p>
-                                                                    </div>
-                                                            </div>
+    <div class="card">
+        <div class="row">
+            <div class="col-12">
+                {% with user=req.user  %}
+                <div class="card-body d-lg-flex justify-content-between text-center">
+                    <div class="row">
+                        <div class="col-sm-12 d-flex pull-right">
+                            <p class="subtitle text-left mr-3"><strong class="text-danger">{{user.first_name}} {{ user.last_name }} </strong>{% if req.add_to_list %}wants to be added to your client list.{% endif %}</p>
+                        </div>
+                        <div>
+                            <p class='subtitle text-left mr-3'>Contact Info:</p>
+                        </div>
+                            <p class="text-left text-info">Email: {{ user.email }}, Phone:{{ user.phone }}</p>
+                        </div>
+                </div>
 
-                                                                    <button type="button" class="btn btn-primary btn-sm accept" data-url="{% host_url 'addRequested' req.id host 'bizadmin' %}">Accept Request</button>
-                                                                    <button type="button" class="btn btn-danger btn-sm decline" data-url="{% host_url 'deleteRequested' req.id host 'bizadmin' %}">Decline Request</button>
-                                                            {% endwith %}
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            {% empty %}
-                                                <div class="card">
-                                                    <div class="card-header">You have no requests yet.</div>
-                                                </div>
-                                            {% endfor %}
-                                            {% include 'bizadmin/dashboard/reviews/pagination.html' with page=requested%}
+                        <button type="button" class="btn btn-primary btn-sm accept" data-url="{% host_url 'addRequested' req.id host 'bizadmin' %}">Accept Request</button>
+                        <button type="button" class="btn btn-danger btn-sm decline" data-url="{% host_url 'deleteRequested' req.id host 'bizadmin' %}">Decline Request</button>
+                {% endwith %}
+            </div>
+        </div>
+    </div>
+{% empty %}
+    <div class="card">
+        <div class="card-header">You have no requests yet.</div>
+    </div>
+{% endfor %}
+{% include 'bizadmin/dashboard/reviews/pagination.html' with page=requested%}

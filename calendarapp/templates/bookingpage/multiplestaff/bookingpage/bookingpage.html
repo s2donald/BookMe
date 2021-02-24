@@ -159,7 +159,7 @@ $(document).ready(
                         <div class="d-flex justify-content-center">
                             <h3 class="mb-3">Reviews</h3>
                         </div>
-                    {% if company.company_reviews %}
+                    {% if company.company_reviews.all %}
                         {% for review in company.company_reviews.all %}
                             <hr>
                             {% with reviewer=review.reviewer %}
@@ -173,6 +173,7 @@ $(document).ready(
                                 </div>
                             </div>
                             {% endwith %}
+
                         {% endfor %}
                         {% include 'business/company/pagination_review/pagination.html' with page=reviews %}
                         <hr>

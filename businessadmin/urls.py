@@ -20,6 +20,8 @@ urlpatterns = [
     re_path(r'api/togglepath/$', views.toggleformrequiredAPI.as_view(), name='toggleformrequired'),
     re_path(r'api/editformfield/$', views.editFormFieldAPI.as_view(), name='editformrequired'),
 
+    
+
     re_path(r'dashboard/schedule/$', views.scheduleView, name='schedule'),
     re_path(r'dashboard/profile/booking/$', views.bookingSettingViews, name='bookingSetting'),
     re_path(r'dashboard/profile/security/$',views.profileSecurityViews, name='security'),
@@ -121,6 +123,7 @@ urlpatterns = [
     re_path(r'^addbusinessh/$',views.saveBusinessHours.as_view(), name='businessHourSave'),
 
     re_path(r'integration/$', views.integrationsView, name='integrations'),
+    re_path(r'integration/zoom/signup', views.integrationZoomSignUp.as_view(), name='zoomsignupintegration'),
 
     re_path(r'^updatedpass/$', views.updatePassword.as_view(), name='updatepassword'),
     re_path(r'^pricing/$', views.pricingViews, name='pricingBusiness'),

@@ -15,8 +15,8 @@ def FutPastBooking(request):
     today = timezone.now()
     categories = Category.objects.all()
     subcategories = SubCategory.objects.all()
-    futureBookings = Bookings.objects.filter(user=request.user, end__gt=today, is_cancelled_user=False, is_cancelled_company=False)
-    pastBookings = Bookings.objects.filter(user=request.user, end__lte=today, is_cancelled_user=False, is_cancelled_company=False).order_by('-end')
+    futureBookings = Bookings.objects.filter(user=request.user, end__gt=today, is_cancelled_user=False, is_cancelled_company=False, is_cancelled_request=False)
+    pastBookings = Bookings.objects.filter(user=request.user, end__lte=today, is_cancelled_user=False, is_cancelled_company=False, is_cancelled_request=False).order_by('-end')
     
     paginator = Paginator(futureBookings, 3)
     page = request.GET.get('page')

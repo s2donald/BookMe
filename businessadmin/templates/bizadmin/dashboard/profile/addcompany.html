@@ -62,9 +62,6 @@
       <form method="POST" action="{% host_url 'service_create' host 'bizadmin' %}" class="js-product-create-form">
         {% csrf_token %}
         {{ service_form.name|as_crispy_field }}
-        {% if company.staffmembers.all %}
-            {{ category_form.staff|as_crispy_field }}
-        {% endif %}
         {{ service_form.description|as_crispy_field }}
         <div class="form-row">
             <div class="form-group col mb-0">

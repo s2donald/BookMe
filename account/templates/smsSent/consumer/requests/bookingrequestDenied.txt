@@ -1,0 +1,2 @@
+Unfortunately your appointment request with {{ company.business_name }} was denied. 
+{% if reason %}Reason: {{ reason }}{% endif %}

@@ -1,5 +1,5 @@
 from django.db import models
-from business.models import Account, Company, Services, Clients
+from business.models import Account, Company, Services, Clients, CompanyReq
 from businessadmin.models import StaffMember, Breaks
 from django.utils import timezone
 from django.core.validators import MinValueValidator, MaxValueValidator,RegexValidator
@@ -71,10 +71,13 @@ class Bookings(models.Model):
     is_cancelled_company = models.BooleanField(default=False)
     #user cancelled booking
     is_cancelled_user = models.BooleanField(default=False)
+    #staff cancelled the appointment request
+    is_cancelled_request = models.BooleanField(default=False)
     #We must also create a receipt model to handle the reciepts and link to the booking
     start = models.DateTimeField(default=timezone.now)
     end = models.DateTimeField(default=timezone.now)
     # time_zone = TimeZoneField(default='America/Toronto')
+    bookingreq = models.OneToOneField(CompanyReq, related_name='booking_request', on_delete=models.CASCADE, null=True, blank=True)
 
 
     class Meta:

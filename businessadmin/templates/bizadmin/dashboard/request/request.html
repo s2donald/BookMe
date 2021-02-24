@@ -35,22 +35,68 @@
                                                 <div class="card">
                                                     <div class="row">
                                                         <div class="col-12">
-                                                            {% with user=req.user  %}
-                                                            <div class="card-body d-lg-flex justify-content-between text-center">
-                                                                <div class="row">
-                                                                    <div class="col-sm-12 d-flex pull-right">
-                                                                        <p class="subtitle text-left mr-3"><strong class="text-danger">{{user.first_name}} {{ user.last_name }} </strong>{% if req.add_to_list %}wants to be added to your client list.{% endif %}</p>
+                                                            {% if req.is_addusertolist %}
+                                                                {% with user=req.user  %}
+                                                                    <div class="card-body d-lg-flex justify-content-between text-center">
+                                                                        <div class="row">
+                                                                            <div class="col-sm-12 d-flex pull-right">
+                                                                                <p class="subtitle text-left mr-3"><strong>{{user.first_name}} {{ user.last_name }} </strong>{% if req.add_to_list %}wants to be added to your client list.{% endif %}</p>
+                                                                            </div>
+                                                                            <div>
+                                                                                <p class='subtitle text-left mr-3'>Contact Info:</p>
+                                                                            </div>
+                                                                                <p class="text-left text-info">Email: {{ user.email }}, Phone:{{ user.phone }}</p>
+                                                                            </div>
+                                                                        </div>
                                                                     </div>
-                                                                    <div>
-                                                                        <p class='subtitle text-left mr-3'>Contact Info:</p>
-                                                                    </div>
-                                                                        <p class="text-left text-info">Email: {{ user.email }}, Phone:{{ user.phone }}</p>
-                                                                    </div>
-                                                            </div>
 
                                                                     <button type="button" class="btn btn-primary btn-sm accept" data-url="{% host_url 'addRequested' req.id host 'bizadmin' %}">Accept Request</button>
                                                                     <button type="button" class="btn btn-danger btn-sm decline" data-url="{% host_url 'deleteRequested' req.id host 'bizadmin' %}">Decline Request</button>
-                                                            {% endwith %}
+                                                                {% endwith %}
+                                                            {% else %}
+                                                                {% with booking=req.booking_request %}
+                                                                    <div class="card-body d-lg-flex justify-content-between">
+                                                                        <div class="card-light p-4">
+                                                                            <div class="card-header white-content">
+                                                                                <ul class="list-unstyled text-left">
+                                                                                    {% with service=booking.service %}
+                                                                                    <li class="mb-1"><strong>Date:</strong> {{ booking.start|date:"D, M d,Y" }}</li>
+                                                                                    <li class="mb-1"><strong>Time:</strong> {{ booking.start|date:"P" }}-{{ booking.end|date:"P"}}</li>
+                                                                                    {% if booking.user %}
+                                                                                        {% with cust=booking.user %}
+                                                                                        <li class="mb-1"><strong>Customer:</strong> {{ cust.first_name }} {{ cust.last_name }}</li>
+                                                                                        <li class="mb-1"><strong>Contact Info:</strong> {{ cust.email }} {{ cust.phone }}</li>
+                                                                                        {% endwith %}
+                                                                                    {% elif booking.guest %}
+                                                                                        {% with cust=guest.user %}
+                                                                                        <li class="mb-1"><strong>Customer:</strong> {{ cust.first_name }} {{ cust.last_name }}</li>
+                                                                                        <li class="mb-1"><strong>Contact Info:</strong> {{ cust.email }} {{ cust.phone }}</li>
+                                                                                        {% endwith %}
+                                                                                    {% endif %}
+                                                                                    
+                                                                                    <br>
+                                                                                    {% if booking.booking_forms.all %}
+                                                                                        {% for x in booking.booking_forms.all %}
+                                                                                            <li class="mb-1"><strong>{{ x.label }}:</strong> {{ x.text }}</li>
+                                                                                        {% endfor %}
+                                                                                            {% comment %} <li class="mb-1"><strong>{{ extra.label }}:</strong> {{ extra.car_make }}</li>
+                                                                                            <li class="mb-1"><strong>{{ extra.label }}:</strong> {{ extra.car_model }}</li>
+                                                                                            <li class="mb-1"><strong>Vehicle Year:</strong> {{ extra.car_year }}</li> {% endcomment %}
+                                                                                        <br>
+                                                                                    {% endif %}
+                                                                                    <li class="mb-1"><strong>Booking ID:</strong> {{ booking.slug }}</li>
+                                                                                    <li class="mb-1"><strong>Service:</strong> {{ service.name }}</li>
+                                                                                    <li class="mb-1"><strong>Cost:</strong> ${{ booking.price }}</li>
+                                                                                    {% endwith %}
+                                                                                </ul>
+                                                                            </div>
+                                                                        </div>
+                                                                        <button type="button" class="btn btn-primary btn-sm accept" data-url="{% host_url 'addRequested' req.id host 'bizadmin' %}">Accept Request</button>
+                                                                        <button type="button" class="btn btn-danger btn-sm decline" data-url="{% host_url 'deleteRequested' req.id host 'bizadmin' %}">Decline Request</button>
+                                                                    </div>
+                                                                {% endwith %}
+                                                            {% endif %}
+                                                            
                                                         </div>
                                                     </div>
                                                 </div>

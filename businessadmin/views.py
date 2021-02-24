@@ -478,7 +478,7 @@ def scheduleView(request):
             if day >= 7:
                 day = 0
             openhour = OpeningHours.objects.get(company=company, weekday=day).from_hour
-            bookings = Bookings.objects.filter(company=company, is_cancelled_user=False, is_cancelled_company=False)
+            bookings = Bookings.objects.filter(company=company, is_cancelled_user=False, is_cancelled_company=False,is_cancelled_request=False)
             addbooking = AddBookingForm(initial={'company':company, 'timepick':openhour, 'datepick':datetime.today().strftime('%m/%d/%Y')})
             return render(request, 'bizadmin/dashboard/schedule.html', {'company':company, 'bookings':bookings, 'addbooking':addbooking})
         else:
@@ -1034,22 +1034,22 @@ def homepageViews(request):
             twoweek = week - timedelta(days=7)
             threeweek = twoweek - timedelta(days=7)
             fourweek = threeweek - timedelta(days=7)
-            week1 = Bookings.objects.filter(company=company, end__gte=week, end__lte=timezone.now(),is_cancelled_user=False, is_cancelled_company=False).aggregate(Sum('price')).get('price__sum',0)
+            week1 = Bookings.objects.filter(company=company, end__gte=week, end__lte=timezone.now(),is_cancelled_user=False, is_cancelled_company=False, is_cancelled_request=False).aggregate(Sum('price')).get('price__sum',0)
             if not week1:
                 week1 = 0
             start1 = (week - timedelta(days=week.weekday())).strftime("%b-%d-%Y")
             
-            week2 = Bookings.objects.filter(company=company, end__gte=twoweek, end__lte=week,is_cancelled_user=False, is_cancelled_company=False).aggregate(Sum('price')).get('price__sum',0)
+            week2 = Bookings.objects.filter(company=company, end__gte=twoweek, end__lte=week,is_cancelled_user=False, is_cancelled_company=False, is_cancelled_request=False).aggregate(Sum('price')).get('price__sum',0)
             if not week2:
                 week2 = 0
             start2 = (twoweek - timedelta(days=twoweek.weekday())).strftime("%b-%d-%Y")
 
-            week3 = Bookings.objects.filter(company=company, end__gte=threeweek, end__lte=twoweek,is_cancelled_user=False, is_cancelled_company=False).aggregate(Sum('price')).get('price__sum',0)
+            week3 = Bookings.objects.filter(company=company, end__gte=threeweek, end__lte=twoweek,is_cancelled_user=False, is_cancelled_company=False, is_cancelled_request=False).aggregate(Sum('price')).get('price__sum',0)
             if not week3:
                 week3 = 0
             start3 = (threeweek - timedelta(days=threeweek.weekday())).strftime("%b-%d-%Y")
 
-            week4 = Bookings.objects.filter(company=company, end__gte=fourweek, end__lte=threeweek,is_cancelled_user=False, is_cancelled_company=False).aggregate(Sum('price')).get('price__sum',0)
+            week4 = Bookings.objects.filter(company=company, end__gte=fourweek, end__lte=threeweek,is_cancelled_user=False, is_cancelled_company=False, is_cancelled_request=False).aggregate(Sum('price')).get('price__sum',0)
             if not week4:
                 week4 = 0
             start4 = (fourweek - timedelta(days=fourweek.weekday())).strftime("%b-%d-%Y")
@@ -1057,74 +1057,74 @@ def homepageViews(request):
             weeklabel = [start4, start3, start2, start1]
 
             month = timezone.localtime(timezone.now() - timedelta(days=30))
-            month1 = Bookings.objects.filter(company=company, end__gte=month, end__lte=timezone.now(),is_cancelled_user=False, is_cancelled_company=False).aggregate(Sum('price')).get('price__sum',0)
+            month1 = Bookings.objects.filter(company=company, end__gte=month, end__lte=timezone.now(),is_cancelled_user=False, is_cancelled_company=False, is_cancelled_request=False).aggregate(Sum('price')).get('price__sum',0)
             if not month1:
                 month1 = 0
             labelM0 = timezone.now().strftime("%b-%Y")
             labelM1 = month.strftime("%b-%Y")
 
             twomonth = month - timedelta(days=30)
-            month2 = Bookings.objects.filter(company=company, end__gte=twomonth, end__lte=month,is_cancelled_user=False, is_cancelled_company=False).aggregate(Sum('price')).get('price__sum',0)
+            month2 = Bookings.objects.filter(company=company, end__gte=twomonth, end__lte=month,is_cancelled_user=False, is_cancelled_company=False, is_cancelled_request=False).aggregate(Sum('price')).get('price__sum',0)
             if not month2:
                 month2 = 0
             labelM2 = twomonth.strftime("%b-%Y")
 
             threemonth = twomonth - timedelta(days=30)
-            month3 = Bookings.objects.filter(company=company, end__gte=threemonth, end__lte=twomonth,is_cancelled_user=False, is_cancelled_company=False).aggregate(Sum('price')).get('price__sum',0)
+            month3 = Bookings.objects.filter(company=company, end__gte=threemonth, end__lte=twomonth,is_cancelled_user=False, is_cancelled_company=False, is_cancelled_request=False).aggregate(Sum('price')).get('price__sum',0)
             if not month3:
                 month3 = 0
             labelM3 = threemonth.strftime("%b-%Y")
 
             fourmonth = threemonth - timedelta(days=30)
-            month4 = Bookings.objects.filter(company=company, end__gte=fourmonth, end__lte=threemonth,is_cancelled_user=False, is_cancelled_company=False).aggregate(Sum('price')).get('price__sum',0)
+            month4 = Bookings.objects.filter(company=company, end__gte=fourmonth, end__lte=threemonth,is_cancelled_user=False, is_cancelled_company=False, is_cancelled_request=False).aggregate(Sum('price')).get('price__sum',0)
             if not month4:
                 month4 = 0
             labelM4 = fourmonth.strftime("%b-%Y")
 
             fivemonth = fourmonth - timedelta(days=30)
-            month5 = Bookings.objects.filter(company=company, end__gte=fivemonth, end__lte=fourmonth,is_cancelled_user=False, is_cancelled_company=False).aggregate(Sum('price')).get('price__sum',0)
+            month5 = Bookings.objects.filter(company=company, end__gte=fivemonth, end__lte=fourmonth,is_cancelled_user=False, is_cancelled_company=False, is_cancelled_request=False).aggregate(Sum('price')).get('price__sum',0)
             if not month5:
                 month5 = 0
             labelM5 = fivemonth.strftime("%b-%Y")
 
             sixmonth = fivemonth - timedelta(days=30)
-            month6 = Bookings.objects.filter(company=company, end__gte=sixmonth, end__lte=fivemonth,is_cancelled_user=False, is_cancelled_company=False).aggregate(Sum('price')).get('price__sum',0)
+            month6 = Bookings.objects.filter(company=company, end__gte=sixmonth, end__lte=fivemonth,is_cancelled_user=False, is_cancelled_company=False, is_cancelled_request=False).aggregate(Sum('price')).get('price__sum',0)
             if not month6:
                 month6 = 0
             labelM6 = sixmonth.strftime("%b-%Y")
 
             sevenmonth = sixmonth - timedelta(days=30)
-            month7 = Bookings.objects.filter(company=company, end__gte=sevenmonth, end__lte=sixmonth,is_cancelled_user=False, is_cancelled_company=False).aggregate(Sum('price')).get('price__sum',0)
+            month7 = Bookings.objects.filter(company=company, end__gte=sevenmonth, end__lte=sixmonth,is_cancelled_user=False, is_cancelled_company=False, is_cancelled_request=False).aggregate(Sum('price')).get('price__sum',0)
             if not month7:
                 month7 = 0
             labelM7 = sevenmonth.strftime("%b-%Y")
 
             eightmonth = sevenmonth - timedelta(days=30)
-            month8 = Bookings.objects.filter(company=company, end__gte=eightmonth, end__lte=sevenmonth,is_cancelled_user=False, is_cancelled_company=False).aggregate(Sum('price')).get('price__sum',0)
+            month8 = Bookings.objects.filter(company=company, end__gte=eightmonth, end__lte=sevenmonth,is_cancelled_user=False, is_cancelled_company=False, is_cancelled_request=False).aggregate(Sum('price')).get('price__sum',0)
             if not month8:
                 month8 = 0
             labelM8 = eightmonth.strftime("%b-%Y")
 
             ninemonth = eightmonth - timedelta(days=30)
-            month9 = Bookings.objects.filter(company=company, end__gte=ninemonth, end__lte=eightmonth,is_cancelled_user=False, is_cancelled_company=False).aggregate(Sum('price')).get('price__sum',0)
+            month9 = Bookings.objects.filter(company=company, end__gte=ninemonth, end__lte=eightmonth,is_cancelled_user=False, is_cancelled_company=False, is_cancelled_request=False).aggregate(Sum('price')).get('price__sum',0)
             if not month9:
                 month9 = 0
             labelM9 = ninemonth.strftime("%b-%Y")
 
             tenmonth = ninemonth - timedelta(days=30)
-            month10 = Bookings.objects.filter(company=company, end__gte=tenmonth, end__lte=ninemonth,is_cancelled_user=False, is_cancelled_company=False).aggregate(Sum('price')).get('price__sum',0)
+            month10 = Bookings.objects.filter(company=company, end__gte=tenmonth, end__lte=ninemonth,is_cancelled_user=False, is_cancelled_company=False, is_cancelled_request=False).aggregate(Sum('price')).get('price__sum',0)
             if not month10:
                 month10 = 0
             labelM10 = tenmonth.strftime("%b-%Y")
 
             elevenmonth = tenmonth - timedelta(days=30)
-            month11 = Bookings.objects.filter(company=company, end__gte=elevenmonth, end__lte=tenmonth,is_cancelled_user=False, is_cancelled_company=False).aggregate(Sum('price')).get('price__sum',0)
+            month11 = Bookings.objects.filter(company=company, end__gte=elevenmonth, end__lte=tenmonth,is_cancelled_user=False, is_cancelled_company=False, is_cancelled_request=False).aggregate(Sum('price')).get('price__sum',0)
             if not month11:
                 month11 = 0
             labelM11 = elevenmonth.strftime("%b-%Y")
 
             twelvemonth = elevenmonth - timedelta(days=30)
-            month12 = Bookings.objects.filter(company=company, end__gte=twelvemonth, end__lte=elevenmonth,is_cancelled_user=False, is_cancelled_company=False).aggregate(Sum('price')).get('price__sum',0)
+            month12 = Bookings.objects.filter(company=company, end__gte=twelvemonth, end__lte=elevenmonth,is_cancelled_user=False, is_cancelled_company=False, is_cancelled_request=False).aggregate(Sum('price')).get('price__sum',0)
             if not month12:
                 month12 = 0
             labelM12 = twelvemonth.strftime("%b-%Y")
@@ -1690,10 +1690,11 @@ class addRequestedViews(View):
         req = get_object_or_404(CompanyReq, id=pk)
         user = req.user
         company = get_object_or_404(Company, user= request.user)
-        Clients.objects.create(company=company, user=user, first_name=user.first_name, last_name=user.last_name, email=user.email,phone=user.phone,
-                                city=user.city,postal=user.postal,province=user.province,address=user.address)
-        addedOnCompanyList.delay(user.id, company.id)
-        req.delete()
+        if req.is_addusertolist:
+            Clients.objects.create(company=company, user=user, first_name=user.first_name, last_name=user.last_name, email=user.email,phone=user.phone,
+                                    city=user.city,postal=user.postal,province=user.province,address=user.address)
+            addedOnCompanyList.delay(user.id, company.id)
+            req.delete()
         requested = company.reqclients.all()
         paginator = Paginator(requested, 10)
         page = request.GET.get('page')
@@ -1801,7 +1802,7 @@ class addBooking(View):
             if day >= 7:
                 day = 0
             openhour = OpeningHours.objects.get(company=company, weekday=day).from_hour
-            bookings = Bookings.objects.filter(company=company, is_cancelled_user=False, is_cancelled_company=False)
+            bookings = Bookings.objects.filter(company=company, is_cancelled_user=False, is_cancelled_company=False,is_cancelled_request=False)
             return render(request, 'bizadmin/dashboard/schedule.html', {'company':company, 'bookings':bookings, 'addbooking':bform, 'errorshow':True})
         return redirect(reverse('schedule', host='bizadmin'))
 
@@ -1841,7 +1842,7 @@ class load_events(View):
         staff_id = int(request.GET.get('staff_id'))
         staff_member = StaffMember.objects.get(pk=staff_id)
         company= Company.objects.get(user=request.user)
-        bookings = Bookings.objects.filter(start__gte=start, staffmem=staff_member, end__lte=end, company=company, is_cancelled_user=False, is_cancelled_company=False).values()
+        bookings = Bookings.objects.filter(start__gte=start, staffmem=staff_member, end__lte=end, company=company, is_cancelled_user=False, is_cancelled_company=False,is_cancelled_request=False).values()
         for b in bookings:
             b_id = b['id']
             booking = Bookings.objects.get(pk=b_id)
@@ -1912,7 +1913,7 @@ class calendarScheduleICS(View):
         cal = Calendar()
         cal.add('X-WR-CALNAME', request.user.first_name + "'s Appointments with Gibele")
         cal.add('X-WR-TIMEZONE', request.user.tz)
-        bookings = Bookings.objects.filter(company=company, is_cancelled_user=False, is_cancelled_company=False)
+        bookings = Bookings.objects.filter(company=company, is_cancelled_user=False, is_cancelled_company=False,is_cancelled_request=False)
         for booking in bookings:
             if booking.user:
                 cust = booking.user
@@ -2256,3 +2257,8 @@ class customThemeAPI(View):
                 company.background = 'hexagon'
             company.save()
         return JsonResponse({'oldbackground':bg})
+
+class integrationZoomSignUp(View):
+    def get(self, request):
+        user = request.user
+        return render(request, 'welcome/welcome.html', {'user':user, 'none':'d-none'})

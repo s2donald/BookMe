@@ -19,37 +19,17 @@
                                     <tr>
                                     <td valign="top" class="mcnTextContent" style="padding: 18px;color: #616161;font-family: Helvetica;font-size: 14px;font-weight: normal;line-height: 150%;text-align: center;">
                                         <div style="text-align: left;"><br>
-                                        <p>New Appointment!</p>
+                                        <p>Appointment Request Denied</p>
                                         <br>
-                                        <span style="font-size:14px; color:#616161 !important;">Hello {{ staff.first_name }},</span><br>
-                                        <span style="font-size:14px; color:#616161 !important;">You have a new appointment scheduled.</span><br>
+                                        <span style="font-size:14px; color:#616161 !important;">Hello {{ acct.first_name }},</span><br>
+                                        <span style="font-size:14px; color:#616161 !important;">Unfortunately your appointment request with {{ company.business_name }} was denied.</span><br>
                                         &nbsp;
                                         <hr><br>
-                                        <span style="font-size:14px; color:#616161 !important;">When: {{ booking.start|date:'D, N j, Y' }}, {{ booking.start|date:'g:i A e' }}</span><br>
-                                        <span style="font-size:14px; color:#616161 !important;">Service: {{ service.name }}</span><br>
-                                        &nbsp;
-                                        <hr><br>
-                                        <span style="font-size:14px; color:#616161 !important;">Customer: {{ acct.first_name }} {{ acct.last_name }}</span><br>
-                                        <span style="font-size:14px; color:#616161 !important;">Phone Number: {{ acct.phone }}</span><br>
-                                        <span style="font-size:14px; color:#616161 !important;">Email: {{ acct.email }}</span><br>
-                                        <span style="font-size:14px; color:#616161 !important;">Booking ID: {{ booking.slug }}</span><br>
-
-
-                                        &nbsp;
-                                        <hr><br>
-                                        {% if booking.booking_forms.all %}
-                                            Additional Info:
-                                            <ul style="list-style: none;">
-                                                {% for formfield in booking.booking_forms.all %}
-                                                    <li style="list-style: none;"><span style="font-size:14px; color:#616161 !important;"><strong>{{ formfield.label }}</strong>: {{ formfield.text }}</span></li>
-                                                {% endfor %}
-                                            </ul>
-                                            <hr>
+                                        {% if reason %}
+                                            <span style="font-size:14px; color:#616161 !important;">Reason: {{ reason }}</span><br>
                                         {% endif %}
-                                        {% if service.checkintime > 0 %}
-                                            <p><strong>NOTE:</strong>Please arrive {{ service.checkintime }} minutes before your service starts to check in.</p>
+                                        &nbsp;
                                         <hr><br>
-                                        {% endif %}
                                         </div>
 
                                     </td>

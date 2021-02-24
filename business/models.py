@@ -7,6 +7,7 @@ from account.models import Account, MyAccountManager
 from django.utils.text import slugify
 from django.contrib.auth.models import AbstractBaseUser
 from django.utils import timezone
+# from consumer.models import Bookings
 from django.db.models.signals import pre_save, post_save
 from gibele.utils import unique_slug_generator, unique_slug_generator_services
 import geocoder
@@ -309,14 +310,17 @@ class Clients(models.Model):
 from django.utils.timezone import now
 #This model should include all requests for bookings or getting on the client list(Bookings not added yet)
 class CompanyReq(models.Model):
-    user = models.ForeignKey(Account, on_delete=models.CASCADE, related_name='requests')
+    user = models.ForeignKey(Account, on_delete=models.CASCADE, related_name='requestsuser', null=True, blank=True)
+    guest = models.ForeignKey(Clients, on_delete=models.CASCADE, related_name='requestguest', null=True, blank=True)
     company = models.ForeignKey(Company, on_delete=models.CASCADE,related_name='reqclients')
     created_at = models.DateTimeField(auto_now_add=True)
-    add_to_list = models.BooleanField(default=False)
+    #check if the company must approve or decline this booking, True means the company/staff still has to approve the request and False means the company has responded
+    status = models.BooleanField(default=True)
+    #Check if the company approved the request
+    approved = models.BooleanField(default=False)
+    is_addusertolist = models.BooleanField(default=False)
+    is_addbooking = models.BooleanField(default=False)
 
-    #To be implemented in the near future, the client can add a description and an image to requested
-    description = models.CharField(max_length=400,blank=True)
-    image = models.ImageField(upload_to=get_user_image_folder, blank=True)
     class Meta:
         ordering = ('created_at',)
         verbose_name = 'Request For Company'
@@ -355,6 +359,7 @@ class Services(models.Model):
     paddingtime_minute = models.IntegerField(choices=minute_choices,default=0)
     padding = models.CharField(max_length=20,choices=beforeafter, default='none')
     available = models.BooleanField(default=True)
+    request = models.BooleanField(default=False)
 
     class Meta:
         ordering = ('name',)

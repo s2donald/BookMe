@@ -90,8 +90,11 @@ class BusinessRegistrationForm(UserCreationForm):
     def clean_email(self):
         email = self.cleaned_data['email']
         acct = Account.objects.filter(email=email)
+        staff = StaffMember.objects.filter(email=email)
         if acct:
             raise forms.ValidationError("Email address is already in use.")
+        elif staff:
+            raise forms.ValidationError("Email address is already associated with a staff member.")
             
         return email
 

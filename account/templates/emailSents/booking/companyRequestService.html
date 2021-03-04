@@ -19,14 +19,14 @@
                                     <tr>
                                     <td valign="top" class="mcnTextContent" style="padding: 18px;color: #616161;font-family: Helvetica;font-size: 14px;font-weight: normal;line-height: 150%;text-align: center;">
                                         <div style="text-align: left;"><br>
-                                        <p>New Appointment!</p>
+                                        <p>New Appointment Request!</p>
                                         <br>
                                         <span style="font-size:14px; color:#616161 !important;">Hello {{ staff.first_name }},</span><br>
-                                        <span style="font-size:14px; color:#616161 !important;">You have a new appointment scheduled.</span><br>
+                                        <span style="font-size:14px; color:#616161 !important;">You have a new appointment request. Please sign into BookMe.to to respond to the request.</span><br>
                                         &nbsp;
                                         <hr><br>
-                                        <span style="font-size:14px; color:#616161 !important;">When: {{ booking.start|date:'D, N j, Y' }}, {{ booking.start|date:'g:i A e' }}</span><br>
-                                        <span style="font-size:14px; color:#616161 !important;">Service: {{ service.name }}</span><br>
+                                        <span style="font-size:14px; color:#616161 !important;">Requested Date: {{ booking.start|date:'D, N j, Y' }}, {{ booking.start|date:'g:i A e' }}</span><br>
+                                        <span style="font-size:14px; color:#616161 !important;">Requested Service: {{ service.name }}</span><br>
                                         &nbsp;
                                         <hr><br>
                                         <span style="font-size:14px; color:#616161 !important;">Customer: {{ acct.first_name }} {{ acct.last_name }}</span><br>
@@ -62,6 +62,23 @@
                 </tr>
                 </table>
 				<![endif]-->
+            </td>
+        </tr>
+    </tbody>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" width="100%" class="mcnButtonBlock" style="min-width:100%;">
+    <tbody class="mcnButtonBlockOuter">
+        <tr>
+            <td style="padding-top:0; padding-right:18px; padding-bottom:18px; padding-left:18px;" valign="top" align="center" class="mcnButtonBlockInner">
+                <table border="0" cellpadding="0" cellspacing="0" class="mcnButtonContentContainer" style="border-collapse: separate !important;border-radius: 13px;background-color: #ffae74;">
+                    <tbody>
+                        <tr>
+                            <td align="center" valign="middle" class="mcnButtonContent" style="font-family: Arial; font-size: 14px; padding: 16px;">
+                                <a class="mcnButton " title="BookMe Admin Console" href="https://biz.bookme.to/requests" target="_blank" style="font-weight: bold;letter-spacing: normal;line-height: 100%;text-align: center;text-decoration: none;color: #FFFFFF;">Respond to request</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </td>
         </tr>
     </tbody>

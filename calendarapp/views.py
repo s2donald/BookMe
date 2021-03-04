@@ -17,7 +17,7 @@ from account.forms import UpdatePersonalForm, AccountAuthenticationForm, Account
 from django.contrib.auth import authenticate, login
 from django.core.validators import validate_email
 from django import forms
-from account.tasks import reminderEmail, confirmedEmail, consumerCreatedEmailSent, confirmedEmailCompany, send_sms_reminder_client, send_sms_confirmed_client
+from account.tasks import reminderEmail, emailRequestServiceCompany, confirmedEmail, consumerCreatedEmailSent, confirmedEmailCompany, send_sms_reminder_client, send_sms_confirmed_client, emailRequestServiceClient, send_sms_requestService_company, send_sms_requestService_client
 from businessadmin.tasks import requestToBeClient
 from business.forms import VehicleMakeModelForm, AddressForm
 import re
@@ -625,7 +625,6 @@ class confirmationMessageRender(View):
                 company.save()
             booking = Bookings.objects.create(user=user,guest=guest,service=service, staffmem=staff, company=company,start=start, end=end, price=price)
             booking.save()
-
             if company.category.name == 'Automotive Services':
                 bookinform1 = bookingForm.objects.create(booking=booking, label='Vehicle Year', text=vehyear.replace('%20',' '))
                 bookinform2 = bookingForm.objects.create(booking=booking, label='Vehicle Make', text=make.replace('%20',' '))
@@ -641,20 +640,33 @@ class confirmationMessageRender(View):
                 bookinform.save()
             # saveformhere
 
-            #Send conf and reminder emails
-            confirmedEmail.delay(booking.id)
-            confirmedEmailCompany.delay(booking.id)
-
-            confirmtime = 30
-            if service.checkintime:
-                confirmtime = service.checkintime + 30
-            startTime = timezone.localtime(start - datetime.timedelta(minutes=confirmtime))
-            reminderEmail.apply_async(args=[booking.id], eta=startTime, task_id=booking.slug)
-            # Confirm the appointment through texts with the client
-            if company.subscriptionplan >= 1:
-                send_sms_confirmed_client.delay(booking.id)
-                send_sms_reminder_client.apply_async(args=[booking.id], eta=startTime)
-            html_content = render_to_string('bookingpage/multiplestaff/bookingpage/partials/confirmationside/bookingset.html', {'company':company,'staff':staff,'service':service, 'date':date, 'time':time, 'month':month, 'year':year, 'day':day }, request)
+            if service.request:
+                reqc = CompanyReq.objects.create(user=user, guest=guest, company=company, is_addbooking=True)
+                booking.bookingreq = reqc
+                booking.save()
+                #Send request sent and recieved to customer and client respectively
+                #Email
+                emailRequestServiceClient.delay(booking.id)
+                emailRequestServiceCompany.delay(booking.id)
+                #Text
+                if company.subscriptionplan >= 1:
+                    send_sms_requestService_company.delay(booking.id)
+                    send_sms_requestService_client.delay(booking.id)
+                html_content = render_to_string('bookingpage/multiplestaff/bookingpage/partials/confirmationside/requestServiceSent.html', {'company':company,'staff':staff,'booking':booking }, request)
+            else:
+                #Send conf and reminder emails
+                confirmedEmail.delay(booking.id)
+                confirmedEmailCompany.delay(booking.id)
+                confirmtime = 30
+                if service.checkintime:
+                    confirmtime = service.checkintime + 30
+                startTime = timezone.localtime(start - datetime.timedelta(minutes=confirmtime))
+                reminderEmail.apply_async(args=[booking.id], eta=startTime, task_id=booking.slug)
+                # Confirm the appointment through texts with the client
+                if company.subscriptionplan >= 1:
+                    send_sms_confirmed_client.delay(booking.id)
+                    send_sms_reminder_client.apply_async(args=[booking.id], eta=startTime)
+                html_content = render_to_string('bookingpage/multiplestaff/bookingpage/partials/confirmationside/bookingset.html', {'company':company,'staff':staff,'service':service, 'date':date, 'time':time, 'month':month, 'year':year, 'day':day }, request)
         else:
             html_content = render_to_string('bookingpage/multiplestaff/bookingpage/partials/confirmationside/bookingerror.html', {'company':company,'staff':staff,'service':service, 'date':date, 'time':time, 'month':month, 'year':year, 'day':day }, request)
         lock.release()
@@ -809,19 +821,34 @@ class guestFormRender(View):
                     bookinform = bookingForm.objects.create(booking=booking, label=newformfield[1], text=newformfield[0])
                     bookinform.save()
                 
-                confirmedEmailCompany.delay(booking.id)
-                if email:
+                if service.request:
+                    reqc = CompanyReq.objects.create(guest=guest, company=company, is_addbooking=True)
+                    booking.bookingreq = reqc
+                    booking.save()
+                    #Send request sent and recieved to customer and client respectively
+                    #Email
+                    emailRequestServiceClient.delay(booking.id)
+                    emailRequestServiceCompany.delay(booking.id)
+                    #Text
+                    if company.subscriptionplan >= 1:
+                        send_sms_requestService_company.delay(booking.id)
+                        send_sms_requestService_client.delay(booking.id)
+                    html_content = render_to_string('bookingpage/multiplestaff/bookingpage/partials/confirmationside/requestServiceSent.html', {'company':company,'staff':staff,'booking':booking }, request)
+                else:
+                    #Send conf and reminder emails
                     confirmedEmail.delay(booking.id)
+                    confirmedEmailCompany.delay(booking.id)
                     confirmtime = 30
                     if service.checkintime:
                         confirmtime = service.checkintime + 30
-                    startTime = start - datetime.timedelta(minutes=confirmtime)
-                    reminderEmail.apply_async(args=[booking.id], eta=startTime)
+                    startTime = timezone.localtime(start - datetime.timedelta(minutes=confirmtime))
+                    reminderEmail.apply_async(args=[booking.id], eta=startTime, task_id=booking.slug)
                     # Confirm the appointment through texts with the client
                     if company.subscriptionplan >= 1:
                         send_sms_confirmed_client.delay(booking.id)
                         send_sms_reminder_client.apply_async(args=[booking.id], eta=startTime)
-                html_content = render_to_string('bookingpage/multiplestaff/bookingpage/partials/confirmationside/bookingset.html', {'company':company,'staff':staff,'service':service, 'date':date, 'time':time, 'month':month, 'year':year, 'day':day }, request)
+                    html_content = render_to_string('bookingpage/multiplestaff/bookingpage/partials/confirmationside/bookingset.html', {'company':company,'staff':staff,'service':service, 'date':date, 'time':time, 'month':month, 'year':year, 'day':day }, request)
+            
             else:
                 html_content = render_to_string('bookingpage/multiplestaff/bookingpage/partials/confirmationside/bookingerror.html', {'company':company,'staff':staff,'service':service, 'date':date, 'time':time, 'month':month, 'year':year, 'day':day }, request)
             lock.release()
@@ -928,8 +955,6 @@ class renderLoginPage(View):
                 company.save()
             booking = Bookings.objects.create(user=user,guest=guest,service=service, staffmem=staff, company=company,start=start, end=end, price=price)
             booking.save()
-            if service.request:
-                req = CompanyReq.objects.create(user=user,guest=guest, is_addbooking=True)
             if company.category.name == 'Automotive Services':
                 bookinform1 = bookingForm.objects.create(booking=booking, label='Vehicle Year', text=vehyear.replace('%20',' '))
                 bookinform2 = bookingForm.objects.create(booking=booking, label='Vehicle Make', text=make.replace('%20',' '))
@@ -944,22 +969,33 @@ class renderLoginPage(View):
                 # fieldname = request.POST.get(str(newformfield.id))
                 bookinform = bookingForm.objects.create(booking=booking, label=newformfield[1], text=newformfield[0])
                 bookinform.save()
-            # saveformhere
-            confirmedEmail.delay(booking.id)
-            confirmedEmailCompany.delay(booking.id)
-            confirmtime = 30
-            if service.checkintime:
-                confirmtime = service.checkintime + 30
-            startTime = timezone.localtime(start - datetime.timedelta(minutes=confirmtime))
-            reminderEmail.apply_async(args=[booking.id], eta=startTime, task_id=booking.slug)
-            # Confirm the appointment through texts with the client
-            if company.subscriptionplan >= 1:
-                send_sms_confirmed_client.delay(booking.id)
-                send_sms_reminder_client.apply_async(args=[booking.id], eta=startTime)
-
-            html_content = render_to_string('bookingpage/multiplestaff/bookingpage/partials/confirmationside/bookingset.html', {'company':company,'staff':staff,'service':service, 'date':date, 'time':time, 'month':month, 'year':year, 'day':day }, request)
-        else:
-            html_content = render_to_string('bookingpage/multiplestaff/bookingpage/partials/confirmationside/bookingerror.html', {'company':company,'staff':staff,'service':service, 'date':date, 'time':time, 'month':month, 'year':year, 'day':day }, request)
+            if service.request:
+                reqc = CompanyReq.objects.create(guest=guest, company=company, is_addbooking=True)
+                booking.bookingreq = reqc
+                booking.save()
+                #Send request sent and recieved to customer and client respectively
+                #Email
+                emailRequestServiceClient.delay(booking.id)
+                emailRequestServiceCompany.delay(booking.id)
+                #Text
+                if company.subscriptionplan >= 1:
+                    send_sms_requestService_company.delay(booking.id)
+                    send_sms_requestService_client.delay(booking.id)
+                html_content = render_to_string('bookingpage/multiplestaff/bookingpage/partials/confirmationside/requestServiceSent.html', {'company':company,'staff':staff,'booking':booking }, request)
+            else:
+                #Send conf and reminder emails
+                confirmedEmail.delay(booking.id)
+                confirmedEmailCompany.delay(booking.id)
+                confirmtime = 30
+                if service.checkintime:
+                    confirmtime = service.checkintime + 30
+                startTime = timezone.localtime(start - datetime.timedelta(minutes=confirmtime))
+                reminderEmail.apply_async(args=[booking.id], eta=startTime, task_id=booking.slug)
+                # Confirm the appointment through texts with the client
+                if company.subscriptionplan >= 1:
+                    send_sms_confirmed_client.delay(booking.id)
+                    send_sms_reminder_client.apply_async(args=[booking.id], eta=startTime)
+                html_content = render_to_string('bookingpage/multiplestaff/bookingpage/partials/confirmationside/bookingset.html', {'company':company,'staff':staff,'service':service, 'date':date, 'time':time, 'month':month, 'year':year, 'day':day }, request)
         lock.release()
         return JsonResponse({'notvalid':False, 'html_content':html_content})
 

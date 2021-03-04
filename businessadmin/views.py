@@ -503,6 +503,11 @@ def save_service_form(request, form, template_name):
             description = form.cleaned_data.get('description')
             price_type = form.cleaned_data.get('price_type')
             price = form.cleaned_data.get('price')
+            is_requested = form.cleaned_data.get('is_request')
+            if is_requested == 'n':
+                requ = False
+            else:
+                requ = True
             duration_hour = form.cleaned_data.get('duration_hour')
             duration_minute = form.cleaned_data.get('duration_minute')
             checkintime=form.cleaned_data.get('checkintime')
@@ -513,7 +518,7 @@ def save_service_form(request, form, template_name):
             company = Company.objects.get(user=request.user)
             service = Services.objects.create(business=company,name=name,description=description,price=price, available=avail, 
                                                 price_type=price_type,duration_hour=duration_hour,duration_minute=duration_minute,checkintime=checkintime,
-                                                padding=padding,paddingtime_hour=paddingtime_hour,paddingtime_minute=paddingtime_minute)
+                                                padding=padding,paddingtime_hour=paddingtime_hour,paddingtime_minute=paddingtime_minute,request=requ)
             
             service.save()
             user = request.user
@@ -550,6 +555,7 @@ class createserviceAPI(View):
             name = form.cleaned_data['name']
             description = form.cleaned_data['description']
             price_type = form.cleaned_data.get('price_type')
+            is_requested = form.cleaned_data.get('is_request')
             price = form.cleaned_data.get('price')
             duration_hour = form.cleaned_data.get('duration_hour')
             duration_minute = form.cleaned_data.get('duration_minute')
@@ -558,9 +564,13 @@ class createserviceAPI(View):
             paddingtime_hour=form.cleaned_data.get('paddingtime_hour')
             paddingtime_minute=form.cleaned_data.get('paddingtime_minute')
             avail = True
+            if is_requested == 'n':
+                requ = False
+            else:
+                requ = True
             service = Services.objects.create(business=company,name=name,description=description,price=price, available=avail, 
                                                 price_type=price_type,duration_hour=duration_hour,duration_minute=duration_minute,checkintime=checkintime,
-                                                padding=padding,paddingtime_hour=paddingtime_hour,paddingtime_minute=paddingtime_minute)
+                                                padding=padding,paddingtime_hour=paddingtime_hour,paddingtime_minute=paddingtime_minute, request=requ)
             service.save()
 
             catename = form2.cleaned_data.get('category')
@@ -851,7 +861,25 @@ class saveBusinessHours(View):
 def updateserviceViews(request, pk):
     service = get_object_or_404(Services, pk=pk)
     company = Company.objects.get(user=request.user)
-    dat = {'name': service.name,'company':company, 'description': service.description, 'price_type':service.price_type, 'price':service.price, 'available':service.available, 'duration_hour':service.duration_hour, 'duration_minute':service.duration_minute, 'checkintime':service.checkintime, 'padding':service.padding, 'paddingtime_hour':service.paddingtime_hour, 'paddingtime_minute':service.paddingtime_minute}
+    if service.request == False:
+        req = 'n'
+    else:
+        req = 'y'
+    dat = {
+            'name': service.name,
+            'company':company, 
+            'description': service.description, 
+            'price_type':service.price_type, 
+            'price':service.price, 
+            'available':service.available, 
+            'duration_hour':service.duration_hour, 
+            'duration_minute':service.duration_minute, 
+            'checkintime':service.checkintime, 
+            'padding':service.padding, 
+            'paddingtime_hour':service.paddingtime_hour, 
+            'paddingtime_minute':service.paddingtime_minute,
+            'is_request':req
+            }
     data=dict()
     if request.method=='POST':
         form = UpdateServiceForm(request.POST)
@@ -865,6 +893,12 @@ def updateserviceViews(request, pk):
             service.duration_minute = form.cleaned_data.get('duration_minute')
             service.checkintime = form.cleaned_data.get('checkintime')
             service.padding = form.cleaned_data.get('padding')
+            is_req = form.cleaned_data.get('is_request')
+            if is_req == 'n':
+                requ=False
+            else:
+                requ=True
+            service.request = requ
             service.paddingtime_hour = form.cleaned_data.get('paddingtime_hour')
             service.paddingtime_minute = form.cleaned_data.get('paddingtime_minute')
             service.avail = True
@@ -897,7 +931,23 @@ class updateserviceAPI(View):
     def get(self, request, pk):
         service = get_object_or_404(Services, pk=pk)
         company = Company.objects.get(user=request.user)
-        dat = {'name': service.name, 'description': service.description, 'price_type':service.price_type, 'price':service.price, 'available':service.available, 'duration_hour':service.duration_hour, 'duration_minute':service.duration_minute, 'checkintime':service.checkintime, 'padding':service.padding, 'paddingtime_hour':service.paddingtime_hour, 'paddingtime_minute':service.paddingtime_minute}
+        if service.request == False:
+            req = 'n'
+        else:
+            req = 'y'
+        dat = {
+                'name': service.name, 
+                'description': service.description, 
+                'price_type':service.price_type, 
+                'price':service.price, 
+                'available':service.available, 
+                'duration_hour':service.duration_hour, 
+                'duration_minute':service.duration_minute, 
+                'checkintime':service.checkintime, 
+                'padding':service.padding, 
+                'paddingtime_hour':service.paddingtime_hour, 
+                'paddingtime_minute':service.paddingtime_minute,
+                'is_request':req}
         data=dict()
         form = UpdateServiceForm(initial=dat)
         form2 = AddServiceToCategory(initial={'company':company, 'category':company.service_category.filter(services=service), 'staff':company.staffmembers.filter(services=service),'formfield':company.company_forms.filter(services=service)})
@@ -935,6 +985,12 @@ class updateserviceAPI(View):
             service.paddingtime_hour = form.cleaned_data.get('paddingtime_hour')
             service.paddingtime_minute = form.cleaned_data.get('paddingtime_minute')
             service.avail = True
+            is_req = form.cleaned_data.get('is_request')
+            if is_req == 'n':
+                requ=False
+            else:
+                requ=True
+            service.request = requ
             company = Company.objects.get(user=request.user)
             service.save()
 
@@ -1653,8 +1709,10 @@ def requestListViews(request):
         return redirect(reverse('completeprofile', host='bizadmin'))
     company = Company.objects.get(user=user)
     requested = CompanyReq.objects.filter(company=company).order_by('-created_at')
+    for req in requested:
+        print(req.booking_request)
 
-    paginator = Paginator(requested, 10)
+    paginator = Paginator(requested, 6)
     page = request.GET.get('page')
     try:
         requested = paginator.page(page)
@@ -1688,15 +1746,50 @@ class getBooking(View):
 class addRequestedViews(View):
     def post(self, request, pk):
         req = get_object_or_404(CompanyReq, id=pk)
-        user = req.user
+        if req.user:
+            user = req.user
+        elif req.guest:
+            user = req.guest
+
         company = get_object_or_404(Company, user= request.user)
         if req.is_addusertolist:
             Clients.objects.create(company=company, user=user, first_name=user.first_name, last_name=user.last_name, email=user.email,phone=user.phone,
                                     city=user.city,postal=user.postal,province=user.province,address=user.address)
             addedOnCompanyList.delay(user.id, company.id)
             req.delete()
+            message = 'You have added ' + user.first_name + ' to your client list.'
+        else:
+            message = 'You have confirmed ' + user.first_name + '\'s appointment request.'
+            booking = req.booking_request
+            service = booking.service
+            start = booking.start
+            req.delete()
+            if timezone.localtime(start) < timezone.now():
+                booking.is_cancelled_request = True
+                booking.save()
+                requested = company.reqclients.all()
+                paginator = Paginator(requested, 6)
+                page = request.GET.get('page')
+                try:
+                    requested = paginator.page(page)
+                except PageNotAnInteger:
+                    requested = paginator.page(1)
+                except EmptyPage:
+                    requested = paginator.page(paginator.num_pages)
+                html_string = render_to_string('bizadmin/dashboard/request/partial/partial_request.html', {'requested':requested, 'page':page})
+                return JsonResponse({'added':'The bookings requested date has already passed. Booking was not confirmed.','html_string':html_string})
+            confirmedEmail.delay(booking.id)
+            confirmtime = 30
+            if service.checkintime:
+                confirmtime = service.checkintime + 30
+            startTime = timezone.localtime(start - timedelta(minutes=confirmtime))
+            reminderEmail.apply_async(args=[booking.id], eta=startTime, task_id=booking.slug)
+            # Confirm the appointment through texts with the client
+            if company.subscriptionplan >= 1:
+                send_sms_confirmed_client.delay(booking.id)
+                send_sms_reminder_client.apply_async(args=[booking.id], eta=startTime)
         requested = company.reqclients.all()
-        paginator = Paginator(requested, 10)
+        paginator = Paginator(requested, 6)
         page = request.GET.get('page')
         try:
             requested = paginator.page(page)
@@ -1706,16 +1799,29 @@ class addRequestedViews(View):
             requested = paginator.page(paginator.num_pages)
         html_string = render_to_string('bizadmin/dashboard/request/partial/partial_request.html', {'requested':requested, 'page':page})
 
-        return JsonResponse({'added':'We have added ' + user.first_name + ' to your client list.','html_string':html_string})
+        return JsonResponse({'added':message,'html_string':html_string})
 
 class deleteRequestedViews(View):
     def post(self, request, pk):
         req = get_object_or_404(CompanyReq, id=pk)
-        user = req.user
-        req.delete()
+        if req.user:
+            user = req.user
+        elif req.guest:
+            user = req.guest
+        
+        if req.is_addusertolist:
+            req.delete()
+            message='You have rejected ' + user.first_name + '\'s request to join your client list.'
+        else:
+            booking = req.booking_request
+            booking.is_cancelled_request = True
+            booking.save()
+            message='You have rejected ' + user.first_name + '\'s appointment request.'
+            req.delete()
+
         company = get_object_or_404(Company, user= request.user)
         requested = company.reqclients.all()
-        paginator = Paginator(requested, 10)
+        paginator = Paginator(requested, 6)
         page = request.GET.get('page')
         try:
             requested = paginator.page(page)
@@ -1725,7 +1831,7 @@ class deleteRequestedViews(View):
             requested = paginator.page(paginator.num_pages)
         html_string = render_to_string('bizadmin/dashboard/request/partial/partial_request.html', {'requested':requested, 'page':page})
 
-        return JsonResponse({'deleted':'We have rejected ' + user.first_name + '\'s request to join your client list.','html_string':html_string})
+        return JsonResponse({'deleted':message,'html_string':html_string})
 import celery
 from celery import app
 class deleteBookingByCompAPI(View):
@@ -1842,7 +1948,7 @@ class load_events(View):
         staff_id = int(request.GET.get('staff_id'))
         staff_member = StaffMember.objects.get(pk=staff_id)
         company= Company.objects.get(user=request.user)
-        bookings = Bookings.objects.filter(start__gte=start, staffmem=staff_member, end__lte=end, company=company, is_cancelled_user=False, is_cancelled_company=False,is_cancelled_request=False).values()
+        bookings = Bookings.objects.filter(start__gte=start, staffmem=staff_member, end__lte=end, company=company, is_cancelled_user=False, is_cancelled_company=False,is_cancelled_request=False,bookingreq=None).values()
         for b in bookings:
             b_id = b['id']
             booking = Bookings.objects.get(pk=b_id)

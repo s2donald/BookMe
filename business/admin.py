@@ -52,7 +52,7 @@ class CompanyAdmin(admin.ModelAdmin):
     list_filter = ['available', 'created', 'updated']
     search_fields = ('user__first_name','business_name','user__email')
     list_editable = ['available']
-    inlines = [ StaffMemberInline, ClientsInline, CompanyReqInline, GallaryInline, OpeningHoursInline, AmenitiesInline, ServiceCategories ]
+    inlines = [ StaffMemberInline, CompanyReqInline, GallaryInline, OpeningHoursInline, AmenitiesInline, ServiceCategories ]
 
 
 

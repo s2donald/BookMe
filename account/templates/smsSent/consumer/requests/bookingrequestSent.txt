@@ -1,3 +1,3 @@
-Appointment Requested: You have sent an appointment request to {{ company.business_name }} for a {{ booking.service }} on {{ booking.start|date:'D, N j, Y' }}, {{ booking.start|date:'g:i A e' }}. 
+Appointment Requested: You have sent an appointment request to {{ staff_name }} for a {{ booking.service }} on {{ booking.start|date:'D, N j, Y' }}, {{ booking.start|date:'g:i A e' }}. 
 
-You will recieve a confirmation text once your request has been approved.
+You will recieve a confirmation text once your request has been confirmed.

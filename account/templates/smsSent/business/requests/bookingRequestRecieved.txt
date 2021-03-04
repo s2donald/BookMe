@@ -1,0 +1,3 @@
+New Appointment Request: You have recieved a new appointment request. 
+
+Please sign into https://biz.bookme.to to respond to the request.

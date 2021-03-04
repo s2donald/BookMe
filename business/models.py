@@ -316,8 +316,6 @@ class CompanyReq(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     #check if the company must approve or decline this booking, True means the company/staff still has to approve the request and False means the company has responded
     status = models.BooleanField(default=True)
-    #Check if the company approved the request
-    approved = models.BooleanField(default=False)
     is_addusertolist = models.BooleanField(default=False)
     is_addbooking = models.BooleanField(default=False)
 
@@ -336,7 +334,6 @@ class OpeningHours(models.Model):
     class Meta:
         ordering = ('weekday', 'from_hour')
         unique_together = ('weekday', 'company')
-
     def __unicode__(self):
         return u'%s: %s - %s' % (self.get_weekday_display(),
                                  self.from_hour, self.to_hour)

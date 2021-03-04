@@ -164,6 +164,10 @@ states = (
     ("SK", "Saskatchewan"),
     ("YT", "Yukon")
 )
+yesno = (
+    ('y','Yes'),
+    ('n','No')
+)
 
 class SearchForm(forms.Form):
     Search = forms.CharField(label='Search Business',widget=forms.TextInput(attrs={'class':'form-control border','placeholder':'Search Business or Service'}))
@@ -179,6 +183,7 @@ class homeSearchForm(forms.Form):
 class AddServiceForm(forms.ModelForm):
     name = forms.CharField(label='Service Name', max_length=200,widget=forms.TextInput(attrs={'class':'form-control'}))
     description = forms.CharField(label='Details Of Service',max_length=250, required=True, widget=forms.Textarea(attrs={'rows':4, 'cols':20}))
+    is_request = forms.ChoiceField(label='Must be approved by staff before confirming appointment:',choices=yesno, initial='n', widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control'}))
     price_type = forms.ChoiceField(label='Price Type',choices=price_choices, widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control', 'data-size':'5'}))
     price = forms.DecimalField(label='Price ($)',max_digits=10, required=True, widget=forms.TextInput(attrs={'type':'number', 'rows':1, 'cols':20,}))
     duration_hour = forms.ChoiceField(label='Duration Hour',choices=hours_choices,initial= '0', widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control', 'data-size':'5'}))
@@ -218,6 +223,7 @@ class BookingSettingForm(forms.Form):
 class UpdateServiceForm(forms.ModelForm):
     name = forms.CharField(label='Service Name',max_length=200,widget=forms.TextInput(attrs={'class':'form-control'}))
     description = forms.CharField(label='Details Of Service',max_length=250, required=True, widget=forms.Textarea(attrs={'rows':4, 'cols':20}))
+    is_request = forms.ChoiceField(label='Must be approved by staff before confirming appointment:',choices=yesno, initial='n', widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control'}))
     price_type = forms.ChoiceField(label='Price Type',choices=price_choices, widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control', 'data-size':'5'}))
     price = forms.DecimalField(label='Price ($)',max_digits=10, required=True, widget=forms.TextInput(attrs={'type':'number', 'rows':1, 'cols':20}))
     duration_hour = forms.ChoiceField(label='Duration Hour',choices=hours_choices, widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control', 'data-size':'5'}))

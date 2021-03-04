@@ -63,6 +63,7 @@
         {% csrf_token %}
         {{ service_form.name|as_crispy_field }}
         {{ service_form.description|as_crispy_field }}
+        {{ service_form.is_request|as_crispy_field }}
         <div class="form-row">
             <div class="form-group col mb-0">
                         {{ service_form.price_type|as_crispy_field }}

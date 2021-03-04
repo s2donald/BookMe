@@ -77,7 +77,7 @@ class Bookings(models.Model):
     start = models.DateTimeField(default=timezone.now)
     end = models.DateTimeField(default=timezone.now)
     # time_zone = TimeZoneField(default='America/Toronto')
-    bookingreq = models.OneToOneField(CompanyReq, related_name='booking_request', on_delete=models.CASCADE, null=True, blank=True)
+    bookingreq = models.OneToOneField(CompanyReq, related_name='booking_request', on_delete=models.SET_NULL, null=True, blank=True)
 
 
     class Meta:

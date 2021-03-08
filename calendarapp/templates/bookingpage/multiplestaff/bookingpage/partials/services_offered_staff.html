@@ -1,5 +1,28 @@
+{% load hosts %}
 <div>
-    <h2>Choose a Provider</h2>
+    <div class="justify-content-between align-baseline pl-4 row mb-6">
+        <div class="row align-middle">
+            <div class="clickme">
+            <a href="{% host_url 'bookingurls' host 'bookingurl' slug=company.slug %}"><svg xlmns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
+                <path fill="#181818" d="M12.859 1.49l-7.08 7.39-.097.112c-.232.303-.349.65-.349 1.008 0 .419.16.822.447 1.121l7.079 7.389.098.089c.452.342 1.04.295 1.408-.09l.085-.101.062-.1c.246-.437.186-.962-.147-1.309L7.66 10l6.706-6.999.085-.102c.316-.455.273-1.035-.085-1.409-.413-.431-1.093-.431-1.506 0z"></path>
+            </svg></a>
+            
+            </div>
+            <h4> Select Staff</h4>
+        </div>
+        <button class="text-muted clickme btn btn-sm btn-link" data-toggle="modal" data-target="#notesModal">{% if company.shownotes %}Policy{% endif %}</button>
+    </div>
+    <ul class="progressbar text-left">
+        <li class="completedprog" style="left: 0px;"></li>
+        <li class="progactive" style="left: 25%;"></li>
+        <li style="left: 50%;"></li>
+        <li style="left: 75%;"></li>
+        <li style="left: 100%;"></li>
+        <span style="width: 25%;"></span>
+    </ul>
+    <div class="status-info information">
+        <h6>{{ service.name }}</h6>
+    </div>
     <ul class="ulnopadd">
         {% for s in staff %}
             <li class="hovermeclick" data-staff="{{ s.id }}">

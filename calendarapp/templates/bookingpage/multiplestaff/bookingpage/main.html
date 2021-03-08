@@ -36,19 +36,8 @@
   <body class="mainpage" data-background="{{ company.background }}">
         {% comment %} {% block slideshow %}
         {% endblock slideshow %} {% endcomment %}
-        <div class="bg-light inline-block container-fluid align-items-center justify-content-center">
-            <div class="row justify-content-between p-2">
-                {% comment %} <a class="my-2 pr-2 ml-2" href="{% host_url 'business:homepage' host 'www' %}"><img width="125px" src="{% static "/img/favicon/logo/BookMe-whitebrown.svg" %}"></a> {% endcomment %}
-                <a class="my-2 pr-2 ml-2" href="{% host_url 'bizadminmain' host 'bizadmin' %}"><img width="125px" src="{% static "/img/favicon/logo/BookMe-whitebrown.svg" %}"></a>
-            </div>
-            <div class="d-flex align-items-center justify-content-center">
-              <h1><a class="text-white" href="{% host_url 'bookingurls' host 'bookingurl' slug=company.slug %}">{{ company.business_name }}</a></h1>
-            </div>
-            <div class="text-block align-items-center justify-content-center text-center">
-                <p class="text-block text-white align-items-center justify-content-center mb-0"><i class="fa-map-marker-alt fa mr-1 licolor"></i> {{ company.address }}, {{ company.city }}</p>
-                <p class="text-block text-white justify-content-center align-items-center pb-3">Rating: {% for x in '12345' %}<i class="fas fa-star {% if forloop.counter|avg_reviews:company.id %}text-warning{% else %}text-gray-300{% endif %}"></i>{% endfor %}</p>
-            </div>
-        </div>
+        {% block header %}
+        {% endblock %}
         
         <div class="container align-items-center text-center mt-2">
             
@@ -75,7 +64,11 @@
             {% endblock %}
             {% block scripts %}
             {% endblock scripts %}
-            <p class="font-weight-bold text-black m-2" style="color:black; margin:2px">Appointments Powered by BookMe</p>
+            <p class="font-weight-bold text-black m-2" style="color:black; margin:2px"></p>
+            <div class="bookingfooter">
+              <span>Appointments by</span>
+              <img width="72px" src="{% static "/img/favicon/logo/BookMe-blackgrad.svg" %}">
+            </div>
         </div>
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->

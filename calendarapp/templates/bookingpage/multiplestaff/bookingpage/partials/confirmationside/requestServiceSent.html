@@ -1,7 +1,21 @@
+<div class="justify-content-between align-baseline pl-4 row mb-6">
+        <div class="row align-middle">
+            <h4>Booking Requested</h4>
+        </div>
+        <button class="text-muted clickme btn btn-sm btn-link" data-toggle="modal" data-target="#notesModal">{% if company.shownotes %}Policy{% endif %}</button>
+    </div>
+    <ul class="progressbar text-left">
+        <li class="completedprog" style="left: 0px;"></li>
+        <li class="completedprog" style="left: 25%;"></li>
+        <li class="completedprog" style="left: 50%;"></li>
+        <li class="completedprog" style="left: 75%;"></li>
+        <li class="completedprog" style="left: 100%;"></li>
+        <span style="width: 100%;"></span>
+    </ul>
 <div class="row">
     <div class="col-lg-12">
-        <h1 class="h2 mb-2">Booking Requested</h1>
-        <p style="font-size:25px;">We have sent an appointment request to {{ company.business_name }} for a {{ booking.service }} on {{ booking.start|date:'D, N j, Y' }}, {{ booking.start|date:'g:i A e' }}.</p>
-        <p style="font-size:25px;">You will recieve a confirmation text once your request has been confirmed</p>
+        <h1 class="h2 mb-2"></h1>
+        <p style="font-size:25px;">We have sent an appointment request to {{ company.business_name }} for a <strong>{{ booking.service }}</strong> on <strong>{{ booking.start|date:'D, N j, Y' }}</strong>, <strong>{{ booking.start|date:'g:i A e' }}</strong>.</p>
+        <p style="font-size:25px;">You will recieve a confirmation through email or text once your request has been confirmed.</p>
     </div>
 </div>

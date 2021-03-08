@@ -1,6 +1,20 @@
+
+<div class="justify-content-between align-baseline pl-4 row mb-6">
+    <div class="row align-middle">
+        <h4>Booking Confirmed</h4>
+    </div>
+    <button class="text-muted clickme btn btn-sm btn-link" data-toggle="modal" data-target="#notesModal">{% if company.shownotes %}Policy{% endif %}</button>
+</div>
+<ul class="progressbar text-left">
+    <li class="completedprog" style="left: 0px;"></li>
+    <li class="completedprog" style="left: 25%;"></li>
+    <li class="completedprog" style="left: 50%;"></li>
+    <li class="completedprog" style="left: 75%;"></li>
+    <li class="completedprog" style="left: 100%;"></li>
+    <span style="width: 100%;"></span>
+</ul>
 <div class="row">
     <div class="col-lg-12">
-        <h1 class="h2 mb-2">Booking Confirmed</h1>
         <p style="font-size:25px;">Thank you for setting an appointment with {{ company.business_name }}! You are scheduled with <strong>{{ staff.first_name }} {{ staff.last_name }}</strong> and it will take place on <strong> {{ date }}</strong> at <strong>{{ time }}</strong> for a <strong>{{ service.name }}</strong>.</p><p style="font-size:25px;">We have sent the additional details of your service to your email.</p>
     </div>
 </div>

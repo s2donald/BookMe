@@ -1,12 +1,38 @@
-
 {% load crispy_forms_tags %}
-<form method="post" class="justify-content-center" id="guestform" enctype="multipart/form-data">
+<form method="post" class="justify-content-center pt-1" id="guestform" enctype="multipart/form-data">
     {% csrf_token %}
+    <div class="justify-content-between align-baseline pl-4 row mb-6">
+        <div class="row align-middle">
+            <h4> Book as a guest</h4>
+        </div>
+        <button class="text-muted clickme btn btn-sm btn-link" data-toggle="modal" data-target="#notesModal">{% if company.shownotes %}Policy{% endif %}</button>
+    </div>
+    <ul class="progressbar text-left">
+        <li class="completedprog" style="left: 0px;"></li>
+        <li class="completedprog" style="left: 25%;"></li>
+        <li class="completedprog" style="left: 50%;"></li>
+        <li class="completedprog" style="left: 75%;"></li>
+        <li style="left: 100%;"></li>
+        <span style="width: 75%;"></span>
+    </ul>
+    <div class="status-info information">
+        <h6>{{ service.name }}</h6>
+        <p>with {% if staff.user %}{{ staff.user.first_name }}{% else %}{{ staff.first_name }}{% endif %}</p>
+        {% comment %} <p><a href="">Restart booking</a></p> {% endcomment %}
+    </div>
+    <div class="row mb-3 mx-auto">
+        <div class="col-5 ml-auto mr-1 d-flex align-items-center mb-3 mb-md-0 bg-light rounded text-white">
+            <div class="date-tile mr-3">
+                <div class="text-uppercase"> <span class="text-sm" id="sm-mon">{{ date|date:'M' }}</span><br><strong class="text-lg" id="numdate">{{ date|date:'j' }}</strong></div>
+            </div>
+            <p class="text-sm mb-0" id="serDate">{{ date|date:'l' }}<br> {{ time }} </p>
+        </div>
+        <div class="col-5 mr-auto ml-1 d-flex align-items-left mb-3 mb-md-0 bg-light rounded text-white">
+            <p class="text-sm mb-0 text-left" id="serDate"> {% if service.duration_hour > 0 %}{{ service.duration_hour }} hour{% endif %} {% if service.duration_minute > 0 and service.duration_hour > 0 %}and{% endif %} {{ service.duration_minute}} minute service.</p>
+        </div>
+    </div>
     <div class="authver justify-content-center container-fluid">
         <div class="row justify-content-center">
-            <div class="col-md-12">
-                <h3>Submit Your Info</h3>
-            </div>
             <div class="row cont">
                 <div class="col-md-6 py-0" id="fname">
                     {{ personal_form.first_name|as_crispy_field }}

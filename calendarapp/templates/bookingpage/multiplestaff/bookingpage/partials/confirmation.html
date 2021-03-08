@@ -1,21 +1,42 @@
-<h1 class="h2 mb-2"> Confirm To Secure Spot <span class="text-muted"></span></h1>
+<div class="justify-content-between align-baseline pl-4 row mb-6">
+    <div class="row align-middle">
+        <div class="clickme hovermeclick" data-staff="{{ staff.id }}">
+        <svg xlmns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
+            <path fill="#181818" d="M12.859 1.49l-7.08 7.39-.097.112c-.232.303-.349.65-.349 1.008 0 .419.16.822.447 1.121l7.079 7.389.098.089c.452.342 1.04.295 1.408-.09l.085-.101.062-.1c.246-.437.186-.962-.147-1.309L7.66 10l6.706-6.999.085-.102c.316-.455.273-1.035-.085-1.409-.413-.431-1.093-.431-1.506 0z"></path>
+        </svg>
+        </div>
+        <h4> Additional Info</h4>
+    </div>
+    <button class="text-muted clickme btn btn-sm btn-link" data-toggle="modal" data-target="#notesModal">{% if company.shownotes %}Policy{% endif %}</button>
+</div>
+<ul class="progressbar text-left">
+    <li class="completedprog" style="left: 0px;"></li>
+    <li class="completedprog" style="left: 25%;"></li>
+    <li class="completedprog" style="left: 50%;"></li>
+    <li class="completedprog" style="left: 75%;"></li>
+    <li style="left: 100%;"></li>
+    <span style="width: 75%;"></span>
+</ul>
+<div class="status-info information">
+    <h6>{{ service.name }}</h6>
+    <p>with {% if staff.user %}{{ staff.user.first_name }}{% else %}{{ staff.first_name }}{% endif %}</p>
+</div>
 <div class="text-block">
 <form method="POST" id='fconfirmationform'>
     {% csrf_token %}
-    <h5 class="mb-4">{{ service.name }}</h5>
     <div class="row mb-3">
-        <div class="col-6 m-1 d-flex align-items-center mb-3 mb-md-0 bg-light rounded text-white">
+        <div class="col-5 ml-auto mr-1 d-flex align-items-center mb-3 mb-md-0 bg-light rounded text-white">
             <div class="date-tile mr-3">
                 <div class="text-uppercase"> <span class="text-sm" id="sm-mon">{{ date|date:'M' }}</span><br><strong class="text-lg" id="numdate">{{ date|date:'j' }}</strong></div>
             </div>
             <p class="text-sm mb-0" id="serDate">{{ date|date:'l' }}<br> {{ time }} </p>
         </div>
-        <div class="col-5 m-1 d-flex align-items-left mb-3 mb-md-0 bg-light rounded text-white">
+        <div class="col-5 mr-auto ml-1 d-flex align-items-left mb-3 mb-md-0 bg-light rounded text-white">
             <p class="text-sm mb-0 text-left" id="serDate"> {% if service.duration_hour > 0 %}{{ service.duration_hour }} hour{% endif %} {% if service.duration_minute > 0 and service.duration_hour > 0 %}and{% endif %} {{ service.duration_minute}} minute service.</p>
         </div>
     </div>
 {% if company.company_forms.all or company.category.name == 'Automotive Services' %}
-    <h6>Fill out the following form</h6>
+    <h4>Fill out the following form</h4>
 {% endif %}
 {% if company.category.name == 'Automotive Services' %}
     <div class="col-12 text-left">
@@ -44,12 +65,12 @@
 {% endfor %}
 
 <div class="row form-block flex-column flex-sm-row my-4">
-    <div class="col text-center"><button type='submit' data-sitekey="6LeimeAZAAAAAE119rtvZivK4DW9csX6QhEo5Yla" data-callback='onSubmit' data-action='submit' class="btn btn-outline-primary px-3 confbtn"> Confirm and Secure Spot<i class="fa-chevron-right fa ml-2"></i></button></div>
+    <div class="col text-center"><button type='submit' data-sitekey="6LeimeAZAAAAAE119rtvZivK4DW9csX6QhEo5Yla" data-callback='onSubmit' data-action='submit' class="btn btn-outline-primary px-3 confbtn"> {% if request.user.is_authenticated %}Confirm and Secure Spot{% else %}Proceed to Final Step{% endif %}<i class="fa-chevron-right fa ml-2"></i></button></div>
 </div>
 </form>
 </div>
 
-{% if company.notes %}
+{% comment %} {% if company.notes %}
     <div class="text-block">
         <h5 class="mb-4">Things to keep in mind</h5>
         <ul class="list-unstyled">
@@ -61,4 +82,4 @@
             </li>
         </ul>
     </div>
-{% endif %}
+{% endif %} {% endcomment %}

@@ -1000,6 +1000,14 @@ class updateserviceAPI(View):
                 sc = ServiceCategories.objects.get(name=s.name, services=service)
                 sc.services.remove(service)
 
+            staffname = form2.cleaned_data.get('staff')
+            for staff in company.staffmembers.all():
+                staffmem = StaffMember.objects.get(id=staff.id)
+                staffmem.services.remove(service)
+            for staff in staffname:
+                staffmem = StaffMember.objects.get(id=staff.id)
+                staffmem.services.add(service)
+
             catename = form2.cleaned_data.get('category')
             for cate in catename:
                 sc = ServiceCategories.objects.get(name=cate.name, company=company)

@@ -504,7 +504,7 @@ a:link{
 }
 
 .licolor {
-    color: #854fee !important;
+    color: #ffae74 !important;
     font-weight: bold;
 }
 a.licolor:hover, a.licolor:focus {
@@ -514,7 +514,7 @@ a.licolor:hover, a.licolor:focus {
     color: black;
 }
 .lipurple {
-  color: #854fee;
+  color: #ffae74;
 }
 .ligrey {
   color: grey;
@@ -709,17 +709,27 @@ a.licolor:hover, a.licolor:focus {
 .nav-top-default {
     background: linear-gradient(90deg, #ff5f6d 0%,#ffc371 100%);
 }
+
 .mainpage[data-background="primary"] .bg-light, .bg-light {
     background: linear-gradient(90deg, #ff5f6d 0%, #ff5f6d 100%);
     background-color: #ff5f6d;
 }
-
+.mainpage[data-background="blue"] .bg-light, .bg-light {
+  background: linear-gradient(90deg, #10559A 0%, #10559A 100%);
+  background-color: #10559A;
+}
+.mainpage[data-background="cello"] .bg-light, .bg-light {
+  background: linear-gradient(90deg, #477f8f 0%, #477f8f 100%);
+  background-color: #477f8f;
+}
 .mainpage[data-background="carbon"] .bg-light {
   background-color: rgb(32, 32, 32) !important;
   background-image: linear-gradient(to right, rgba(0,0,0,1), rgba(0,0,0,0) 20%, rgba(0,0,0,0) 80%, rgba(0,0,0,1)), linear-gradient(-45deg, black 25%, transparent 25%, transparent 75%, black 75%, black), linear-gradient(-45deg, black 25%, transparent 25%, transparent 75%, black 75%, black), linear-gradient(to bottom, rgb(8, 8, 8), rgb(32, 32, 32)) !important;
   background-size: 100% 100%, 20px 20px, 20px 20px, 20px 10px !important;
   background-position: 0px 0px, 0px 0px, 10px 10px, 0px 0px !important;
 }
+
+
 
 .mainpage[data-background="hexagon"] .bg-light {
   background:
@@ -754,6 +764,15 @@ a.licolor:hover, a.licolor:focus {
   color: white !important;
 }
 
+.mainpage[data-background="blue"] .nav-pills .nav-link.active, .nav-pills .nav-link.active {
+  background: linear-gradient(90deg, #10559A 0%, #10559A 100%) !important;
+  color: white !important;
+}
+.mainpage[data-background="cello"] .nav-pills .nav-link.active, .nav-pills .nav-link.active {
+  background: linear-gradient(90deg, #477f8f 0%, #477f8f 100%) !important;
+  background-color: #477f8f;
+}
+
 .mainpage[data-background="carbon"] .nav-pills .nav-link.active {
   background-color: rgb(32, 32, 32) !important;
   background-image: linear-gradient(to right, rgba(0,0,0,1), rgba(0,0,0,0) 20%, rgba(0,0,0,0) 80%, rgba(0,0,0,1)), linear-gradient(45deg, black 25%, transparent 25%, transparent 75%, black 75%, black), linear-gradient(45deg, black 25%, transparent 25%, transparent 75%, black 75%, black), linear-gradient(to bottom, rgb(8, 8, 8), rgb(32, 32, 32)) !important;
@@ -773,6 +792,51 @@ a.licolor:hover, a.licolor:focus {
   background-size: 40px 60px !important;
   color: white !important;
 }
+
+ul.progressbar {
+  height: 2px;
+  position: relative;
+  padding-bottom: 3px;
+  padding-left: 0px;
+  margin-bottom: 25px;
+}
+ul.progressbar:before {
+  content: "";
+  background-color: #d9e1ee;
+  height: 2px;
+  display: block;
+  width: 100%;
+}
+
+ul.progressbar li.progactive, ul.progressbar li.completedprog, ul.progressbar span {
+  background-color: #ffae74;
+}
+
+ul.progressbar li {
+  width: 6px;
+  height: 6px;
+  position: absolute;
+  top: -2px;
+  background-color: #d9e1ee;
+  border-radius: 50%;
+  z-index: 9;
+}
+
+ul.progressbar span {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 2px;
+  z-index: 1;
+  margin: 0;
+  padding: 0;
+}
+
+ul.progressbar li.progactive, ul.progressbar li.completedprog, ul.progressbar span {
+  background-color: #ffae74;
+}
+
+
 
 .bg-dark {
     background: #1b1b1b;
@@ -835,6 +899,27 @@ a.licolor:hover, a.licolor:focus {
   .hovermeclick {
     cursor: pointer;
     padding-bottom: 1rem;
+    border-radius: 6px;
+  }
+  .clickme{
+    padding-right: 2px;
+    background-color: transparent !important;
+  }
+  .clickme:hover {
+    cursor: pointer;
+  }
+
+  .status-info.information {
+    padding: 10px 16px;
+  }
+
+  .status-info {
+      min-height: 64px;
+      padding: 24px 16px;
+      background-color: #f6f8fc;
+      border-radius: 6px;
+      margin-bottom: 10px;
+      text-align: left;
   }
 
   .hovermeclick:hover {
@@ -947,7 +1032,7 @@ li {
 
 .footer a {
   text-decoration: none;
-  color: #854fee;
+  color: #ffae74;
 }
 .footer a:hover {
   text-decoration: none;
@@ -1477,7 +1562,7 @@ li {
 #sidebar {
     min-width: 260px;
     max-width: 260px;
-    background: #854fee;
+    background: #ffae74;
     color: #fff;
     transition: all 0.3s;
 }
@@ -1543,7 +1628,7 @@ li {
 
 #sidebar .sidebar-header {
     padding: 20px;
-    background: #854fee;
+    background: #ffae74;
 }
 
 #sidebar .sidebar-header strong {
@@ -1553,7 +1638,7 @@ li {
 
 #sidebar ul.components {
     padding: 20px 0;
-    border-bottom: 1px solid #854fee;
+    border-bottom: 1px solid #ffae74;
 }
 
 #sidebar ul li a {
@@ -2232,7 +2317,10 @@ figure {
     ------------------------
 */
 
-
+  #accordion {
+    box-shadow: 0 12px 8px 0 rgb(22 45 61 / 4%), 0 1px 4px 0 rgb(22 45 61 / 10%);
+    border-radius: 6px;
+  }
   .card-topcol {
     position: absolute;
     top: -1px;

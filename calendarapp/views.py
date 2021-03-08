@@ -468,8 +468,8 @@ class bookingTimesView(View):
         request.session['staff_id'] = staff_id
         service = Services.objects.get(pk=service_id)
         staff = company.staffmembers.filter(services=service)
-        html = render_to_string('bookingpage/multiplestaff/bookingpage/partials/bookingCalendar.html', {'company':company,'staff':staff, 'service':service}, request)
         staffmem = StaffMember.objects.get(pk=staff_id)
+        html = render_to_string('bookingpage/multiplestaff/bookingpage/partials/bookingCalendar.html', {'company':company,'staff':staffmem, 'service':service}, request)
         hours = render_to_string('bookingpage/multiplestaff/bookingpage/partials/staff/staff_hours.html', {'staff':staffmem}, request)
         info = render_to_string('bookingpage/multiplestaff/bookingpage/partials/staff/staff_information.html', {'staff':staffmem}, request)
         return JsonResponse({'html_content':html, 'hours_content':hours, 'info_content':info, 'service_id':service_id})
@@ -858,7 +858,17 @@ class renderLoginPage(View):
     def get(self, request):
         company = request.viewing_company
         account_form = AccountAuthenticationForm()
-        html_content = render_to_string('bookingpage/multiplestaff/bookingpage/partials/login/bookmeuser.html', {'account_form':account_form, 'company':company }, request)
+        company=request.viewing_company
+        s_id = request.session.get('service_id')
+        staff_id = request.session.get('staff_id')
+        month = request.session.get('month')
+        year = request.session.get('year')
+        day = request.session.get('day')
+        time = request.session.get('time')
+        staff = get_object_or_404(StaffMember, id=staff_id)
+        service = get_object_or_404(Services, id=s_id)
+        date = datetime.date(year, month, day)
+        html_content = render_to_string('bookingpage/multiplestaff/bookingpage/partials/login/bookmeuser.html', {'account_form':account_form, 'company':company, 'staff':staff,'service':service, 'date':date, 'time':time }, request)
         return JsonResponse({'html_content': html_content})
 
     def post(self, request):

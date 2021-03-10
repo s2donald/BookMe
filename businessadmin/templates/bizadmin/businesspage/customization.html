@@ -52,7 +52,7 @@
                     <a class="nav-link" href="{% host_url 'amenities' host 'bizadmin'%}">Amenities and Tags</a>
                     <a class="nav-link activate" href="{% host_url 'bpagecustomization' host 'bizadmin'%}">Customization</a>
                 </nav>
-                <hr class="mt-0 mb-4" />
+                <hr class="mt-0 mb-4"/>
                 <div class="row">
                     <div class="col-md-12 mb-4">
                         <div class="card h-100 border-left-lg border-left-secondary">
@@ -85,7 +85,9 @@
                                                                 </label>
                                                             </div>
                                                         </td>
-                                                        <td></td>
+                                                        <td class="text-center">
+                                                        
+                                                        </td>
                                                     </tr>
                                                     <tr>
                                                         <td class="text-center">Vehicle Make</td>
@@ -97,7 +99,9 @@
                                                                 </label>
                                                             </div>
                                                         </td>
-                                                        <td></td>
+                                                        <td class="text-center">
+                                                            
+                                                        </td>
                                                     </tr>
                                                     <tr>
                                                         <td class="text-center">Vehicle Model</td>
@@ -109,7 +113,9 @@
                                                                 </label>
                                                             </div>
                                                         </td>
-                                                        <td></td>
+                                                        <td class="text-center">
+
+                                                        </td>
                                                     </tr>
                                                     <tr>
                                                         <td class="text-center">Vehicle Trim</td>
@@ -121,7 +127,9 @@
                                                                 </label>
                                                             </div>
                                                         </td>
-                                                        <td></td>
+                                                        <td class="text-center">
+
+                                                        </td>
                                                     </tr>
                                                 {% endif %}
                                                 {% for field in company.company_forms.all %}
@@ -142,7 +150,9 @@
                                                         </td>
                                                     </tr>
                                                 {% empty %}
-                                                    <td colspan="8" class="text-center">Add form fields to collect specific information from clients</td>
+                                                    {% if not company.category.name == 'Automotive Services' %}
+                                                        <td colspan="8" class="text-center">Add form fields to collect specific information from clients</td>
+                                                    {% endif %}
                                                 {% endfor %}
                                             </tbody>
                                         </table>

@@ -902,11 +902,15 @@ ul.progressbar li.progactive, ul.progressbar li.completedprog, ul.progressbar sp
     border-radius: 6px;
   }
   .clickme{
-    padding-right: 2px;
+    padding: 2px 2px 2px 0px;
     background-color: transparent !important;
   }
   .clickme:hover {
     cursor: pointer;
+    background-color: #f6f8fc !important;
+    border-radius: 6px;
+    padding: 2px 2px 2px 0px;
+
   }
 
   .status-info.information {

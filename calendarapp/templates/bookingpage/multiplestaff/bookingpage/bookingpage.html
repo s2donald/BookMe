@@ -25,13 +25,12 @@
 
 {% block booking %}
 <script type="text/javascript">
-$(document).ready(
-);
+    $(document).ready();
 </script>
 <div class="modal fade" id="notesModal" tabindex="-1" data-keyboard="false" data-backdrop="static" role="dialog" aria-labelledby="myModalLabel" aria-hidden="false">
    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            <div class="modal-body" id="getCode" style="overflow-x: scroll;">
+            <div class="modal-body" id="getCodeBooking" style="overflow-x: scroll;">
                 <div class="text-left">
                 <h5 class="modal-title">Booking Policy</h5>
                 </div>
@@ -92,7 +91,7 @@ $(document).ready(
                             <div class="row align-middle">
                                 <h4> Select Service</h4>
                             </div>
-                            <button class="text-muted clickme btn btn-sm btn-link" data-toggle="modal" data-target="#notesModal">{% if company.shownotes %}Policy{% endif %}</button>
+                            <button class="text-muted btn btn-sm btn-link" data-toggle="modal" data-target="#notesModal">{% if company.shownotes %}Policy{% endif %}</button>
                         </div>
                         <ul class="progressbar text-left">
                             <li class="completedprog" style="left: 0px;"></li>
@@ -681,8 +680,9 @@ $(document).ready(
                     $( "#datepicker" ).flatpickr({
                         dateFormat: "Y-m-d",
                         inline:true,
+                        minDate: "{{ dateWindowBefore|date:'Y-m-d' }}",
+                        maxDate: "{{ dateWindowAfter|date:'Y-m-d' }}",
                         defaultHour: 12,
-                        minDate: 'today',
                         position: "center",
                         onChange: function(selectedDates, dateStr, instance) {
                             selectedDateFunction(selectedDates[0], data.service_id, staff_id)

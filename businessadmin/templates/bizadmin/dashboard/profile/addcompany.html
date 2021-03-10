@@ -432,6 +432,34 @@
                         {{ booking_form.cancellation|as_crispy_field }}
                     </div>
                     </div>
+                    <div class="col-md-12 input-group justify-content-center">
+
+                    <div class="col-md-4 text-left">
+                        <label for="" class="font-weight-bold d-flex justify-content-left pr-1">Advanced Notice Time<a data-toggle="tooltip" data-placement="top" title="The time required in advance prior to setting an appointment"> <i class="fas fa-question-circle licolor"></i></a></label>
+                        <div class="row">
+                            <div class="col-4 pr-0">
+                                {{ booking_form.before_window_day|as_crispy_field }}
+                            </div>
+                            <div class="col-4 px-0">
+                                {{ booking_form.before_window_hour|as_crispy_field }}
+                            </div>
+                            <div class="col-4 pl-0">
+                                {{ booking_form.before_window_min|as_crispy_field }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 text-left">
+                        <label for="" class="font-weight-bold d-flex justify-content-left pr-1">Scheduling Window<a data-toggle="tooltip" data-placement="top" title="How far in advance are clients allowed to book a service?"> <i class="fas fa-question-circle licolor"></i></a></label>
+                        <div class="row">
+                            <div class="col-6 pr-0">
+                                {{ booking_form.after_window_month|as_crispy_field }}
+                            </div>
+                            <div class="col-6 pl-0">
+                                {{ booking_form.after_window_day|as_crispy_field }}
+                            </div>
+                        </div>
+                    </div>
+                    </div>
                     <div class="col-md-12 mx-auto text-center">
                         <label for="" class="font-weight-bold d-flex justify-content-center pr-1">Returning Clients Only<a data-toggle="tooltip" data-placement="top" title="Only accept clients who are on your client list"> <i class="fas fa-question-circle licolor"></i></a></label>
                         <input name="returning" type="checkbox" class="bootstrap-switch bootstrap-switch-red my-0" data-on-label="True" data-off-label=""/>

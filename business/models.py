@@ -166,6 +166,56 @@ cancellationtime = (
     (168, '1 week'),
     (10000, 'never'),
 )
+
+day = (
+    ('0', '0 Day'),
+    ('1', '1 Day'),
+    ('2', '2 Days'),
+    ('3', '3 Days'),
+    ('4', '4 Days'),
+    ('5', '5 Days'),
+    ('6', '6 Days'),
+    ('7', '7 Days'),
+    ('8', '8 Days'),
+    ('9', '9 Days'),
+    ('10', '10 Days'),
+    ('11', '11 Days'),
+    ('12', '12 Days'),
+    ('13', '13 Days'),
+    ('14', '14 Days'),
+    ('15', '15 Days'),
+    ('16', '16 Days'),
+    ('17', '17 Days'),
+    ('18', '18 Days'),
+    ('19', '19 Days'),
+    ('20', '20 Days'),
+    ('21', '21 Days'),
+    ('22', '22 Days'),
+    ('23', '23 Days'),
+    ('24', '24 Days'),
+    ('25', '25 Days'),
+    ('26', '26 Days'),
+    ('27', '27 Days'),
+    ('28', '28 Days'),
+    ('29', '29 Days'),
+)
+
+month_int_choices = (
+    ('0', '0 Month'),
+    ('1', '1 Month'),
+    ('2', '2 Months'),
+    ('3', '3 Months'),
+    ('4', '4 Months'),
+    ('5', '5 Months'),
+    ('6', '6 Months'),
+    ('7', '7 Months'),
+    ('8', '8 Months'),
+    ('9', '9 Months'),
+    ('10', '10 Months'),
+    ('11', '11 Months'),
+    ('12', '12 Months'),
+)
+
 subscriptionplan = (
     (0,'Free'),
     (1, 'Pro'),
@@ -236,6 +286,12 @@ class Company(models.Model):
     showAddress = models.BooleanField(default=True)
     subscriptionplan = models.IntegerField(choices=subscriptionplan, default=0)
     
+    #Scheduling window
+    before_window_day = models.IntegerField(choices=day, default=0)
+    before_window_hour = models.IntegerField(choices=hours_choices, default=0)
+    before_window_min = models.IntegerField(choices=minute_choices, default=0)
+    after_window_month = models.IntegerField(choices=month_int_choices, default=0)
+    after_window_day = models.IntegerField(choices=day, default=29)
 
     class Meta:
         ordering = ('-updated',)

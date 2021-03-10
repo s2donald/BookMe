@@ -89,6 +89,56 @@ cancellationtime = (
     ('10000', 'never'),
 )
 
+day = (
+    ('0', '0 Day'),
+    ('1', '1 Day'),
+    ('2', '2 Days'),
+    ('3', '3 Days'),
+    ('4', '4 Days'),
+    ('5', '5 Days'),
+    ('6', '6 Days'),
+    ('7', '7 Days'),
+    ('8', '8 Days'),
+    ('9', '9 Days'),
+    ('10', '10 Days'),
+    ('11', '11 Days'),
+    ('12', '12 Days'),
+    ('13', '13 Days'),
+    ('14', '14 Days'),
+    ('15', '15 Days'),
+    ('16', '16 Days'),
+    ('17', '17 Days'),
+    ('18', '18 Days'),
+    ('19', '19 Days'),
+    ('20', '20 Days'),
+    ('21', '21 Days'),
+    ('22', '22 Days'),
+    ('23', '23 Days'),
+    ('24', '24 Days'),
+    ('25', '25 Days'),
+    ('26', '26 Days'),
+    ('27', '27 Days'),
+    ('28', '28 Days'),
+    ('29', '29 Days'),
+)
+
+month_int_choices = (
+    ('0', '0 Month'),
+    ('1', '1 Month'),
+    ('2', '2 Months'),
+    ('3', '3 Months'),
+    ('4', '4 Months'),
+    ('5', '5 Months'),
+    ('6', '6 Months'),
+    ('7', '7 Months'),
+    ('8', '8 Months'),
+    ('9', '9 Months'),
+    ('10', '10 Months'),
+    ('11', '11 Months'),
+    ('12', '12 Months'),
+)
+
+
 states = (
     ("AL", "Alabama"),
     ("AK", "Alaska"),
@@ -218,7 +268,11 @@ class BookingSettingForm(forms.Form):
     interval = forms.ChoiceField(label='',choices=minute_choices_no_zero,initial= '30', widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control', 'data-size':'5', 'data-dropdown-align-right':'true'}))
     cancellation = forms.ChoiceField(label='',choices=cancellationtime, initial= '0', widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control', 'data-size':'5', 'data-dropdown-align-right':'true'}))
     notes = forms.CharField(label='',max_length=250, required=False, widget=forms.Textarea(attrs={'rows':4, 'cols':20}))
-
+    before_window_day = forms.ChoiceField(label='',choices=day, initial= '0', widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control', 'data-size':'5', 'data-dropdown-align-right':'true'}))
+    before_window_hour = forms.ChoiceField(label='',choices=hours_choices, initial= '0', widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control', 'data-size':'5', 'data-dropdown-align-right':'true'}))
+    before_window_min = forms.ChoiceField(label='',choices=minute_choices, initial= '0', widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control', 'data-size':'5', 'data-dropdown-align-right':'true'}))
+    after_window_month = forms.ChoiceField(label='',choices=month_int_choices, initial= '0', widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control', 'data-size':'5', 'data-dropdown-align-right':'true'}))
+    after_window_day = forms.ChoiceField(label='',choices=day, initial= '0', widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control', 'data-size':'5', 'data-dropdown-align-right':'true'}))
 
 class UpdateServiceForm(forms.ModelForm):
     name = forms.CharField(label='Service Name',max_length=200,widget=forms.TextInput(attrs={'class':'form-control'}))

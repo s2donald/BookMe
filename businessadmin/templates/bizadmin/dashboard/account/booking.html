@@ -39,15 +39,40 @@
                                 <div class="card mb-4">
                                     <div class="card-header"><h4>Main Booking Settings</h4></div>
                                     <div class="card-body">
-                                        <div class="col-lg-12">
-                                                <label for="" class="font-weight-bold d-flex justify-content-center pr-1">Booking Interval <a data-toggle="tooltip" data-placement="top" title="Set the duration for appointment slots"> <i class="fas fa-question-circle licolor"></i></a></label>
-                                                {{ booking_form.interval|as_crispy_field }}
-                                        </div>
-                                    </div>
-                                    <div class="card-body">
-                                        <div class="col-lg-12">
-                                            <label for="" class="font-weight-bold d-flex justify-content-center pr-1">Cancellation Policy <a data-toggle="tooltip" data-placement="top" title="The length of time before an appointment which a customer can cancel"> <i class="fas fa-question-circle licolor"></i></a></label>
-                                            {{ booking_form.cancellation|as_crispy_field }}
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                    <label for="" class="font-weight-bold d-flex justify-content-center pr-1">Booking Interval <a data-toggle="tooltip" data-placement="top" title="Set the duration for appointment slots"> <i class="fas fa-question-circle licolor"></i></a></label>
+                                                    {{ booking_form.interval|as_crispy_field }}
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="" class="font-weight-bold d-flex justify-content-center pr-1">Cancellation Policy <a data-toggle="tooltip" data-placement="top" title="The length of time before an appointment which a customer can cancel"> <i class="fas fa-question-circle licolor"></i></a></label>
+                                                {{ booking_form.cancellation|as_crispy_field }}
+                                            </div>
+                                            <div class="col-md-6 text-left">
+                                                <label for="" class="font-weight-bold d-flex justify-content-left pr-1">Advanced Notice Time<a data-toggle="tooltip" data-placement="top" title="The time required in advance prior to setting an appointment"> <i class="fas fa-question-circle licolor"></i></a></label>
+                                                <div class="row">
+                                                    <div class="col-4 pr-0">
+                                                        {{ booking_form.before_window_day|as_crispy_field }}
+                                                    </div>
+                                                    <div class="col-4 px-0">
+                                                        {{ booking_form.before_window_hour|as_crispy_field }}
+                                                    </div>
+                                                    <div class="col-4 pl-0">
+                                                        {{ booking_form.before_window_min|as_crispy_field }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 text-left">
+                                                <label for="" class="font-weight-bold d-flex justify-content-left pr-1">Scheduling Window<a data-toggle="tooltip" data-placement="top" title="How far in advance are clients allowed to book a service?"> <i class="fas fa-question-circle licolor"></i></a></label>
+                                                <div class="row">
+                                                    <div class="col-6 pr-0">
+                                                        {{ booking_form.after_window_month|as_crispy_field }}
+                                                    </div>
+                                                    <div class="col-6 pl-0">
+                                                        {{ booking_form.after_window_day|as_crispy_field }}
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -83,6 +108,11 @@
         $(document).ready(function(){
             var selectInterval = document.getElementById("id_interval");
             var selectCancellation = document.getElementById('id_cancellation');
+            var before_window_day = document.getElementById('id_before_window_day');
+            var before_window_hour = document.getElementById('id_before_window_hour');
+            var before_window_min = document.getElementById('id_before_window_min');
+            var after_window_month = document.getElementById('id_after_window_month');
+            var after_window_day = document.getElementById('id_after_window_day');
             function getCookie(name) {
             let cookieValue = null;
             if (document.cookie && document.cookie !== '') {
@@ -111,14 +141,12 @@
                         "X-CSRFToken": csrftoken
                     },
                     success: function(){
-                        Swal.fire({
-                            title: 'We successfully updated your booking interval',
-                            icon:'success',
-                            customClass:{
-                                confirmButton: 'btn btn-primary',
-                                cancelButton: 'btn btn-danger',
-                            },
-                        buttonsStyling: false,
+                        $.notify({
+                            // options
+                            message: 'We successfully updated your booking interval'
+                        },{
+                            // settings
+                            type: 'success'
                         });
                     },
                 });
@@ -135,14 +163,122 @@
                         "X-CSRFToken": csrftoken
                     },
                     success: function(){
-                        Swal.fire({
-                            title: 'We successfully updated your cancellation policy',
-                            icon:'success',
-                            customClass:{
-                                confirmButton: 'btn btn-primary',
-                                cancelButton: 'btn btn-danger',
-                            },
-                        buttonsStyling: false,
+                        $.notify({
+                            // options
+                            message: 'We successfully updated your cancellation policy'
+                        },{
+                            // settings
+                            type: 'success'
+                        });
+                    },
+                });
+            });
+
+            before_window_day.addEventListener('change',function(e){
+                const cancellation = e.target.value
+                $.ajax({
+                    url: '{% host_url "bookingIntervalAPI" host "bizadmin" %}',
+                    data: $('#intervalForm').serialize(),
+                    type: "POST",
+                    dataType: 'json',
+                    headers:{
+                        "X-CSRFToken": csrftoken
+                    },
+                    success: function(){
+                        $.notify({
+                            // options
+                            message: 'We have updated your Notice Time Window'
+                        },{
+                            // settings
+                            type: 'success'
+                        });
+                    },
+                });
+            });
+
+            before_window_hour.addEventListener('change',function(e){
+                const cancellation = e.target.value
+                $.ajax({
+                    url: '{% host_url "bookingIntervalAPI" host "bizadmin" %}',
+                    data: $('#intervalForm').serialize(),
+                    type: "POST",
+                    dataType: 'json',
+                    headers:{
+                        "X-CSRFToken": csrftoken
+                    },
+                    success: function(){
+                        $.notify({
+                            // options
+                            message: 'We have updated your Notice Time'
+                        },{
+                            // settings
+                            type: 'success'
+                        });
+                    },
+                });
+            });
+
+            before_window_min.addEventListener('change',function(e){
+                const cancellation = e.target.value
+                $.ajax({
+                    url: '{% host_url "bookingIntervalAPI" host "bizadmin" %}',
+                    data: $('#intervalForm').serialize(),
+                    type: "POST",
+                    dataType: 'json',
+                    headers:{
+                        "X-CSRFToken": csrftoken
+                    },
+                    success: function(){
+                        $.notify({
+                            // options
+                            message: 'We have updated your Notice Time'
+                        },{
+                            // settings
+                            type: 'success'
+                        });
+                    },
+                });
+            });
+
+            after_window_month.addEventListener('change',function(e){
+                const cancellation = e.target.value
+                $.ajax({
+                    url: '{% host_url "bookingIntervalAPI" host "bizadmin" %}',
+                    data: $('#intervalForm').serialize(),
+                    type: "POST",
+                    dataType: 'json',
+                    headers:{
+                        "X-CSRFToken": csrftoken
+                    },
+                    success: function(){
+                        $.notify({
+                            // options
+                            message: 'We have updated your Scheduling Window'
+                        },{
+                            // settings
+                            type: 'success'
+                        });
+                    },
+                });
+            });
+
+            after_window_day.addEventListener('change',function(e){
+                const cancellation = e.target.value
+                $.ajax({
+                    url: '{% host_url "bookingIntervalAPI" host "bizadmin" %}',
+                    data: $('#intervalForm').serialize(),
+                    type: "POST",
+                    dataType: 'json',
+                    headers:{
+                        "X-CSRFToken": csrftoken
+                    },
+                    success: function(){
+                        $.notify({
+                            // options
+                            message: 'We have updated your Scheduling Window'
+                        },{
+                            // settings
+                            type: 'success'
                         });
                     },
                 });

@@ -135,6 +135,13 @@ def completeViews(request):
             interval = booking_form.cleaned_data.get('interval')
             notes = booking_form.cleaned_data.get('notes')
             cancellation = booking_form.cleaned_data.get('cancellation')
+
+            before_window_day = booking_form.cleaned_data.get('before_window_day')
+            before_window_hour = booking_form.cleaned_data.get('before_window_hour')
+            before_window_min = booking_form.cleaned_data.get('before_window_min')
+            after_window_month = booking_form.cleaned_data.get('after_window_month')
+            after_window_day = booking_form.cleaned_data.get('after_window_day')
+
             subdomain = request.POST.get('subdomain', company.slug)
             returning = request.POST.get('returning', False)
             sun_from = request.POST.get('sun-dayfrom')
@@ -172,11 +179,19 @@ def completeViews(request):
                 company.returning = True
             company.notes = notes
             company.cancellation = cancellation
+            company.before_window_day = before_window_day
+            company.before_window_hour = before_window_hour
+            company.before_window_min = before_window_min
+            company.after_window_month = after_window_month
+            company.after_window_day = after_window_day
             if subdomain != company.slug:
                 if not Company.objects.filter(slug=subdomain).exists():
                     company.slug = slugify(subdomain)
             try:
                 company.save()
+                if company.category.name == 'Automotive Services':
+                    company.background = 'carbon'
+                    company.save()
             except ValueError:
                 biz_form.add_error('address','Check your address again. Could not find the location.')
                 biz_form.add_error('postal','Check your postal code')
@@ -1599,7 +1614,17 @@ def bookingSettingViews(request):
         return redirect(reverse('completeprofile', host='bizadmin'))
     elif not user.is_business:
         loginViews(request)
-    bookingform = BookingSettingForm(initial={'interval':company.interval, 'cancellation':company.cancellation})
+    bookingform = BookingSettingForm(
+                    initial={
+                            'interval':company.interval, 
+                            'cancellation':company.cancellation, 
+                            'before_window_day':company.before_window_day, 
+                            'before_window_hour':company.before_window_hour, 
+                            'before_window_min':company.before_window_min, 
+                            'after_window_month':company.after_window_month,
+                            'after_window_day':company.after_window_day,
+                        }
+                    )
     return render(request, 'bizadmin/dashboard/account/booking.html', {'company':company, 'booking_form':bookingform})
 
 class bookingAPI(View):
@@ -1609,10 +1634,16 @@ class bookingAPI(View):
             company =  get_object_or_404(Company, user=request.user)
             interval = bookForm.cleaned_data.get('interval')
             cancellation = bookForm.cleaned_data.get('cancellation')
+            company.before_window_day = bookForm.cleaned_data.get('before_window_day')
+            company.before_window_hour = bookForm.cleaned_data.get('before_window_hour')
+            company.before_window_min = bookForm.cleaned_data.get('before_window_min')
+            company.after_window_month = bookForm.cleaned_data.get('after_window_month')
+            company.after_window_day = bookForm.cleaned_data.get('after_window_day')
+
             company.interval = interval
             company.cancellation = cancellation
             company.save()
-            return JsonResponse({'title':'', 'icon':'error'})
+            return JsonResponse({'title':'', 'icon':'success'})
         else:
             return JsonResponse({'title':'Unfortunately, there was an error that occured. Please try again.', 'icon':'error'})
 
@@ -1717,9 +1748,6 @@ def requestListViews(request):
         return redirect(reverse('completeprofile', host='bizadmin'))
     company = Company.objects.get(user=user)
     requested = CompanyReq.objects.filter(company=company).order_by('-created_at')
-    for req in requested:
-        print(req.booking_request)
-
     paginator = Paginator(requested, 6)
     page = request.GET.get('page')
     try:
@@ -1737,7 +1765,6 @@ class getBooking(View):
         booking_id = request.GET.get('booking_id')
         booking = Bookings.objects.get(id=booking_id)
         try:
-            # extra = extraInformation.objects.get(booking=booking)
             extra = bookingForm.objects.filter(booking=booking)
         except:
             extra = None

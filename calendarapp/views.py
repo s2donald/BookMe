@@ -25,7 +25,7 @@ from gibele import settings
 from django.views.decorators.clickjacking import xframe_options_exempt
 from django.template.loader import render_to_string
 import multiprocessing
-
+from dateutil.relativedelta import relativedelta
 # from account.models import Account
 # Create your views here.
 
@@ -89,15 +89,20 @@ def bookingServiceView(request, pk):
         extra_info_form = AddressForm()
     else:
         extra_info_form = AddressForm()
+    
     return render(request, 'bookingpage/onestaff/bookingpage/testBookingPage.html', {'extra_info_form':extra_info_form,'returnClient':returnClient,'user': user, 'company':company, 'service':service, 'personal_form':personal_form, 'gibele_form':gibele_form})
 
 from django.db.models import Q
 def time_slots(start_time, end_time, interval, duration_hour, duration_minute, year, month, day, company, staff_breaks, staff):
     t = start_time
     servDate = timezone.localtime(timezone.make_aware(datetime.datetime(year,month,day)))
+    dateWindowBefore = timezone.localtime(timezone.now()) + datetime.timedelta(days=company.before_window_day,hours=company.before_window_hour,minutes=company.before_window_min)
+    dateWindowAfter = timezone.localtime(timezone.now()) + relativedelta(days=company.after_window_day,months=company.after_window_month)
+
     #We check if the date they are looking to book an appointment is today. If so, we get the earliest available time
     if timezone.localtime(timezone.now()).date() == servDate.date():
-        while timezone.localtime(timezone.now()).time()>t:
+        init_time = timezone.localtime(timezone.now() + datetime.timedelta(hours=company.before_window_hour, minutes=company.before_window_min)).time()
+        while init_time>t:
             t = timezone.localtime(timezone.make_aware(datetime.datetime.combine(datetime.date.today(), t) +
              datetime.timedelta(minutes=interval))).time()
     availableDay = []
@@ -419,7 +424,9 @@ class createAccountView(View):
 def bookingurlupdated(request):
     user = request.user
     company = request.viewing_company
-    return render(request, 'bookingpage/multiplestaff/bookingpage/bookingpage.html',{'user':user,'company':company})
+    dateWindowBefore = timezone.localtime(timezone.now()) + datetime.timedelta(days=company.before_window_day,hours=company.before_window_hour,minutes=company.before_window_min)
+    dateWindowAfter = timezone.localtime(timezone.now()) + relativedelta(days=company.after_window_day,months=company.after_window_month)
+    return render(request, 'bookingpage/multiplestaff/bookingpage/bookingpage.html',{'user':user,'company':company, 'dateWindowBefore':dateWindowBefore, 'dateWindowAfter':dateWindowAfter})
 
 def bookingStaffUrl(request, slug):
     user = request.user

@@ -5,7 +5,7 @@ from django.utils.text import slugify
 from django.shortcuts import reverse
 from timezone_field import TimeZoneField
 import pytz
-ALL_TIMEZONES = sorted((item, item) for item in pytz.all_timezones)
+ALL_TIMEZONES = sorted((item, item) for item in pytz.common_timezones)
 # from business.models import Company
 # Create your models here.
 il8nl = ["AF", "AX", "AL", "DZ", "AS", "AD", "AO", "AI", "AQ", "AG", "AR",

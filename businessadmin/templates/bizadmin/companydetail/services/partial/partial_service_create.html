@@ -7,21 +7,22 @@
         {{ service_form.name|as_crispy_field }}
         {{ service_form.description|as_crispy_field }}
         <div class="row">
-            <div class="col-sm-6">
-                {% if company.service_category.all %}
+            
+            {% if company.service_category.all %}
+                <div class="col-sm-6">
                     {{ category_form.category|as_crispy_field }}
-                {% endif %}
-            </div>
-            <div class="col-sm-6">
-                {% if company.staffmembers.all %}
+                </div>
+            {% endif %}
+            {% if company.staffmembers.all %}
+                <div class="col-sm-6">
                     {{ category_form.staff|as_crispy_field }}
-                {% endif %}
-            </div>
-            <div class="col-sm-6">
-                {% if company.company_forms.all %}
+                </div>
+            {% endif %}
+            {% if company.company_forms.all %}
+                <div class="col-sm-6">
                     {{ category_form.formfield|as_crispy_field }}
-                {% endif %}
-            </div>
+                </div>
+            {% endif %}
             <div class="col-sm-6">
                 {{ service_form.is_request|as_crispy_field }}
             </div>

@@ -40,6 +40,13 @@ class bookingForm(models.Model):
     integer = models.IntegerField(null=True,blank=True)
     checkbox = models.BooleanField(default=False)
 
+class BookingPageViews(models.Model):
+    directmonthly = models.PositiveIntegerField(default=0)
+    directweekly = models.PositiveIntegerField(default=0)
+    directtotal = models.PositiveIntegerField(default=0)
+    kijiji = models.PositiveIntegerField(default=0)
+    company = models.OneToOneField(Company, on_delete=models.CASCADE, related_name='company_views')
+
 
 
 

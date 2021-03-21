@@ -75,6 +75,8 @@ class StaffMember(models.Model):
     calendarics = models.FileField(upload_to=calendar_staff_folder,null=True, blank=True)
     services = models.ManyToManyField(Services, blank=True)
     image = models.ImageField(upload_to=get_staff_image_folder, blank=True)
+    stripe_access_token = models.CharField(verbose_name="Stripe Access Token", max_length=200, unique=True, null=True, blank=True)
+    stripe_user_id = models.CharField(verbose_name="Stripe User Id", max_length=200, unique=True, null=True, blank=True)
 
     class Meta:
         ordering = ('user',)

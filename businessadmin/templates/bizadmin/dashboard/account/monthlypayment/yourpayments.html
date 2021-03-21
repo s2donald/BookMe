@@ -1,0 +1,52 @@
+{% extends 'bizadmin/index.html' %}
+{% load static %}
+{% load hosts %}
+{% load crispy_forms_tags %}
+{% block activedetails%}active{%endblock%}
+{% block businessadmin %}
+
+<!-- Main page content-->
+<div class="content">
+    <div class="row">
+        <div class="col-md-12 ml-auto mr-auto">
+            <header class="page-header page-header-compact page-header-light mb-2">
+                <div class="container-fluid">
+                    <div class="page-header-content">
+                        <div class="row align-items-center justify-content-between pt-3">
+                            <div class="col-auto">
+                                <h1 class="page-header-title">
+                                    Account Payment Settings
+                                </h1>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            <hr class="mt-0 mb-4" />
+            <div class="row">
+                <div class="col-lg-6">
+                    <!-- Security preferences card-->
+                    <div class="card mb-4">
+                        <div class="card-header"><h1>Account</h1></div>
+                        <div class="card-body">
+                            <div class="row">
+                                {% for p in products %}
+                                <div class="col-12 align-items-center my-0">
+                                    <p for="" class="font-weight-bold my-0">Current Plan: Pro Plan</p>
+                                    <p class="font-weight-bold my-0">Credit Card: {{ brand|lower|capfirst}} ....{{last4}}</p>
+                                    <a class="btn btn-link cancelsubscription" href="{% host_url 'cancel_subscription_stripe' host 'bizadmin' %}" style="font-size: 20px">Cancel Subscription <i class="fas fa-arrow-right"></i></a>
+                                    <div class="col-12">
+                                        
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                                
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

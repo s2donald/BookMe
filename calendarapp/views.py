@@ -426,14 +426,20 @@ def bookingurlupdated(request):
     company = request.viewing_company
     dateWindowBefore = timezone.localtime(timezone.now()) + datetime.timedelta(days=company.before_window_day,hours=company.before_window_hour,minutes=company.before_window_min)
     dateWindowAfter = timezone.localtime(timezone.now()) + relativedelta(days=company.after_window_day,months=company.after_window_month)
+    kanalytics = request.GET.get('k')
+    if kanalytics:
+        print(company.company_views.kijiji)
+        # k = company.company_views.kijiji
+        # k += 1
+        # k.save()
+
+    print(kanalytics)
     return render(request, 'bookingpage/multiplestaff/bookingpage/bookingpage.html',{'user':user,'company':company, 'dateWindowBefore':dateWindowBefore, 'dateWindowAfter':dateWindowAfter})
 
 def bookingStaffUrl(request, slug):
     user = request.user
     company = request.viewing_company
     return render(request, 'bookingpage/onestaff/bookingpage/homes.html',{'user':user,'company':company})
-
-
 
 class staffofferingservice(View):
     def post(self, request):

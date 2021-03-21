@@ -60,11 +60,7 @@
                                     <div class="card-header"><h4>Text Notifications</h4></div>
                                     <div class="card-body">
                                         <p class="small text-muted">Add another level of user experience for your clients by sending out automated text messages when they book an appointment.</p>
-                                        {% if company.has_texts %}
-                                            
-                                        {% else %}
-                                            <button class="btn btn-primary" id="textSettingBtn" type="button">Purchase text messages</button>
-                                        {% endif %}
+                                        
                                     </div>
                                 </div>
                             </div>
@@ -76,14 +72,14 @@
                                         <form id="notesForm">
                                             {% csrf_token %}
 
-                                            <p class="small text-muted">Display a message to your clients whenever they reach your booking page</p>
+                                            <p class="small text-muted">Display policy information to your clients whenever they reach your booking page</p>
                                             <div class="custom-control custom-radio">
                                                 <input class="custom-control-input" id="radioShowNotes" type="radio" name="radioShowNotes" {% if company.shownotes %}checked{% endif %} />
-                                                <label class="custom-control-label" name="radPublic" for="radioShowNotes">Display message to clients</label>
+                                                <label class="custom-control-label" name="radPublic" for="radioShowNotes">Display policy information to clients</label>
                                             </div>
                                             <div class="custom-control custom-radio">
                                                 <input class="custom-control-input" id="radioHideNotes" type="radio" name="radioShowNotes" {% if company.shownotes == False %}checked{% endif %} />
-                                                <label class="custom-control-label" name="radPrivate"  for="radioHideNotes">Don't display message to clients</label>
+                                                <label class="custom-control-label" name="radPrivate"  for="radioHideNotes">Don't display policy information to clients</label>
                                             </div>
                                             {{ notesForm.notes|as_crispy_field }}
                                             <button class="btn btn-primary" id="notesButton" type="button">Save Notes Setting</button>
@@ -186,7 +182,7 @@
                 success: function(data){
                     if (data.error){
                         Swal.fire({
-                            title: 'We could not save your notes submission. Please try again later',
+                            title: 'We could not save your policy information submission. Please try again later',
                             icon: data.error,
                             customClass:{
                                 confirmButton: 'btn btn-primary',
@@ -198,7 +194,7 @@
                     else{
                         $.notify({
                             // options
-                            message: 'We have saved your notes settings'
+                            message: 'We have saved your policy information settings'
                         },{
                             // settings
                             type: 'success'

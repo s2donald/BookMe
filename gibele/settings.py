@@ -45,9 +45,11 @@ INSTALLED_APPS = [
     'sslserver',
     'social_django',
     'widget_tweaks',
+    "djstripe",
     'account.apps.AccountConfig',
     'business.apps.BusinessConfig',
     'businessadmin.apps.BusinessadminConfig',
+    'products.apps.ProductsConfig',
     'consumer.apps.ConsumerConfig',
     'calendarapp.apps.CalendarappConfig',
     'django.contrib.gis',
@@ -246,3 +248,28 @@ else:
     # Your Trail Auth Token from twilio.com/console
     TWILIO_AUTH_TOKEN  = "c63173775623ac34e0dfe724061cc6e3"
     TWILIO_PHONE = "+13656509721"
+
+#Stripe
+if not DEBUG:
+    #Live
+    STRIPE_PUBLISHABLE_KEY = "pk_live_51HU4jmCsaRRt8PNDlpBtjPtzBF3EVALj94YP5IIKw0gVqwcSBuCHmwl0F8vSWOOSgFOpVmhvJpEgBjn091QpyO1k00UtujS0IQ"
+    STRIPE_SECRET_KEY = "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"
+    STRIPE_CONNECT_CLIENT_ID = "ca_I4DBi7BOdFc4ycwQTz1xI1v7NMpACjtJ"
+    STRIPE_LIVE_SECRET_KEY = "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"
+    STRIPE_LIVE_MODE = True  # Change to True in production
+    DJSTRIPE_WEBHOOK_SECRET = "whsec_xxx"
+    WEBHOOK_SECRET_SUBSCRIPTION = "whsec_xxx"
+    DJSTRIPE_USE_NATIVE_JSONFIELD = True
+    DJSTRIPE_FOREIGN_KEY_TO_FIELD = "id"
+else:
+    #Test
+    STRIPE_PUBLISHABLE_KEY = "pk_test_51HU4jmCsaRRt8PNDy1kNP0PAioXd6aUz0aZSSrr1JvMb708UqXxN9SHDYxGG2HPj9OaJclnJahbe8keEdxMjytAx00xfczADdk"
+    STRIPE_SECRET_KEY = "sk_test_51HU4jmCsaRRt8PNDNA0E9huxDHbIiZR0yNSq7sK0saRHzOj0NnQrIdF64ePIT7Q9B6OKLVWAt19emi3wEUZGV6e000N3UruGDV"
+    STRIPE_TEST_SECRET_KEY = "sk_test_51HU4jmCsaRRt8PNDNA0E9huxDHbIiZR0yNSq7sK0saRHzOj0NnQrIdF64ePIT7Q9B6OKLVWAt19emi3wEUZGV6e000N3UruGDV"
+    STRIPE_CONNECT_CLIENT_ID = "ca_I4DBRCUpMuOkdUdP5kgbR1ZuWOmXRjqX"
+    STRIPE_LIVE_MODE = False  # Change to True in production
+    DJSTRIPE_WEBHOOK_SECRET = "whsec_JaEpILehg8fZFmN3BqMXPkJj3vJt8sDV"
+    WEBHOOK_SECRET_SUBSCRIPTION = "whsec_iZ87PMcztcKviVCINayjPnyX0wWmCqH5"
+    DJSTRIPE_USE_NATIVE_JSONFIELD = True
+    DJSTRIPE_FOREIGN_KEY_TO_FIELD = "id"
+

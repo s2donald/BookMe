@@ -19,16 +19,18 @@ from business.forms import AddCompanyForm, AddServiceForm, UpdateServiceForm, Bo
 from django.forms import inlineformset_factory
 from django.views import View
 from slugify import slugify
-from .forms import MainPhoto
+from .forms import MainPhoto, ServicePaymentCollectForm
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from businessadmin.tasks import addedOnCompanyList, requestToBeClient, appointmentCancelled
 from account.tasks import reminderEmail, confirmedEmail, consumerCreatedEmailSent, send_sms_confirmed_client, send_sms_reminder_client
 import re
 from django.db import transaction
+import urllib
+from django.conf import settings
+import requests
 # Create your views here.
 def businessadmin(request):
     user = request.user
-
     return render(request, 'welcome/welcome.html', {'user':user, 'none':'d-none'})
 
 def pricingViews(request):
@@ -428,9 +430,6 @@ class personDetailSave(View):
             return JsonResponse({'good':"The data was good"})
         else:
             return JsonResponse({'errors':'There were errors'})
-
-def profileBillingViews(request):
-    return render(request,'bizadmin/dashboard/account/billing.html')
 
 @login_required()
 def profileSecurityViews(request):
@@ -1281,18 +1280,19 @@ def headerImageUploads(request):
     if request.POST:
         company = Company.objects.get(user=request.user)
         img = request.FILES.get('imageFile')
-        x = Decimal(request.POST.get('x'))
-        y = Decimal(request.POST.get('y'))
-        w = Decimal(request.POST.get('width'))
-        h = Decimal(request.POST.get('height'))
+        # x = Decimal(request.POST.get('x'))
+        # y = Decimal(request.POST.get('y'))
+        # w = Decimal(request.POST.get('width'))
+        # h = Decimal(request.POST.get('height'))
         valid_extensions = ['jpg', 'png', 'jpeg']
         extension = img.name.rsplit('.',1)[1].lower()
         if extension not in valid_extensions:
-            return redirect(reverse('photos', host='bizadmin'))
+            return JsonResponse({'success':'success'})
         if img:
             image = Image.open(img)
             image.filename = img.name
-            box = (x, y, w+x, h+y)
+            width, height = image.size
+            box = (0, 0, width, height)
             cropped_image = image.crop(box)
             resized_image = cropped_image.resize((2048,2048),Image.ANTIALIAS)
             thumb_io = BytesIO()
@@ -1300,24 +1300,26 @@ def headerImageUploads(request):
             company.image.save(image.filename, ContentFile(thumb_io.getvalue()), save=False)
             company.save()
     
-    return redirect(reverse('photos', host='bizadmin'))
+    return JsonResponse({'success':'success'})
         
 def galImageUpload(request):
     if request.POST:
         company = Company.objects.get(user=request.user)
-        img = request.FILES.get('gallaryFile')
-        x = Decimal(request.POST.get('xs'))
-        y = Decimal(request.POST.get('ys'))
-        w = Decimal(request.POST.get('widths'))
-        h = Decimal(request.POST.get('heights'))
+        img = request.FILES.get('kartik-input-700[]')
+        # x = Decimal(request.POST.get('xs'))
+        # y = Decimal(request.POST.get('ys'))
+        # w = Decimal(request.POST.get('widths'))
+        # h = Decimal(request.POST.get('heights'))
         valid_extensions = ['jpg', 'png', 'jpeg']
         extension = img.name.rsplit('.',1)[1].lower()
         if extension not in valid_extensions:
-            return redirect(reverse('photos', host='bizadmin'))
+            return JsonResponse({'success':'success'})
         if img:
             image = Image.open(img)
             image.filename = img.name
-            box = (x, y, w+x, h+y)
+            width, height = image.size
+            aspect = int(aspectratio)
+            box = (0, 0, width, height)
             cropped_image = image.crop(box)
             resized_image = cropped_image.resize((2048,2048),Image.ANTIALIAS)
             thumb_io = BytesIO()
@@ -1326,7 +1328,8 @@ def galImageUpload(request):
             gallary.photos.save(image.filename, ContentFile(thumb_io.getvalue()), save=False)
             gallary.save()
     
-    return redirect(reverse('photos', host='bizadmin'))
+    return JsonResponse({'success':'success'})
+    # return redirect(reverse('photos', host='bizadmin'))
 
 from .forms import ImagesForm
 ##Business Page Views
@@ -1340,7 +1343,7 @@ def businessPhotoView(request):
     elif not user.is_business:
         loginViews(request)
     photos = Gallary.objects.filter(company=company)
-    paginator = Paginator(photos, 6)
+    paginator = Paginator(photos, 200)
     page = request.GET.get('page')
     try:
         photos = paginator.page(page)
@@ -2015,7 +2018,6 @@ def integrationsView(request):
         return redirect(reverse('completeprofile', host='bizadmin'))
     elif not user.is_business:
         loginViews(request)
-    
     return render(request, 'bizadmin/dashboard/integrations/integrations.html',{'company':company})
 from icalendar import Calendar, Event
 
@@ -2237,6 +2239,13 @@ class UpdateStaffDetails(View):
         types = request.POST.get('type')
         staff = StaffMember.objects.get(pk=int(staff_id))
         success = 'success'
+        staff_comp = staff.company
+        userstaff = StaffMember.objects.get(user=request.user)
+        comp = userstaff.company
+        if not comp.id == staff_comp.id:
+            success = 'error'
+            message = 'You do not have access to this profile. Try again later.'
+            return JsonResponse({'success':success, 'message':message})
 
         if types == 'first':
             staff.first_name = content
@@ -2264,7 +2273,6 @@ class addNewStaffMember(View):
     def post(self, request):
         staff = StaffMember.objects.get(user=request.user)
         company = staff.company
-
         form = StaffMemberForms(request.POST, initial={'company':company})
         if form.is_valid():
             first = form.cleaned_data['first_name']
@@ -2390,10 +2398,8 @@ class customThemeAPI(View):
             
             if background == 'primary':
                 company.background = 'primary'
-                print(background)
             elif background == 'carbon':
                 company.background = 'carbon'
-                print(background)
             else:
                 company.background = 'hexagon'
             company.save()
@@ -2403,3 +2409,209 @@ class integrationZoomSignUp(View):
     def get(self, request):
         user = request.user
         return render(request, 'welcome/welcome.html', {'user':user, 'none':'d-none'})
+
+
+class paymentsView(View):
+    def get(self, request):
+        company = get_object_or_404(Company, user=request.user)
+        user=request.user
+        payment_form = ServicePaymentCollectForm()
+        if user.is_business and not user.on_board:
+            return redirect(reverse('completeprofile', host='bizadmin'))
+        elif not user.is_business:
+            loginViews(request)
+        staff = StaffMember.objects.get(user=user)
+        return render(request,'bizadmin/dashboard/account/payments.html', {'company':company, 'staff':staff, 'payment_form':payment_form})
+from django.template.context_processors import csrf
+from crispy_forms.utils import render_crispy_form
+class updatePaymentInfoView(View):
+    def post(self, request):
+        company = get_object_or_404(Company, user=request.user)
+        payment_form = ServicePaymentCollectForm(request.POST)
+        user=request.user
+        staff = StaffMember.objects.get(user=user)
+        if payment_form.is_valid():
+            return JsonResponse({'success': 'success', 'message': 'Updated non-refundable amount'})
+        else:
+            err = payment_form.errors.as_json()
+            errdata = json.loads(err)
+            message = errdata["nrfpayment"][0]["message"]
+            return JsonResponse({'success': 'danger', 'message':message})
+
+
+import stripe
+from django.http import HttpResponseRedirect
+class StripeAuthorizeView(View):
+    def get(self, request):
+        company = get_object_or_404(Company, user=request.user)
+        user=request.user
+        if user.is_business and not user.on_board:
+            return redirect(reverse('completeprofile', host='bizadmin'))
+        url = 'https://connect.stripe.com/oauth/authorize'
+        if not settings.DEBUG:
+            domainurl = f'https://biz.bookme.to/dashboard/profile/payments/oauth/callback'
+        else:
+            domainurl = f'https://biz.gibele.com:8000/dashboard/profile/payments/oauth/callback'
+        params = {
+            'response_type': 'code',
+            'scope': 'read_write',
+            'client_id': settings.STRIPE_CONNECT_CLIENT_ID,
+            'redirect_uri': domainurl
+        }
+        url = f'{url}?{urllib.parse.urlencode(params)}'
+        return redirect(url)
+
+class StripeAuthorizeCallbackView(View):
+    def get(self, request):
+        code = request.GET.get('code')
+        if code:
+            data = {
+                'client_secret': settings.STRIPE_SECRET_KEY,
+                'grant_type': 'authorization_code',
+                'client_id': settings.STRIPE_CONNECT_CLIENT_ID,
+                'code': code
+            }
+            url = 'https://connect.stripe.com/oauth/token'
+            resp = requests.post(url, params=data)
+            stripe_user_id = resp.json()['stripe_user_id']
+            stripe_access_token = resp.json()['access_token']
+            staff = StaffMember.objects.get(user=request.user)
+            staff.stripe_access_token = stripe_access_token
+            staff.stripe_user_id = stripe_user_id
+            staff.save()
+        url = reverse('staff_payments', host='bizadmin')
+        response = redirect(url)
+        return response
+
+def get_or_create_customer(email, token, stripe_access_token, stripe_account):
+    stripe.api_key = stripe_access_token
+    connected_customers = stripe.Customer.list()
+    for customer in connected_customers:
+        if customer.email == email:
+            print(f'{email} found')
+            return customer
+    print(f'{email} created')
+    return stripe.Customer.create(
+        email=email,
+        source=token,
+        stripe_account=stripe_account,
+    )
+
+class CourseChargeView(View):
+    def post(self, request, *args, **kwargs):
+        stripe.api_key = settings.STRIPE_SECRET_KEY
+        json_data = json.loads(request.body)
+        course = Course.objects.filter(id=json_data['course_id']).first()
+
+        fee_percentage = .01 * int(course.fee)
+        try:
+            customer = get_or_create_customer(
+                self.request.user.email,
+                json_data['token'],
+                course.seller.stripe_access_token,
+                course.seller.stripe_user_id,
+            )
+            charge = stripe.Charge.create(
+                amount=json_data['amount'],
+                currency='usd',
+                customer=customer.id,
+                description=json_data['description'],
+                application_fee=int(json_data['amount'] * fee_percentage),
+                stripe_account=course.seller.stripe_user_id,
+            )
+            if charge:
+                return JsonResponse({'status': 'success'}, status=202)
+        except stripe.error.StripeError as e:
+            return JsonResponse({'status': 'error'}, status=500)
+
+import djstripe
+def completeSubscriptionPayment(request):
+    company = get_object_or_404(Company, user=request.user)
+    user=request.user
+    staff = StaffMember.objects.get(user=user)
+
+    subscription_id = company.stripe_subscription.id
+    customer_id = company.stripe_customer.id
+    stripe.api_key = djstripe.settings.STRIPE_SECRET_KEY
+    try:
+        subscription = stripe.Subscription.retrieve(subscription_id)
+    except:
+        return redirect(reverse('payments_to_bookme', host='bizadmin'))
+    if subscription.status == 'active':
+        company.subscriptionplan = 1
+        company.save()
+        return render(request, 'bizadmin/dashboard/account/monthlypayment/confirmationpage.html', {'company':company, 'staff':staff})
+    else:
+        return redirect(reverse('payments_to_bookme', host='bizadmin'))
+
+from djstripe.models import Product
+class payMonthlyView(View):
+    def get(self, request):
+        company = get_object_or_404(Company, user=request.user)
+        user=request.user
+        staff = StaffMember.objects.get(user=user)
+        if user.is_business and not user.on_board:
+            return redirect(reverse('completeprofile', host='bizadmin'))
+        products = Product.objects.all()
+        subscription_id = company.stripe_subscription.id
+        customer_id = company.stripe_customer.id
+        stripe.api_key = djstripe.settings.STRIPE_SECRET_KEY
+        pk = settings.STRIPE_PUBLISHABLE_KEY
+        try:
+            subscription = stripe.Subscription.retrieve(subscription_id)
+            customer = stripe.Customer.retrieve(customer_id)
+            paymentmethod_id = customer.invoice_settings.default_payment_method
+            paymentmethod = stripe.PaymentMethod.retrieve(paymentmethod_id)
+            cardbrand = paymentmethod.card.brand
+            last4 = paymentmethod.card.last4
+            if not subscription.status == 'active':
+                return render(request,'bizadmin/dashboard/account/monthlypayment/pricing.html', {'company':company, 'staff':staff, 'products':products, 'pk_stripe':pk})
+            # plan = subscription.items.data.product
+        except:
+            return render(request,'bizadmin/dashboard/account/monthlypayment/pricing.html', {'company':company, 'staff':staff, 'products':products, 'pk_stripe':pk})
+        return render(request,'bizadmin/dashboard/account/monthlypayment/yourpayments.html', {'company':company, 'staff':staff, 'products':products, 'brand':cardbrand, 'last4':last4})
+
+class webhook_received(View):
+    def post(self, request):
+        # You can use webhooks to receive information about asynchronous payment events.
+        # For more about our webhook events check out https://stripe.com/docs/webhooks.
+        webhook_secret = settings.WEBHOOK_SECRET_SUBSCRIPTION
+        request_data = json.loads(request.data)
+
+        if webhook_secret:
+            # Retrieve the event by verifying the signature using the raw body and secret if webhook signing is configured.
+            signature = request.headers.get('stripe-signature')
+            try:
+                event = stripe.Webhook.construct_event(
+                    payload=request.data, sig_header=signature, secret=webhook_secret)
+                data = event['data']
+            except Exception as e:
+                return e
+            # Get the type of webhook event sent - used to check the status of PaymentIntents.
+            event_type = event['type']
+        else:
+            data = request_data['data']
+            event_type = request_data['type']
+
+        data_object = data['object']
+
+        if event_type == 'invoice.paid':
+            # Used to provision services after the trial has ended.
+            # The status of the invoice will show up as paid. Store the status in your
+            # database to reference when a user accesses your service to avoid hitting rate
+            # limits.
+            print(data)
+
+        if event_type == 'invoice.payment_failed':
+            # If the payment fails or the customer does not have a valid payment method,
+            # an invoice.payment_failed event is sent, the subscription becomes past_due.
+            # Use this webhook to notify your user that their payment has
+            # failed and to retrieve new card details.
+            print(data)
+
+        if event_type == 'customer.subscription.deleted':
+            # handle subscription cancelled automatically based
+            # upon your subscription settings. Or if the user cancels it.
+            print(data)
+
+        return jsonify({'status': 'success'})

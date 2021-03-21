@@ -13,6 +13,7 @@ from gibele.utils import unique_slug_generator, unique_slug_generator_services
 import geocoder
 import pytz
 from timezone_field import TimeZoneField
+from djstripe.models import Customer, Subscription
 ALL_TIMEZONES = sorted((item, item) for item in pytz.all_timezones)
 
 # This category holds our different types of services such as
@@ -252,6 +253,8 @@ class Company(models.Model):
     address = models.CharField(max_length=200)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='published')
     email = models.EmailField(verbose_name='Business Email', max_length=60)
+    stripe_customer = models.ForeignKey(Customer, null=True, blank=True, on_delete=models.SET_NULL)
+    stripe_subscription = models.ForeignKey(Subscription, null=True, blank=True,on_delete=models.SET_NULL)
     phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$', message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
     phone = models.CharField("Business Phone Number",validators=[phone_regex], max_length=17)
     postal_regex = RegexValidator(regex=r"^[ABCEGHJKLMNPRSTVXYabcdefghijklmnopqrstuvwxyz]{1}\d{1}[A-Z]{1} *\d{1}[A-Z]{1}\d{1}$", message="A valid postal code/ZIP Code must be entered, letters must be in all caps")

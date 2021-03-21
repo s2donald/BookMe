@@ -1,0 +1,98 @@
+{% extends 'bizadmin/index.html' %}
+{% load static %}
+{% load hosts %}
+{% load crispy_forms_tags %}
+{% block activedetails%}active{%endblock%}
+{% block businessadmin %}
+
+                    <!-- Main page content-->
+<div class="content">
+    <div class="row">
+        <div class="col-md-12 ml-auto mr-auto">
+            <header class="page-header page-header-compact page-header-light mb-2">
+                <div class="container-fluid">
+                    <div class="page-header-content">
+                        <div class="row align-items-center justify-content-between pt-3">
+                            <div class="col-auto">
+                                <h1 class="page-header-title">
+                                    Account Settings - Payments
+                                </h1>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            <!-- Account page navigation-->
+            <nav class="nav nav-borders">
+                <a class="nav-link ml-0" href="{% host_url 'profile' host 'bizadmin'%}">Profile</a>
+                <a class="nav-link activate" href="{% host_url 'staff_payments' host 'bizadmin'%}">Payments</a>
+                <a class="nav-link" href="{% host_url 'bookingSetting' host 'bizadmin' %}">Booking Settings</a>
+                <a class="nav-link" href="{% host_url 'security' host 'bizadmin'%}">Security</a>
+                <a class="nav-link" href="{% host_url 'notifications' host 'bizadmin'%}">Notifications</a>
+            </nav>
+            <hr class="mt-0 mb-4"/>
+            <div class="row">
+                <div class="col-lg-6">
+                    <!-- Security preferences card-->
+                    <div class="card mb-4">
+                        <div class="card-header"><h4>Payment handling</h4></div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-12 align-items-center my-auto">
+                                    <p for="" class="text-muted">Collect payments from customers using Stripe</p>
+                                    {% if not staff.stripe_user_id %}
+                                        <a href="{% host_url 'stripe_authorize' host 'bizadmin' %}" class="stripe-connect"><span>Connect with</span></a>
+                                    {% else %}
+                                        <label for="" class="font-weight-bold d-flex justify-content-left pr-1">Collect a non-refundable payment<a data-toggle="tooltip" data-placement="top" title="This payment will only be refunded to the customer if you are unable to service the customer."> <i class="fas fa-question-circle licolor"></i></a></label>
+                                        <div class="col-4">
+                                            <form method="POST" id="paymentinfoform">
+                                                {% csrf_token %}
+                                                {{ payment_form.nrfpayment|as_crispy_field }}
+                                                {{ payment_form.currency|as_crispy_field }}
+                                            </form>
+                                        </div>
+                                    {% endif %}
+
+                                </div>
+                                <div class="col-12">
+                                    
+                                </div>
+                            </div>
+                                
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block java %}
+<script>
+    $(document).ready(function(){
+        var nrfpayment = document.getElementById("id_nrfpayment");
+        $(document).on('blur','#id_nrfpayment',function() {
+            var form = $('#paymentinfoform')
+            $.ajax({
+                type:'POST',
+                url: "{% host_url 'updatepaymentinfo' host 'bizadmin' %}",
+                data: form.serialize(),
+                headers:{
+                    "X-CSRFToken": csrftoken
+                },
+                success:function(data){
+                    $.notify({
+                        // options
+                        message: data.message
+                    },{
+                        // settings
+                        type: data.success,
+                        delay: 50,
+                    });
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}

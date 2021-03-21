@@ -2,7 +2,7 @@ from django.conf.urls import url, include
 from django.contrib import admin
 from django.urls import re_path, path
 from django.contrib.auth import views as auth_views
-from . import views
+from . import views, stripe_views
 app_name = 'businessadmin'
 urlpatterns = [
     path('password_reset/', auth_views.PasswordResetView.as_view(),name='password_reset'),
@@ -26,7 +26,12 @@ urlpatterns = [
     re_path(r'dashboard/profile/booking/$', views.bookingSettingViews, name='bookingSetting'),
     re_path(r'dashboard/profile/security/$',views.profileSecurityViews, name='security'),
     re_path(r'dashboard/profile/notifs/$', views.notifViews, name='notifications'),
-    re_path(r'dashboard/profile/billing/$',views.profileBillingViews, name='billing'),
+    re_path(r'dashboard/profile/payments/$', views.paymentsView.as_view(), name='staff_payments'),
+    re_path(r'dashboard/profile/payments/recurring/$', views.payMonthlyView.as_view(), name='payments_to_bookme'),
+    re_path(r'dashboard/profile/payments/recurring/stripe-webhook/$', views.webhook_received.as_view(), name='webhook_received_stripe'),
+    re_path(r'dashboard/profile/payments/updateinfopayment$', views.updatePaymentInfoView.as_view(), name='updatepaymentinfo'),
+    re_path(r'dashboard/profile/payments/authorize/$', views.StripeAuthorizeView.as_view(), name='stripe_authorize'),
+    re_path(r'dashboard/profile/payments/oauth/callback', views.StripeAuthorizeCallbackView.as_view(), name='authorize_callback'),
     re_path(r'dashboard/profile/$',views.profileViews, name='profile'),
     re_path(r'updateBookingInterval/$', views.bookingAPI.as_view() ,name='bookingIntervalAPI'),
     re_path(r'returningbookingReturningAPI/$', views.returningAPI.as_view(), name='bookingReturningAPI'),
@@ -124,6 +129,10 @@ urlpatterns = [
 
     re_path(r'integration/$', views.integrationsView, name='integrations'),
     re_path(r'integration/zoom/signup', views.integrationZoomSignUp.as_view(), name='zoomsignupintegration'),
+    #Stripe Integration
+    path("create-sub", stripe_views.create_sub, name="create_sub"), #add
+    path("complete", views.completeSubscriptionPayment, name="complete_subscription_stripe"),
+    path("cancel", stripe_views.cancelStripeMonthlySubscription, name="cancel_subscription_stripe"),
 
     re_path(r'^updatedpass/$', views.updatePassword.as_view(), name='updatepassword'),
     re_path(r'^pricing/$', views.pricingViews, name='pricingBusiness'),

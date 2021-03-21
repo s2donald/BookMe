@@ -354,6 +354,10 @@ yesno = (
         ('y', 'Yes'),
         ('n', 'No')
 )
+CURR = (
+    ('CAD', 'CAD'),
+    ('USD', 'USD')
+)
 
 class formBuilderForm(forms.ModelForm):
     label = forms.CharField(label='Form Label',max_length=100, required=True)
@@ -374,4 +378,9 @@ class formBuilderForm(forms.ModelForm):
         except AttributeError:
             pass
 
-    
+class ServicePaymentCollectForm(forms.Form):
+    #Non-refundable payment
+    nrfpayment = forms.IntegerField(initial=10,label='', min_value=10, widget=forms.TextInput(attrs={'class':'form-control'}))
+    currency = forms.ChoiceField(label='',initial='CAD',choices=CURR, widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control', 'data-size':'2'}))
+
+

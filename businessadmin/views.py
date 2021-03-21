@@ -1321,7 +1321,7 @@ def galImageUpload(request):
             aspect = int(aspectratio)
             box = (0, 0, width, height)
             cropped_image = image.crop(box)
-            resized_image = cropped_image.resize((2048,2048),Image.ANTIALIAS)
+            resized_image = cropped_image.resize((2048,2048*aspect),Image.ANTIALIAS)
             thumb_io = BytesIO()
             resized_image.save(thumb_io, format=image.format)
             gallary = Gallary.objects.create(company=company)
@@ -2545,31 +2545,33 @@ def completeSubscriptionPayment(request):
         return redirect(reverse('payments_to_bookme', host='bizadmin'))
 
 from djstripe.models import Product
-class payMonthlyView(View):
-    def get(self, request):
-        company = get_object_or_404(Company, user=request.user)
-        user=request.user
-        staff = StaffMember.objects.get(user=user)
-        if user.is_business and not user.on_board:
-            return redirect(reverse('completeprofile', host='bizadmin'))
-        products = Product.objects.all()
-        stripe.api_key = djstripe.settings.STRIPE_SECRET_KEY
-        pk = settings.STRIPE_PUBLISHABLE_KEY
-        try:
-            subscription_id = company.stripe_subscription.id
-            customer_id = company.stripe_customer.id
-            subscription = stripe.Subscription.retrieve(subscription_id)
-            customer = stripe.Customer.retrieve(customer_id)
-            paymentmethod_id = customer.invoice_settings.default_payment_method
-            paymentmethod = stripe.PaymentMethod.retrieve(paymentmethod_id)
-            cardbrand = paymentmethod.card.brand
-            last4 = paymentmethod.card.last4
-            if not subscription.status == 'active':
-                return render(request,'bizadmin/dashboard/account/monthlypayment/pricing.html', {'company':company, 'staff':staff, 'products':products, 'pk_stripe':pk})
-            # plan = subscription.items.data.product
-        except:
+from .decorators import log_exceptions
+ 
+@log_exceptions('payMonthlyView')
+def payMonthlyView(request):
+    company = get_object_or_404(Company, user=request.user)
+    user=request.user
+    staff = StaffMember.objects.get(user=user)
+    if user.is_business and not user.on_board:
+        return redirect(reverse('completeprofile', host='bizadmin'))
+    products = Product.objects.all()
+    stripe.api_key = djstripe.settings.STRIPE_SECRET_KEY
+    pk = settings.STRIPE_PUBLISHABLE_KEY
+    try:
+        subscription_id = company.stripe_subscription.id
+        customer_id = company.stripe_customer.id
+        subscription = stripe.Subscription.retrieve(subscription_id)
+        customer = stripe.Customer.retrieve(customer_id)
+        paymentmethod_id = customer.invoice_settings.default_payment_method
+        paymentmethod = stripe.PaymentMethod.retrieve(paymentmethod_id)
+        cardbrand = paymentmethod.card.brand
+        last4 = paymentmethod.card.last4
+        if not subscription.status == 'active':
             return render(request,'bizadmin/dashboard/account/monthlypayment/pricing.html', {'company':company, 'staff':staff, 'products':products, 'pk_stripe':pk})
-        return render(request,'bizadmin/dashboard/account/monthlypayment/yourpayments.html', {'company':company, 'staff':staff, 'products':products, 'brand':cardbrand, 'last4':last4})
+        # plan = subscription.items.data.product
+    except:
+        return render(request,'bizadmin/dashboard/account/monthlypayment/pricing.html', {'company':company, 'staff':staff, 'products':products, 'pk_stripe':pk})
+    return render(request,'bizadmin/dashboard/account/monthlypayment/yourpayments.html', {'company':company, 'staff':staff, 'products':products, 'brand':cardbrand, 'last4':last4})
 
 class webhook_received(View):
     def post(self, request):

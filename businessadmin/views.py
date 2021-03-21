@@ -1318,10 +1318,12 @@ def galImageUpload(request):
             image = Image.open(img)
             image.filename = img.name
             width, height = image.size
-            aspect = int(aspectratio)
+            print(width, height)
+            aspectratio = height / width
+            aspect = int(2048*aspectratio) + 1
             box = (0, 0, width, height)
             cropped_image = image.crop(box)
-            resized_image = cropped_image.resize((2048,2048*aspect),Image.ANTIALIAS)
+            resized_image = cropped_image.resize((2048,aspect),Image.ANTIALIAS)
             thumb_io = BytesIO()
             resized_image.save(thumb_io, format=image.format)
             gallary = Gallary.objects.create(company=company)

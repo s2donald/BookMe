@@ -2553,11 +2553,11 @@ class payMonthlyView(View):
         if user.is_business and not user.on_board:
             return redirect(reverse('completeprofile', host='bizadmin'))
         products = Product.objects.all()
-        subscription_id = company.stripe_subscription.id
-        customer_id = company.stripe_customer.id
         stripe.api_key = djstripe.settings.STRIPE_SECRET_KEY
         pk = settings.STRIPE_PUBLISHABLE_KEY
         try:
+            subscription_id = company.stripe_subscription.id
+            customer_id = company.stripe_customer.id
             subscription = stripe.Subscription.retrieve(subscription_id)
             customer = stripe.Customer.retrieve(customer_id)
             paymentmethod_id = customer.invoice_settings.default_payment_method

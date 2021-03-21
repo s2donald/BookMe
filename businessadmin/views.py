@@ -2529,11 +2529,10 @@ def completeSubscriptionPayment(request):
     company = get_object_or_404(Company, user=request.user)
     user=request.user
     staff = StaffMember.objects.get(user=user)
-
-    subscription_id = company.stripe_subscription.id
-    customer_id = company.stripe_customer.id
     stripe.api_key = djstripe.settings.STRIPE_SECRET_KEY
     try:
+        subscription_id = company.stripe_subscription.id
+        customer_id = company.stripe_customer.id
         subscription = stripe.Subscription.retrieve(subscription_id)
     except:
         return redirect(reverse('payments_to_bookme', host='bizadmin'))

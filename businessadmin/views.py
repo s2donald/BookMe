@@ -1620,12 +1620,12 @@ def bookingSettingViews(request):
     elif not user.is_business:
         loginViews(request)
     bookingform = BookingSettingForm(
-                    initial={
+                    initial= {
                             'interval':company.interval, 
-                            'cancellation':company.cancellation, 
-                            'before_window_day':company.before_window_day, 
-                            'before_window_hour':company.before_window_hour, 
-                            'before_window_min':company.before_window_min, 
+                            'cancellation':company.cancellation,
+                            'before_window_day':company.before_window_day,
+                            'before_window_hour':company.before_window_hour,
+                            'before_window_min':company.before_window_min,
                             'after_window_month':company.after_window_month,
                             'after_window_day':company.after_window_day,
                         }

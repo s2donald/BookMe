@@ -75,6 +75,21 @@ minute_choices_no_zero = (
         ('55', '55 minutes')
 )
 
+minute_choices_no_zero_with_hours = (
+        ('5', '5 minutes'),
+        ('10', '10 minutes'),
+        ('15', '15 minutes'),
+        ('20', '20 minutes'),
+        ('25', '25 minutes'),
+        ('30', '30 minutes'),
+        ('35', '35 minutes'),
+        ('40', '40 minutes'),
+        ('45', '45 minutes'),
+        ('50', '50 minutes'),
+        ('55', '55 minutes'),
+        ('60', '1 hour')
+)
+
 cancellationtime = (
     ('0','Anytime'),
     ('1', '1 hour'),
@@ -237,7 +252,7 @@ class AddServiceForm(forms.ModelForm):
     price_type = forms.ChoiceField(label='Price Type',choices=price_choices, widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control', 'data-size':'5'}))
     price = forms.DecimalField(label='Price ($)',max_digits=10, required=True, widget=forms.TextInput(attrs={'type':'number', 'rows':1, 'cols':20,}))
     duration_hour = forms.ChoiceField(label='Duration Hour',choices=hours_choices,initial= '0', widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control', 'data-size':'5'}))
-    duration_minute = forms.ChoiceField(label='Duration Minute',choices=minute_choices,initial= '30', widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control', 'data-size':'5'}))
+    duration_minute = forms.ChoiceField(label='Duration Minute',choices=minute_choices,initial='30', widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control', 'data-size':'5'}))
     checkintime = forms.ChoiceField(label='Check In Time',choices=minute_choices, widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control', 'data-size':'5'}))
     padding = forms.ChoiceField(label='', choices=beforeafter, widget=forms.Select(attrs={'class':'d-none selectcolor selectpicker show-tick form-control', 'data-size':'5'}))
     paddingtime_hour = forms.ChoiceField(label='', choices=hours_choices, widget=forms.Select(attrs={'class':'d-none selectcolor selectpicker show-tick form-control', 'data-size':'5'}))
@@ -265,7 +280,7 @@ class AddServiceForm(forms.ModelForm):
     #             pass
 
 class BookingSettingForm(forms.Form):
-    interval = forms.ChoiceField(label='',choices=minute_choices_no_zero,initial= '30', widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control', 'data-size':'5', 'data-dropdown-align-right':'true'}))
+    interval = forms.ChoiceField(label='',choices=minute_choices_no_zero_with_hours,initial='30', widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control', 'data-size':'5', 'data-dropdown-align-right':'true','data-live-search':"true"}))
     cancellation = forms.ChoiceField(label='',choices=cancellationtime, initial= '0', widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control', 'data-size':'5', 'data-dropdown-align-right':'true'}))
     notes = forms.CharField(label='',max_length=250, required=False, widget=forms.Textarea(attrs={'rows':4, 'cols':20}))
     before_window_day = forms.ChoiceField(label='',choices=day, initial= '0', widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control', 'data-size':'5', 'data-dropdown-align-right':'true'}))

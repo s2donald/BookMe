@@ -69,7 +69,8 @@ INTERVAL = [
     (40, '40 Minutes'),
     (45, '45 Minutes'),
     (50, '50 Minutes'),
-    (55, '55 Minutes')
+    (55, '55 Minutes'),
+    (60, '60 Minutes')
 ]
 
 price_choices = (
@@ -266,7 +267,7 @@ class Company(models.Model):
     returning = models.BooleanField(default=False)
     background = models.CharField(max_length=200, default='primary', choices=backgroundstyle)
     cancellation = models.IntegerField(choices=cancellationtime, default=0)
-    interval = models.IntegerField(choices=INTERVAL, default=1)
+    interval = models.IntegerField(choices=INTERVAL, default=30)
     image = models.ImageField(upload_to=get_user_image_folder, blank=True)
     emailReminders = models.BooleanField(default=True)
     confirmation_minutes = models.IntegerField(choices=minute_choices,default=15)

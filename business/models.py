@@ -168,7 +168,10 @@ cancellationtime = (
     (168, '1 week'),
     (10000, 'never'),
 )
-
+typeofbusiness = (
+    ("product", 'Product Verticle'),
+    ("service", 'Services Verticle'),
+)
 day = (
     (0, '0 Day'),
     (1, '1 Day'),
@@ -229,8 +232,8 @@ backgroundstyle = (
     ('hexagon', 'hexagon'),
 )
 
-def get_user_image_folder(instance, filename):
-    return "company/images/user_{0}/imagefolder/{1}/".format(instance.user.id, filename)
+def get_user_backgroundimage_folder(instance, filename):
+    return "company/backgroundimage/user_{0}/imagefolder/{1}/".format(instance.user.id, filename)
 
 def get_user_image_folder(instance, filename):
     return "company/images/user_{0}/requested/{1}/".format(instance.user.id, filename)
@@ -248,6 +251,7 @@ class Company(models.Model):
     )
     user = models.OneToOneField(Account, on_delete=models.CASCADE, related_name='user')
     business_name = models.CharField(max_length=30, db_index=True)
+    business_type = models.CharField(choices=typeofbusiness, default="service", max_length=60)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='category', null=True, blank=True)
     subcategory = models.ManyToManyField(SubCategory)
     description = models.TextField(max_length=500, db_index=True, blank=True, null=True)
@@ -268,6 +272,7 @@ class Company(models.Model):
     background = models.CharField(max_length=200, default='primary', choices=backgroundstyle)
     cancellation = models.IntegerField(choices=cancellationtime, default=0)
     interval = models.IntegerField(choices=INTERVAL, default=30)
+    backgroundimage = models.ImageField(upload_to=get_user_backgroundimage_folder,blank=True)
     image = models.ImageField(upload_to=get_user_image_folder, blank=True)
     emailReminders = models.BooleanField(default=True)
     confirmation_minutes = models.IntegerField(choices=minute_choices,default=15)
@@ -289,7 +294,6 @@ class Company(models.Model):
     tz = models.CharField(choices=ALL_TIMEZONES, max_length=64, default="America/Toronto")
     showAddress = models.BooleanField(default=True)
     subscriptionplan = models.IntegerField(choices=subscriptionplan, default=0)
-    
     #Scheduling window
     before_window_day = models.IntegerField(choices=day, default=0)
     before_window_hour = models.IntegerField(choices=hours_choices, default=0)
@@ -401,6 +405,10 @@ class OpeningHours(models.Model):
 class Gallary(models.Model):
     company = models.ForeignKey(Company, on_delete=models.CASCADE,related_name='gallary')
     photos = models.ImageField(upload_to='companies/gallary/photos')
+    created = models.DateTimeField(auto_now_add=True)
+    class Meta:
+        ordering = ('-created',)
+
 
 class Services(models.Model):
     name = models.CharField(max_length=200, db_index=True)

@@ -364,6 +364,47 @@ a:focus {
     line-height: 3rem;
   }
 
+  .avatar-Heading {
+    position: relative;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    box-shadow: 0 0 1rem rgba(0, 0, 0, 0.15);
+    background-color: #f4f4f4;
+    object-fit: cover;
+}
+.businessNameHeading {
+  text-align: center;
+  color: #000;
+  font-size: 22px;
+  font-weight: 500;
+  margin-bottom: 6px;
+}
+
+.aboutHeading {
+  display: inline-block;
+  width: 100%;
+  position: relative;
+}
+
+.aboutDescriptionHeading {
+  width: 80%;
+  margin: 0 auto 16px;
+  font-size: 13px;
+  color: #6e6e6e;
+  text-align: center;
+}
+
+.moretoitbtn {
+  display: block;
+  cursor: pointer;
+  text-decoration: underline;
+}
+.moretoitbtns {
+  cursor: pointer;
+  text-decoration: underline;
+}
+
   .loading {
     max-height: 500px;
   }
@@ -911,6 +952,73 @@ ul.progressbar li.progactive, ul.progressbar li.completedprog, ul.progressbar sp
     border-radius: 6px;
     padding: 2px 2px 2px 0px;
 
+  }
+  .hoverproductclick {
+    cursor: pointer;
+    padding-bottom: 1rem;
+    border-radius: 6px;
+    padding: 2px 2px 2px 2px;
+  }
+  .hoverproductclick:hover {
+    cursor: pointer;
+    /* border: 3px; */
+    /* background-color: #f0f0ec !important; */
+    /* border-radius: 6px; */
+    /* position: absolute; */
+    border-radius: 9px;
+    /* top: -9px;
+    right: -9px;
+    bottom: -9px;
+    left: -9px;
+    z-index: -1; */
+    box-shadow: 0 2px 18px rgb(34 34 34 / 20%);
+    background: #FFFFFF;
+    /* border: 1px dotted transparent; */
+    transform: scale(0.99);
+    transition: transform 200ms cubic-bezier(0.345, 0.115, 0.135, 1.42),opacity 150ms ease-out,border-color 200ms ease-out;
+  
+  }
+  .heading-text-caption{
+    font-weight: 300;
+    font-size: 13px;
+    line-height: 18px;
+  }
+
+  @media (min-width: 769px) {
+
+  .cartBadge {
+    top: -31px;
+  }
+
+  }
+
+.cartBadge {
+    background-color: #ff795c;
+    top: -30px;
+}
+.cartBadge {
+  position: relative;
+  left: 11px;
+  height: 13px;
+  padding: 2px 6px 1px;
+  line-height: 1.2em;
+  font-size: 10px;
+  font-weight: 600;
+  color: #fff;
+  text-align: center;
+  white-space: nowrap;
+  border-radius: 10px;
+  transition: background-color .3s;
+  -webkit-transition: background-color .3s;
+  transform: translateZ(0);
+  vertical-align: super;
+  -webkit-tap-highlight-color: transparent;
+  box-sizing: content-box;
+}
+
+  .mainproductimages {
+    max-width: 300px;
+    max-height: 200px;
   }
 
   .status-info.information {
@@ -2503,4 +2611,22 @@ figure {
 }
 .fontarvo{
   font-family: 'Arvo', serif;
+}
+
+.coverimgstyle {
+  background: 50% 50% no-repeat;
+  width: 100%;
+  height: 100px;
+  max-height: 100px;
+  background-color: #f4f4f4;
+  display: inline-block;
+  object-fit: cover;
+}
+
+.avatarHeading {
+  display: inline-block;
+  width: 100%;
+  margin-bottom: 16px;
+  text-align: center;
+  margin-top: -100px;
 }

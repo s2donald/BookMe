@@ -1,6 +1,7 @@
 from django.contrib import admin
 from businessadmin.models import StaffMember
 from .models import Company, Category, Services, SubCategory, Amenities, OpeningHours, Gallary, Clients, CompanyReq, ServiceCategories
+from products.models import Product
 # Register your models here.
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
@@ -45,6 +46,10 @@ class StaffMemberInline(admin.TabularInline):
     model = StaffMember
     extra = 0
 
+class ProductInline(admin.TabularInline):
+    model = Product
+    extra = 0
+
 @admin.register(Company)
 class CompanyAdmin(admin.ModelAdmin):
     list_display = ['user','business_name','slug','available','created','updated']
@@ -52,7 +57,7 @@ class CompanyAdmin(admin.ModelAdmin):
     list_filter = ['available', 'created', 'updated']
     search_fields = ('user__first_name','business_name','user__email')
     list_editable = ['available']
-    inlines = [ StaffMemberInline, CompanyReqInline, GallaryInline, OpeningHoursInline, AmenitiesInline, ServiceCategories ]
+    inlines = [ StaffMemberInline, CompanyReqInline, GallaryInline, OpeningHoursInline, AmenitiesInline, ServiceCategories, ProductInline ]
 
 
 

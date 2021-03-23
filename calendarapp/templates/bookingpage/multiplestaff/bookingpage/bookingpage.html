@@ -6,7 +6,38 @@
 {% block companybizname %}{{ company.business_name }}{% endblock companybizname %}
 
 {% block header %}
-    <div class="bg-light inline-block container-fluid align-items-center justify-content-center">
+    <div class="heading">
+        <a href="{% host_url 'bookingurls' host 'bookingurl' slug=company.slug %}">
+            <div class="imgcontainer_header bg-light">
+            <a class="m-2" href="{% host_url 'bizadminmain' host 'bizadmin' %}"><img width="125px" src="{% static "/img/favicon/logo/BookMe-whitebrown.svg" %}"></a>
+                {% if company.backgroundimage %}
+                    <img class="coverimgstyle" src="{{ company.image.url }}" alt="">
+                {% else %}
+                    <div class="bg-light coverimgstyle"></div>
+                {% endif %}
+            </div>
+        </a>
+        <div class="avatarHeading">
+            <a href="{% host_url 'bookingurls' host 'bookingurl' slug=company.slug %}">
+            {% if company.image %}
+                <img src="{{ company.image.url }}" alt="{{ company.business_name }} Logo" class="avatar-Heading">
+            {% else %}
+                <img src="{% static "/img/favicon/logo/bookme-appiconios.png" %}" class="avatar-Heading" alt="BookMe Logo">
+            {% endif %}
+            </a>
+        </div>
+        <div class="aboutHeading">
+            <h2 class="businessNameHeading">{{ company.business_name }}</h2>
+            <div class="aboutDescriptionHeading mb-0">
+                <p class="headingabout text-truncate m-0">{{ company.description }}</p>
+                <span class="moretoitbtn">Show More</span>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block oldheader %}
+    <div class="bg-light inline-block container-fluid align-items-center justify-content-center mainheader">
         <div class="row justify-content-between p-2">
             {% comment %} <a class="my-2 pr-2 ml-2" href="{% host_url 'business:homepage' host 'www' %}"><img width="125px" src="{% static "/img/favicon/logo/BookMe-whitebrown.svg" %}"></a> {% endcomment %}
             <a class="my-2 pr-2 ml-2" href="{% host_url 'bizadminmain' host 'bizadmin' %}"><img width="125px" src="{% static "/img/favicon/logo/BookMe-whitebrown.svg" %}"></a>
@@ -20,6 +51,8 @@
         </div>
     </div>
 {% endblock %}
+
+
 
 
 
@@ -89,7 +122,7 @@
                     <div class="tab-pane fade show active" role="tabpanel" id="serviceList">
                         <div class="justify-content-between align-baseline pl-4 row mb-6 lorem">
                             <div class="row align-middle">
-                                <h4> Select Service</h4>
+                                <h4> {{ company.business_name }}'s Services</h4>
                             </div>
                             <button class="text-muted btn btn-sm btn-link" data-toggle="modal" data-target="#notesModal">{% if company.shownotes %}Policy{% endif %}</button>
                         </div>
@@ -128,7 +161,8 @@
                                             </div>
                                         </div>
                                         <div class="col-12 p-0 mt-2">
-                                            <p class="text-muted">{{ s.description }}</p>
+                                            <p class="text-muted text-left text-truncate descr{{ s.id }} m-0">{{ s.description }}</p>
+                                            <p class="moretoitbtns text-left text-muted" data-class="descr{{s.id}}"><u>Show More</u></p>
                                         </div>
                                         {% endwith %}  
                                             <hr>
@@ -159,8 +193,9 @@
                                                 </div>
                                             </div>
 
-                                            <div class="col-12 p-0 m-0 text-center">
-                                                <p class="text-muted text-left">{{ s.description }}</p>
+                                            <div class="col-12 px-0 pb-0 m-0 text-center">
+                                                <p class="text-muted text-left text-truncate descr{{ s.id }} m-0">{{ s.description }}</p>
+                                                <p class="moretoitbtns text-left text-muted" data-class="descr{{s.id}}"><u>Show More</u></p>
                                             </div>
                                         {% endwith %}  
                                             <hr>
@@ -188,14 +223,6 @@
                         <hr>
                         </div>
                         {% endif %}
-
-                        <div class="text-block">
-                        {% if company.description %}
-                        <h3 class="mb-3">About</h3>
-                        <p class="text-muted text-left"> {{ company.description }}</p>
-                        <hr>
-                        {% endif %}
-                        </div>
 
                         <div class="text-block">
                             <h3 class="mb-3">Location</h3>
@@ -517,12 +544,24 @@
                         $("#getCodeModal").modal('show');
                     }
                     else {
+                        var  removeheading = document.querySelector('.heading');
+                        removeheading.innerHTML = ''
                         var el = document.querySelector('#contentsarg');
                         el.innerHTML = data.html_content
                     }
                 }
             });
         });
+
+        $(document).on('click', '.moretoitbtn',function(e){
+            $('.headingabout').toggleClass("text-truncate");
+        });
+
+        $(document).on('click', '.moretoitbtns',function(e){
+            const varsd = '.' + $(this).attr('data-class')
+            $(varsd).toggleClass("text-truncate");
+        });
+
 
         $(document).on('submit', '#RequestBookMeAdd',function(e){
             e.preventDefault()

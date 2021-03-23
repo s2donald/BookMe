@@ -1,0 +1,305 @@
+{% extends 'bookingpage/multiplestaff/bookingpage/main.html'%}
+{% load static %}
+{% load hosts %}
+{% load business_tags %}
+{% block title %}{{ company.business_name }} - BookMe.to{% endblock %}
+{% block companybizname %}{{ company.business_name }}{% endblock companybizname %}
+
+{% block header %}
+    <div class="heading">
+        <div class="headingtext bg-light">
+            <div class="container">
+            <div class="row justify-content-between">
+                <a class="ml-3 mt-3" href="{% host_url 'bizadminmain' host 'bizadmin' %}"><img width="125px" height="18px" src="{% static "/img/favicon/logo/BookMe-whitebrown.svg" %}"></a>
+                <a class="mr-3 mt-3" href="{% host_url 'bizadminmain' host 'bizadmin' %}"><div class="fa fa-shopping-cart text-white" height="50"></div><div class="cartBadge d-none" id="cart"></div></a>
+                
+            </div>
+            </div>
+        </div>
+        <div>
+            <div class="imgcontainer_header bg-light d-flex">
+                {% if company.backgroundimage %}
+                    <img class="coverimgstyle" src="{{ company.image.url }}" alt="">
+                {% else %}
+                    <div class="bg-light coverimgstyle"></div>
+                {% endif %}
+            </div>
+        </div>
+        <div class="avatarHeading">
+            <a href="{% host_url 'bookingurls' host 'bookingurl' slug=company.slug %}">
+            {% if company.image %}
+                <img src="{{ company.image.url }}" alt="{{ company.business_name }} Logo" class="avatar-Heading">
+            {% else %}
+                <img src="{% static "/img/favicon/logo/bookme-appiconios.png" %}" class="avatar-Heading" alt="BookMe Logo">
+            {% endif %}
+            </a>
+        </div>
+        <div class="aboutHeading">
+            <h2 class="businessNameHeading">{{ company.business_name }}</h2>
+            <div class="aboutDescriptionHeading mb-0">
+                <p class="headingabout text-truncate m-0">{{ company.description }}</p>
+                <span class="moretoitbtn">Show More</span>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block booking %}
+<section class="py-0">
+    <div id="sd" width="100px"></div>
+    <div class="container liblack" id="wholepage">
+        <div class="row justify-content-center">
+            <div id="bm" width="100px"></div>
+            <div class="col-lg-12" id="contentsarg">
+                <hr>
+                <ul class="navbar nav nav-pills" id="navlink-page" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active ml-0 service-link" data-toggle="pill" role="tab" href="#serviceList" aria-selected="true" id="aservice">Shop</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link about-link" href="#aboutList" data-toggle="pill" role="tab" aria-selected="false" id="aabout">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link review-link" href="#reviewlist" data-toggle="pill" role="tab" aria-selected="false" id="areview">Reviews</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link gallary-link" href="#gallarylist" data-toggle="pill" role="tab" aria-selected="false" id="agallary">Gallery</a>
+                    </li>
+                </ul>
+                <hr>
+                <div class="tab-content" id="pillscontent">
+                    <div class="tab-pane fade show active" role="tabpanel" id="serviceList">
+                        <div class="justify-content-between align-baseline pl-4 row mb-6 lorem">
+                            <div class="row align-middle">
+                                <h4> {{ company.business_name }}'s Store</h4>
+                            </div>
+                        </div>
+                        <div class="row justify-content-center" id="listofallproducts">
+                        {% for products in company.products_offered.all %}
+                            <div class="col-4-lg col-6-md hoverproductclick text-left">
+                                <a href="">
+                                    {% if products.mainimage %}
+                                        <img src="{{ products.mainimage.url }}" class="mainproductimages" alt="BookMe Logo">
+                                    {% else %}
+                                        <img src="" alt="">
+                                    {% endif %}
+                                    <h3 class="heading-text-caption text-truncate" style="max-width:300px;">{{ products.name }}</h3>
+                                    <h5>{{ products.currency }} ${{ products.price }}</h5>
+                                </a>
+                            </div>
+                        {% endfor %}
+                        </div>
+                        
+                    </div>
+                    <!-- Amenities-->
+                    <div class="tab-pane fade" role="tabpanel" id="aboutList">
+                        {% if company.company_amenity %}
+                        <div class="text-block">
+                        <h3 class="mb-4">Amenities Offered</h3>
+                        <ul class="amenities-list list-inline">
+                            {% for a in company.company_amenity.all %}
+                            <li class="list-inline-item mb-3">
+                            <div class="d-flex align-items-center">
+                                <div class="icon-circle bg-secondary mr-2"><i class="fa fa-check"></i></div><span class="text-capitalize">{{ a.amenity }}</span>
+                            </div>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                        <hr>
+                        </div>
+                        {% endif %}
+
+                        <div class="text-block">
+                            <h3 class="mb-3">Location</h3>
+                            <div id="map"></div>
+                            <hr>
+                        </div>
+                    </div>
+                    
+                    <div class="tab-pane fade" role="tabpanel" id="reviewlist">
+                        <div class="d-flex justify-content-center">
+                            <h3 class="mb-3">Reviews</h3>
+                        </div>
+                    {% if company.company_reviews.all %}
+                        {% for review in company.company_reviews.all %}
+                            <hr>
+                            {% with reviewer=review.reviewer %}
+                            <div class="media d-block d-sm-flex review">
+                                <div class="text-md-left mr-4 mr-xl-5"><img class="d-block avatar avatar-xl p-2 mb-2" src="{% if reviewer.avatar %}{{ reviewer.avatar.url }}{% else %}https://epicattorneymarketing.com/wp-content/uploads/2016/07/Headshot-Placeholder-1.png{% endif %} " alt="{{ reviewer.first_name }} {{ reviewer.last_name }}"><span class="text-uppercase text-muted text-sm">{{ review.created|date:"M d, Y"}}</span></div>
+                                <div class="media-body text-left">
+                                <h6 class="mt-2 mb-1">{{ reviewer.first_name }} {{ reviewer.last_name }}</h6>
+                                <div class="mb-2">{% for x in '12345' %}<i class="fas fa-star {% if forloop.counter <= review.star %}text-warning{% else %}text-gray-300{% endif %}"></i>{% endfor %}
+                                </div>
+                                <p class="text-muted text-sm">{{ review.review }}     </p>
+                                </div>
+                            </div>
+                            {% endwith %}
+
+                        {% endfor %}
+                        {% include 'business/company/pagination_review/pagination.html' with page=reviews %}
+                        <hr>
+                    {% else %}
+                        <h6>Be the first to write a review on this business after you complete a service with them.</h6>
+                        <hr>
+                    {% endif %}
+                    
+                    
+                    </div>
+
+                    <div class="tab-pane fade" role="tabpanel" id="gallarylist">
+                    <div class="row text-center justify-content-center" id="galphotos">
+                        {% for p in company.gallary.all %}
+                        <div class="col-sm-12 col-md-6 col-lg-4 mt-2">
+                            <div class="card justify-content-center align-self-center show-image" id="{{ p.id }}">
+                            <img width="100%" class="rounded" src="{{ p.photos.url }}" alt="">
+                            </div>
+                        </div>
+                        {% empty %}
+                            <h6>No images have been uploaded by {{ company.business_name }}</h6>
+                        {% endfor %}
+                    </div>
+                    <br>
+                    {% include 'bizadmin/dashboard/reviews/pagination.html' with page=photos%}
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-5">
+                <!-- Contact-->
+                    <div class="card border-0 shadow mb-5">
+                        <div class="card-topcol bg-light"></div>
+                        <div class="card-body" id="informationcompstaff">
+                            <div class="media align-items-center">
+                                <div class="media-body">
+                                    <h4 class="mb-0">Business Information</h4>
+                                </div>
+                            </div>
+                            <ul class="list-unstyled mb-4">
+                                <li class="mb-0 pb-0"> 
+                                    <a rel="nofollow" class="licolor text-sm text-decoration-none" href="tel:{{ company.phone }}">
+                                    <div class="row my-0 py-0">
+                                        <div class="col-2 mb-0 pb-0">
+                                        <i class="fa fa-phone mr-3"></i>
+                                        </div>
+                                        <div class="col-10 pb-0 text-left">
+                                        <span class="text-muted">{{ company.phone }}</span>
+                                        </div>
+                                    </div>
+                                    </a>
+                                </li>
+                                <li class="mb-2"> 
+                                    <a rel="nofollow" class="licolor text-sm text-decoration-none" href="mailto:{{ company.email }}">
+                                    <div class="row my-0 py-0">
+                                        <div class="col-2 my-0 pb-0">
+                                        <i class="fa fa-envelope mr-3"></i>
+                                        </div>
+                                        <div class="col-10 pb-0 text-left">
+                                        <span class="text-muted">{{ company.email }}</span>
+                                        </div>
+                                    </div>
+                                    </a>
+                                </li>
+                                {% if company.website_link %}
+                                    <li class="mb-2"> 
+                                    <a rel="nofollow" class="licolor text-sm text-decoration-none" href="{{ company.website_link }}">
+                                        <div class="row my-0 py-0">
+                                        <div class="col-2 my-0 pb-0">
+                                            <i class="fa fa-globe mr-3"></i>
+                                        </div>
+                                        <div class="col-10 pb-0 text-left">
+                                            <span class="text-muted">{{ company.website_link }}</span>
+                                        </div>
+                                        </div>
+                                    </a>
+                                    </li>
+                                {% endif %}
+                                {% if company.fb_link %}
+                                    <li class="mb-2"> 
+                                    <a rel="nofollow" class="licolor text-blue text-sm text-decoration-none" href="{{ company.fb_link}}">
+                                        <div class="row my-0 py-0">
+                                        <div class="col-2 my-0 pb-0">
+                                            <i class="fab fa-facebook mr-3"></i>
+                                        </div>
+                                        <div class="col-10 pb-0 text-left">
+                                            <span class="text-muted">Facebook</span>
+                                        </div>
+                                        </div>
+                                    </a>
+                                    </li>
+                                {% endif %}
+                                {% if company.twitter_link %}
+                                    <li class="mb-2"> 
+                                        <a rel="nofollow" class="licolor text-sm text-decoration-none" href="{{ company.twitter_link}}">
+                                            <div class="row my-0 py-0">
+                                            <div class="col-2 my-0 pb-0">
+                                                <i class="fab fa-twitter mr-3"></i>
+                                            </div>
+                                            <div class="col-10 pb-0 text-left">
+                                                <span class="text-muted">Twitter</span>
+                                            </div>
+                                            </div>
+                                        </a>
+                                    </li>
+                                {% endif %}
+                                {% if company.instagram_link %}
+                                    <li class="mb-2"> 
+                                        <a rel="nofollow" class="licolor text-sm text-decoration-none" href="{{ company.instagram_link}}">
+                                            <div class="row my-0 py-0">
+                                            <div class="col-2 my-0 pb-0">
+                                                <i class="fab fa-instagram licolor mr-3"></i>
+                                            </div>
+                                            <div class="col-10 pb-0 text-left">
+                                                <span class="text-muted">Instagram</span>
+                                            </div>
+                                            </div>
+                                        </a>
+                                    </li>
+                                {% endif %}
+                            </ul>
+                        </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock  %}
+
+{% block scripts %}
+    <script>
+        function initMap() {
+                var map = new google.maps.Map(document.getElementById("map"), {
+                    zoom: 16,
+                    center: { lat: 43.790810, lng: -79.166140 }
+                });
+                var geocoder = new google.maps.Geocoder();
+                geocodeAddress(geocoder, map);
+                
+            }
+
+            function geocodeAddress(geocoder, resultsMap) {
+                var address = '{{ company.address }}, {{ company.state }}, {{ company.city }}, {{ company.postal }}';
+                geocoder.geocode({ address: address }, function(results, status) {
+                    if (status === "OK") {
+                    resultsMap.setCenter(results[0].geometry.location);
+                    var marker = new google.maps.Marker({
+                        map: resultsMap,
+                        position: results[0].geometry.location
+                    });
+                    } else {
+                        
+                    }
+                });
+            }
+        $(document).ready(function() {
+            $(document).on('click', '.moretoitbtn',function(e){
+                $('.headingabout').toggleClass("text-truncate");
+            });
+
+            $(document).on('click', '.moretoitbtns',function(e){
+                const varsd = '.' + $(this).attr('data-class')
+                $(varsd).toggleClass("text-truncate");
+            });
+        });
+    </script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBaZM_O3d1-xDrecS_fbcbvoT5qDmLmje0&callback=initMap"
+    type="text/javascript"></script>
+{% endblock  %}

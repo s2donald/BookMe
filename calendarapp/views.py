@@ -434,7 +434,10 @@ def bookingurlupdated(request):
         # k.save()
 
     print(kanalytics)
-    return render(request, 'bookingpage/multiplestaff/bookingpage/bookingpage.html',{'user':user,'company':company, 'dateWindowBefore':dateWindowBefore, 'dateWindowAfter':dateWindowAfter})
+    if company.business_type == 'product':
+        return render(request, 'productspage/productpage.html',{'user':user,'company':company, 'dateWindowBefore':dateWindowBefore, 'dateWindowAfter':dateWindowAfter})
+    else:
+        return render(request, 'bookingpage/multiplestaff/bookingpage/bookingpage.html',{'user':user,'company':company, 'dateWindowBefore':dateWindowBefore, 'dateWindowAfter':dateWindowAfter})
 
 def bookingStaffUrl(request, slug):
     user = request.user

@@ -1,0 +1,20 @@
+{% load static %}
+{% load hosts %}
+<div class="row">
+<div class="col-12 text-left">
+    <h3>Results({{ products.count }})</h3>
+</div>
+{% for products in products.all %}
+    <div class="col-6-lg col-6-md text-left m-1 hoverproductclick">
+        <a href="{% host_url 'productdetail' slug=products.slug host 'bookingurl' slug=company.slug %}" style="color: black !important;">
+            {% if products.mainimage %}
+                <img src="{{ products.mainimage.url }}" class="mainproductimages" alt="{{ company.business_name }} Image">
+            {% else %}
+                <img src="{% static 'img/default-product-image.png' %}" class="mainproductimages" alt="">
+            {% endif %}
+            <h3 class="heading-text-caption text-truncate" style="max-width:300px;">{{ products.name }}</h3>
+            <h5>{{ products.currency }} ${{ products.price }}</h5>
+        </a>
+    </div>
+{% endfor %}
+</div>

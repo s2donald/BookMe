@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'social_django',
     'widget_tweaks',
     "djstripe",
+    'tinymce',
     'account.apps.AccountConfig',
     'business.apps.BusinessConfig',
     'businessadmin.apps.BusinessadminConfig',
@@ -112,6 +113,11 @@ TEMPLATES = [
         },
     },
 ]
+
+TINYMCE_DEFAULT_CONFIG = {
+    "plugins": "image", #plugins  
+}
+
 
 WSGI_APPLICATION = 'gibele.wsgi.application'
 
@@ -187,6 +193,8 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
+
+CART_SESSION_ID = 'cart'
 
 if not DEBUG:
     AWS_STORAGE_BUCKET_NAME = 'django-gibele'

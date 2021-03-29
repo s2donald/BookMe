@@ -113,7 +113,8 @@ def slug_generator(sender, instance, *args, **kwargs):
 pre_save.connect(slug_generator, sender=Bookings)
 
 class Reviews(models.Model):
-    reviewer = models.ForeignKey(Account, on_delete=models.CASCADE, related_name='user_reviews')
+    reviewer = models.ForeignKey(Account, on_delete=models.CASCADE, related_name='user_reviews', null=True, blank=True)
+    guest = models.ForeignKey(Clients, on_delete=models.CASCADE, null=True, blank=True)
     company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name='company_reviews')
     review = models.TextField(max_length=500)
     star = models.IntegerField(validators=[MinValueValidator(1),MaxValueValidator(5)])

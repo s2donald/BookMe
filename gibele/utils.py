@@ -59,7 +59,7 @@ def unique_slug_generator_product(instance, new_slug=None):
     if new_slug is not None:
         slug = new_slug
     else:
-        slug = slugify("product")
+        slug = slugify(instance.name.replace(" ", ""))
     
     Klass = instance.__class__
     qs_exists = Klass.objects.filter(slug=slug).exists()

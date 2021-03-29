@@ -57,10 +57,31 @@
                             <div class="col-lg-6">
                                 <!-- Two factor authentication card-->
                                 <div class="card mb-4">
-                                    <div class="card-header"><h4>Text Notifications</h4></div>
+                                    <div class="card-header"><h4>Text Notifications <p class="badge badge-primary text-white">Premium</p></h4></div>
                                     <div class="card-body">
+                                    {% if company.subscriptionplan >= 1 %}
+                                        <p for="" class="small text-muted">Send automatic confirmation and reminder text messages to clients</p>
+                                        <div class="custom-control custom-radio">
+                                            <input class="custom-control-input" id="sendtextReminder" type="radio" name="sendreminders" checked />
+                                            <label class="custom-control-label" name="radPublic" for="sendtextReminder">Send text confirmation messages</label>
+                                        </div>
+                                        <div class="custom-control custom-radio">
+                                            <input class="custom-control-input" id="notextReminder" type="radio" name="sendreminders" {% if company.textReminders %}checked{% endif %} disabled/>
+                                            <label class="custom-control-label text-muted" name="radPrivate"  for="notextReminder">Don't receive text confirmation messages</label>
+                                        </div>
+                                        <br>
+                                        <p for="" class="small text-muted">Receive text confirmation</p>
+                                        <div class="custom-control custom-radio">
+                                            <input class="custom-control-input" id="textReminder" type="radio" name="textreminders" {% if company.textReminders %}checked{% endif %} disabled />
+                                            <label class="custom-control-label text-muted" name="radPublic" for="textReminder">Receive text confirmation messages</label>
+                                        </div>
+                                        <div class="custom-control custom-radio">
+                                            <input class="custom-control-input" id="notextReminder" type="radio" name="textreminders" {% if not company.textReminders %}checked{% endif %} />
+                                            <label class="custom-control-label" name="radPrivate"  for="notextReminder">Don't receive text confirmation messages</label>
+                                        </div>
+                                    {% else %}
                                         <p class="small text-muted">Add another level of user experience for your clients by sending out automated text messages when they book an appointment.</p>
-                                        
+                                    {% endif %}
                                     </div>
                                 </div>
                             </div>
@@ -114,7 +135,6 @@
         }
         const csrftoken = getCookie('csrftoken');
         var emailBtn = document.getElementById("noemailReminder");
-        var textBtn = document.getElementById("textSettingBtn");
         var notesBtn = document.getElementById("notesButton");
         var emailrmdr = document.getElementById("emailReminder")
         emailBtn.addEventListener('click', function(){
@@ -157,17 +177,7 @@
                 },
             });
         });
-        textBtn.addEventListener('click', function(){
-            Swal.fire({
-                title:'Automated text message support is currently unavailable. We will send you an email once it becomes available!',
-                icon:'error',
-                customClass:{
-                                confirmButton: 'btn btn-primary',
-                                cancelButton: 'btn btn-danger',
-                            },
-                        buttonsStyling: false,
-            });
-        });
+        
         var clientMsgNotes = document.getElementById('radioShowNotes')
         var clientNotes = document.getElementById('id_notes')
         notesBtn.addEventListener('click',function(){

@@ -219,6 +219,48 @@ class bookingTimes(View):
         
         return JsonResponse({'appointment_slots':slist, 'auth':is_auth})
 
+import stripe 
+def get_or_create_customer(email, token, stripe_access_token, stripe_account):
+    stripe.api_key = stripe_access_token
+    connected_customers = stripe.Customer.list()
+    for customer in connected_customers:
+        if customer.email == email:
+            print(f'{email} found')
+            return customer
+    print(f'{email} created')
+    return stripe.Customer.create(
+        email=email,
+        source=token,
+        stripe_account=stripe_account,
+    )
+
+class ServiceChargeView(View):
+    def post(self, request, *args, **kwargs):
+        stripe.api_key = settings.STRIPE_SECRET_KEY
+        json_data = json.loads(request.body)
+        course = Services.objects.filter(id=json_data['service_id']).first()
+
+        fee_percentage = .01 * int(course.fee)
+        try:
+            customer = get_or_create_customer(
+                self.request.user.email,
+                json_data['token'],
+                course.seller.stripe_access_token,
+                course.seller.stripe_user_id,
+            )
+            charge = stripe.Charge.create(
+                amount=json_data['amount'],
+                currency='usd',
+                customer=customer.id,
+                description=json_data['description'],
+                application_fee=int(json_data['amount'] * fee_percentage),
+                stripe_account=course.seller.stripe_user_id,
+            )
+            if charge:
+                return JsonResponse({'status': 'success'}, status=202)
+        except stripe.error.StripeError as e:
+            return JsonResponse({'status': 'error'}, status=500)
+
 class confbook(View):
     def post(self, request):
         data=json.loads(request.body)
@@ -227,7 +269,6 @@ class confbook(View):
 class loadSignUpForm(View):
     def post(self, request):
         company = request.viewing_company
-        print(request.POST)
         first_name = request.POST.get('first_name')
         last_name = request.POST.get('last_name')
         email = request.POST.get('email')
@@ -427,17 +468,18 @@ def bookingurlupdated(request):
     dateWindowBefore = timezone.localtime(timezone.now()) + datetime.timedelta(days=company.before_window_day,hours=company.before_window_hour,minutes=company.before_window_min)
     dateWindowAfter = timezone.localtime(timezone.now()) + relativedelta(days=company.after_window_day,months=company.after_window_month)
     kanalytics = request.GET.get('k')
-    if kanalytics:
-        print(company.company_views.kijiji)
+    # if kanalytics:
+    #     print(company.company_views.kijiji)
         # k = company.company_views.kijiji
         # k += 1
         # k.save()
 
-    print(kanalytics)
+    # print(kanalytics)
     if company.business_type == 'product':
         return render(request, 'productspage/productpage.html',{'user':user,'company':company, 'dateWindowBefore':dateWindowBefore, 'dateWindowAfter':dateWindowAfter})
     else:
-        return render(request, 'bookingpage/multiplestaff/bookingpage/bookingpage.html',{'user':user,'company':company, 'dateWindowBefore':dateWindowBefore, 'dateWindowAfter':dateWindowAfter})
+        pk = settings.STRIPE_PUBLISHABLE_KEY
+        return render(request, 'bookingpage/multiplestaff/bookingpage/bookingpage.html',{"pk_stripe":pk,'user':user,'company':company, 'dateWindowBefore':dateWindowBefore, 'dateWindowAfter':dateWindowAfter})
 
 def bookingStaffUrl(request, slug):
     user = request.user

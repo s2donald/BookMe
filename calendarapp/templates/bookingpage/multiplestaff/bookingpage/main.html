@@ -32,13 +32,48 @@
     <script src="https://kit.fontawesome.com/2c8e21dfe2.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <script src="https://js.stripe.com/v3/"></script>
-    <script src="{% static 'js/vendor/stripe_client.js'%}"></script>
+    {% comment %} <script src="{% static 'js/vendor/stripe_client.js'%}"></script> {% endcomment %}
     <title>{{ company.business_name }} - BookMe Bookings</title>
   </head>
   <body class="mainpage" data-background="{{ company.background }}">
         {% comment %} {% block slideshow %}
         {% endblock slideshow %} {% endcomment %}
         {% block header %}
+            <div class="heading">
+                <div class="headingtext bg-light" style="background: transparent url('{{ company.image.url }}') no-repeat cover center;">
+                    <div class="container">
+                    <div class="row justify-content-between">
+                        <a class="ml-3 mt-3" href="{% host_url 'bizadminmain' host 'bizadmin' %}"><img width="125px" height="18px" src="{% static "/img/favicon/logo/BookMe-whitebrown.svg" %}"></a>
+                        <a class="mr-3 mt-3" href="{% host_url 'bizadminmain' host 'bizadmin' %}"><div class="fa fa-shopping-cart text-white {% if company.business_type == "service" %}d-none{% endif %}" height="50"></div><div class="cartBadge {% if company.business_type == "service" %}d-none{% endif %}" id="cart">2</div></a>
+                    </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="imgcontainer_header bg-light d-flex">
+                        {% if company.backgroundimage %}
+                            <img class="coverimgstyle" src="{{ company.backgroundimage.url }}" alt="">
+                        {% else %}
+                            <div class="bg-light coverimgstyle"></div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="avatarHeading">
+                    <a href="{% host_url 'bookingurls' host 'bookingurl' slug=company.slug %}">
+                    {% if company.image %}
+                        <img src="{{ company.image.url }}" alt="{{ company.business_name }} Logo" class="avatar-Heading">
+                    {% else %}
+                        <img src="{% static "/img/favicon/logo/bookme-appiconios.png" %}" class="avatar-Heading" alt="BookMe Logo">
+                    {% endif %}
+                    </a>
+                </div>
+                <div class="aboutHeading">
+                    <h2 class="businessNameHeading">{{ company.business_name }}</h2>
+                    <div class="aboutDescriptionHeading mb-0">
+                        <p class="headingabout text-truncate mx-auto" style="max-width:700px;">{{ company.description }}</p>
+                        <span class="moretoitbtn">Show More</span>
+                    </div>
+                </div>
+            </div>
         {% endblock %}
         
         <div class="container align-items-center text-center mt-2">
@@ -66,6 +101,16 @@
             {% endblock %}
             {% block scripts %}
             {% endblock scripts %}
+            <script>
+              $(document).on('click', '.moretoitbtn',function(e){
+                $('.headingabout').toggleClass("text-truncate");
+              });
+
+              $(document).on('click', '.moretoitbtns',function(e){
+                  const varsd = '.' + $(this).attr('data-class')
+                  $(varsd).toggleClass("text-truncate");
+              });
+            </script>
             <p class="font-weight-bold text-black m-2" style="color:black; margin:2px"></p>
             <div class="bookingfooter">
               <span>Powered by</span>

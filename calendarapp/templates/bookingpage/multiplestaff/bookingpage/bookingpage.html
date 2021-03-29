@@ -5,37 +5,6 @@
 {% block title %}{{ company.business_name }} - BookMe.to{% endblock %}
 {% block companybizname %}{{ company.business_name }}{% endblock companybizname %}
 
-{% block header %}
-    <div class="heading">
-        <a href="{% host_url 'bookingurls' host 'bookingurl' slug=company.slug %}">
-            <div class="imgcontainer_header bg-light">
-            <a class="m-2" href="{% host_url 'bizadminmain' host 'bizadmin' %}"><img width="125px" src="{% static "/img/favicon/logo/BookMe-whitebrown.svg" %}"></a>
-                {% if company.backgroundimage %}
-                    <img class="coverimgstyle" src="{{ company.image.url }}" alt="">
-                {% else %}
-                    <div class="bg-light coverimgstyle"></div>
-                {% endif %}
-            </div>
-        </a>
-        <div class="avatarHeading">
-            <a href="{% host_url 'bookingurls' host 'bookingurl' slug=company.slug %}">
-            {% if company.image %}
-                <img src="{{ company.image.url }}" alt="{{ company.business_name }} Logo" class="avatar-Heading">
-            {% else %}
-                <img src="{% static "/img/favicon/logo/bookme-appiconios.png" %}" class="avatar-Heading" alt="BookMe Logo">
-            {% endif %}
-            </a>
-        </div>
-        <div class="aboutHeading">
-            <h2 class="businessNameHeading">{{ company.business_name }}</h2>
-            <div class="aboutDescriptionHeading mb-0">
-                <p class="headingabout text-truncate m-0">{{ company.description }}</p>
-                <span class="moretoitbtn">Show More</span>
-            </div>
-        </div>
-    </div>
-{% endblock %}
-
 {% block oldheader %}
     <div class="bg-light inline-block container-fluid align-items-center justify-content-center mainheader">
         <div class="row justify-content-between p-2">
@@ -53,12 +22,11 @@
 {% endblock %}
 
 
-
-
-
 {% block booking %}
 <script type="text/javascript">
-    $(document).ready();
+    $(document).ready({
+
+    });
 </script>
 <div class="modal fade" id="notesModal" tabindex="-1" data-keyboard="false" data-backdrop="static" role="dialog" aria-labelledby="myModalLabel" aria-hidden="false">
    <div class="modal-dialog modal-dialog-centered">
@@ -138,7 +106,7 @@
                             <div class="card card-plain mb-2">
                                 
                                 {% for categories in company.service_category.all %}
-                                <div class="card-header p-2 mb-2" role="tab" id="heading{{ forloop.counter }}">
+                                <div class="card-header p-2" role="tab" id="heading{{ forloop.counter }}">
                                     <p class="mb-0 text-sm text-left align-items-center justify-content-center">
                                     <a data-toggle="collapse" href="#collapse{{ forloop.counter }}" aria-expanded="false" aria-controls="collapse{{ forloop.counter }}">
                                         {{ categories.name }} Services
@@ -432,7 +400,6 @@
         $('#sd').hide()
         {% if company.shownotes %}$('#notesModal').modal('show'){% endif %}
         
-        
     });
 
     function carQueryFunctionInit() {
@@ -478,6 +445,7 @@
             return cookieValue;
     }
         var csrftoken = getCookie('csrftoken');
+        let stripe = Stripe('{{ pk_stripe }}');
 
     
         function initMap() {
@@ -551,15 +519,6 @@
                     }
                 }
             });
-        });
-
-        $(document).on('click', '.moretoitbtn',function(e){
-            $('.headingabout').toggleClass("text-truncate");
-        });
-
-        $(document).on('click', '.moretoitbtns',function(e){
-            const varsd = '.' + $(this).attr('data-class')
-            $(varsd).toggleClass("text-truncate");
         });
 
 
@@ -747,6 +706,7 @@
                     'month':month, 'year':year, 'day':day, 'time':time
                 },
                 success:function(data){
+                    
                     setTimeout(function(){ 
                         animation.stop()
                         $('#bm').hide()
@@ -758,12 +718,53 @@
                         {% if company.category.name == 'Automotive Services' %}
                             carQueryFunctionInit();
                         {% endif %}
-                        
+                        {% if request.user.is_authenticated %}
+                        {% comment %} var elements = stripe.elements();
+
+                        var style = {
+                        base: {
+                            color: "#131313",
+                            fontFamily: 'Arial, sans-serif',
+                            fontSmoothing: "antialiased",
+                            fontSize: "16px",
+                            "::placeholder": {
+                            color: "#131313"
+                            }
+                        },
+                        invalid: {
+                            fontFamily: 'Arial, sans-serif',
+                            color: "#ffae74",
+                            iconColor: "#ffae74"
+                        }
+                        };
+
+                        var card = elements.create("card", { style: style });
+                        // Stripe injects an iframe into the DOM
+                        card.mount("#card-element");
+
+                        card.on('change', function (event) {
+                            displayError(event);
+                        }); {% endcomment %}
+                        {% endif %}
                     }, 500);
+                    
                     
                 }
             });
         });
+
+        function displayError(event) {
+            let displayError = document.getElementById('card-element-errors');
+            if (event.error) {
+                displayError.textContent = event.error.message;
+                document.getElementById("submit").disabled = false;
+                document.querySelector("#spinner").classList.add("sr-only");
+                document.querySelector("#button-text").classList.remove("hidden");
+
+            } else {
+                displayError.textContent = '';
+            }
+        }
 
         $(document).on('click', '.guestbtn', function(){
             $('#sd').show()

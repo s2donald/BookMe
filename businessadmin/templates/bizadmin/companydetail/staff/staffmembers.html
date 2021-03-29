@@ -240,6 +240,7 @@
             $('.collapse').collapse('hide')
         }        
     });
+
     $(document).on('click', '.removestaff', function(){
         var staff_id =  $('.removestaff').attr("data-staff")
         $.ajax({
@@ -350,11 +351,11 @@
                         close: 'fa fa-remove',
                     }
                 });
-                $('.popover').popover({
+                
+                $('.popoverbreaks').popover({
                     trigger: 'focus',
                     html: true,
-                    sanitize: false,
-                    content: 'Are you sure you want to delete? <button class="btn btn-sm btn-danger removebreak" data-breakid='+staff_id+' data-staff='+staff_id+' >Delete</button><button class="btn btn-sm">Cancel</button>',
+                    sanitize: false
 
                 })
             }
@@ -648,17 +649,10 @@
         });
     });
 
-    let breakid = -1
-
-    $(document).on('click', '.breakdate', function(){
-        var $this = $(this)
-        break_id = $this.attr('data-breakid')
-        breakid = break_id
-    });
-
     $(document).on('click', '.removebreak',function(){
         var $this = $(this)
         staff_id = $this.attr('data-staff')
+        breakid = $this.attr('data-breakid')
         $.ajax({
             type:'POST',
             url: "{% host_url 'removebreakday' host 'bizadmin' %}",
@@ -694,12 +688,10 @@
                     
                     }
                 });
-                $('.popover').popover({
+                $('.popoverbreaks').popover({
                     trigger: 'focus',
                     html: true,
                     sanitize: false,
-                    content: 'Are you sure you want to delete? <button class="btn btn-sm btn-danger removebreak" data-breakid='+staff_id+' data-staff='+staff_id+' >Delete</button><button class="btn btn-sm">Cancel</button>',
-
                 })
 
             }
@@ -843,11 +835,10 @@
                     
                     }
                 });
-                $('.popover').popover({
+                $('.popoverbreaks').popover({
                     trigger: 'focus',
                     html: true,
                     sanitize: false,
-                    content: 'Are you sure you want to delete? <button class="btn btn-sm btn-danger removebreak" data-breakid='+staff_id+' data-staff='+staff_id+' >Delete</button><button class="btn btn-sm">Cancel</button>',
                 })
                 $.notify({
                     // options

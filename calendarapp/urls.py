@@ -1,6 +1,6 @@
 from django.conf.urls import url, include
 from django.urls import path, re_path
-from . import views
+from . import views, viewsshop
 app_name = 'calendarapp'
 urlpatterns = [
     re_path(r'^account/updatep/$', views.phoneValidationView.as_view(), name='phoneupdate'),
@@ -23,6 +23,8 @@ urlpatterns = [
     re_path(r'^renderbookingtimes/$', views.bookingTimesView.as_view(), name='getbookingtime'),
     re_path(r'^bookingbutton/$', views.bookingCalendarRender.as_view(), name='getbookingbuttons'),
     path('social-auth/',include('social_django.urls',namespace='social'), name='fb'),
+    path('retrievefilteredsearchproduct/', viewsshop.SearchFilter.as_view(), name='productsearch'),
+    path('<slug:slug>/',viewsshop.ProductDetails.as_view(), name='productdetail'),
     # re_path(r'^service(?P<pk>\d+)/$', views.bookingServiceView, name='bookingserviceurls'),
     # path('<slug:slug>/',views.bookingStaffUrl,name='getstaffurl'),
     re_path(r'^$', views.bookingurlupdated, name='bookingurls'),

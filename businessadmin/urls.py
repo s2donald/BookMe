@@ -103,7 +103,6 @@ urlpatterns = [
     re_path(r'deletegal/$', views.deleteGalPic.as_view(), name='deletegalpic'),
     re_path(r'galupload/$', views.galImageUpload, name='galleryupload'),
     re_path(r'imageuploads/$', views.headerImageUploads, name='imageuploads'),
-    re_path(r'imageupload/$', views.headerImageUpload, name='imageupload'),
     re_path(r'profileimg/$', views.profileImageUpload, name='profileimg'),
     re_path(r'file-upload/$', views.fileUploadView, name='upload'),
 

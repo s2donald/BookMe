@@ -421,13 +421,21 @@ class personDetailSave(View):
     def post(self, request):
         personal_form = UpdatePersonalForm(request.POST, instance=request.user)
         acct = get_object_or_404(Account, email=request.user)
+        staff = get_object_or_404(StaffMember, user=acct)
         if personal_form.is_valid():
             acct.first_name = personal_form.cleaned_data.get('first_name')
             acct.last_name = personal_form.cleaned_data.get('last_name')
             acct.email = personal_form.cleaned_data.get('email')
             acct.phone = personal_form.cleaned_data.get('phone')
             acct.save()
+            staff.first_name = personal_form.cleaned_data.get('first_name')
+            staff.last_name = personal_form.cleaned_data.get('last_name')
+            staff.email = personal_form.cleaned_data.get('email')
+            staff.phone = personal_form.cleaned_data.get('phone')
+            staff.save()
+
             return JsonResponse({'good':"The data was good"})
+
         else:
             return JsonResponse({'errors':'There were errors'})
 
@@ -1220,59 +1228,37 @@ from django.core.files import File
 from io import BytesIO
 from django.core.files.base import ContentFile
 
-#For the main image on the company info
-@login_required
-def headerImageUpload(request):
-    if request.POST:
-        company = Company.objects.get(user=request.user)
-        img = request.FILES.get('imageFile')
-        x = Decimal(request.POST.get('x'))
-        y = Decimal(request.POST.get('y'))
-        w = Decimal(request.POST.get('width'))
-        h = Decimal(request.POST.get('height'))
-        valid_extensions = ['jpg', 'png', 'jpeg']
-        extension = img.name.rsplit('.',1)[1].lower()
-        if extension not in valid_extensions:
-            return redirect(reverse('information', host='bizadmin'))
-        if img:
-            image = Image.open(img)
-            image.filename = img.name
-            box = (x, y, w+x, h+y)
-            cropped_image = image.crop(box)
-            resized_image = cropped_image.resize((2048,2048),Image.ANTIALIAS)
-            thumb_io = BytesIO()
-            resized_image.save(thumb_io, image.format)
-            company.image.save(image.filename, ContentFile(thumb_io.getvalue()), save=False)
-            company.save()
-    
-    return redirect(reverse('information', host='bizadmin'))
 
 @login_required
 def profileImageUpload(request):
     if request.POST:
         user = Account.objects.get(email=request.user)
         img = request.FILES.get('imageFile')
-        x = Decimal(request.POST.get('x'))
-        y = Decimal(request.POST.get('y'))
-        w = Decimal(request.POST.get('width'))
-        h = Decimal(request.POST.get('height'))
 
         valid_extensions = ['jpg', 'png', 'jpeg']
         extension = img.name.rsplit('.',1)[1].lower()
         if extension not in valid_extensions:
-            return redirect(reverse('profile', host='bizadmin'))
+            return JsonResponse({'success':'success'})
         if img:
             image = Image.open(img)
             image.filename = img.name
-            box = (x, y, w+x, h+y)
+            minimumsize = min(image.size)
+            width, height = image.size
+            box = ((width - minimumsize) // 2, (height - minimumsize) // 2, (width + minimumsize) // 2, (height + minimumsize) // 2)
             cropped_image = image.crop(box)
             resized_image = cropped_image.resize((2048,2048),Image.ANTIALIAS)
             thumb_io = BytesIO()
             resized_image.save(thumb_io, image.format)
             user.avatar.save(image.filename, ContentFile(thumb_io.getvalue()), save=False)
             user.save()
+            staffmember = StaffMember.objects.get(user=user)
+            staffmember.image.save(image.filename, ContentFile(thumb_io.getvalue()), save=False)
+            staffmember.save()
+
     
-    return redirect(reverse('profile', host='bizadmin'))
+    return JsonResponse({'error':'success', 'append':True})
+
+
 
 #For the gallery and photos main photo
 @login_required
@@ -1291,8 +1277,9 @@ def headerImageUploads(request):
         if img:
             image = Image.open(img)
             image.filename = img.name
+            minimumsize = min(image.size)
             width, height = image.size
-            box = (0, 0, width, height)
+            box = ((width - minimumsize) // 2, (height - minimumsize) // 2, (width + minimumsize) // 2, (height + minimumsize) // 2)
             cropped_image = image.crop(box)
             resized_image = cropped_image.resize((2048,2048),Image.ANTIALIAS)
             thumb_io = BytesIO()
@@ -1300,7 +1287,7 @@ def headerImageUploads(request):
             company.image.save(image.filename, ContentFile(thumb_io.getvalue()), save=False)
             company.save()
     
-    return JsonResponse({'success':'success'})
+    return JsonResponse({'error':'success', 'append':True})
         
 def galImageUpload(request):
     if request.POST:
@@ -1318,7 +1305,6 @@ def galImageUpload(request):
             image = Image.open(img)
             image.filename = img.name
             width, height = image.size
-            print(width, height)
             aspectratio = height / width
             aspect = int(2048*aspectratio) + 1
             box = (0, 0, width, height)
@@ -2197,8 +2183,8 @@ class removebreakdayViews(View):
         staff_id = request.POST.get('staff_id')
         break_id = request.POST.get('break_id')
         staff = StaffMember.objects.get(id=int(staff_id))
-        weekday = staff.staff_breaks.get(id=break_id).weekday
-        dayoff = staff.staff_breaks.get(id=break_id).delete()
+        weekday = staff.staff_breaks.get(id=int(break_id)).weekday
+        dayoff = staff.staff_breaks.get(id=int(break_id)).delete()
         html = render_to_string('bizadmin/companydetail/staff/partial/partial/breakday.html', {'staff':staff,'weekday':int(weekday)}, request)
         innerid = '#workdaybreaks' + str(weekday)
         return JsonResponse({'html':html, 'innerid':innerid})
@@ -2262,7 +2248,7 @@ class UpdateStaffDetails(View):
             staff.cc_email = content
             message = 'Staff notifications will be forwarded to ' + content
         else:
-            staff.phone = phone
+            staff.phone = content
             message = 'Staff\'s phone number has been updated'
         staff.save()
 
@@ -2484,47 +2470,6 @@ class StripeAuthorizeCallbackView(View):
         url = reverse('staff_payments', host='bizadmin')
         response = redirect(url)
         return response
-
-def get_or_create_customer(email, token, stripe_access_token, stripe_account):
-    stripe.api_key = stripe_access_token
-    connected_customers = stripe.Customer.list()
-    for customer in connected_customers:
-        if customer.email == email:
-            print(f'{email} found')
-            return customer
-    print(f'{email} created')
-    return stripe.Customer.create(
-        email=email,
-        source=token,
-        stripe_account=stripe_account,
-    )
-
-class CourseChargeView(View):
-    def post(self, request, *args, **kwargs):
-        stripe.api_key = settings.STRIPE_SECRET_KEY
-        json_data = json.loads(request.body)
-        course = Course.objects.filter(id=json_data['course_id']).first()
-
-        fee_percentage = .01 * int(course.fee)
-        try:
-            customer = get_or_create_customer(
-                self.request.user.email,
-                json_data['token'],
-                course.seller.stripe_access_token,
-                course.seller.stripe_user_id,
-            )
-            charge = stripe.Charge.create(
-                amount=json_data['amount'],
-                currency='usd',
-                customer=customer.id,
-                description=json_data['description'],
-                application_fee=int(json_data['amount'] * fee_percentage),
-                stripe_account=course.seller.stripe_user_id,
-            )
-            if charge:
-                return JsonResponse({'status': 'success'}, status=202)
-        except stripe.error.StripeError as e:
-            return JsonResponse({'status': 'error'}, status=500)
 
 import djstripe
 def completeSubscriptionPayment(request):

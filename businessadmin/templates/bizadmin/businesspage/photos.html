@@ -41,6 +41,7 @@
             browseLabel: 'Upload new image',
             'showCaption': false,
             'showPreview': false,
+            'showRemove': false,
             uploadClass: "btn btn-primary",
             uploadLabel: "Confirm Upload",
             uploadExtraData:{'csrfmiddlewaretoken': '{{ csrf_token }}'},
@@ -50,7 +51,8 @@
 
         var $grid = $('.grid').masonry({
             columnWidth: 250,
-            itemSelector: '.grid-item'
+            itemSelector: '.grid-item',
+            isFitWidth: true
         });
 
         $grid.on( 'click', '.grid-item-content', function( event ) {
@@ -104,7 +106,7 @@
                                     <input type="file" id="inputimage" name="imageFile" class="btn btn-primary" accept="image/*" hidden >
                                     {% comment %} <button type="button" id="btnimage" name="imageFile" class="btn btn-primary">Upload new image</button> {% endcomment %}
                                     <div class="file-loading">
-                                        <input id="inputmain" name="imageFile" type="file" multiple>
+                                        <input id="inputmain" name="imageFile" type="file">
                                     </div>    
                                 </form>
                             </div>
@@ -221,13 +223,7 @@
                             }
                                 return cookieValue;
                             }
-                            {% comment %} const csrftoken = getCookie('csrftoken'); {% endcomment %}
-            
                             
-
-                            function openDialog() {
-                                document.getElementById('inputimage').click();
-                            }
                             photo = document.querySelector("#galphotos");
                             {% for p in photos %}
                                 $('#{{ p.id }}').hover(function(){

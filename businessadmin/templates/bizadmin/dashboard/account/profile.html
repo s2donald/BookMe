@@ -8,58 +8,29 @@
 {% block java %}
 
 <script>
-    $(function () {
-                                $("#inputimage").change(function () {
-                                  if (this.files && this.files[0]) {
-                                      var reader = new FileReader();
-                                      reader.onload = function (e) {
-                                      $("#image").attr("src", e.target.result);
-                                      $("#modalCrop").modal("show");
-                                      }
-                                      reader.readAsDataURL(this.files[0]);
-                                  }
-                                });
-
-                                /* SCRIPTS TO HANDLE THE CROPPER BOX */
-                                var $image = $("#image");
-                                var cropBoxData;
-                                var canvasData;
-                                $("#modalCrop").on("shown.bs.modal", function () {
-                                    $image.cropper("destroy");
-                                    $image.cropper({
-                                        viewMode: 1,
-                                        aspectRatio: 1/1,
-                                        minCropBoxWidth: 100,
-                                        minCropBoxHeight: 100,
-                                        ready: function () {
-                                            $image.cropper("setCanvasData", canvasData);
-                                            $image.cropper("setCropBoxData", cropBoxData);
-                                        }
-                                    });
-                                }).on("hidden.bs.modal", function () {
-                                    cropBoxData = $image.cropper("getCropBoxData");
-                                    canvasData = $image.cropper("getCanvasData");
-                                    $image.cropper("destroy");
-                                });
-
-                                $(".js-zoom-in").click(function () {
-                                    $image.cropper("zoom", 0.1);
-                                });
-
-                                $(".js-zoom-out").click(function () {
-                                    $image.cropper("zoom", -0.1);
-                                });
-
-                                /* SCRIPT TO COLLECT THE DATA AND POST TO THE SERVER */
-                                $(".js-crop-and-upload").click(function () {
-                                    var cropData = $image.cropper("getData");
-                                    $("#id_x").val(cropData["x"]);
-                                    $("#id_y").val(cropData["y"]);
-                                    $("#id_height").val(cropData["height"]);
-                                    $("#id_width").val(cropData["width"]);
-                                    $("#formUpload").submit();
-                                });
-                            });
+$(document).ready(function() {
+    $("#inputmain").fileinput({
+        ajaxSettings:{
+            beforeSend: function(xhr, settings) {
+                if (!this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            }
+        },
+        uploadUrl: "{% host_url 'profileimg' host 'bizadmin' %}",
+        maxFileCount: 1,
+        maxFileSize: 5000,
+        browseIcon: '',
+        browseLabel: 'Upload new image',
+        'showCaption': false,
+        'showPreview': false,
+        'showRemove': false,
+        uploadClass: "btn btn-primary",
+        uploadLabel: "Confirm Upload",
+        uploadExtraData:{'csrfmiddlewaretoken': '{{ csrf_token }}'},
+        allowedFileTypes: ['image'],
+    });
+});
 </script>
 {% endblock java %}
 {% block businessadmin %}
@@ -105,7 +76,10 @@
                                         {% csrf_token %}
                                             <input type="hidden" name="x" id="id_x"><input type="hidden" name="y" id="id_y"><input type="hidden" name="width" id="id_width"><input type="hidden" name="height" id="id_height">
                                             <input type="file" id="inputimage" name="imageFile" class="btn btn-primary" accept="image/*" hidden >
-                                            <button type="button" id="btnimage" name="imageFile" class="btn btn-primary">Upload new profile pic</button>
+                                            {% comment %} <button type="button" id="btnimage" name="imageFile" class="btn btn-primary">Upload new image</button> {% endcomment %}
+                                            <div class="file-loading">
+                                                <input id="inputmain" name="imageFile" type="file">
+                                            </div> 
                                         </form>
                                     </div>
                                 </div>
@@ -142,34 +116,6 @@
                                 </div>
                             </div>
                         </div>
-                        <!-- MODAL TO CROP THE IMAGE -->
-                        <div class="modal fade" id="modalCrop" data-backdrop="static" data-keyboard="false">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                        </button>
-                                        <h4 class="modal-title">Crop the photo</h4>
-                                    </div>
-                                    <div class="modal-body">
-                                        <img src="" id="image" style="max-width: 100%;">
-                                    </div>
-                                    <div class="modal-footer">
-                                        <div class="btn-group pull-left" role="group">
-                                        <button type="button" class="btn btn-default js-zoom-in">
-                                            <span class="fas fa-search-plus"></span>
-                                        </button>
-                                        <button type="button" class="btn btn-default js-zoom-out">
-                                            <span class="fas fa-search-minus"></span>
-                                        </button>
-                                        </div>
-                                        <button type="button" class="btn btn-default" data-dismiss="modal">Nevermind</button>
-                                        <button type="button" class="btn btn-primary js-crop-and-upload">Crop and upload</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                         <script>
                         function getCookie(name) {
                             let cookieValue = null;
@@ -188,25 +134,7 @@
                             }
                             {% comment %} var csrftoken = getCookie('csrftoken'); {% endcomment %}
 
-                            document.getElementById('btnimage').addEventListener('click', openDialog);
-
-                            function openDialog() {
-                                document.getElementById('inputimage').click();
-                            }
-                            var uploadedFile = document.getElementById("inputimage");
-                            uploadedFile.onchange = function(){
-                                if(uploadedFile.file[0].size>5242880){
-                                    Swal.fire({
-                                       title: 'The file you are trying to upload is too big',
-                                       icon:'error',
-                                       customClass:{
-                                            confirmButton: 'btn btn-primary',
-                                            cancelButton: 'btn btn-danger',
-                                        },
-                                    buttonsStyling: false,
-                                    });
-                                }
-                            }
+                        
                 var businessemail = document.getElementById('id_email')
 
                 const feedBackEmail = document.querySelector('.invalid_feedback');

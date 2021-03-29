@@ -1,0 +1,1 @@
+New Appointment on {{ booking.start|date:'D, N j, Y' }}, {{ booking.start|date:'g:i A e' }} for a {{ booking.service }} with {{ consumername }}

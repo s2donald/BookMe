@@ -131,6 +131,40 @@ def send_sms_confirmed_client(booking_id):
         return
 
 @task
+def send_sms_confirmed_company(booking_id):
+    try:
+        booking = Bookings.objects.get(id=booking_id)
+    except Bookings.DoesNotExist:
+        return
+    if booking.user:
+        acct = booking.user
+    else:
+        acct = booking.guest
+    
+    client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
+    staff = booking.staffmem
+    company = booking.company
+    service = booking.service
+    staff = booking.staffmem
+    if staff.user:
+        staff_name = staff.user.first_name
+    else:
+        staff_name = staff.first_name
+    phone = staff.phone
+    if phone:
+        phone = "+1" + str(phone)
+    else:
+        return
+    bodymessage = render_to_string('smsSent/business/bookingConfirmed.txt', {'staff_name':staff_name,'booking':booking, 'consumername':acct.first_name })
+    try:
+        message = client.messages.create(
+            to=phone, 
+            from_=settings.TWILIO_PHONE,
+            body=bodymessage)
+    except:
+        return
+
+@task
 def send_sms_reminder_client(booking_id):
     try:
         booking = Bookings.objects.get(id=booking_id)

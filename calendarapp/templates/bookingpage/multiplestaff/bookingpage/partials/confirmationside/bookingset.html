@@ -1,4 +1,4 @@
-
+{% load hosts %}
 <div class="justify-content-between align-baseline pl-4 row mb-6">
     <div class="row align-middle">
         <h4>Booking Confirmed</h4>
@@ -16,5 +16,8 @@
 <div class="row">
     <div class="col-lg-12">
         <p style="font-size:25px;">Thank you for setting an appointment with {{ company.business_name }}! You are scheduled with <strong>{{ staff.first_name }} {{ staff.last_name }}</strong> and it will take place on <strong> {{ date }}</strong> at <strong>{{ time }}</strong> for a <strong>{{ service.name }}</strong>.</p><p style="font-size:25px;">We have sent the additional details of your service to your email.</p>
+    </div>
+    <div class="col-lg-12">
+        <a href="{% host_url 'bookingurls' host 'bookingurl' slug=company.slug %}" class="btn btn-link">Return to company page</a>
     </div>
 </div>

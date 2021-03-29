@@ -382,6 +382,7 @@ class CompanyReq(models.Model):
     status = models.BooleanField(default=True)
     is_addusertolist = models.BooleanField(default=False)
     is_addbooking = models.BooleanField(default=False)
+    is_customorder = models.BooleanField(default=False)
 
     class Meta:
         ordering = ('created_at',)

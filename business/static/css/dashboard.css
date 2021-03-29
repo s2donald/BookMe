@@ -393,30 +393,25 @@
       }
 
       .grid {
-        background: #EEE;
+        background: transparent;
         max-width: 1200px;
+        margin: 0 auto;
       }
       
       .grid-item {
         float: left;
       }
       
-      /* item is invisible, but used for layout */
-      .grid-item,
-      .grid-item-content {
-        width: 250px;
-        height: 250px;
-      }
-      
       /* grid-item-content is visible, and transitions size */
       .grid-item-content {
-        width: 250px;
-        height: 250px;
+        max-width: 250px;
+        max-height: 250px;
         border: 2px solid #333;
-        border-color: hsla(0, 0%, 0%, 0.5);
+        border-color: transparent;
         border-radius: 5px;
         -webkit-transition: width 0.4s, height 0.4s;
                 transition: width 0.4s, height 0.4s;
+        object-fit: contain;
       }
       
       .grid-item:hover .grid-item-content {
@@ -427,8 +422,8 @@
       /* both item and item content change size */
       .grid-item.is-expanded,
       .grid-item.is-expanded .grid-item-content {
-        width: 250px;
-        height: 250px;
+        max-width: 250px;
+        max-height: 250px;
       }
       
       .grid-item.is-expanded {

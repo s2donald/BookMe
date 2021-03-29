@@ -8,58 +8,29 @@
 {% block java %}
 
 <script>
-    $(document).ready(function() {
-                                $("#inputimage").change(function () {
-                                  if (this.files && this.files[0]) {
-                                      var reader = new FileReader();
-                                      reader.onload = function (e) {
-                                      $("#image").attr("src", e.target.result);
-                                      $("#modalCrop").modal("show");
-                                      }
-                                      reader.readAsDataURL(this.files[0]);
-                                  }
-                                });
-
-                                /* SCRIPTS TO HANDLE THE CROPPER BOX */
-                                var $image = $("#image");
-                                var cropBoxData;
-                                var canvasData;
-                                $("#modalCrop").on("shown.bs.modal", function () {
-                                    $image.cropper("destroy");
-                                    $image.cropper({
-                                        viewMode: 1,
-                                        aspectRatio: 400/400,
-                                        minCropBoxWidth: 100,
-                                        minCropBoxHeight: 100,
-                                        ready: function () {
-                                            $image.cropper("setCanvasData", canvasData);
-                                            $image.cropper("setCropBoxData", cropBoxData);
-                                        }
-                                    });
-                                }).on("hidden.bs.modal", function () {
-                                    cropBoxData = $image.cropper("getCropBoxData");
-                                    canvasData = $image.cropper("getCanvasData");
-                                    $image.cropper("destroy");
-                                });
-
-                                $(".js-zoom-in").click(function () {
-                                    $image.cropper("zoom", 0.1);
-                                });
-
-                                $(".js-zoom-out").click(function () {
-                                    $image.cropper("zoom", -0.1);
-                                });
-
-                                /* SCRIPT TO COLLECT THE DATA AND POST TO THE SERVER */
-                                $(".js-crop-and-upload").click(function () {
-                                    var cropData = $image.cropper("getData");
-                                    $("#id_x").val(cropData["x"]);
-                                    $("#id_y").val(cropData["y"]);
-                                    $("#id_height").val(cropData["height"]);
-                                    $("#id_width").val(cropData["width"]);
-                                    $("#formUpload").submit();
-                                });
-                            });
+$(document).ready(function() {
+    $("#inputmain").fileinput({
+        ajaxSettings:{
+            beforeSend: function(xhr, settings) {
+                if (!this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            }
+        },
+        uploadUrl: "{% host_url 'imageuploads' host 'bizadmin' %}",
+        maxFileCount: 1,
+        maxFileSize: 5000,
+        browseIcon: '',
+        browseLabel: 'Upload new image',
+        'showCaption': false,
+        'showPreview': false,
+        'showRemove': false,
+        uploadClass: "btn btn-primary",
+        uploadLabel: "Confirm Upload",
+        uploadExtraData:{'csrfmiddlewaretoken': '{{ csrf_token }}'},
+        allowedFileTypes: ['image'],
+    });
+});
 </script>
 {% endblock java %}
 {% block businessadmin %}
@@ -104,11 +75,14 @@
                                         <!-- Profile picture help block-->
                                         <div class="small font-italic text-muted mb-4">JPG or PNG no larger than 5 MB</div>
                                         <!-- Profile picture upload button -->
-                                        <form action="{% host_url 'imageupload' host 'bizadmin' %}" method="POST" enctype="multipart/form-data" id="formUpload">
+                                        <form action="{% host_url 'imageuploads' host 'bizadmin' %}" method="POST" enctype="multipart/form-data" id="formUpload">
                                         {% csrf_token %}
                                             <input type="hidden" name="x" id="id_x"><input type="hidden" name="y" id="id_y"><input type="hidden" name="width" id="id_width"><input type="hidden" name="height" id="id_height">
                                             <input type="file" id="inputimage" name="imageFile" class="btn btn-primary" accept="image/*" hidden >
-                                            <button type="button" id="btnimage" name="imageFile" class="btn btn-primary">Upload new image</button>
+                                            {% comment %} <button type="button" id="btnimage" name="imageFile" class="btn btn-primary">Upload new image</button> {% endcomment %}
+                                            <div class="file-loading">
+                                                <input id="inputmain" name="imageFile" type="file">
+                                            </div> 
                                             
                                         </form>
                                     </div>

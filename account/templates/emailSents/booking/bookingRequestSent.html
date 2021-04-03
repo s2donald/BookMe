@@ -34,6 +34,11 @@
                                         <span style="font-size:14px; color:#616161 !important;">Company Address: {{ company.address }}, {{ company.postal }}, {{ company.city }}, {{ company.state }}</span><br>
                                         <span style="font-size:14px; color:#616161 !important;">Booking ID: {{ booking.slug }}</span><br>
 
+                                        {% if booking.paymentintent %}
+                                            <span style="font-size:14px; color:#616161 !important;">Price Paid: {{ booking.price_paid|floatformat:2 }}</span><br>
+                                            <p><strong>NOTE:</strong> If the service provider declines your appointment request, you will not be charged.</p>
+                                        {% endif %}
+
 
                                         &nbsp;
                                         <hr><br>

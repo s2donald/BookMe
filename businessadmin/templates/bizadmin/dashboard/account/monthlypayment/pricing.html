@@ -52,7 +52,6 @@
                                             <button class="btn btn-primary" id="submit" type="submit">
                                             <div class="spinner-border sr-only" id="spinner" role="status">
                                                 <span class="sr-only">Loading...</span>
-                                                
                                             </div>
                                             <span id="button-text">Subscribe</span>
                                             </button>
@@ -170,7 +169,7 @@ function createPaymentMethod({ card }) {
           priceId: price_id,
           subscription: result,
         };
-      })
+      });
       // Some payment methods require a customer to be on session
       // to complete the payment process. Check the status of the
       // payment intent to handle these actions.

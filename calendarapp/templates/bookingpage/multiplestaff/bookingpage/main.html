@@ -40,7 +40,7 @@
         {% endblock slideshow %} {% endcomment %}
         {% block header %}
             <div class="heading">
-                <div class="headingtext bg-light" style="background: transparent url('{{ company.image.url }}') no-repeat cover center;">
+                <div class="headingtext bg-light">
                     <div class="container">
                     <div class="row justify-content-between">
                         <a class="ml-3 mt-3" href="{% host_url 'bizadminmain' host 'bizadmin' %}"><img width="125px" height="18px" src="{% static "/img/favicon/logo/BookMe-whitebrown.svg" %}"></a>
@@ -100,19 +100,21 @@
             {% block booking %}
             {% endblock %}
             {% block scripts %}
-            {% endblock scripts %}
+            {% endblock %}
             <script>
-              $(document).on('click', '.moretoitbtn',function(e){
-                $('.headingabout').toggleClass("text-truncate");
-              });
+                $(document).on('click', '.moretoitbtn',function(e){
+                    $('.headingabout').toggleClass("text-truncate");
+                });
 
-              $(document).on('click', '.moretoitbtns',function(e){
-                  const varsd = '.' + $(this).attr('data-class')
-                  $(varsd).toggleClass("text-truncate");
-              });
+                $(document).on('click', '.moretoitbtns',function(e){
+                    const varsd = '.' + $(this).attr('data-class')
+                    $(varsd).toggleClass("text-truncate");
+                });
             </script>
             <p class="font-weight-bold text-black m-2" style="color:black; margin:2px"></p>
             <div class="bookingfooter">
+                {% comment %} <button id="BookMePlugin" data-url="{% host_url 'bookingurls' host 'bookingurl' slug=company.slug %}" data-color="fcdae5"></button>
+                <script src="{% static "js/addwebsite.js" %}"></script> {% endcomment %}
               <span>Powered by</span>
               <a href="{% host_url 'bizadminmain' host 'bizadmin' %}"><img width="72px" src="{% static "/img/favicon/logo/BookMe-blackgrad.svg" %}"></a>
             </div>

@@ -21,57 +21,19 @@ from account.tasks import reminderEmail, emailRequestServiceCompany, confirmedEm
 from businessadmin.tasks import requestToBeClient
 from business.forms import VehicleMakeModelForm, AddressForm
 import re
+import djstripe
 from gibele import settings
 from django.views.decorators.clickjacking import xframe_options_exempt
 from django.template.loader import render_to_string
 import multiprocessing
 from dateutil.relativedelta import relativedelta
+from django.contrib.auth import logout
 # from account.models import Account
 # Create your views here.
 
 def get_companyslug(request, slug):
     request.viewing_company = get_object_or_404(Company, slug=slug)
 
-def bookingurl(request):
-    user = request.user
-    company = request.viewing_company
-    # services = Services.objects.filter(business=company)
-    if user.is_authenticated:
-        returnClient = company.clients.filter(user=user,first_name=user.first_name).exists() or company.clients.filter(phone=user.phone,first_name=user.first_name,).exists() or company.clients.filter(email=user.email,first_name=user.first_name).exists()
-    else:
-        returnClient = False
-    address = company.address
-    category = None
-    categories = Category.objects.all()
-    subcategories = SubCategory.objects.all()
-    services = Services.objects.all().filter(business=company)
-    reviews = Reviews.objects.filter(company=company).order_by('-created')
-    amenities = Amenities.objects.filter(company=company).order_by('amenity')
-    sun_hour = OpeningHours.objects.get(company=company, weekday=0)
-    mon_hour = OpeningHours.objects.get(company=company, weekday=1)
-    tues_hour = OpeningHours.objects.get(company=company, weekday=2)
-    wed_hour = OpeningHours.objects.get(company=company, weekday=3)
-    thur_hour = OpeningHours.objects.get(company=company, weekday=4)
-    fri_hour = OpeningHours.objects.get(company=company, weekday=5)
-    sat_hour = OpeningHours.objects.get(company=company, weekday=6)
-    galPhotos = Gallary.objects.filter(company=company)
-    paginator = Paginator(reviews, 6)
-    page = request.GET.get('page')
-    try:
-        reviews = paginator.page(page)
-    except PageNotAnInteger:
-        reviews = paginator.page(1)
-    except EmptyPage:
-        reviews = paginator.page(paginator.num_pages)
-    paginator = Paginator(galPhotos, 6)
-    page = request.GET.get('page')
-    try:
-        galPhotos = paginator.page(page)
-    except PageNotAnInteger:
-        galPhotos = paginator.page(1)
-    except EmptyPage:
-        galPhotos = paginator.page(paginator.num_pages)
-    return render(request, 'bookingpage/onestaff/bookingpage/homes.html', {'returnClient':returnClient,'user': user, 'page':page,'photos':galPhotos,'sun_hour':sun_hour,'mon_hour':mon_hour,'tues_hour':tues_hour,'wed_hour':wed_hour,'thur_hour':thur_hour,'fri_hour':fri_hour,'sat_hour':sat_hour,'subcategories':subcategories,'amenities':amenities,'address':address,'company':company,'category':category,'categories':categories, 'services':services, 'reviews':reviews})
 
 def bookingServiceView(request, pk):
     user = request.user
@@ -96,9 +58,7 @@ from django.db.models import Q
 def time_slots(start_time, end_time, interval, duration_hour, duration_minute, year, month, day, company, staff_breaks, staff):
     t = start_time
     servDate = timezone.localtime(timezone.make_aware(datetime.datetime(year,month,day)))
-    dateWindowBefore = timezone.localtime(timezone.now()) + datetime.timedelta(days=company.before_window_day,hours=company.before_window_hour,minutes=company.before_window_min)
-    dateWindowAfter = timezone.localtime(timezone.now()) + relativedelta(days=company.after_window_day,months=company.after_window_month)
-
+    
     #We check if the date they are looking to book an appointment is today. If so, we get the earliest available time
     if timezone.localtime(timezone.now()).date() == servDate.date():
         init_time = timezone.localtime(timezone.now() + datetime.timedelta(hours=company.before_window_hour, minutes=company.before_window_min)).time()
@@ -108,6 +68,8 @@ def time_slots(start_time, end_time, interval, duration_hour, duration_minute, y
     availableDay = []
     #end_time is the closing hour of the shop
     while t < end_time:
+        if t == datetime.time(00,00,00):
+            break
         servStart = timezone.localtime(timezone.make_aware(datetime.datetime.combine(servDate, t)))
         endTime = timezone.localtime(timezone.make_aware(datetime.datetime.combine(servDate, t) + datetime.timedelta(hours=duration_hour,minutes=duration_minute)))
         objects = staff.staff_bookings.filter(company=company, start__gte=servDate, is_cancelled_user=False, is_cancelled_company=False, is_cancelled_request=False)
@@ -115,6 +77,7 @@ def time_slots(start_time, end_time, interval, duration_hour, duration_minute, y
         count = 0
         if endTime.time() <= t:
             endTime = timezone.localtime(timezone.make_aware(datetime.datetime.combine(servDate, datetime.time(23,59,59))))
+            break
         for obj in objects:
             #Check if the booking date from the loop is the same as the requested date
             if (timezone.localtime(obj.start).date() == timezone.localtime(servStart).date()):
@@ -462,6 +425,7 @@ class createAccountView(View):
             login(request, account)
         return JsonResponse({'good':'good'})
 
+@xframe_options_exempt
 def bookingurlupdated(request):
     user = request.user
     company = request.viewing_company
@@ -480,6 +444,8 @@ def bookingurlupdated(request):
     else:
         pk = settings.STRIPE_PUBLISHABLE_KEY
         return render(request, 'bookingpage/multiplestaff/bookingpage/bookingpage.html',{"pk_stripe":pk,'user':user,'company':company, 'dateWindowBefore':dateWindowBefore, 'dateWindowAfter':dateWindowAfter})
+
+
 
 def bookingStaffUrl(request, slug):
     user = request.user
@@ -590,10 +556,25 @@ class confirmationMessageRender(View):
 
         staff = StaffMember.objects.get(pk=staff_id)
         service = Services.objects.get(pk=s_id)
-        html_content = render_to_string('bookingpage/multiplestaff/bookingpage/partials/confirmation.html', {'company':company,'staff':staff,'service':service, 'date':date, 'time':time, 'month':month, 'year':year, 'day':day }, request)
+        if staff.collectpayment and staff.stripe_user_id and request.user.is_authenticated:
+            collectpayment = True
+            price = (float(service.price) * 1.045) + 0.6
+            thepayment = round(price, 2)
+            paymentduelater = 0
+        elif staff.collectnrfpayment and staff.stripe_user_id and request.user.is_authenticated:
+            collectpayment = True
+            price = (float(staff.nrfpayment) * 1.045) + 0.6
+            thepayment = round(price, 2)
+            paymentduelater = round(float(service.price) - staff.nrfpayment, 2)
+            if paymentduelater < 0:
+                paymentduelater = 0
+        else:
+            collectpayment = False
+            paymentduelater = float(service.price)
+            thepayment = 0
+        html_content = render_to_string('bookingpage/multiplestaff/bookingpage/partials/confirmation.html', {'company':company,'staff':staff,'service':service, 'date':date, 'time':time, 'month':month, 'year':year, 'day':day, 'collectpayment':collectpayment, 'thepayment':thepayment,'paymentduelater': paymentduelater}, request)
         conf_content = render_to_string('bookingpage/multiplestaff/bookingpage/partials/confirmationside/confirmationside.html', {'company':company,'service':service, 'staff':staff }, request)
-
-        return JsonResponse({'html_content':html_content, 'conf_content':conf_content})
+        return JsonResponse({'html_content':html_content, 'conf_content':conf_content, 'collectpayment':collectpayment})
 
     def post(self, request):
         user = request.user
@@ -613,8 +594,9 @@ class confirmationMessageRender(View):
             request.session['vehmodel'] = model.replace('%20',' ').replace('%28','(').replace('%29',')')
             request.session['vehyear'] = vehyear.replace('%20',' ').replace('%28','(').replace('%29',')')
             request.session['vehtrim'] = trim.replace('%20',' ').replace('%28','(').replace('%29',')')
+        payment_intent_id = request.session.get('payment_intent_id')
+        stripe.api_key = djstripe.settings.STRIPE_SECRET_KEY
         
-
         starttime = datetime.datetime.strptime(time,'%I:%M %p').time()
         startdate = datetime.datetime(year, month, day)
         date = datetime.date(year, month, day)
@@ -626,11 +608,31 @@ class confirmationMessageRender(View):
             label = newformfield.label
             bookinglist.append([fieldname, label])
         request.session['formlist'] = bookinglist
+        
         if not user.is_authenticated:
+            if staff.collectpayment and staff.stripe_user_id:
+                collectpayment = True
+                price = (float(service.price) * 1.045) + 0.6
+                thepayment = round(price, 2)
+                paymentduelater = 0
+            elif staff.collectnrfpayment and staff.stripe_user_id:
+                collectpayment = True
+                price = (float(staff.nrfpayment) * 1.045) + 0.6
+                thepayment = round(price, 2)
+                paymentduelater = round(float(service.price) - staff.nrfpayment, 2)
+                if paymentduelater < 0:
+                    paymentduelater = 0
+            else:
+                collectpayment = False
+                paymentduelater = float(service.price)
+                thepayment = 0
             # render out the login and user form retrieval
             personal_form = GuestPersonalForm(initial={'phone_code':"CA"})
-            html_content = render_to_string('bookingpage/multiplestaff/bookingpage/partials/login/guest.html', {'company':company,'staff':staff,'service':service, 'date':date, 'time':time, 'month':month, 'year':year, 'day':day, 'personal_form':personal_form }, request)
-            return JsonResponse({'html_content':html_content, 'notauthenticated':True})
+            html_content = render_to_string('bookingpage/multiplestaff/bookingpage/partials/login/guest.html', 
+                {'company':company,'staff':staff,'service':service, 'date':date, 'time':time, 'month':month, 'year':year, 'day':day, 'personal_form':personal_form, 
+                    'collectpayment':collectpayment, 'paymentduelater':paymentduelater, 'thepayment':thepayment
+                }, request)
+            return JsonResponse({'html_content':html_content, 'notauthenticated':True, 'collectpayment':collectpayment})
         
         price = service.price
         
@@ -650,8 +652,6 @@ class confirmationMessageRender(View):
                 pass
             else:
                 return JsonResponse({'notonclientlist':True})
-        lock = multiprocessing.Lock()
-        lock.acquire()
         bcount = Bookings.objects.filter(company=company, staffmem=staff, start__gte=start, end__lte=end, is_cancelled_user=False,is_cancelled_company=False,is_cancelled_request=False).count()
         if bcount<1:
             #Check if the user is already a client
@@ -681,8 +681,9 @@ class confirmationMessageRender(View):
                 guest.save()
                 company.clients.add(guest)
                 company.save()
-            booking = Bookings.objects.create(user=user,guest=guest,service=service, staffmem=staff, company=company,start=start, end=end, price=price)
+            booking = Bookings.objects.create(user=user,guest=guest,service=service, staffmem=staff, company=company,start=start, end=end, price=price, paymentintent=payment_intent_id)
             booking.save()
+
             if company.category.name == 'Automotive Services':
                 bookinform1 = bookingForm.objects.create(booking=booking, label='Vehicle Year', text=vehyear.replace('%20',' '))
                 bookinform2 = bookingForm.objects.create(booking=booking, label='Vehicle Make', text=make.replace('%20',' '))
@@ -712,6 +713,16 @@ class confirmationMessageRender(View):
                     send_sms_requestService_client.delay(booking.id)
                 html_content = render_to_string('bookingpage/multiplestaff/bookingpage/partials/confirmationside/requestServiceSent.html', {'company':company,'staff':staff,'booking':booking }, request)
             else:
+                if payment_intent_id:
+                    stripe.PaymentIntent.capture(
+                        payment_intent_id
+                    )
+                    payintent = stripe.PaymentIntent.retrieve(
+                        payment_intent_id,
+                    )
+                    pricepaid = (payintent.amount_received) / 100
+                    booking.price_paid = pricepaid
+                    booking.save()
                 #Send conf and reminder emails
                 confirmedEmail.delay(booking.id)
                 confirmedEmailCompany.delay(booking.id)
@@ -727,7 +738,8 @@ class confirmationMessageRender(View):
                 html_content = render_to_string('bookingpage/multiplestaff/bookingpage/partials/confirmationside/bookingset.html', {'company':company,'staff':staff,'service':service, 'date':date, 'time':time, 'month':month, 'year':year, 'day':day }, request)
         else:
             html_content = render_to_string('bookingpage/multiplestaff/bookingpage/partials/confirmationside/bookingerror.html', {'company':company,'staff':staff,'service':service, 'date':date, 'time':time, 'month':month, 'year':year, 'day':day }, request)
-        lock.release()
+        for key in list(request.session.keys()):
+            del request.session[key]
         return JsonResponse({'html_content':html_content})
 
 from django.template.context_processors import csrf
@@ -793,8 +805,24 @@ class guestNewFormRender(View):
         service = get_object_or_404(Services, id=s_id)
         date = datetime.date(year, month, day)
         personal_form = GuestPersonalForm(initial={'phone_code':"CA"})
-        html_content = render_to_string('bookingpage/multiplestaff/bookingpage/partials/login/guest.html', {'company':company,'staff':staff,'service':service, 'date':date, 'time':time, 'month':month, 'year':year, 'day':day, 'personal_form':personal_form }, request)
-        return JsonResponse({'html_content':html_content, 'notauthenticated':True})
+        if staff.collectpayment and staff.stripe_user_id:
+            collectpayment = True
+            price = (float(service.price) * 1.045) + 0.6
+            thepayment = round(price, 2)
+            paymentduelater = 0
+        elif staff.collectnrfpayment and staff.stripe_user_id:
+            collectpayment = True
+            price = (float(staff.nrfpayment) * 1.045) + 0.6
+            thepayment = round(price, 2)
+            paymentduelater = round(float(service.price) - staff.nrfpayment, 2)
+            if paymentduelater < 0:
+                paymentduelater = 0
+        else:
+            collectpayment = False
+            paymentduelater = float(service.price)
+            thepayment = 0
+        html_content = render_to_string('bookingpage/multiplestaff/bookingpage/partials/login/guest.html', {'company':company,'staff':staff,'service':service, 'date':date, 'time':time, 'month':month, 'year':year, 'day':day, 'personal_form':personal_form,'collectpayment':collectpayment, 'paymentduelater':paymentduelater, 'thepayment':thepayment }, request)
+        return JsonResponse({'html_content':html_content, 'notauthenticated':True, 'collectpayment': collectpayment})
 
 class guestFormRender(View):
     def post(self, request):
@@ -804,7 +832,7 @@ class guestFormRender(View):
         email = request.POST.get('email')
         phone = request.POST.get('phone')
         personal_form = GuestPersonalForm(request.POST)
-
+        
         s_id = request.session.get('service_id')
         staff_id = request.session.get('staff_id')
         month = request.session.get('month')
@@ -816,17 +844,9 @@ class guestFormRender(View):
         vehyear = request.session.get('vehyear')
         trim = request.session.get('vehtrim')
         bookinglist = request.session.get('formlist')
+        payment_intent_id = request.session.get('payment_intent_id')
+        stripe.api_key = djstripe.settings.STRIPE_SECRET_KEY
 
-        # staff_id = int(request.POST.get('staff_id'))
-        # s_id = int(request.POST.get('service_id'))
-        # time = request.POST.get('time')
-        # month = int(request.POST.get('month'))
-        # year = int(request.POST.get('year'))
-        # day = int(request.POST.get('day'))
-        # make = request.POST.get('make')
-        # model = request.POST.get('model')
-        # vehyear = request.POST.get('vehyear')
-        # trim = request.POST.get('trim')
         date = datetime.date(year, month, day)
         service = Services.objects.get(pk=s_id)
         staff=StaffMember.objects.get(company=company, pk=staff_id)
@@ -848,8 +868,6 @@ class guestFormRender(View):
             if company.returning:
                 html_content = render_to_string('bookingpage/multiplestaff/bookingpage/partials/confirmationside/bookingReturningClient.html', {'company':company,'staff':staff,'service':service, 'date':date, 'time':time, 'month':month, 'year':year, 'day':day }, request)
                 return JsonResponse({'notonclientlist':True, 'html_content':html_content})
-            lock = multiprocessing.Lock()
-            lock.acquire()
             if Bookings.objects.filter(company=company, staffmem=staff, start__gte=start, end__lte=end, is_cancelled_user=False,is_cancelled_company=False, is_cancelled_request=False).count()<1:
                 if Account.objects.filter(email=email).exists():
                     return JsonResponse({'time':time, 's_id':s_id,'start':start,'date':date,'time':time, 'good':False, 'emailerr':'The email you have provided has already been used to create an account. Please sign into BookMe then try booking again later.'})
@@ -862,7 +880,7 @@ class guestFormRender(View):
                     company.clients.add(guest)
                     company.save()
 
-                booking = Bookings.objects.create(guest=guest,service=service, company=company,staffmem=staff, start=start, end=end, price=price)
+                booking = Bookings.objects.create(guest=guest,service=service, company=company,staffmem=staff, start=start, end=end, price=price, paymentintent=payment_intent_id)
                 booking.save()
 
                 if company.category.name == 'Automotive Services':
@@ -893,6 +911,16 @@ class guestFormRender(View):
                         send_sms_requestService_client.delay(booking.id)
                     html_content = render_to_string('bookingpage/multiplestaff/bookingpage/partials/confirmationside/requestServiceSent.html', {'company':company,'staff':staff,'booking':booking }, request)
                 else:
+                    if payment_intent_id:
+                        stripe.PaymentIntent.capture(
+                            payment_intent_id
+                        )
+                        payintent = stripe.PaymentIntent.retrieve(
+                            payment_intent_id,
+                        )
+                        pricepaid = (payintent.amount_received) / 100
+                        booking.price_paid = pricepaid
+                        booking.save()
                     #Send conf and reminder emails
                     confirmedEmail.delay(booking.id)
                     confirmedEmailCompany.delay(booking.id)
@@ -909,7 +937,8 @@ class guestFormRender(View):
             
             else:
                 html_content = render_to_string('bookingpage/multiplestaff/bookingpage/partials/confirmationside/bookingerror.html', {'company':company,'staff':staff,'service':service, 'date':date, 'time':time, 'month':month, 'year':year, 'day':day }, request)
-            lock.release()
+        for key in list(request.session.keys()):
+            del request.session[key]
         return JsonResponse({'form_is_invalid':False, 'html_content': html_content})
          
 class renderLoginPage(View):
@@ -943,7 +972,8 @@ class renderLoginPage(View):
         vehyear = request.session.get('vehyear')
         trim = request.session.get('vehtrim')
         bookinglist = request.session.get('formlist')
-
+        payment_intent_id = request.session.get('payment_intent_id')
+        stripe.api_key = djstripe.settings.STRIPE_SECRET_KEY
 
         # s_id = int(request.POST.get('service_id'))
         # staff_id = int(request.POST.get('staff_id'))
@@ -1021,7 +1051,7 @@ class renderLoginPage(View):
                 guest.save()
                 company.clients.add(guest)
                 company.save()
-            booking = Bookings.objects.create(user=user,guest=guest,service=service, staffmem=staff, company=company,start=start, end=end, price=price)
+            booking = Bookings.objects.create(user=user,guest=guest,service=service, staffmem=staff, company=company,start=start, end=end, price=price, paymentintent=payment_intent_id)
             booking.save()
             if company.category.name == 'Automotive Services':
                 bookinform1 = bookingForm.objects.create(booking=booking, label='Vehicle Year', text=vehyear.replace('%20',' '))
@@ -1051,6 +1081,16 @@ class renderLoginPage(View):
                     send_sms_requestService_client.delay(booking.id)
                 html_content = render_to_string('bookingpage/multiplestaff/bookingpage/partials/confirmationside/requestServiceSent.html', {'company':company,'staff':staff,'booking':booking }, request)
             else:
+                if payment_intent_id:
+                    stripe.PaymentIntent.capture(
+                        payment_intent_id
+                    )
+                    payintent = stripe.PaymentIntent.retrieve(
+                        payment_intent_id,
+                    )
+                    pricepaid = (payintent.amount_received) / 100
+                    booking.price_paid = pricepaid
+                    booking.save()
                 #Send conf and reminder emails
                 confirmedEmail.delay(booking.id)
                 confirmedEmailCompany.delay(booking.id)
@@ -1065,6 +1105,9 @@ class renderLoginPage(View):
                     send_sms_reminder_client.apply_async(args=[booking.id], eta=startTime)
                 html_content = render_to_string('bookingpage/multiplestaff/bookingpage/partials/confirmationside/bookingset.html', {'company':company,'staff':staff,'service':service, 'date':date, 'time':time, 'month':month, 'year':year, 'day':day }, request)
         lock.release()
+
+        for key in list(request.session.keys()):
+            del request.session[key]
         return JsonResponse({'notvalid':False, 'html_content':html_content})
 
 class loginReturningCustomer(View):
@@ -1126,3 +1169,62 @@ class requestSpot(View):
             requestToBeClient.delay(requestUser.id)
         html = render_to_string('bookingpage/multiplestaff/bookingpage/partials/confirmationside/requestSent.html', {'company':company, 'service':service}, request)
         return JsonResponse({'html_content':html, 'returning':True})
+
+
+class PaymentProcessingBooking(View):
+    def post(self, request):
+        data = json.loads(request.body)
+        payment_method = data['payment_method']
+        stripe.api_key = djstripe.settings.STRIPE_SECRET_KEY
+        payment_method_obj = stripe.PaymentMethod.retrieve(payment_method)
+        djstripe.models.PaymentMethod.sync_from_stripe_data(payment_method_obj)
+
+        company = request.viewing_company
+        s_id = request.session.get('service_id')
+        staff_id = request.session.get('staff_id')
+
+
+        staff = StaffMember.objects.get(pk=staff_id)
+        service = Services.objects.get(pk=s_id)
+        if staff.collectpayment and staff.stripe_user_id:
+            collectpayment = True
+            price = (float(service.price) * 104.5) + 60
+            total = float(service.price) * 100
+            thepayment = round(price)
+        elif staff.collectnrfpayment and staff.stripe_user_id:
+            collectpayment = True
+            price = (float(staff.nrfpayment) * 104.5) + 60
+            total = float(staff.nrfpayment) * 100
+            thepayment = round(price)
+        else:
+            collectpayment = False
+            price = 0
+            total = 0
+            thepayment = 0
+
+        applicationfee = round(thepayment - total)
+        # applicationfee = round(thepayment * 101.5)+20
+
+        try:
+            payment_intent = stripe.PaymentIntent.create(
+                payment_method_types=['card'],
+                amount=round(price),
+                # payment_method=payment_method,
+                # customer=customer.id,
+                currency='cad',
+                # application_fee_amount=applicationfee,
+                transfer_data= {
+                    'amount': round(total),
+                    'destination':staff.stripe_user_id
+                },
+                # stripe_account=staff.stripe_user_id,
+                capture_method = 'manual',
+                confirm=True,
+                payment_method=payment_method_obj
+            )
+            request.session['payment_intent_id'] = payment_intent.id
+            # print(subscription.latest_invoice.payment_intent)
+            return JsonResponse(payment_intent)
+        except Exception as e:
+            print(e)
+            return JsonResponse({'error': (e.args[0])}, status =403)

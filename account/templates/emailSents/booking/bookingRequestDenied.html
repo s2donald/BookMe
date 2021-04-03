@@ -23,6 +23,9 @@
                                         <br>
                                         <span style="font-size:14px; color:#616161 !important;">Hello {{ acct.first_name }},</span><br>
                                         <span style="font-size:14px; color:#616161 !important;">Unfortunately your appointment request with {{ company.business_name }} was denied.</span><br>
+                                        {% if booking.paymentintent %}
+                                        <span style="font-size:14px; color:#616161 !important;">Your payment has been refunded to you.</span><br>
+                                        {% endif %}
                                         &nbsp;
                                         <hr><br>
                                         {% if reason %}

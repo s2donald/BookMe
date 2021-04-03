@@ -80,6 +80,8 @@ class Product(models.Model):
     dispatch = models.IntegerField(choices=day, default=0)
     created = models.DateField(auto_now_add=True)
     updated = models.DateField(auto_now=True)
+    isaddon_required = models.BooleanField(default=True)
+    isaddon_multiple = models.BooleanField(default=True)
     class Meta:
         ordering = ('name',)
         verbose_name = 'products'
@@ -98,10 +100,6 @@ class addOnProducts(models.Model):
     name = models.CharField(max_length=200, db_index=True)
     slug = models.SlugField(max_length=200,db_index=True, unique=True)
     price = models.DecimalField(max_digits=10, decimal_places=2)
-    stock = models.PositiveIntegerField()
-    mainimage = models.ImageField(upload_to=get_addon_image_folder, blank=True)
-    is_required = models.BooleanField(default=True)
-    is_multiple = models.BooleanField(default=True)
     
 def slug_generators_addon(sender, instance, *args, **kwargs):
     if not instance.slug:

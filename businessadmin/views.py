@@ -22,12 +22,13 @@ from slugify import slugify
 from .forms import MainPhoto, ServicePaymentCollectForm
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from businessadmin.tasks import addedOnCompanyList, requestToBeClient, appointmentCancelled
-from account.tasks import reminderEmail, confirmedEmail, consumerCreatedEmailSent, send_sms_confirmed_client, send_sms_reminder_client
+from account.tasks import reminderEmail, confirmedEmail, consumerCreatedEmailSent, send_sms_confirmed_client, send_sms_reminder_client, declinedRequestEmail, send_sms_declined_request_client
 import re
 from django.db import transaction
 import urllib
 from django.conf import settings
 import requests
+import djstripe
 # Create your views here.
 def businessadmin(request):
     user = request.user
@@ -1776,6 +1777,7 @@ class addRequestedViews(View):
             user = req.user
         elif req.guest:
             user = req.guest
+        stripe.api_key = djstripe.settings.STRIPE_SECRET_KEY
 
         company = get_object_or_404(Company, user= request.user)
         if req.is_addusertolist:
@@ -1789,8 +1791,12 @@ class addRequestedViews(View):
             booking = req.booking_request
             service = booking.service
             start = booking.start
-            req.delete()
+            payment_intent_id = booking.paymentintent
             if timezone.localtime(start) < timezone.now():
+                if payment_intent_id:
+                    stripe.PaymentIntent.cancel(
+                        payment_intent_id
+                    )
                 booking.is_cancelled_request = True
                 booking.save()
                 requested = company.reqclients.all()
@@ -1803,7 +1809,19 @@ class addRequestedViews(View):
                 except EmptyPage:
                     requested = paginator.page(paginator.num_pages)
                 html_string = render_to_string('bizadmin/dashboard/request/partial/partial_request.html', {'requested':requested, 'page':page})
+                req.delete()
                 return JsonResponse({'added':'The bookings requested date has already passed. Booking was not confirmed.','html_string':html_string})
+            if payment_intent_id:
+                stripe.PaymentIntent.capture(
+                    payment_intent_id
+                )
+                payintent = stripe.PaymentIntent.retrieve(
+                    payment_intent_id,
+                )
+                pricepaid = (payintent.amount_received) / 100
+                booking.price_paid = pricepaid
+                booking.save()
+            req.delete()
             confirmedEmail.delay(booking.id)
             confirmtime = 30
             if service.checkintime:
@@ -1830,6 +1848,13 @@ class addRequestedViews(View):
 class deleteRequestedViews(View):
     def post(self, request, pk):
         req = get_object_or_404(CompanyReq, id=pk)
+        stripe.api_key = djstripe.settings.STRIPE_SECRET_KEY
+        if request.user.is_authenticated:
+            staff = StaffMember.objects.get(user=request.user)
+            company = staff.company
+        else:
+            return JsonResponse({'error':'error'}, status=403)
+        
         if req.user:
             user = req.user
         elif req.guest:
@@ -1841,8 +1866,17 @@ class deleteRequestedViews(View):
         else:
             booking = req.booking_request
             booking.is_cancelled_request = True
+            payment_intent_id = booking.paymentintent
             booking.save()
+            declinedRequestEmail.delay(booking.id)
+            if company.subscriptionplan >= 1:
+                send_sms_declined_request_client.delay(booking.id)
             message='You have rejected ' + user.first_name + '\'s appointment request.'
+            if payment_intent_id:
+                stripe.PaymentIntent.cancel(
+                    payment_intent_id
+                )
+
             req.delete()
 
         company = get_object_or_404(Company, user= request.user)
@@ -2403,7 +2437,8 @@ class paymentsView(View):
     def get(self, request):
         company = get_object_or_404(Company, user=request.user)
         user=request.user
-        payment_form = ServicePaymentCollectForm()
+        staff = StaffMember.objects.get(user=user)
+        payment_form = ServicePaymentCollectForm(initial={'collectpayment':staff.collectpayment, 'collectnrfpayment':staff.collectnrfpayment,'nrfpayment':staff.nrfpayment, 'currency':staff.currency})
         if user.is_business and not user.on_board:
             return redirect(reverse('completeprofile', host='bizadmin'))
         elif not user.is_business:
@@ -2415,15 +2450,20 @@ from crispy_forms.utils import render_crispy_form
 class updatePaymentInfoView(View):
     def post(self, request):
         company = get_object_or_404(Company, user=request.user)
-        payment_form = ServicePaymentCollectForm(request.POST)
         user=request.user
         staff = StaffMember.objects.get(user=user)
+        payment_form = ServicePaymentCollectForm(request.POST, initial={'collectpayment':staff.collectpayment, 'collectnrfpayment':staff.collectnrfpayment, 'nrfpayment':staff.nrfpayment, 'currency':staff.currency})
+        
         if payment_form.is_valid():
+            print(request.POST)
             return JsonResponse({'success': 'success', 'message': 'Updated non-refundable amount'})
         else:
             err = payment_form.errors.as_json()
             errdata = json.loads(err)
-            message = errdata["nrfpayment"][0]["message"]
+            try:
+                message = errdata['nrfpayment'][0]['message']
+            except:
+                message = 'none'
             return JsonResponse({'success': 'danger', 'message':message})
 
 
@@ -2471,7 +2511,8 @@ class StripeAuthorizeCallbackView(View):
         response = redirect(url)
         return response
 
-import djstripe
+
+@login_required()
 def completeSubscriptionPayment(request):
     company = get_object_or_404(Company, user=request.user)
     user=request.user
@@ -2494,6 +2535,7 @@ from djstripe.models import Product
 from .decorators import log_exceptions
  
 @log_exceptions('payMonthlyView')
+@login_required
 def payMonthlyView(request):
     company = get_object_or_404(Company, user=request.user)
     user=request.user

@@ -71,6 +71,7 @@ class Bookings(models.Model):
     is_cancelled_company = models.BooleanField(default=False)
     #user cancelled booking
     is_cancelled_user = models.BooleanField(default=False)
+    paymentintent = models.CharField(verbose_name="Payment Intent", max_length=200, unique=True, null=True, blank=True)
     #staff cancelled the appointment request
     is_cancelled_request = models.BooleanField(default=False)
     #We must also create a receipt model to handle the reciepts and link to the booking

@@ -32,7 +32,7 @@
             </nav>
             <hr class="mt-0 mb-4"/>
             <div class="row">
-                <div class="col-lg-6">
+                <div class="col-lg-6 col-md-12">
                     <!-- Security preferences card-->
                     <div class="card mb-4">
                         <div class="card-header"><h4>Payment handling</h4></div>
@@ -43,12 +43,31 @@
                                     {% if not staff.stripe_user_id %}
                                         <a href="{% host_url 'stripe_authorize' host 'bizadmin' %}" class="stripe-connect"><span>Connect with</span></a>
                                     {% else %}
-                                        <label for="" class="font-weight-bold d-flex justify-content-left pr-1">Collect a non-refundable payment<a data-toggle="tooltip" data-placement="top" title="This payment will only be refunded to the customer if you are unable to service the customer."> <i class="fas fa-question-circle licolor"></i></a></label>
+                                        <label for="" class="font-weight-bold d-flex justify-content-left pr-1">Collect a non-refundable payment prior to confirming a booking<a data-toggle="tooltip" data-placement="top" title="This payment will only be refunded to the customer if you are unable to service the customer."> <i class="fas fa-question-circle licolor"></i></a></label>
                                         <div class="col-4">
                                             <form method="POST" id="paymentinfoform">
                                                 {% csrf_token %}
-                                                {{ payment_form.nrfpayment|as_crispy_field }}
-                                                {{ payment_form.currency|as_crispy_field }}
+                                                <div class="custom-control custom-radio">
+                                                    <input class="custom-control-input" id="collectNRFPayment" type="radio" name="collectnrf" value="True" checked />
+                                                    <label class="custom-control-label" name="radPublic" for="collectNRFPayment">Collect a non refundable payment</label>
+                                                </div>
+                                                <div class="custom-control custom-radio">
+                                                    <input class="custom-control-input" id="nocollectNRFPayment" type="radio" name="collectnrf" value="False" {% if company.textReminders %}checked{% endif %}/>
+                                                    <label class="custom-control-label text-muted" name="radPrivate"  for="nocollectNRFPayment">Don't collect a non refundable payment</label>
+                                                </div>
+                                                <div class="mypayform">
+                                                <div class="row">
+                                                    <div class="col-6 pr-0">
+                                                        {{ payment_form.nrfpayment|as_crispy_field }}
+                                                    </div>
+                                                    <div class="col-6 pl-0">
+                                                        {{ payment_form.currency|as_crispy_field }}
+                                                    </div>
+                                                </div>
+                                                
+                                                    
+                                                    
+                                                </div>
                                             </form>
                                         </div>
                                     {% endif %}
@@ -73,6 +92,69 @@
     $(document).ready(function(){
         var nrfpayment = document.getElementById("id_nrfpayment");
         $(document).on('blur','#id_nrfpayment',function() {
+            var form = $('#paymentinfoform')
+            $.ajax({
+                type:'POST',
+                url: "{% host_url 'updatepaymentinfo' host 'bizadmin' %}",
+                data: form.serialize(),
+                headers:{
+                    "X-CSRFToken": csrftoken
+                },
+                success:function(data){
+                    $.notify({
+                        // options
+                        message: data.message
+                    },{
+                        // settings
+                        type: data.success,
+                        delay: 50,
+                    });
+                }
+            });
+        });
+        $(document).on('blur','#id_currency',function() {
+            var form = $('#paymentinfoform')
+            $.ajax({
+                type:'POST',
+                url: "{% host_url 'updatepaymentinfo' host 'bizadmin' %}",
+                data: form.serialize(),
+                headers:{
+                    "X-CSRFToken": csrftoken
+                },
+                success:function(data){
+                    $.notify({
+                        // options
+                        message: data.message
+                    },{
+                        // settings
+                        type: data.success,
+                        delay: 50,
+                    });
+                }
+            });
+        });
+        $(document).on('click','#collectNRFPayment',function() {
+            var form = $('#paymentinfoform')
+            $.ajax({
+                type:'POST',
+                url: "{% host_url 'updatepaymentinfo' host 'bizadmin' %}",
+                data: form.serialize(),
+                headers:{
+                    "X-CSRFToken": csrftoken
+                },
+                success:function(data){
+                    $.notify({
+                        // options
+                        message: data.message
+                    },{
+                        // settings
+                        type: data.success,
+                        delay: 50,
+                    });
+                }
+            });
+        });
+        $(document).on('click','#nocollectNRFPayment',function() {
             var form = $('#paymentinfoform')
             $.ajax({
                 type:'POST',

@@ -6,6 +6,7 @@ from businessadmin.models import StaffWorkingHours, StaffMember, Breaks
 from consumer.models import Bookings, extraInformation, Reviews
 from .models import bookingForm
 from django.db.models import Count
+from django.views.decorators.http import require_POST
 from django.http import JsonResponse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.views import View
@@ -28,7 +29,11 @@ import multiprocessing
 from dateutil.relativedelta import relativedelta
 from django.contrib.postgres.search import TrigramSimilarity
 from products.models import Product
+from products.cart import ProductCart
 from django_hosts.resolvers import reverse
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+
+
 
 class ProductDetails(View):
     def get(self, request, slug):
@@ -37,8 +42,16 @@ class ProductDetails(View):
         if company.business_type == 'service':
             return redirect(reverse('bookingurls', host='bookingurl', host_args=(company.slug,)))
         product = Product.objects.get(business=company, slug=slug)
-        return render(request, 'productspage/details/productdetail.html',{'user':user,'company':company, 'product':product})
-
+        reviews = product.product_reviews.all()
+        paginator = Paginator(reviews, 15)
+        page = request.GET.get('page')
+        try:
+            reviews = paginator.page(page)
+        except PageNotAnInteger:
+            reviews = paginator.page(1)
+        except EmptyPage:
+            reviews = paginator.page(paginator.num_pages)
+        return render(request, 'productspage/details/productdetail.html',{'user':user,'company':company, 'product':product, 'page':page, 'reviews':reviews})
 
 class SearchFilter(View):
     def get(self, request):
@@ -50,3 +63,38 @@ class SearchFilter(View):
             products = Product.objects.annotate(similarity=TrigramSimilarity('name', Search),).filter(similarity__gt=0.3, business=company).order_by('-similarity')
         html = render_to_string('productspage/details/partial_search/partialproductsearch.html', {'company':company, 'products':products}, request)
         return JsonResponse({'html_content':html})
+
+
+
+# Create your views here.
+
+@require_POST
+def cart_add(request, product_id):
+    cart = ProductCart(request)
+    # print(request.POST)
+    addon_options = request.POST.getlist('addon_options')
+    product = get_object_or_404(Product, id=product_id)
+    dropdownaddons = []
+    for dropdowns in product.product_maindropdown.all():
+        option = request.POST.getlist('addon_dropdown_'+str(dropdowns.id))
+        if len(option) > 0:
+            dropdownaddons.append(option)
+    
+    cart.add(product=product, addon_list=addon_options, dropdown_list=dropdownaddons , quantity=1, override_quantity=False)
+    # print(cart.clear())
+    # print(cart.get_total_price())
+    return JsonResponse({'success':'success'})
+
+# @require_POST
+# def cart_add(request, product_id):
+#     cart = ProductCart(request)
+#     addon_options = request.POST.getlist('addon_options')
+#     alladdon = []
+#     for addon in addon_options:
+#         print(addon)
+#     product = get_object_or_404(Product, id=product_id)
+#     # cart.add(product=product, quantity=1, override_quantity=False)
+#     print(cart.get_total_price())
+
+#     return JsonResponse({'success':'success'})
+

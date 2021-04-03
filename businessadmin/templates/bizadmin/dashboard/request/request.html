@@ -53,8 +53,14 @@
                                                                                 <p class="text-left"><strong>Client Email: </strong>{{ user.email }}{% if user.phone %},<strong>Phone:</strong> {{ user.phone }}{% endif %}</p>
                                                                             </div>
                                                                         <div class="col-md-6">
-                                                                            <button type="button" class="btn btn-primary btn-sm accept" data-url="{% host_url 'addRequested' req.id host 'bizadmin' %}">Accept Request</button>
-                                                                            <button type="button" class="btn btn-danger btn-sm decline" data-url="{% host_url 'deleteRequested' req.id host 'bizadmin' %}">Decline Request</button>
+                                                                            <button type="button" class="btn btn-primary btn-sm accept" data-url="{% host_url 'addRequested' req.id host 'bizadmin' %}">
+                                                                                <span class="spinner-border sr-only" id="spinneraccept" role="status" style="width:1rem; height:1rem;"></span>
+                                                                                <span id="btn-text-accept">Accept</span>
+                                                                            </button>
+                                                                            <button type="button" class="btn btn-danger btn-sm decline" data-url="{% host_url 'deleteRequested' req.id host 'bizadmin' %}">
+                                                                                <span class="spinner-border sr-only" id="spinnerdecline" role="status" style="width:1rem; height:1rem;"></span>
+                                                                                <span id="btn-text-decline">Decline</span>
+                                                                            </button>
                                                                         </div>
                                                                                 
                                                                         </div>
@@ -111,8 +117,14 @@
                                                                             </div>
                                                                         </div>
                                                                         <div class="col-md-6">
-                                                                            <button type="button" class="btn btn-primary btn-sm accept" data-url="{% host_url 'addRequested' req.id host 'bizadmin' %}">Accept</button>
-                                                                        <button type="button" class="btn btn-danger btn-sm decline" data-url="{% host_url 'deleteRequested' req.id host 'bizadmin' %}">Decline</button>
+                                                                            <button type="button" class="btn btn-primary btn-sm accept" data-url="{% host_url 'addRequested' req.id host 'bizadmin' %}">
+                                                                                <span class="spinner-border sr-only" id="spinneraccept" role="status" style="width:1rem; height:1rem;"></span>
+                                                                                <span id="btn-text-accept">Accept</span>
+                                                                            </button>
+                                                                        <button type="button" class="btn btn-danger btn-sm decline" data-url="{% host_url 'deleteRequested' req.id host 'bizadmin' %}">
+                                                                            <span class="spinner-border sr-only" id="spinnerdecline" role="status" style="width:1rem; height:1rem;"></span>
+                                                                            <span id="btn-text-decline">Decline</span>
+                                                                        </button>
                                                                         </div>
                                                                         </div>
                                                                     </div>
@@ -155,6 +167,9 @@
             $(document).on('click', '.accept', function () {
                 var $this = $(this)
                 var urldata = $this.attr("data-url")
+                document.querySelector("#spinneraccept").classList.remove("sr-only");
+                document.querySelector("#btn-text-accept").classList.add("hidden");
+
                 $.ajax({
                     url: urldata,
                     type: 'post',
@@ -181,6 +196,8 @@
             $(document).on('click', '.decline', function () {
                 var $this = $(this)
                 var urldata = $this.attr("data-url")
+                document.querySelector("#spinnerdecline").classList.remove("sr-only");
+                document.querySelector("#btn-text-decline").classList.add("hidden");
                 $.ajax({
                     url: urldata,
                     type: 'post',

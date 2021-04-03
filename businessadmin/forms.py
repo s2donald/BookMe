@@ -356,7 +356,7 @@ yesno = (
 )
 CURR = (
     ('CAD', 'CAD'),
-    ('USD', 'USD')
+    
 )
 
 class formBuilderForm(forms.ModelForm):
@@ -382,5 +382,12 @@ class ServicePaymentCollectForm(forms.Form):
     #Non-refundable payment
     nrfpayment = forms.IntegerField(initial=10,label='', min_value=10, widget=forms.TextInput(attrs={'class':'form-control'}))
     currency = forms.ChoiceField(label='',initial='CAD',choices=CURR, widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control', 'data-size':'2'}))
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        try:
+            self.fields['nrfpayment'].initial = self.initial['nrfpayment']
+            self.fields['currency'].initial = self.initial['currency']
+        except AttributeError:
+            pass
 
 

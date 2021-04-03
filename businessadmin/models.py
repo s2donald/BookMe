@@ -59,7 +59,10 @@ def calendar_staff_folder(instance, filename):
 
 def get_staff_image_folder(instance, filename):
     return "company/other/staff_{0}/images/{1}/".format(instance.company.id, filename)
-
+CURR = (
+    ('CAD', 'CAD'),
+    ('USD', 'USD')
+)
 class StaffMember(models.Model):
     company = models.ForeignKey(Company, on_delete=models.CASCADE,related_name='staffmembers')
     user = models.OneToOneField(Account, on_delete=models.CASCADE, blank=True, null=True, related_name='working_for')
@@ -77,6 +80,11 @@ class StaffMember(models.Model):
     image = models.ImageField(upload_to=get_staff_image_folder, blank=True)
     stripe_access_token = models.CharField(verbose_name="Stripe Access Token", max_length=200, unique=True, null=True, blank=True)
     stripe_user_id = models.CharField(verbose_name="Stripe User Id", max_length=200, unique=True, null=True, blank=True)
+    #Collect a full payment
+    collectpayment = models.BooleanField(default=False)
+    collectnrfpayment = models.BooleanField(default=False)
+    currency = models.CharField(default='CAD',max_length=200,choices=CURR)
+    nrfpayment = models.IntegerField(default=0)
 
     class Meta:
         ordering = ('user',)

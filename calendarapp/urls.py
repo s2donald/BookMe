@@ -22,6 +22,9 @@ urlpatterns = [
     re_path(r'^renderstaffservice/', views.staffofferingservice.as_view(), name='staffofferingservice'),
     re_path(r'^renderbookingtimes/$', views.bookingTimesView.as_view(), name='getbookingtime'),
     re_path(r'^bookingbutton/$', views.bookingCalendarRender.as_view(), name='getbookingbuttons'),
+    path('paymentprocessing/', views.PaymentProcessingBooking.as_view(), name='newpaymentbooking'),
+    path('cartaddproduct/<int:product_id>/', viewsshop.cart_add, name='cart_add_product'),
+
     path('social-auth/',include('social_django.urls',namespace='social'), name='fb'),
     path('retrievefilteredsearchproduct/', viewsshop.SearchFilter.as_view(), name='productsearch'),
     path('<slug:slug>/',viewsshop.ProductDetails.as_view(), name='productdetail'),

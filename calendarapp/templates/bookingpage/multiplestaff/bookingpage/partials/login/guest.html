@@ -19,6 +19,10 @@
         <h6>{{ service.name }}</h6>
         <p>with {% if staff.user %}{{ staff.user.first_name }}{% else %}{{ staff.first_name }}{% endif %}</p>
         {% comment %} <p><a href="">Restart booking</a></p> {% endcomment %}
+        {% if collectpayment %}
+            <p><strong>Due Now:</strong> ${{ thepayment|floatformat:2 }}</p>
+            <p><strong>Due at the time of appointment:</strong> ${{ paymentduelater|floatformat:2 }}</p>
+        {% endif %}
     </div>
     <div class="row mb-3 mx-auto">
         <div class="col-5 ml-auto mr-1 d-flex align-items-center mb-3 mb-md-0 bg-light rounded text-white">
@@ -52,12 +56,36 @@
                     </div>
                 </div>
             </div>
+            {% if collectpayment %}
+                <div class="col-12">
+                    <div class="text-block my-2">
+                        <h4>Payment Info</h4>
+                    </div>
+                    <div id="card-element">
+                    <!-- Elements will create input elements here -->
+                    </div>
+                    
+                    
+                    <!-- We'll put the error messages in this element -->
+                    <div id="card-element-errors" role="alert"></div>
+                    <button data-sitekey="6LeimeAZAAAAAE119rtvZivK4DW9csX6QhEo5Yla" data-callback='onSubmit' data-action='submit' class="btn btn-outline-primary px-3 my-3" id="collectpayfirst" type="submit">
+                    <div class="spinner-border sr-only" id="spinner" role="status">
+                        <span class="sr-only">Loading...</span>
+                        
+                    </div>
+                    <span id="button-text">Pay and Secure Spot</span>
+                    </button>
+                </div>
+                    
+            {% else %}
             <div class="col-md-12" id="subbtndiv">
                 <button id="submitform" type="submit" data-sitekey="6LeimeAZAAAAAE119rtvZivK4DW9csX6QhEo5Yla" data-callback='onSubmit' data-action='submit' class="g-recaptcha btn btn-outline-primary subbtn">Book as a guest</button>
             </div>
-        </div>
-        <div class="col-md-12" id="pphone">
-            <a id="loginGibeleForm" class="btn btn-pill btn-warning mb-1">Log into BookMe</a>
+            {% endif %}
+
+            {% comment %} <div class="col-md-12" id="pphone">
+                <a id="loginGibeleForm" class="btn btn-pill btn-warning mb-1">Log into BookMe</a>
+            </div> {% endcomment %}
         </div>
     </div>
 </form>

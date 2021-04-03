@@ -22,7 +22,6 @@ def create_sub(request):
         payment_method_obj = stripe.PaymentMethod.retrieve(payment_method)
         djstripe.models.PaymentMethod.sync_from_stripe_data(payment_method_obj)
 
-
         try:
             # This creates a new Customer and attaches the PaymentMethod in one API call.
             customer = stripe.Customer.create(

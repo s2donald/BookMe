@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Product, addOnProducts, GallaryProductImage, MainProductDropDown, ProductDropDown
+from .models import Product, addOnProducts, GallaryProductImage, MainProductDropDown, ProductDropDown, ProductReviews
 # Register your models here.
 
 class ProductInline(admin.TabularInline):
@@ -29,3 +29,7 @@ class ProductsAdmin(admin.ModelAdmin):
 class MainProductsDropDownAdmin(admin.ModelAdmin):
     list_display = ['product','placeholder', 'is_required', 'is_multiple']
     inlines = [ ProductDropDownInline ]
+
+@admin.register(ProductReviews)
+class ProductsAdmin(admin.ModelAdmin):
+    list_display = ['reviewer','guest', 'product']

@@ -197,6 +197,12 @@ class BookmeModal {
         elementStyle.backgroundColor = '#'+color;
 
         this.buttonCallBookmeModalRef.onclick = () => {
+            var windowWidth		=	jQuery(window).width();
+            if( windowWidth < 600 )
+            {
+                window.open( BookMeUrl , '_blank' );
+                return;
+            }
             if (this.buttonCallBookmeModalRef.disabled) {
                 return;
             }
@@ -221,6 +227,7 @@ class BookmeModal {
             } else {
                 changeModalState();
             }
+
         };
     }
 

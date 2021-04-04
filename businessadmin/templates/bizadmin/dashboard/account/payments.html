@@ -25,48 +25,53 @@
             <!-- Account page navigation-->
             <nav class="nav nav-borders">
                 <a class="nav-link ml-0" href="{% host_url 'profile' host 'bizadmin'%}">Profile</a>
-                <a class="nav-link activate" href="{% host_url 'staff_payments' host 'bizadmin'%}">Payments</a>
+                <a class="nav-link activate" href="{% host_url 'staff_payments' host 'bizadmin'%}">Process Payments</a>
                 <a class="nav-link" href="{% host_url 'bookingSetting' host 'bizadmin' %}">Booking Settings</a>
                 <a class="nav-link" href="{% host_url 'security' host 'bizadmin'%}">Security</a>
                 <a class="nav-link" href="{% host_url 'notifications' host 'bizadmin'%}">Notifications</a>
             </nav>
             <hr class="mt-0 mb-4"/>
             <div class="row">
-                <div class="col-lg-6 col-md-12">
+                <div class="col-lg-5 col-sm-8">
                     <!-- Security preferences card-->
                     <div class="card mb-4">
                         <div class="card-header"><h4>Payment handling</h4></div>
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-12 align-items-center my-auto">
-                                    <p for="" class="text-muted">Collect payments from customers using Stripe</p>
                                     {% if not staff.stripe_user_id %}
                                         <a href="{% host_url 'stripe_authorize' host 'bizadmin' %}" class="stripe-connect"><span>Connect with</span></a>
                                     {% else %}
-                                        <label for="" class="font-weight-bold d-flex justify-content-left pr-1">Collect a non-refundable payment prior to confirming a booking<a data-toggle="tooltip" data-placement="top" title="This payment will only be refunded to the customer if you are unable to service the customer."> <i class="fas fa-question-circle licolor"></i></a></label>
-                                        <div class="col-4">
+                                        <div class="col-lg-12">
                                             <form method="POST" id="paymentinfoform">
                                                 {% csrf_token %}
+                                                <label for="" class="font-weight-bold d-flex justify-content-left pr-1">Collect a non-refundable payment prior to confirming a booking<a data-toggle="tooltip" data-placement="top" title="This payment will only be refunded to the customer if you are unable to service the customer."> <i class="fas fa-question-circle licolor"></i></a></label>
                                                 <div class="custom-control custom-radio">
-                                                    <input class="custom-control-input" id="collectNRFPayment" type="radio" name="collectnrf" value="True" checked />
+                                                    <input class="custom-control-input" id="collectNRFPayment" type="radio" name="collectnrf" value="True" {% if staff.collectnrfpayment %}checked{% endif %} />
                                                     <label class="custom-control-label" name="radPublic" for="collectNRFPayment">Collect a non refundable payment</label>
                                                 </div>
                                                 <div class="custom-control custom-radio">
-                                                    <input class="custom-control-input" id="nocollectNRFPayment" type="radio" name="collectnrf" value="False" {% if company.textReminders %}checked{% endif %}/>
-                                                    <label class="custom-control-label text-muted" name="radPrivate"  for="nocollectNRFPayment">Don't collect a non refundable payment</label>
+                                                    <input class="custom-control-input" id="nocollectNRFPayment" type="radio" name="collectnrf" value="False" {% if not staff.collectnrfpayment %}checked{% endif %}/>
+                                                    <label class="custom-control-label" name="radPrivate"  for="nocollectNRFPayment">Don't collect a non refundable payment</label>
                                                 </div>
                                                 <div class="mypayform">
-                                                <div class="row">
-                                                    <div class="col-6 pr-0">
-                                                        {{ payment_form.nrfpayment|as_crispy_field }}
-                                                    </div>
-                                                    <div class="col-6 pl-0">
-                                                        {{ payment_form.currency|as_crispy_field }}
+                                                    <div class="row">
+                                                        <div class="col-md-4 col-6 pr-0">
+                                                            {{ payment_form.nrfpayment|as_crispy_field }}
+                                                        </div>
+                                                        <div class="col-md-4 col-6 pl-0">
+                                                            {{ payment_form.currency|as_crispy_field }}
+                                                        </div>
                                                     </div>
                                                 </div>
-                                                
-                                                    
-                                                    
+                                                <label for="" class="font-weight-bold d-flex justify-content-left pr-1">Collect a full payment prior to confirming a booking<a data-toggle="tooltip" data-placement="top" title="This payment will be refunded to the customer if a booking is cancelled."> <i class="fas fa-question-circle licolor"></i></a></label>
+                                                <div class="custom-control custom-radio">
+                                                    <input class="custom-control-input" id="collectfullNRFPayment" type="radio" name="collectfullpay" value="True" {% if staff.collectpayment %}checked{% endif %} />
+                                                    <label class="custom-control-label" name="radPublic" for="collectfullNRFPayment">Collect the full payment</label>
+                                                </div>
+                                                <div class="custom-control custom-radio">
+                                                    <input class="custom-control-input" id="nocollectfullNRFPayment" type="radio" name="collectfullpay" value="False" {% if not staff.collectpayment %}checked{% endif %}/>
+                                                    <label class="custom-control-label" name="radPrivate"  for="nocollectfullNRFPayment">Don't collect a full payment</label>
                                                 </div>
                                             </form>
                                         </div>
@@ -78,6 +83,20 @@
                                 </div>
                             </div>
                                 
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 mb-4">
+                    <div class="card">
+                        <div class="card-header"><h4>Processing Fees</h4></div>
+                        <div class="card-body">
+                        <div class="row">
+                            <div class="col-12">
+                                <p class='mb-0'>Stripe and Platform fees may apply when collecting payments.</p>
+                                <a class="btn btn-link m-0" href="https://stripe.com/en-ca/pricing#pricing-details" rel="nofollow" target="_blank">See more details</a>
+
+                            </div>
+                        </div>
                         </div>
                     </div>
                 </div>
@@ -113,6 +132,48 @@
             });
         });
         $(document).on('blur','#id_currency',function() {
+            var form = $('#paymentinfoform')
+            $.ajax({
+                type:'POST',
+                url: "{% host_url 'updatepaymentinfo' host 'bizadmin' %}",
+                data: form.serialize(),
+                headers:{
+                    "X-CSRFToken": csrftoken
+                },
+                success:function(data){
+                    $.notify({
+                        // options
+                        message: data.message
+                    },{
+                        // settings
+                        type: data.success,
+                        delay: 50,
+                    });
+                }
+            });
+        });
+        $(document).on('click','#collectfullNRFPayment',function() {
+            var form = $('#paymentinfoform')
+            $.ajax({
+                type:'POST',
+                url: "{% host_url 'updatepaymentinfo' host 'bizadmin' %}",
+                data: form.serialize(),
+                headers:{
+                    "X-CSRFToken": csrftoken
+                },
+                success:function(data){
+                    $.notify({
+                        // options
+                        message: data.message
+                    },{
+                        // settings
+                        type: data.success,
+                        delay: 50,
+                    });
+                }
+            });
+        });
+        $(document).on('click','#nocollectfullNRFPayment',function() {
             var form = $('#paymentinfoform')
             $.ajax({
                 type:'POST',

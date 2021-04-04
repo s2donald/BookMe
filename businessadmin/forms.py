@@ -380,7 +380,7 @@ class formBuilderForm(forms.ModelForm):
 
 class ServicePaymentCollectForm(forms.Form):
     #Non-refundable payment
-    nrfpayment = forms.IntegerField(initial=10,label='', min_value=10, widget=forms.TextInput(attrs={'class':'form-control'}))
+    nrfpayment = forms.DecimalField(initial=10,label='', min_value=1.00, widget=forms.TextInput(attrs={'class':'form-control'}))
     currency = forms.ChoiceField(label='',initial='CAD',choices=CURR, widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control', 'data-size':'2'}))
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

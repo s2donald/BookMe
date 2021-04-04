@@ -2,7 +2,7 @@ from celery import task
 from django.core.mail import send_mail
 from django.conf import settings
 from .models import Account
-from business.models import Company
+from business.models import Company, CompanyReq
 from consumer.models import Bookings, extraInformation
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
@@ -262,6 +262,13 @@ def emailRequestServiceClient(booking_id):
     mail_sent = send_mail(subject, plain_message, 'BookMe.to <noreply@bookme.to>', [email], html_message=html_message, fail_silently=False)
     return mail_sent
 
+@task
+def deleteCompanyReqAuto(request_id):
+    try:
+        CompanyReq.objects.delete(id=request_id)
+    except:
+        return
+    return
 @task
 def emailRequestServiceCompany(booking_id):
     booking = Bookings.objects.get(id=booking_id)

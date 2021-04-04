@@ -17,7 +17,7 @@ from account.forms import UpdatePersonalForm, AccountAuthenticationForm, Account
 from django.contrib.auth import authenticate, login
 from django.core.validators import validate_email
 from django import forms
-from account.tasks import reminderEmail, emailRequestServiceCompany, confirmedEmail, consumerCreatedEmailSent, confirmedEmailCompany, send_sms_reminder_client, send_sms_confirmed_client, emailRequestServiceClient, send_sms_requestService_company, send_sms_requestService_client
+from account.tasks import reminderEmail, emailRequestServiceCompany, confirmedEmail, consumerCreatedEmailSent, confirmedEmailCompany, send_sms_reminder_client, send_sms_confirmed_client, emailRequestServiceClient, send_sms_requestService_company, send_sms_requestService_client, deleteCompanyReqAuto
 from businessadmin.tasks import requestToBeClient
 from business.forms import VehicleMakeModelForm, AddressForm
 import re
@@ -558,14 +558,14 @@ class confirmationMessageRender(View):
         service = Services.objects.get(pk=s_id)
         if staff.collectpayment and staff.stripe_user_id and request.user.is_authenticated:
             collectpayment = True
-            price = (float(service.price) * 1.045) + 0.6
+            price = (float(service.price))
             thepayment = round(price, 2)
             paymentduelater = 0
         elif staff.collectnrfpayment and staff.stripe_user_id and request.user.is_authenticated:
             collectpayment = True
-            price = (float(staff.nrfpayment) * 1.045) + 0.6
+            price = (float(staff.nrfpayment))
             thepayment = round(price, 2)
-            paymentduelater = round(float(service.price) - staff.nrfpayment, 2)
+            paymentduelater = round(float(service.price) - price, 2)
             if paymentduelater < 0:
                 paymentduelater = 0
         else:
@@ -612,14 +612,14 @@ class confirmationMessageRender(View):
         if not user.is_authenticated:
             if staff.collectpayment and staff.stripe_user_id:
                 collectpayment = True
-                price = (float(service.price) * 1.045) + 0.6
+                price = (float(service.price))
                 thepayment = round(price, 2)
                 paymentduelater = 0
             elif staff.collectnrfpayment and staff.stripe_user_id:
                 collectpayment = True
-                price = (float(staff.nrfpayment) * 1.045) + 0.6
+                price = (float(staff.nrfpayment))
                 thepayment = round(price, 2)
-                paymentduelater = round(float(service.price) - staff.nrfpayment, 2)
+                paymentduelater = round(float(service.price) - price, 2)
                 if paymentduelater < 0:
                     paymentduelater = 0
             else:
@@ -703,6 +703,9 @@ class confirmationMessageRender(View):
                 reqc = CompanyReq.objects.create(user=user, guest=guest, company=company, is_addbooking=True)
                 booking.bookingreq = reqc
                 booking.save()
+                delettime = timezone.localtime(timezone.now() + datetime.timedelta(days=6))
+                print(delettime)
+                deleteCompanyReqAuto.apply_async(args=[reqc.id], eta=delettime, task_id=booking.slug)
                 #Send request sent and recieved to customer and client respectively
                 #Email
                 emailRequestServiceClient.delay(booking.id)
@@ -715,10 +718,12 @@ class confirmationMessageRender(View):
             else:
                 if payment_intent_id:
                     stripe.PaymentIntent.capture(
-                        payment_intent_id
+                        payment_intent_id,
+                        stripe_account=staff.stripe_user_id
                     )
                     payintent = stripe.PaymentIntent.retrieve(
                         payment_intent_id,
+                        stripe_account=staff.stripe_user_id
                     )
                     pricepaid = (payintent.amount_received) / 100
                     booking.price_paid = pricepaid
@@ -807,14 +812,14 @@ class guestNewFormRender(View):
         personal_form = GuestPersonalForm(initial={'phone_code':"CA"})
         if staff.collectpayment and staff.stripe_user_id:
             collectpayment = True
-            price = (float(service.price) * 1.045) + 0.6
+            price = (float(service.price))
             thepayment = round(price, 2)
             paymentduelater = 0
         elif staff.collectnrfpayment and staff.stripe_user_id:
             collectpayment = True
-            price = (float(staff.nrfpayment) * 1.045) + 0.6
+            price = (float(staff.nrfpayment))
             thepayment = round(price, 2)
-            paymentduelater = round(float(service.price) - staff.nrfpayment, 2)
+            paymentduelater = round(float(service.price) - price, 2)
             if paymentduelater < 0:
                 paymentduelater = 0
         else:
@@ -901,6 +906,9 @@ class guestFormRender(View):
                     reqc = CompanyReq.objects.create(guest=guest, company=company, is_addbooking=True)
                     booking.bookingreq = reqc
                     booking.save()
+                    delettime = timezone.localtime(timezone.now() + datetime.timedelta(days=6))
+                    print(delettime)
+                    deleteCompanyReqAuto.apply_async(args=[reqc.id], eta=delettime, task_id=booking.slug)
                     #Send request sent and recieved to customer and client respectively
                     #Email
                     emailRequestServiceClient.delay(booking.id)
@@ -913,10 +921,12 @@ class guestFormRender(View):
                 else:
                     if payment_intent_id:
                         stripe.PaymentIntent.capture(
-                            payment_intent_id
+                            payment_intent_id,
+                            stripe_account=staff.stripe_user_id
                         )
                         payintent = stripe.PaymentIntent.retrieve(
                             payment_intent_id,
+                            stripe_account=staff.stripe_user_id
                         )
                         pricepaid = (payintent.amount_received) / 100
                         booking.price_paid = pricepaid
@@ -1073,6 +1083,9 @@ class renderLoginPage(View):
                 booking.save()
                 #Send request sent and recieved to customer and client respectively
                 #Email
+                delettime = timezone.localtime(timezone.now() + datetime.timedelta(days=6))
+                print(delettime)
+                deleteCompanyReqAuto.apply_async(args=[reqc.id], eta=delettime, task_id=booking.slug)
                 emailRequestServiceClient.delay(booking.id)
                 emailRequestServiceCompany.delay(booking.id)
                 #Text
@@ -1083,10 +1096,12 @@ class renderLoginPage(View):
             else:
                 if payment_intent_id:
                     stripe.PaymentIntent.capture(
-                        payment_intent_id
+                        payment_intent_id,
+                        stripe_account=staff.stripe_user_id
                     )
                     payintent = stripe.PaymentIntent.retrieve(
                         payment_intent_id,
+                        stripe_account=staff.stripe_user_id
                     )
                     pricepaid = (payintent.amount_received) / 100
                     booking.price_paid = pricepaid
@@ -1178,46 +1193,42 @@ class PaymentProcessingBooking(View):
         stripe.api_key = djstripe.settings.STRIPE_SECRET_KEY
         payment_method_obj = stripe.PaymentMethod.retrieve(payment_method)
         djstripe.models.PaymentMethod.sync_from_stripe_data(payment_method_obj)
-
+        
         company = request.viewing_company
         s_id = request.session.get('service_id')
         staff_id = request.session.get('staff_id')
-
-
         staff = StaffMember.objects.get(pk=staff_id)
         service = Services.objects.get(pk=s_id)
+        payment_method_obj = stripe.PaymentMethod.create(
+            payment_method=payment_method,
+            stripe_account=staff.stripe_user_id,
+        )
         if staff.collectpayment and staff.stripe_user_id:
-            collectpayment = True
-            price = (float(service.price) * 104.5) + 60
-            total = float(service.price) * 100
-            thepayment = round(price)
+            price = (float(service.price) * 100)
+            applicationfee = (float(service.price) * 1) + 5
         elif staff.collectnrfpayment and staff.stripe_user_id:
-            collectpayment = True
-            price = (float(staff.nrfpayment) * 104.5) + 60
-            total = float(staff.nrfpayment) * 100
-            thepayment = round(price)
+            price = (float(staff.nrfpayment)*100)
+            applicationfee = (float(staff.nrfpayment) * 1) + 5
+
         else:
             collectpayment = False
-            price = 0
+            price = 100
+            applicationfee = 0
             total = 0
             thepayment = 0
-
-        applicationfee = round(thepayment - total)
-        # applicationfee = round(thepayment * 101.5)+20
 
         try:
             payment_intent = stripe.PaymentIntent.create(
                 payment_method_types=['card'],
                 amount=round(price),
-                # payment_method=payment_method,
                 # customer=customer.id,
                 currency='cad',
-                # application_fee_amount=applicationfee,
-                transfer_data= {
-                    'amount': round(total),
-                    'destination':staff.stripe_user_id
-                },
-                # stripe_account=staff.stripe_user_id,
+                application_fee_amount=round(applicationfee),
+                # transfer_data= {
+                #     'amount': round(total),
+                #     'destination':staff.stripe_user_id
+                # },
+                stripe_account=staff.stripe_user_id,
                 capture_method = 'manual',
                 confirm=True,
                 payment_method=payment_method_obj
@@ -1226,5 +1237,4 @@ class PaymentProcessingBooking(View):
             # print(subscription.latest_invoice.payment_intent)
             return JsonResponse(payment_intent)
         except Exception as e:
-            print(e)
             return JsonResponse({'error': (e.args[0])}, status =403)

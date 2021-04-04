@@ -29,7 +29,7 @@ DEBUG = False
 
 TIME_INPUT_FORMATS = ['%I:%M %p',]
 
-ALLOWED_HOSTS = ['pure-fjord-45840.herokuapp.com','.pure-fjord-45840.herokuapp.com','gibele.com', '.gibele.com','.gibele.ca','gibele.ca', 'bookme.to', '.bookme.to']
+ALLOWED_HOSTS = ['pure-fjord-45840.herokuapp.com','.pure-fjord-45840.herokuapp.com','gibele.com', '.gibele.com','.gibele.ca','gibele.ca', 'bookme.to', '.bookme.to','.shopme.to']
 if DEBUG:
     SESSION_COOKIE_DOMAIN= 'gibele.com'
     DOMAIN_NAME= 'gibele.com'

@@ -1794,8 +1794,10 @@ class addRequestedViews(View):
             payment_intent_id = booking.paymentintent
             if timezone.localtime(start) < timezone.now():
                 if payment_intent_id:
+                    staff = booking.staffmem
                     stripe.PaymentIntent.cancel(
-                        payment_intent_id
+                        payment_intent_id,
+                        stripe_account=staff.stripe_user_id
                     )
                 booking.is_cancelled_request = True
                 booking.save()
@@ -1812,11 +1814,14 @@ class addRequestedViews(View):
                 req.delete()
                 return JsonResponse({'added':'The bookings requested date has already passed. Booking was not confirmed.','html_string':html_string})
             if payment_intent_id:
+                staff = booking.staffmem
                 stripe.PaymentIntent.capture(
-                    payment_intent_id
+                    payment_intent_id,
+                    stripe_account=staff.stripe_user_id
                 )
                 payintent = stripe.PaymentIntent.retrieve(
                     payment_intent_id,
+                    stripe_account=staff.stripe_user_id
                 )
                 pricepaid = (payintent.amount_received) / 100
                 booking.price_paid = pricepaid
@@ -1873,8 +1878,10 @@ class deleteRequestedViews(View):
                 send_sms_declined_request_client.delay(booking.id)
             message='You have rejected ' + user.first_name + '\'s appointment request.'
             if payment_intent_id:
+                staff = booking.staffmem
                 stripe.PaymentIntent.cancel(
-                    payment_intent_id
+                    payment_intent_id,
+                    stripe_account=staff.stripe_user_id
                 )
 
             req.delete()
@@ -1894,10 +1901,38 @@ class deleteRequestedViews(View):
         return JsonResponse({'deleted':message,'html_string':html_string})
 import celery
 from celery import app
+
 class deleteBookingByCompAPI(View):
     def post(self, request):
+        company = get_object_or_404(Company, user=request.user)
         booking_id = request.POST.get('booking_id')
         booking = get_object_or_404(Bookings, id=booking_id)
+        if booking.company != company:
+            return JsonResponse({'error':'error'}, status=403)
+        stripe.api_key = djstripe.settings.STRIPE_SECRET_KEY
+        #Dont delete the object, we instead have it on file and change it to cancelled appt
+        pi = booking.paymentintent
+        amount= 0
+        if pi:
+            staff = booking.staffmem
+            stripe_acct = staff.stripe_user_id
+            
+            payment_intent = stripe.PaymentIntent.retrieve(
+                pi,
+                stripe_account=stripe_acct
+            )
+            recieved = payment_intent.amount_received
+            amount = recieved
+            if(staff.collectnrfpayment):
+                nrf = staff.nrfpayment * 100
+                amount = round(recieved - nrf)
+            if amount > 0:
+                stripe.Refund.create(
+                    amount=amount,
+                    payment_intent=payment_intent,
+                    refund_application_fee=False,
+                    stripe_account=stripe_acct
+                )
         try:
             email = booking.user.email
             # app.control.revoke(task_id=booking.slug, terminate=True)
@@ -1910,10 +1945,10 @@ class deleteBookingByCompAPI(View):
                 appointmentCancelled.delay(booking.id)
             except AttributeError:
                 email = ''
-            
-        #Dont delete the object, we instead have it on file and change it to cancelled appt
+        booking.price_paid = amount/100
         booking.is_cancelled_company = True
         booking.save()
+
         return JsonResponse({'':''})
 
 from django.core.exceptions import ObjectDoesNotExist
@@ -2452,18 +2487,39 @@ class updatePaymentInfoView(View):
         company = get_object_or_404(Company, user=request.user)
         user=request.user
         staff = StaffMember.objects.get(user=user)
-        payment_form = ServicePaymentCollectForm(request.POST, initial={'collectpayment':staff.collectpayment, 'collectnrfpayment':staff.collectnrfpayment, 'nrfpayment':staff.nrfpayment, 'currency':staff.currency})
+        payment_form = ServicePaymentCollectForm(request.POST, initial={'nrfpayment':staff.nrfpayment, 'currency':staff.currency})
         
         if payment_form.is_valid():
-            print(request.POST)
-            return JsonResponse({'success': 'success', 'message': 'Updated non-refundable amount'})
+            collectnrf = request.POST.get('collectnrf')
+            collect = request.POST.get('collectfullpay')
+            nrfpayment = payment_form.cleaned_data.get('nrfpayment')
+            curr = payment_form.cleaned_data.get('currency')
+            if (collectnrf == 'True'):
+                staff.collectnrfpayment = True
+                if(nrfpayment < 1):
+                    print('hexw')
+                    return JsonResponse({'success': 'danger', 'message': 'Refundable payment must be more than a $1.00'})
+                
+            else:
+                staff.collectnrfpayment = False
+            if (collect == 'True'):
+                staff.collectpayment = True
+                if(nrfpayment < 1):
+                    print('hexw')
+                    return JsonResponse({'success': 'danger', 'message': 'Refundable payment must be more than $1.00'})
+            else:
+                staff.collectpayment = False
+            staff.nrfpayment = nrfpayment
+            staff.currency = curr
+            staff.save()
+            return JsonResponse({'success': 'success', 'message': 'Updated payment collection form'})
         else:
             err = payment_form.errors.as_json()
             errdata = json.loads(err)
             try:
                 message = errdata['nrfpayment'][0]['message']
             except:
-                message = 'none'
+                message = 'Please recheck the form'
             return JsonResponse({'success': 'danger', 'message':message})
 
 

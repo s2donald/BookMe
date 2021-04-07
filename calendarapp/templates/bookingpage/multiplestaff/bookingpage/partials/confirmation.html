@@ -21,8 +21,11 @@
     <h6>{{ service.name }}</h6>
     <p>with {% if staff.user %}{{ staff.user.first_name }}{% else %}{{ staff.first_name }}{% endif %}</p>
     {% if collectpayment %}
-        <p><strong>Due Now:</strong> ${{ thepayment|floatformat:2 }}</p>
+        <p><strong>Total Due Now:</strong> ${{ thepayment|floatformat:2 }}</p>
         <p><strong>Due at the time of appointment:</strong> ${{ paymentduelater|floatformat:2 }}</p>
+        {% if staff.collectnrfpayment %}
+            <p class="small"><strong class="text-muted">Non-refundable deposit:</strong> ${{ staff.nrfpayment }}</p>
+        {% endif %}
     {% endif %}
 </div>
 <div class="text-block">

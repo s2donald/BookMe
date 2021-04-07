@@ -556,21 +556,23 @@ class confirmationMessageRender(View):
 
         staff = StaffMember.objects.get(pk=staff_id)
         service = Services.objects.get(pk=s_id)
+        servprice = service.price
         if staff.collectpayment and staff.stripe_user_id and request.user.is_authenticated:
             collectpayment = True
-            price = (float(service.price))
+            price = (float(servprice))
             thepayment = round(price, 2)
             paymentduelater = 0
         elif staff.collectnrfpayment and staff.stripe_user_id and request.user.is_authenticated:
             collectpayment = True
             price = (float(staff.nrfpayment))
             thepayment = round(price, 2)
-            paymentduelater = round(float(service.price) - price, 2)
+            paymentduelater = round(float(servprice) - price, 2)
             if paymentduelater < 0:
+                thepayment = round(servprice, 2)
                 paymentduelater = 0
         else:
             collectpayment = False
-            paymentduelater = float(service.price)
+            paymentduelater = float(servprice)
             thepayment = 0
         html_content = render_to_string('bookingpage/multiplestaff/bookingpage/partials/confirmation.html', {'company':company,'staff':staff,'service':service, 'date':date, 'time':time, 'month':month, 'year':year, 'day':day, 'collectpayment':collectpayment, 'thepayment':thepayment,'paymentduelater': paymentduelater}, request)
         conf_content = render_to_string('bookingpage/multiplestaff/bookingpage/partials/confirmationside/confirmationside.html', {'company':company,'service':service, 'staff':staff }, request)
@@ -610,21 +612,23 @@ class confirmationMessageRender(View):
         request.session['formlist'] = bookinglist
         
         if not user.is_authenticated:
+            servprc = service.price
             if staff.collectpayment and staff.stripe_user_id:
                 collectpayment = True
-                price = (float(service.price))
+                price = (float(servprc))
                 thepayment = round(price, 2)
                 paymentduelater = 0
             elif staff.collectnrfpayment and staff.stripe_user_id:
                 collectpayment = True
                 price = (float(staff.nrfpayment))
                 thepayment = round(price, 2)
-                paymentduelater = round(float(service.price) - price, 2)
+                paymentduelater = round(float(servprc) - price, 2)
                 if paymentduelater < 0:
+                    thepayment = round(servprice, 2)
                     paymentduelater = 0
             else:
                 collectpayment = False
-                paymentduelater = float(service.price)
+                paymentduelater = float(servprc)
                 thepayment = 0
             # render out the login and user form retrieval
             personal_form = GuestPersonalForm(initial={'phone_code':"CA"})
@@ -707,10 +711,17 @@ class confirmationMessageRender(View):
                 print(delettime)
                 deleteCompanyReqAuto.apply_async(args=[reqc.id], eta=delettime, task_id=booking.slug)
                 #Send request sent and recieved to customer and client respectively
+                #Text
+                payintent = stripe.PaymentIntent.retrieve(
+                    payment_intent_id,
+                    stripe_account=staff.stripe_user_id
+                )
+                pricepaid = (payintent.amount_capturable) / 100
+                booking.price_paid = pricepaid
+                booking.save()
                 #Email
                 emailRequestServiceClient.delay(booking.id)
                 emailRequestServiceCompany.delay(booking.id)
-                #Text
                 if company.subscriptionplan >= 1:
                     send_sms_requestService_company.delay(booking.id)
                     send_sms_requestService_client.delay(booking.id)
@@ -810,21 +821,23 @@ class guestNewFormRender(View):
         service = get_object_or_404(Services, id=s_id)
         date = datetime.date(year, month, day)
         personal_form = GuestPersonalForm(initial={'phone_code':"CA"})
+        servpmnt = service.price
         if staff.collectpayment and staff.stripe_user_id:
             collectpayment = True
-            price = (float(service.price))
+            price = (float(servpmnt))
             thepayment = round(price, 2)
             paymentduelater = 0
         elif staff.collectnrfpayment and staff.stripe_user_id:
             collectpayment = True
             price = (float(staff.nrfpayment))
             thepayment = round(price, 2)
-            paymentduelater = round(float(service.price) - price, 2)
+            paymentduelater = round(float(servpmnt) - price, 2)
             if paymentduelater < 0:
+                thepayment = round(servprice, 2)
                 paymentduelater = 0
         else:
             collectpayment = False
-            paymentduelater = float(service.price)
+            paymentduelater = float(servpmnt)
             thepayment = 0
         html_content = render_to_string('bookingpage/multiplestaff/bookingpage/partials/login/guest.html', {'company':company,'staff':staff,'service':service, 'date':date, 'time':time, 'month':month, 'year':year, 'day':day, 'personal_form':personal_form,'collectpayment':collectpayment, 'paymentduelater':paymentduelater, 'thepayment':thepayment }, request)
         return JsonResponse({'html_content':html_content, 'notauthenticated':True, 'collectpayment': collectpayment})
@@ -905,14 +918,21 @@ class guestFormRender(View):
                 if service.request:
                     reqc = CompanyReq.objects.create(guest=guest, company=company, is_addbooking=True)
                     booking.bookingreq = reqc
-                    booking.save()
                     delettime = timezone.localtime(timezone.now() + datetime.timedelta(days=6))
-                    print(delettime)
+                    
                     deleteCompanyReqAuto.apply_async(args=[reqc.id], eta=delettime, task_id=booking.slug)
                     #Send request sent and recieved to customer and client respectively
-                    #Email
+                    
+                    payintent = stripe.PaymentIntent.retrieve(
+                        payment_intent_id,
+                        stripe_account=staff.stripe_user_id
+                    )
+                    pricepaid = (payintent.amount_capturable) / 100
+                    booking.price_paid = pricepaid
+                    booking.save()
                     emailRequestServiceClient.delay(booking.id)
                     emailRequestServiceCompany.delay(booking.id)
+
                     #Text
                     if company.subscriptionplan >= 1:
                         send_sms_requestService_company.delay(booking.id)
@@ -1084,8 +1104,16 @@ class renderLoginPage(View):
                 #Send request sent and recieved to customer and client respectively
                 #Email
                 delettime = timezone.localtime(timezone.now() + datetime.timedelta(days=6))
-                print(delettime)
+                
                 deleteCompanyReqAuto.apply_async(args=[reqc.id], eta=delettime, task_id=booking.slug)
+                
+                payintent = stripe.PaymentIntent.retrieve(
+                    payment_intent_id,
+                    stripe_account=staff.stripe_user_id
+                )
+                pricepaid = (payintent.amount_capturable) / 100
+                booking.price_paid = pricepaid
+                booking.save()
                 emailRequestServiceClient.delay(booking.id)
                 emailRequestServiceCompany.delay(booking.id)
                 #Text
@@ -1203,12 +1231,18 @@ class PaymentProcessingBooking(View):
             payment_method=payment_method,
             stripe_account=staff.stripe_user_id,
         )
+        prc = service.price
         if staff.collectpayment and staff.stripe_user_id:
-            price = (float(service.price) * 100)
-            applicationfee = (float(service.price) * 1) + 5
+            price = (float(prc) * 100)
+            applicationfee = (float(prc) * 1) + 5
         elif staff.collectnrfpayment and staff.stripe_user_id:
-            price = (float(staff.nrfpayment)*100)
-            applicationfee = (float(staff.nrfpayment) * 1) + 5
+            pmnt = staff.nrfpayment
+            if pmnt > prc:
+                price = (float(prc)*100)
+                applicationfee = (float(prc) * 1) + 5
+            else:
+                price = (float(staff.nrfpayment)*100)
+                applicationfee = (float(staff.nrfpayment) * 1) + 5
 
         else:
             collectpayment = False

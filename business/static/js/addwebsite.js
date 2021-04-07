@@ -80,7 +80,7 @@ class BookmeModal {
 
             elementStyle.display = 'none';
             elementStyle.position = 'fixed';
-            elementStyle.zIndex = '9999999999';
+            elementStyle.zIndex = '1';
             elementStyle.paddingTop = '4%';
             elementStyle.paddingBottom = '4%';
             elementStyle.left = '0';

@@ -22,6 +22,9 @@
         {% if collectpayment %}
             <p><strong>Due Now:</strong> ${{ thepayment|floatformat:2 }}</p>
             <p><strong>Due at the time of appointment:</strong> ${{ paymentduelater|floatformat:2 }}</p>
+            {% if staff.collectnrfpayment %}
+            <p class="text-sm text-muted"><strong>Non-refundable deposit amount:</strong>${{ staff.nrfpayment }}</p>
+            {% endif %}
         {% endif %}
     </div>
     <div class="row mb-3 mx-auto">

@@ -1,0 +1,444 @@
+{% load static %}
+{% load hosts %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="author" content="Stephen Donald">
+    <meta name="type" content="website">
+    <meta name="site_name" content="BookMe.to">
+    <meta name="theme-color" content="#854fee">
+    <link rel="shortcut icon" type="image/png" href="{% static '/img/favicon/logo/favicon15.png'%}"/>
+    <link rel="apple-touch-icon" href="{% static '/img/favicon/logo/bookme-appicon.png'%}">
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="description" content="You focus on the services, BookMe will focus on the managing your schedules. BookMe is an online scheduling tool which enables businesses in any category to allow their clients to book appointments. Let BookMe help you maintain a good relationship with your customers while you are busy servicing your clients.">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/smartwizard@5/dist/css/smart_wizard_all.min.css" rel="stylesheet" type="text/css" />
+    {% comment %} <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous"> {% endcomment %}
+    <link rel="stylesheet" href="{% static "css/dashboardstyles.css" %}">
+    <link rel="stylesheet" href="{% static "css/dashboard.css" %}">
+    <link rel="stylesheet" href="{% static "css/vendor/dropzone.min.css" %}">
+    <link rel="stylesheet" href="{% static 'css/vendor/jquery-cropper.min.css'%}">
+    <link rel="stylesheet" href="{% static 'css/vendor/bootstrap-tagsinput.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.18/css/bootstrap-select.min.css" integrity="sha512-ARJR74swou2y0Q2V9k0GbzQ/5vJ2RBSoCWokg4zkfM29Fb3vZEQyv0iWBMW/yvKgyHSR/7D64pFMmU8nYmbRkg==" crossorigin="anonymous" />        
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/14.6.1/nouislider.min.css" integrity="sha512-1qnaNbQJ1IbEE01sp3ac1n/oa3olZ0N9io+n2Tbdk/sbWMRoMi5Btc/MLqtWCAIHVbPr5dukCODmyLVxx8pmKA==" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.2.3/flatpickr.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.2.3/themes/dark.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/4.0.0/css/jasny-bootstrap.min.css" integrity="sha512-VUj0sZbQFPixq7NJ6ioBRK/scakfsdlKl647mLmZaZHWPgpnrWvIfy80/QF3q1l+kozBc8IHrTEoiZY25PSUTw==" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.css" integrity="sha512-/zs32ZEJh+/EO2N1b0PEdoA10JkdC3zJ8L5FTiQu82LR9S/rOQNfQN7U59U9BC12swNeRAz3HSzIL2vpp4fv3w==" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" crossorigin="anonymous">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/5.1.5/css/fileinput.min.css" media="all" rel="stylesheet" type="text/css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/5.1.5/js/plugins/piexif.min.js" type="text/javascript"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/5.1.5/js/fileinput.min.js"></script>
+    <!-- optionally if you need a theme like font awesome theme you can include it as mentioned below -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/5.1.5/themes/fa/theme.js"></script>
+    <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
+    <!-- optionally if you need translation for your language then include  locale file as mentioned below -->
+
+    <!-- sortable.min.js is only needed if you wish to sort / rearrange files in initial preview. 
+        This must be loaded before fileinput.min.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/5.1.5/js/plugins/sortable.min.js" type="text/javascript"></script>
+
+    <script src="{% static 'js/businessAdmin/perfect-scrollbar.jquery.min.js' %}"></script>
+    {% block linkscript %}
+    {% endblock linkscript %}
+    <title>BookMe Biz</title>
+  </head>
+  <body class="sidebar-mini {% if not company.darkmode %}white-content{% endif %}">
+    <div class="wrapper">
+    <div class="sidebar" id="sidebar" data="orange">
+      <div class="sidebar-wrapper">
+        <div class="logo">
+          <a href="{% host_url 'bookingurls' host 'bookingurl' slug=company.slug %}" class="simple-text logo-mini text-white">
+            {{ company.business_name.0 }}
+          </a>
+          <a href="{% host_url 'bookingurls' host 'bookingurl' slug=company.slug %}" class="simple-text logo-normal text-white">
+            {{ company.business_name }}
+          </a>
+        </div>
+        <ul class="nav marg-6">
+          <li class="{% block activehome %}{%endblock%}">
+            <a href="{% host_url 'home' host 'bizadmin'%}">
+              <i class="fas fa-home"></i>
+              <p>Homepage</p>
+            </a>
+          </li>
+          <li class="{% block activecal%}{%endblock%}">
+            <a href="{% host_url 'schedule' host 'bizadmin'%}">
+              <i class="fas fa-calendar-alt"></i>
+              <p>Schedule</p>
+            </a>
+          </li>
+          <li class="{% block activecompinfo%}{%endblock%}"> 
+            <a data-toggle="collapse" href="#pagesExamples">
+              <i class="fas fa-store-alt"></i>
+              <p>
+                Company Details
+                <b class="caret"></b>
+              </p>
+            </a>
+            <div class="collapse" id="pagesExamples">
+              <ul class="nav">
+                <li>
+                  <a href="{% host_url 'information' host 'bizadmin' %}">
+                    <span class="sidebar-mini-icon"><i class="fas fa-info"></i></span>
+                    <span class="sidebar-normal"> Company Info </span>
+                  </a>
+                </li>
+                <li class=''>
+                  <a href="{% host_url 'hours' host 'bizadmin'%}">
+                    <span class="sidebar-mini-icon"><i class="fas fa-clock"></i></span>
+                    <span class="sidebar-normal"> Business Hours</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="{% host_url 'staffmemb' host 'bizadmin' %}">
+                    <span class="sidebar-mini-icon"><i class="fas fa-user"></i></span>
+                    <span class="sidebar-normal"> Staff Members </span>
+                  </a>
+                </li>
+                <li>
+                  <a href="{% host_url 'service_detail' host 'bizadmin' %}">
+                    <span class="sidebar-mini-icon"><i class="fas fa-concierge-bell"></i></span>
+                    <span class="sidebar-normal"> Services </span>
+                  </a>
+                </li>
+                <li>
+                  <a href="{% host_url 'client_list' host 'bizadmin' %}">
+                    <span class="sidebar-mini-icon"><i class="fas fa-users"></i></span>
+                    <span class="sidebar-normal"> Clients </span>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </li>
+
+          <li class="{% block bpageact %}{%endblock%}">
+            <a data-toggle="collapse" href="#portfolio">
+              <i class="fas fa-id-card"></i>
+              <p>
+                Business Page
+                <b class="caret"></b>
+              </p>
+            </a>
+            <div class="collapse" id="portfolio">
+              <ul class="nav">
+                <li>
+                  <a href="{% host_url 'photos' host 'bizadmin' %}">
+                    <span class="sidebar-mini-icon"><i class="fas fa-camera-retro"></i></span>
+                    <span class="sidebar-normal"> Photos and Gallery </span>
+                  </a>
+                </li>
+                <li>
+                  <a href="{% host_url 'amenities' host 'bizadmin'%}">
+                    <span class="sidebar-mini-icon"><i class="fas fa-tags"></i></span>
+                    <span class="sidebar-normal"> Amenities and Tags</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="{% host_url 'bpagecustomization' host 'bizadmin'%}">
+                    <span class="sidebar-mini-icon"><i class="fas fa-bezier-curve"></i></span>
+                    <span class="sidebar-normal"> Customization</span>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </li>
+          
+          <li class="{% block bizrequests %}{%endblock%}">
+            <a href="{% host_url 'requestList' host 'bizadmin' %}" >
+              <i class="fas fa-clipboard-list"></i>
+              <p>Requests</p>
+            </a>
+          </li>
+
+          <li class="{% block bizreview %}{%endblock%}">
+            <a href="{% host_url 'reviewlist' host 'bizadmin' %}">
+              <i class="fas fa-star"></i>
+              <p>Reviews</p>
+            </a>
+          </li>
+
+          {% comment %} <li>
+            <a href="{% host_url 'exampleForm' host 'bizadmin' %}">
+              <i class="fas fa-chart-line"></i>
+              <p>Stats</p>
+            </a>
+          </li> {% endcomment %}
+          {% comment %} <li class="{% block activeint %}{%endblock%}">
+            <a href="{% host_url 'integrations' host 'bizadmin'%}">
+              <i class="fas fa-network-wired"></i>
+              <p>Integrations</p>
+            </a>
+          </li> {% endcomment %}
+
+          <li class="{% block activedetails%}{%endblock%} settingEx mb-3">
+            <a data-toggle="collapse" href="#settingExample" class="">
+              <i class="fas fa-cog"></i>
+              <p>
+                Settings
+                <b class="caret"></b>
+              </p>
+            </a>
+            <div class="collapse" id="settingExample">
+              <ul class="nav">
+                <li>
+                  <a href="{% host_url 'profile' host 'bizadmin'%}">
+                    <span class="sidebar-mini-icon"><i class="fas fa-user-circle"></i></span>
+                    <span class="sidebar-normal"> Account Profile </span>
+                  </a>
+                </li>
+                <li>
+                  <a href="{% host_url 'staff_payments' host 'bizadmin'%}">
+                    <span class="sidebar-mini-icon"><i class="fas fa-credit-card"></i></span>
+                    <span class="sidebar-normal"> Process Payments </span>
+                  </a>
+                </li>
+                <li>
+                  <a href="{% host_url 'bookingSetting' host 'bizadmin' %}">
+                    <span class="sidebar-mini-icon"><i class="fas fa-bookmark"></i></span>
+                    <span class="sidebar-normal"> Booking Settings </span>
+                  </a>
+                </li>
+                <li>
+                  <a href="{% host_url 'notifications' host 'bizadmin' %}">
+                    <span class="sidebar-mini-icon"><i class="fas fa-sms"></i></span>
+                    <span class="sidebar-normal"> Notifications </span>
+                  </a>
+                </li>
+                {% comment %} <li>
+                  <a href="">
+                    <span class="sidebar-mini-icon"><i class="fas fa-language"></i></span>
+                    <span class="sidebar-normal"> Language &amp; Time Zone </span>
+                  </a>
+                </li> {% endcomment %}
+                <li>
+                  <a href="{% host_url 'business:privacy' host 'www' %}">
+                    <span class="sidebar-mini-icon"><i class="fas fa-user-secret"></i></span>
+                    <span class="sidebar-normal"> Privacy Policy </span>
+                  </a>
+                </li>
+                <li>
+                  <a href="{% host_url 'business:terms' host 'www' %}">
+                    <span class="sidebar-mini-icon"><i class="fas fa-user-secret"></i></span>
+                    <span class="sidebar-normal"> Terms of Service </span>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </li>
+
+
+        </ul>
+
+      </div>
+    </div>
+    <div class="main-panel">
+      <!-- Navbar -->
+      <nav class="navbar navbar-expand-lg {% if not company.darkmode %}navbar-transparent{% endif %}">
+        <div class="container-fluid">
+          <div class="navbar-wrapper">
+            <div class="navbar-minimize d-inline">
+              <button class="minimize-sidebar btn btn-link btn-just-icon sidetoggle d-lg-none" rel="tooltip" data-original-title="Sidebar toggle" data-placement="right">
+                <i class="fas fa-align-left"></i>
+              </button>
+            </div>
+            <div class="navbar-toggle d-inline">
+              <button type="button" class="navbar-toggler">
+                <span class="navbar-toggler-bar bar1"></span>
+                <span class="navbar-toggler-bar bar2"></span>
+                <span class="navbar-toggler-bar bar3"></span>
+              </button>
+            </div>
+            {% if company.darkmode %}
+              <a class="navbar-brand" href="{% host_url 'home' host 'bizadmin' %}"><img class="logo-height" src="{% static 'img/favicon/logo/BookMe-whitegrad.svg' %}" alt=""></a>
+            {% else %}
+              <a class="navbar-brand" href="{% host_url 'home' host 'bizadmin' %}"><img class="logo-height" src="{% static 'img/favicon/logo/BookMe-blackgrad.svg' %}" alt=""></a>
+            {% endif %}
+            
+          </div>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navigation" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-bar navbar-kebab"></span>
+            <span class="navbar-toggler-bar navbar-kebab"></span>
+            <span class="navbar-toggler-bar navbar-kebab"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navigation">
+            <ul class="navbar-nav ml-auto align-items-center">
+              {% comment %} <li class="dropdown nav-item">
+                <a href="javascript:void(0)" class="dropdown-toggle nav-link" data-toggle="dropdown">
+                  <div class="notification d-none d-lg-block d-xl-block"></div>
+                  <i class="fas fa-bell"></i>
+                  <p class="d-lg-none">
+                    Notifications
+                  </p>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-right dropdown-navbar">
+                  <li class="nav-link">
+                    <a href="#" class="nav-item dropdown-item">A quick notification</a>
+                  </li>
+                </ul>
+                
+              </li> {% endcomment %}
+              <li class="nav-item px-0">
+                <a href="javascript:void(0)" class="nav-link" id="lightdarkmode">
+                  <div class="d-none d-lg-block d-xl-block"></div>
+                  <i class="fas fa-lightbulb"></i>
+                  <p class="d-lg-none">
+                    {% if company.darkmode %}Enable Light Mode {% else %}Enable Dark Mode{% endif %}
+                  </p>
+                </a>
+              </li>
+              
+              <li class="dropdown nav-item">
+                <a href="{% host_url 'bizadminlogout' host 'bizadmin' %}" class="dropdown-toggle nav-link" data-toggle="dropdown">
+                  {% if request.user.avatar %}
+                        <div class="photo">
+                            <img src="{{ request.user.avatar.url }}" alt="{{ request.user.first_name }} Profile Photo">
+                        </div>
+                  {% else %}
+                    <i class="fas fa-user-circle"></i>
+                  {% endif %}
+                  
+                  <b class="caret d-none d-lg-block d-xl-block"></b>
+                  <p class="d-lg-none">
+                    Account
+                  </p>
+                </a>
+                <ul class="dropdown-menu dropdown-navbar">
+                  <li class="nav-link">
+                    <a href="{% host_url 'information' host 'bizadmin'%}" class="nav-item dropdown-item">Company Details</a>
+                  </li>
+                  <li class="nav-link">
+                    <a href="{% host_url 'profile' host 'bizadmin'%}" class="nav-item dropdown-item">Account Settings</a>
+                  </li>
+                  <li class="nav-link">
+                    <a href="{% host_url 'bookingSetting' host 'bizadmin'%}" class="nav-item dropdown-item">Booking Settings</a>
+                  </li>
+                  <li class="dropdown-divider"></li>
+                  {% if request.user.on_board %}
+                    <li class="nav-link">
+                      <a href="{% host_url 'bookingurls' host 'bookingurl' slug=company.slug %}" class="nav-item dropdown-item">Your Business Page</a>
+                    </li>
+                  {% endif %}
+                  <li class="dropdown-divider"></li>
+                  <li class="nav-link">
+                    <a href="{% host_url 'bizadminlogout' host 'bizadmin' %}" class="nav-item dropdown-item">Log out</a>
+                  </li>
+                </ul>
+              </li>
+              <li class="separator d-lg-none"></li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+      <div class="modal modal-search fade" id="searchModal" tabindex="-1" role="dialog" aria-labelledby="searchModal" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <input type="text" class="form-control" id="inlineFormInputGroup" placeholder="SEARCH">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <i class="tim-icons icon-simple-remove"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+        <form action="" method="POST">{% csrf_token %}</form>
+      </div>
+        <script type="text/javascript" src="https://kit.fontawesome.com/a07c5b9658.js" crossorigin="anonymous"></script>
+        
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+        <script src="{% static 'js/vendor/moment.min.js' %}"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/cleave.js/1.6.0/cleave.min.js" integrity="sha512-KaIyHb30iXTXfGyI9cyKFUIRSSuekJt6/vqXtyQKhQP6ozZEGY8nOtRS6fExqE4+RbYHus2yGyYg1BrqxzV6YA==" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.18/js/bootstrap-select.min.js" ></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.2.3/flatpickr.js"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+        <script src="{% static 'js/vendor/bootstrap-switch.js' %}"></script>
+        <script src="{% static 'js/vendor/bootstrap-datetimepicker.js' %}"></script>
+        <script src="{% static 'js/vendor/dropzone.min.js' %}"></script>
+        <script src="{% static 'js/vendor/jquery-cropper.min.js' %}"></script>
+        <script src="{% static 'js/vendor/bootstrap-tagsinput.js' %}"></script>
+        <script src="{% static 'js/businessAdmin/jquery.validate.min.js' %}"></script>
+        <script src="{% static 'js/businessAdmin/jquery.bootstrap-wizard.js' %}"></script>
+        <script src="{% static 'js/vendor/bootstrap-notify.js' %}"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.7.5/lottie.min.js" integrity="sha512-0bCDSnaX8FOD9Mq8WbHcDwshXwCB5V4EP+UBu87WQgga2b7lAsuEbaSmIZjH/XEmNhJuhrPbFHemre5HZwrk9w==" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/smartwizard@5/dist/js/jquery.smartWizard.min.js" type="text/javascript"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js" type="text/javascript"></script>
+        <script src="{% static 'js/businessAdmin/scripts.js' %%}"></script>
+        <script>
+          function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+              const cookies = document.cookie.split(';');
+              for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                  cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                  break;
+                }
+              }
+            }
+            return cookieValue;
+          }
+          const csrftoken = getCookie('csrftoken');
+          lightdarkMode = document.querySelector('#lightdarkmode');
+          lightdarkMode.addEventListener('click', function(e){
+            {% if company.darkmode %}
+              $("body").addClass("white-content");
+              $('nav').removeClass('navbar-transparent');
+              var dark = true
+            {% else %}
+              $("body").removeClass("white-content");
+              $('nav').addClass('navbar-transparent');
+              var dark = false
+            {% endif %}
+            
+            $.ajax({
+              url: '{% host_url "changeDarkMode" host "bizadmin" %}',
+              data: JSON.stringify({light:dark}),
+              type: "POST",
+              dataType: 'json',
+              headers:{
+                "X-CSRFToken": csrftoken
+              },
+              success: function(data){
+                if (data.darkmode){
+                  $(".navbar-brand").attr("src","{% static 'img/favicon/logo/BookMe-whitegrad.svg' %}");
+                  $("body").removeClass("white-content");
+                  $('nav').removeClass('navbar-transparent');
+                  $('table').removeClass('table-white');
+                  $('table').addClass('table-dark');
+                }
+                else {
+                  $("body").addClass("white-content");
+                  $('nav').addClass('navbar-transparent');
+                  $('table').addClass('table-white');
+                  $('table').removeClass('table-dark');
+                }
+              },
+            });
+          });
+          settingMode = document.querySelector('.sidebar .sidebar-wrapper');
+
+          
+        </script>
+        {% block java %}
+        {% endblock java %}
+        {% block businessadmin %}
+        {% endblock %}
+      </div>
+        {% block calendarscript %}
+        {% endblock %}
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+  </body>
+</html>

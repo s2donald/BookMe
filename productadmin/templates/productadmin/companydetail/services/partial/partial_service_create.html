@@ -1,0 +1,104 @@
+{% load static %}
+{% load hosts %}
+{% load crispy_forms_tags %}
+
+    <form method="POST" id="createserv">
+        {% csrf_token %}
+        {{ service_form.name|as_crispy_field }}
+        {{ service_form.description|as_crispy_field }}
+        <div class="row">
+            
+            {% if company.service_category.all %}
+                <div class="col-sm-6">
+                    {{ category_form.category|as_crispy_field }}
+                </div>
+            {% endif %}
+            {% if company.staffmembers.all %}
+                <div class="col-sm-6">
+                    {{ category_form.staff|as_crispy_field }}
+                </div>
+            {% endif %}
+            {% if company.company_forms.all %}
+                <div class="col-sm-6">
+                    {{ category_form.formfield|as_crispy_field }}
+                </div>
+            {% endif %}
+            <div class="col-sm-6">
+                {{ service_form.is_request|as_crispy_field }}
+            </div>
+        </div>
+        
+        
+        <div class="form-row">
+            <div class="form-group col mb-0">
+                {{ service_form.price_type|as_crispy_field }}
+            </div>
+            <div class="form-group col mb-0">
+                {{ service_form.price|as_crispy_field }}
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col mb-0">
+                {{ service_form.duration_hour|as_crispy_field }}
+            </div>
+            <div class="form-group col mb-0"> 
+                {{ service_form.duration_minute|as_crispy_field }}
+            </div>
+        </div>
+        <a class="licolor" href="#simpleCollapse" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="simpleCollapse">Advanced Options</a>
+        <div class="collapse" id="simpleCollapse">
+            {{ service_form.checkintime|as_crispy_field }}
+            <div id="padd">
+                {{ service_form.padding|as_crispy_field }}
+            </div>
+            <div id="show-padding" class="form-row">
+                <div class="form-group col mb-0"> 
+                    {{ service_form.paddingtime_hour|as_crispy_field }}
+                </div>
+                <div class="form-group col mb-0"> 
+                    {{ service_form.paddingtime_minute|as_crispy_field }}
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary" id="addService">Add Service</button>
+        </div>
+    </form>
+<script >
+    var $selectpicker = $('.selectpicker');
+    //    Activate bootstrap-select
+    if ($selectpicker.length != 0) {
+        $selectpicker.selectpicker({
+        
+        });
+    }
+    $('#createserv').submit(function(e){
+                e.preventDefault();
+                {% comment %} btn.attr("data-category") {% endcomment %}
+                $.ajax({
+                    type:'POST',
+                    url: "{% host_url 'createservice' host 'bizadmin' %}",
+                    data: $('#createserv').serialize(),
+                    headers:{
+                        "X-CSRFToken": csrftoken
+                    },
+                    success:function(data){
+                        $('#modal-service').modal('hide');
+                        var htmlcontent = data.html_service_list
+                        var el = document.querySelector('#service-t');
+                        el.innerHTML = htmlcontent
+                        var htmlcontent = data.html_category_list
+                        var catel = document.querySelector('#categorylisttab');
+                        catel.innerHTML = htmlcontent
+                        $.notify({
+                            // options
+                            message: data.view
+                        },{
+                            // settings
+                            type: data.icon
+                        });
+                    }
+                });
+            });
+</script> 

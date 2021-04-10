@@ -1,0 +1,63 @@
+{% load static %}
+{% load hosts %}
+{% load business_tags %}
+<div class="card shadow my-1">
+    <div class="row">
+        <div class="col-md-8 py-auto" style="overflow:hidden;">
+            <nav class="nav nav-borders" >
+                <a class="nav-link ml-0" id="detail" data-staff="{{ staff.id }}" href="#detail" data-toggle="tab">Details</a>
+                <a class="nav-link" id="services" data-staff="{{ staff.id }}" href="#services" data-toggle="tab">Services</a>
+                <a class="nav-link" id="hours" data-staff="{{ staff.id }}" href="#hours" data-toggle="tab">Working Hours</a>
+                <a class="nav-link activate" id="breaks" data-staff="{{ staff.id }}" href="#breaks" data-toggle="tab">Breaks</a>
+                {% comment %} <a class="nav-link" id="timeoff" data-staff="{{ staff.id }}" href="#timeoff" data-toggle="tab">Time Off</a> {% endcomment %}
+                {% comment %} <a class="nav-link" href="#">Staff Members</a> {% endcomment %}
+            </nav>
+            
+        </div>
+        <div class="col-md-4 text-right">
+            <div class="card-header p-2">
+                    {% if company.staffmembers.count > 1 %}
+                        <button class="btn btn-link btn-danger btn-sm categorydelete" type="button" data-catename="{{ category.name }}" data-url="{% host_url 'category_delete_view' staff.id host 'bizadmin' %}">Remove Staff Member <i class="fas fa-trash"></i></button>
+                    {% endif %}        
+            </div>
+        </div>
+    </div>
+
+<div class="card-header"> <h4>Schedule breaks for {{ staff.first_name }}</h4></div>
+    <div class="card-body">
+        <div class="justify-content-center my-auto align-items-center">
+            <form method="POST" >
+                {% csrf_token %}
+            </form>
+            {% for day in staff.staff_hours.all %}
+                <ul class="list-inline">
+
+                    <li class="list-inline-item" style="width:90px">
+                        <strong for="" class="text-danger">{{ day.get_weekday_display }}</strong>
+                    </li>
+                    <span class="list-inline-item"><button data-staff="{{ staff.id }}" data-weekday="{{ day.weekday }}" data-url="" class="btn btn-sm btn-info addbreak {% if day.is_off %}disabled{% endif %}"> {% if day.is_off %}Off{% else %}Add break{% endif %}</button></span>
+                    {% if not day.is_off %}
+                        <span class="list-inline-item">
+                            <ul class="list-group" id="workdaybreaks{{ day.weekday }}">
+                                {% for breakday in staff.staff_breaks.all %}
+                                    {% if breakday.weekday == day.weekday %}
+                                        <div class="list-group-item">
+                                            <div class="row m-0 align-items-center">
+                                        
+                                                <input type="text" class="breaktimepicker form-control text-center mr-1 updatebreaktime" data-fromto="from" data-staff="{{ staff.id }}" data-breakid="{{ breakday.id }}" style="width:90px" value="{{ breakday.from_hour|time:"H:i A" }}"> to <input type="text" style="width:90px" data-fromto="to" class="breaktimepicker form-control text-center ml-1 updatebreaktime" data-staff="{{ staff.id }}" data-breakid="{{ breakday.id }}" value="{{ breakday.to_hour|time:"H:i A" }}"> 
+                                                {% comment %} <button class="btn btn-icon btn-danger"></button> {% endcomment %}
+                                                <a tabindex="0" data-staff="{{ staff.id }}" data-weekday="{{ day.weekday }}" class="popoverbreaks btn btn-icon btn-danger text-center breakdate" data-breakid="{{ breakday.id }}" role="button" data-toggle="popover" data-trigger="focus" title="Delete?" data-html='true' data-sanitize='false' style="z-index:1 !important;" data-content="Are you sure you want to delete? <button class='btn btn-sm btn-danger removebreak' data-breakid='{{ breakday.id }}' data-staff='{{ staff.id }}' >Delete</button><button class='btn btn-sm'>Cancel</button>"><i class='fas fa-trash' data-breakid='{{ breakday.id }}' data-staff='{{ staff.id }}'></i></a>
+                                                
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+                                    
+                            </ul>
+                        </span>
+                    {% endif %}
+                </ul>
+            {% endfor %}
+        </div>
+    </div>
+</div>

@@ -1,0 +1,405 @@
+{% extends 'bizadmin/index.html' %}
+{% load static %}
+{% load hosts %}
+{% load crispy_forms_tags %}
+{% block bpageact%}active{%endblock%}
+{% block businessadmin %}
+<div class="modal fade" id="modal-addformfield" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content card">
+      <div class="modal-header">
+        <h5 class="modal-title {% if company.darkmode %}text-white{% endif %}" id="exampleModalLabel">Add Form Field</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form method="POST" action="" class="addformfield">
+            {% csrf_token %}
+            {{ formBuilderForms|crispy }}
+            <div class="modal-footer">
+                
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary">Add Form Field</button>
+            </div>
+        </form>
+      </div>
+      
+    </div>
+  </div>
+</div>
+
+<!-- Main page content-->
+    <div class="content">
+        <div class="row">
+            <div class="col-md-12 ml-auto mr-auto">
+                <header class="page-header page-header-compact page-header-light mb-2">
+                    <div class="container-fluid">
+                        <div class="page-header-content">
+                            <div class="row align-items-center justify-content-between pt-3">
+                                <div class="col-auto">
+                                    <h1 class="page-header-title">
+                                        Business Page - Customization
+                                    </h1>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </header>
+                <!-- Account page navigation-->
+                <nav class="nav nav-borders">
+                    <a class="nav-link  ml-0" href="{% host_url 'photos' host 'bizadmin'%}">Photo and Gallery</a>
+                    <a class="nav-link" href="{% host_url 'amenities' host 'bizadmin'%}">Amenities and Tags</a>
+                    <a class="nav-link activate" href="{% host_url 'bpagecustomization' host 'bizadmin'%}">Customization</a>
+                </nav>
+                <hr class="mt-0 mb-4"/>
+                <div class="row">
+                    <div class="col-md-12 mb-4">
+                        <div class="card h-100 border-left-lg border-left-secondary">
+                            <div class="card-header"><h4>Create a Custom Form</h4></div>
+                            <div class="card-body">
+                                <!-- Gallary upload button -->
+                                <div class="row">
+                                    <div class="col-md-8 pt-0-0">
+                                        <h6>Form Fields</h6>
+                                        <div>Add form fields to retrieve specific client information</div>
+                                        <div class="text-center pt-3">
+                                        <button class="btn btn-primary btn-sm addfields">Add Form Field</button>
+                                        <table class="table {% if company.darkmode %}table-dark {% else %}table-white{% endif %} table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th class="text-center" scope="col">Form Label</th>
+                                                    <th class="text-center" scope="col">Required</th>
+                                                    <th class="text-center" scope="col">Edit</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id='formfieldtable'>
+                                                {% if company.category.name == 'Automotive Services' %}
+                                                    <tr>
+                                                        <td class="text-center">Vehicle Year</td>
+                                                        <td class="text-center">
+                                                            <div class="form-check">
+                                                                <label class="form-check-label">
+                                                                <input class="form-check-input" data-id="{{ field.id }}" type="checkbox" checked disabled>
+                                                                <span class="form-check-sign"></span>
+                                                                </label>
+                                                            </div>
+                                                        </td>
+                                                        <td class="text-center">
+                                                        
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="text-center">Vehicle Make</td>
+                                                        <td class="text-center">
+                                                            <div class="form-check">
+                                                                <label class="form-check-label">
+                                                                <input class="form-check-input" data-id="{{ field.id }}" type="checkbox" checked disabled>
+                                                                <span class="form-check-sign"></span>
+                                                                </label>
+                                                            </div>
+                                                        </td>
+                                                        <td class="text-center">
+                                                            
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="text-center">Vehicle Model</td>
+                                                        <td class="text-center">
+                                                            <div class="form-check">
+                                                                <label class="form-check-label">
+                                                                <input class="form-check-input" data-id="{{ field.id }}" type="checkbox" checked disabled>
+                                                                <span class="form-check-sign"></span>
+                                                                </label>
+                                                            </div>
+                                                        </td>
+                                                        <td class="text-center">
+
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="text-center">Vehicle Trim</td>
+                                                        <td class="text-center">
+                                                            <div class="form-check">
+                                                                <label class="form-check-label">
+                                                                <input class="form-check-input" data-id="{{ field.id }}" type="checkbox" checked disabled>
+                                                                <span class="form-check-sign"></span>
+                                                                </label>
+                                                            </div>
+                                                        </td>
+                                                        <td class="text-center">
+
+                                                        </td>
+                                                    </tr>
+                                                {% endif %}
+                                                {% for field in company.company_forms.all %}
+                                                    <tr>
+                                                        {% comment %} <td class="text-center"><button class="btn btn-sm btn-info" style="border-radius: 100px!important;"><i class="fas fa-check-circle text-left"></i>  {{ field.label }}</button></td> {% endcomment %}
+                                                        <td class="text-center">{{ field.label }}</td>
+                                                        <td class="text-center">
+                                                            <div class="form-check">
+                                                                <label class="form-check-label">
+                                                                <input class="form-check-input" data-id="{{ field.id }}" type="checkbox" {% if field.is_required == 'y' %}checked{% endif %}>
+                                                                <span class="form-check-sign"></span>
+                                                                </label>
+                                                            </div>
+                                                        </td>
+                                                        <td class="text-center">
+                                                            {% comment %} <button data-id="{{ field.id }}" role="button" class='btn btn-icon btn-sm editformfield'><i class="fas fa-pen"></i></button> {% endcomment %}
+                                                            <button data-id="{{ field.id }}" class='btn btn-icon btn-danger btn-sm deleteformfield' role="button" data-toggle="popover" data-trigger="focus" title="Delete?" data-html='true'><i class="fas fa-trash"></i></button>
+                                                        </td>
+                                                    </tr>
+                                                {% empty %}
+                                                    {% if not company.category.name == 'Automotive Services' %}
+                                                        <td colspan="8" class="text-center">Add form fields to collect specific information from clients</td>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                        <br>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12 mb-4">
+                        <div class="card h-100 border-left-lg border-left-secondary">
+                            <div class="card-header"><h4>Themes for your booking page</h4></div>
+                            <div class="card-body">
+                                <h6>Click the theme to apply to your booking page</h6>
+                                <ul class="bgcollection">
+                                    <li class="themecircle primarybackground {% if company.background == 'primary' %}applied{% endif %}">
+                                    </li>
+                                    
+                                    <li class="themecircle carbonbackground {% if company.background == 'carbon' %}applied{% endif %}">
+                                    </li>
+                                    
+                                    <li class="themecircle hexagonbackground {% if company.background == 'hexagon' %}applied{% endif %}">
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        function getCookie(name) {
+        let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        $(document).on('click','.addfields', function(e){
+            $('#modal-addformfield').modal('show')
+        });
+
+        $(document).on('click','.primarybackground', function(e){
+            var csrf_token = getCookie('cookie')
+            $.ajax({
+                type:'POST',
+                url: "{% host_url 'toggletheme' host 'bizadmin' %}",
+                data: {'background':'primary'},
+                headers:{
+                    "X-CSRFToken": csrftoken
+                },
+                success:function(data){
+                    var el = document.querySelector(data.oldbackground)
+                    el.classList.remove("applied")
+                    var els = document.querySelector('.primarybackground')
+                    els.classList.add("applied")
+                    $.notify({
+                        // options
+                        message: 'Primary theme has been applied to your booking page'
+                    },{
+                        // settings
+                        type: 'success',
+                        delay: 50,
+                    });
+                }
+            })
+        });
+
+        $(document).on('click','.carbonbackground', function(e){
+            var csrf_token = getCookie('cookie')
+            $.ajax({
+                type:'POST',
+                url: "{% host_url 'toggletheme' host 'bizadmin' %}",
+                data: {'background':'carbon'},
+                headers:{
+                    "X-CSRFToken": csrftoken
+                },
+                success:function(data){
+                    var el = document.querySelector(data.oldbackground)
+                    el.classList.remove("applied")
+                    var els = document.querySelector('.carbonbackground')
+                    els.classList.add("applied")
+                    $.notify({
+                        // options
+                        message: 'Carbon theme has been applied to your booking page'
+                    },{
+                        // settings
+                        type: 'success',
+                        delay: 50,
+                    });
+                }
+            })
+        });
+
+        $(document).on('click','.hexagonbackground', function(e){
+            var csrf_token = getCookie('cookie')
+            $.ajax({
+                type:'POST',
+                url: "{% host_url 'toggletheme' host 'bizadmin' %}",
+                data: {'background':'hexagon'},
+                headers:{
+                    "X-CSRFToken": csrftoken
+                },
+                success:function(data){
+                    var el = document.querySelector(data.oldbackground)
+                    el.classList.remove("applied")
+                    var els = document.querySelector('.hexagonbackground')
+                    els.classList.add("applied")
+                    $.notify({
+                        // options
+                        message: 'Hexagon theme has been applied to your booking page'
+                    },{
+                        // settings
+                        type: 'success',
+                        delay: 50,
+                    });
+                }
+            })
+        });
+
+        $(".form-check-label").unbind('click');
+        $(document).on('click','.form-check-input', function(e){
+            var $this = $(this)
+            var csrf_token = getCookie('cookie')
+            $.ajax({
+                type:'POST',
+                url: "{% host_url 'toggleformrequired' host 'bizadmin' %}",
+                data: {'formid':$this.attr('data-id')},
+                headers:{
+                    "X-CSRFToken": csrftoken
+                },
+                success:function(data){
+                    if (data.is_valid){
+                        
+                        $.notify({
+                            // options
+                            message: 'Form Field Updated'
+                        },{
+                            // settings
+                            type: 'success',
+                            delay: 50,
+                        });
+                        $('.deleteformfield').popover({
+                            trigger: 'focus',
+                            html: true,
+                            sanitize: false,
+                            content: 'Are you sure you want to delete? <button class="btn btn-sm btn-danger removeformfield">Delete</button><button class="btn btn-sm">Cancel</button>',
+                        });
+                    }
+                }
+            })
+        });
+
+        let formid = -1
+
+        $(document).on('click', '.deleteformfield', function(){
+            var $this = $(this)
+            form_id = $this.attr('data-id')
+            formid = form_id
+        });
+
+        $(document).ready(function() {
+            $('.deleteformfield').popover({
+                trigger: 'focus',
+                html: true,
+                sanitize: false,
+                content: 'Are you sure you want to delete? <button class="btn btn-sm btn-danger removeformfield">Delete</button><button class="btn btn-sm">Cancel</button>',
+            });
+        })
+
+        $(document).on('click','.removeformfield', function(e){
+            var $this = $(this)
+            var csrf_token = getCookie('cookie')
+            $.ajax({
+                type:'POST',
+                url: "{% host_url 'editformrequired' host 'bizadmin' %}",
+                data: {'formid':formid,'type':'remove'},
+                headers:{
+                    "X-CSRFToken": csrftoken
+                },
+                success:function(data){
+                    if (data.is_valid){
+                        var el = document.querySelector('#formfieldtable')
+                        el.innerHTML = data.html_content
+                        $('.addformfield')[0].reset();
+                        $.notify({
+                            // options
+                            message: 'Form Field Removed'
+                        },{
+                            // settings
+                            type: 'success',
+                            delay: 50,
+                        });
+                        $('.deleteformfield').popover({
+                            trigger: 'focus',
+                            html: true,
+                            sanitize: false,
+                            content: 'Are you sure you want to delete? <button class="btn btn-sm btn-danger removeformfield" data-id='+formid+' >Delete</button><button class="btn btn-sm">Cancel</button>',
+                        });
+                    }
+                }
+            })
+        });
+
+        $(document).on('submit', '.addformfield',function(e){
+            e.preventDefault();
+            var form = $(this).serialize()
+            $.ajax({
+                type:'POST',
+                url: "{% host_url 'addnewformfield' host 'bizadmin' %}",
+                data: form,
+                success:function(data){
+                    if (data.is_valid){
+                        $('#modal-addformfield').modal('hide')
+                        var el = document.querySelector('#formfieldtable')
+                        el.innerHTML = data.html_content
+                        document.getElementById('id_label').value = ''
+                        $.notify({
+                            // options
+                            message: 'Form Field Added'
+                        },{
+                            // settings
+                            type: 'success',
+                            delay: 50,
+                        });
+                        $('.deleteformfield').popover({
+                            trigger: 'focus',
+                            html: true,
+                            sanitize: false,
+                            content: 'Are you sure you want to delete? <button class="btn btn-sm btn-danger removeformfield">Delete</button><button class="btn btn-sm">Cancel</button>',
+                        });
+                    }
+                }
+            })
+        });
+    </script>
+{% endblock %}

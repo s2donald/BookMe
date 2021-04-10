@@ -1,4 +1,5 @@
 {% load crispy_forms_tags %}
+{% load static %}
 <form method="post" class="justify-content-center pt-1" id="guestform" enctype="multipart/form-data">
     {% csrf_token %}
     <div class="justify-content-between align-baseline pl-4 row mb-6">
@@ -60,23 +61,40 @@
                 </div>
             </div>
             {% if collectpayment %}
-                <div class="col-12">
+                <div class="col-12 p-0 text-left">
                     <div class="text-block my-2">
-                        <h4>Payment Info</h4>
+                        <h4>Payment Method</h4>
                     </div>
-                    <div id="card-element" class="form-control">
-                    <!-- Elements will create input elements here -->
+                    <p class="text-muted small">All transactions are secure and encrypted. BookMe won't save your card.</p>
+                    <div class="py-3 pr-1 pl-0 rounded mt-2 bordpayment">
+                        <div class="d-flex align-items-center">
+                            {% comment %} <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" class="" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M256 76c48.1 0 93.3 18.7 127.3 52.7S436 207.9 436 256s-18.7 93.3-52.7 127.3S304.1 436 256 436c-48.1 0-93.3-18.7-127.3-52.7S76 304.1 76 256s18.7-93.3 52.7-127.3S207.9 76 256 76m0-28C141.1 48 48 141.1 48 256s93.1 208 208 208 208-93.1 208-208S370.9 48 256 48z"></path><path d="M363.5 148.5C334.8 119.8 296.6 104 256 104c-40.6 0-78.8 15.8-107.5 44.5C119.8 177.2 104 215.4 104 256s15.8 78.8 44.5 107.5C177.2 392.2 215.4 408 256 408c40.6 0 78.8-15.8 107.5-44.5C392.2 334.8 408 296.6 408 256s-15.8-78.8-44.5-107.5z"></path></svg> {% endcomment %}
+                            <div class="w-100 ml-3">
+                                <div class="d-flex align-ittems-center justify-content-between">
+                                    <p style="font-weight:500">Credit Card</p>
+                                    <div class="d-flex align-items-center">
+                                        <img alt="visa" src="{% static 'css/svg-img/cards/visa.svg' %}" class="creditcard"></img:alt:src:class>
+                                        <img alt="mastercard" src="{% static 'css/svg-img/cards/mc_vrt_rev.svg' %}" class="creditcard"></img:alt:src:class>
+                                        <img alt="amex" src="{% static 'css/svg-img/cards/amex.svg' %}" class="creditcard"></img:alt:src:class>
+                                        <p class="text-muted small my-auto">&amp; more</p>
+                                    </div>
+                                </div>
+                                <div id="card-element" class="rounded mt-2 borderpayment" style="padding: 12px 8px;">
+                                <!-- Elements will create input elements here -->
+                                </div>
+                                <!-- We'll put the error messages in this element -->
+                                <div id="card-element-errors" role="alert"></div>
+                                
+                            </div>
+                        </div>
+                        <button data-sitekey="6LeimeAZAAAAAE119rtvZivK4DW9csX6QhEo5Yla" data-callback='onSubmit' data-action='submit' class="btn btn-outline-primary px-3 my-3 mx-1" id="collectpayfirst" type="submit">
+                        <div class="spinner-border sr-only" id="spinner" role="status">
+                            <span class="sr-only">Loading...</span>
+                        </div>
+                        <span id="button-text">Pay and Secure Spot</span>
+                        </button>
                     </div>
                     
-                    
-                    <!-- We'll put the error messages in this element -->
-                    <div id="card-element-errors" role="alert"></div>
-                    <button data-sitekey="6LeimeAZAAAAAE119rtvZivK4DW9csX6QhEo5Yla" data-callback='onSubmit' data-action='submit' class="btn btn-outline-primary px-3 my-3" id="collectpayfirst" type="submit">
-                    <div class="spinner-border sr-only" id="spinner" role="status">
-                        <span class="sr-only">Loading...</span>
-                    </div>
-                    <span id="button-text">Pay and Secure Spot</span>
-                    </button>
                 </div>
                     
             {% else %}

@@ -69,7 +69,7 @@
     <div class="container liblack" id="wholepage">
         <div class="row">
             <div id="bm" width="100px"></div>
-            <div class="col-lg-7" id="contentsarg">
+            <div class="col-lg-7 p-0" id="contentsarg">
                 <hr>
                 <ul class="navbar nav nav-pills" id="navlink-page" role="tablist">
                     <li class="nav-item">
@@ -822,8 +822,6 @@
         };
 
         function GuestFormAndBook(form){
-            grecaptcha.ready(function() {
-                grecaptcha.execute('6LeimeAZAAAAAE119rtvZivK4DW9csX6QhEo5Yla', {action: 'submit'}).then(function(token) {
                     // Add your logic to submit to your backend server here.
                     $.ajax({
                         type:'POST',
@@ -858,8 +856,6 @@
                             }
                         }
                     });
-                });
-            });
         }
 
         function AuthenticatedFormAndBook(form, someform ){
@@ -895,8 +891,6 @@
             
             var el = document.querySelector('#wholepage');
             el.innerHTML = ''
-            grecaptcha.ready(function() {
-            grecaptcha.execute('6LeimeAZAAAAAE119rtvZivK4DW9csX6QhEo5Yla', {action: 'submit'}).then(function(token) {
                 $.ajax({
                     type:'POST',
                     url: "{% host_url 'confirmationbooking' host 'bookingurl' slug=company.slug %}",
@@ -905,6 +899,7 @@
                         sdanimation.stop()
                         $('#sd').hide()
                         var el = document.querySelector('#wholepage');
+                        el.classList.add('p-0')
                         el.innerHTML = data.html_content
                         if (data.notauthenticated){
                             cleave = new Cleave('#id_phone', {
@@ -926,8 +921,6 @@
                         }
                     }
                 });
-            });
-            });
         }
         function createPaymentMethod({ card }, form, someform, typeform) {
 
@@ -1002,6 +995,14 @@
                             GuestFormAndBook(form)
                         }
                     }
+                    else if (result.paymentIntent.status === ''||result.paymentIntent.status === "requires_capture") {
+                        if (typeform === 'fconfirmform'){
+                            AuthenticatedFormAndBook(form, someform)
+                        }
+                        else if (typeform === 'gconfirmform'){
+                            GuestFormAndBook(form)
+                        }
+                    }
                     else if (result.result.error){
                         display(result.result.error)
                     }
@@ -1027,7 +1028,6 @@ function handlePaymentThatRequiresCustomerAction({
     // Subscription is active, no customer actions required.
     return { subscription, paymentMethodId };
   }
-
   // If it's a first payment attempt, the payment intent is on the subscription latest invoice.
   // If it's a retry, the payment intent will be on the invoice itself.
   let paymentIntent = subscription;
@@ -1036,10 +1036,9 @@ function handlePaymentThatRequiresCustomerAction({
     paymentIntent.status === 'requires_action' ||
     (isRetry === true && paymentIntent.status === 'requires_payment_method')
   ) {
-    return stripe
-      .confirmCardPayment(paymentIntent.client_secret, {
-        payment_method: paymentMethodId,
-      })
+      let stripes = Stripe('{{ pk_stripe }}', {stripeAccount:paymentIntent.stripe_staff_account_id});
+    return stripes
+      .confirmCardPayment(paymentIntent.client_secret)
       .then((result) => {
         if (result.error) {
           // Start code flow to handle updating the payment details.
@@ -1047,7 +1046,7 @@ function handlePaymentThatRequiresCustomerAction({
           // The card was declined (i.e. insufficient funds, card has expired, etc).
           throw result;
         } else {
-          if (result.paymentIntent.status === 'succeeded') {
+          if (result.paymentIntent.status === 'succeeded' || result.paymentIntent.status === 'requires_capture') {
             // Show a success message to your customer.
             return {
               subscription: subscription,

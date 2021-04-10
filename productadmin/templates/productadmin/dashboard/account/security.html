@@ -1,0 +1,229 @@
+{% extends 'bizadmin/index.html' %}
+{% load static %}
+{% load hosts %}
+{% block activedetails%}active{%endblock%}
+{% block businessadmin %}
+
+                    <!-- Main page content-->
+                    <div class="content">
+                        <div class="row">
+                        <div class="col-md-12 ml-auto mr-auto">
+                        <header class="page-header page-header-compact page-header-light mb-2">
+                        <div class="container-fluid">
+                            <div class="page-header-content">
+                                <div class="row align-items-center justify-content-between pt-3">
+                                    <div class="col-auto">
+                                        <h1 class="page-header-title">
+                                            Account Settings - Security
+                                        </h1>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </header>
+                        <!-- Account page navigation-->
+                        <nav class="nav nav-borders">
+                            <a class="nav-link ml-0" href="{% host_url 'profile' host 'bizadmin'%}">Profile</a>
+                            <a class="nav-link" href="{% host_url 'staff_payments' host 'bizadmin'%}">Process Payments</a>
+                            <a class="nav-link" href="{% host_url 'bookingSetting' host 'bizadmin' %}">Booking Settings</a>
+                            <a class="nav-link activate" href="{% host_url 'security' host 'bizadmin'%}">Security</a>
+                            <a class="nav-link" href="{% host_url 'notifications' host 'bizadmin'%}">Notifications</a>
+                        </nav>
+                        <hr class="mt-0 mb-4" />
+                        <div class="row">
+                            <div class="col-lg-8">
+                                <!-- Change password card-->
+                                <div class="card shadow mb-4">
+                                    <div class="card-header"><h4>Change Password</h4></div>
+                                    <div class="card-body">
+                                        <form method="post" id="passwordForm">
+                                            {% csrf_token %}
+                                            <!-- Form Group (current password)-->
+                                            <div class="form-group">
+                                                <label class="small mb-1" for="currentPassword">Current Password</label>
+                                                <input class="form-control" name="currentPassword" id="currentPassword" type="password" placeholder="Enter current password" />
+                                            </div>
+                                            <!-- Form Group (new password)-->
+                                            <div class="form-group">
+                                                <label class="small mb-1" for="newPassword">New Password</label>
+                                                <input class="form-control" name="newPassword" id="newPassword" type="password" placeholder="Enter new password" />
+                                            </div>
+                                            <!-- Form Group (confirm password)-->
+                                            <div class="form-group">
+                                                <label class="small mb-1" for="confirmPassword">Confirm Password</label>
+                                                <input class="form-control" name="confirmPassword" id="confirmPassword" type="password" placeholder="Confirm new password" />
+                                            </div>
+                                            <button class="btn btn-primary" type="button" id="updatePass">Update Password</button>
+                                        </form>
+                                    </div>
+                                </div>
+                                <!-- Security preferences card-->
+                                <div class="card shadow mb-4">
+                                    <div class="card-header"><h4>Security Preferences</h4></div>
+                                    <div class="card-body">
+                                        <!-- Account privacy optinos-->
+                                        <h5 class="mb-1">Account Privacy</h5>
+                                        <p class="small text-muted">By setting your company to private, your company will be taken off the marketplace however you can still send clients your booking url and book appointments within BookMe.</p>
+                                        <form>
+                                        {% csrf_token %}
+                                            {% with stat=company.status %}
+                                            <div class="custom-control custom-radio">
+                                                <input class="custom-control-input" id="radioPublic" type="radio" name="radioPrivacy" {% if stat == 'published' %}checked{% endif %} />
+                                                <label class="custom-control-label" name="radPublic" for="radioPublic">Public (Company is posted on the marketplace)</label>
+                                            </div>
+                                            <div class="custom-control custom-radio">
+                                                <input class="custom-control-input" id="radioPrivate" type="radio" name="radioPrivacy" {% if stat == 'draft' %}checked{% endif %} />
+                                                <label class="custom-control-label" name="radPrivate" for="radioPrivate">Private (Company is not posted on the marketplace)</label>
+                                            </div>
+                                            {% endwith %}
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <!-- Two factor authentication card-->
+                                {% comment %} <div class="card mb-4">
+                                    <div class="card-header">Two-Factor Authentication</div>
+                                    <div class="card-body">
+                                        <p>Add another level of security to your account by enabling two-factor authentication. We will send you a text message to verify your login attempts on unrecognized devices and browsers.</p>
+                                        <form>
+                                            <div class="form-group">
+                                                <div class="custom-control custom-radio">
+                                                    <input class="custom-control-input" id="twoFactorOn" type="radio" name="radioUsage" checked />
+                                                    <label class="custom-control-label" for="twoFactorOn">On</label>
+                                                </div>
+                                                <div class="custom-control custom-radio">
+                                                    <input class="custom-control-input" id="twoFactorOff" type="radio" name="radioUsage" />
+                                                    <label class="custom-control-label" for="twoFactorOff">Off</label>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div> {% endcomment %}
+                                <!-- Delete account card-->
+                                <div class="card shadow mb-4">
+                                    <div class="card-header"><h4>Delete Account</h4></div>
+                                    <div class="card-body">
+                                        <p>Deleting your account is a permanent action and cannot be undone. If you are sure you want to delete your account, select the button below.</p>
+                                        <button class="btn btn-danger-soft text-danger" id="deleteAcct" type="button">I understand, delete my account</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                        </div>
+                    </div>
+{% endblock %}
+{% block java %}
+    <script>
+
+    $(document).ready(function(){
+        function getCookie(name) {
+                            let cookieValue = null;
+                            if (document.cookie && document.cookie !== '') {
+                                const cookies = document.cookie.split(';');
+                                for (let i = 0; i < cookies.length; i++) {
+                                    const cookie = cookies[i].trim();
+                                    // Does this cookie string begin with the name we want?
+                                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                                        break;
+                                    }
+                                }
+                            }
+                                return cookieValue;
+                            }
+                            const csrftoken = getCookie('csrftoken');
+
+        var setNewPass = document.getElementById('updatePass');
+        $('#updatePass').on('click', function(){
+            $.ajax({
+                url: "{% host_url 'updatepassword' host 'bizadmin' %}",
+                data: $('#passwordForm').serialize(),
+                type: "POST",
+                dataType: 'json',
+                headers:{
+                    "X-CSRFToken": csrftoken
+                },
+                success: function (data) {
+                    if (data.badresponse) {
+                        Swal.fire({
+                            title: data.badresponse,
+                            icon: 'error',
+                            customClass:{
+                                confirmButton: 'btn btn-primary',
+                                cancelButton: 'btn btn-danger',
+                            },
+                        buttonsStyling: false,
+                        });
+                    }
+                    else {
+                        $.notify({
+                            // options
+                            message: 'We have successfully updated your password'
+                        },{
+                            // settings
+                            type: 'success'
+                        });
+                    }
+                    document.getElementById('passwordForm').reset()
+                },
+            });
+            return true;
+        });
+        $("#radioPublic").on('click', function(){
+            $.ajax({
+                url: '{% host_url "changePrivate" host "bizadmin" %}',
+                data: JSON.stringify({private:false}),
+                type: "POST",
+                dataType: 'json',
+                headers:{
+                    "X-CSRFToken": csrftoken
+                },
+                success: function(data){
+                    $.notify({
+                            // options
+                            message: data.good
+                        },{
+                            // settings
+                            type: 'success'
+                        });
+                },
+            });
+        });
+        $("#radioPrivate").on('click', function(){
+            $.ajax({
+                url: '{% host_url "changePrivate" host "bizadmin" %}',
+                data: JSON.stringify({private:true}),
+                type: "POST",
+                dataType: 'json',
+                headers:{
+                    "X-CSRFToken": csrftoken
+                },
+                success: function(data){
+                    $.notify({
+                            // options
+                            message: data.good
+                        },{
+                            // settings
+                            type: 'success'
+                        });
+                },
+            });
+        });
+
+        $("#deleteAcct").on('click', function(){
+            Swal.fire({
+                title: 'We are sad to see you leave.',
+                html: 'Please send an email to support@bookme.to to finalize the deletion of your account.',
+                customClass:{
+                    confirmButton: 'btn btn-primary',
+                    cancelButton: 'btn btn-danger',
+                },
+                buttonsStyling: false,
+            });
+        });
+    });
+    </script>
+{% endblock java %}

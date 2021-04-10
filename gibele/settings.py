@@ -29,10 +29,10 @@ DEBUG = False
 
 TIME_INPUT_FORMATS = ['%I:%M %p',]
 
-ALLOWED_HOSTS = ['pure-fjord-45840.herokuapp.com','.pure-fjord-45840.herokuapp.com','gibele.com', '.gibele.com','.gibele.ca','gibele.ca', 'bookme.to', '.bookme.to','.shopme.to']
+ALLOWED_HOSTS = ['pure-fjord-45840.herokuapp.com','.pure-fjord-45840.herokuapp.com','gibele.com', '.gibele.com','.gibele.ca','gibele.ca', '.shopme.com', '.bookme.com', 'bookme.to', '.bookme.to','.shopme.to']
 if DEBUG:
-    SESSION_COOKIE_DOMAIN= 'gibele.com'
-    DOMAIN_NAME= 'gibele.com'
+    SESSION_COOKIE_DOMAIN= 'shopme.com'
+    DOMAIN_NAME= 'shopme.com'
 else:
     SESSION_COOKIE_DOMAIN= 'bookme.to'
     DOMAIN_NAME= 'bookme.to'
@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'products.apps.ProductsConfig',
     'consumer.apps.ConsumerConfig',
     'calendarapp.apps.CalendarappConfig',
+    'productadmin.apps.ProductadminConfig',
     'django.contrib.gis',
     'crispy_forms',
     'django.contrib.admin',
@@ -78,6 +79,7 @@ REST_FRAMEWORK = {
 
 MIDDLEWARE = [
     'django_hosts.middleware.HostsRequestMiddleware',
+    'gibele.virtualhostmiddleware.VirtualHostMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',

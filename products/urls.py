@@ -3,7 +3,10 @@ from django.urls import path, re_path
 from . import views
 app_name = 'products'
 urlpatterns = [
-    path('<slug:slug>/',viewsshop.ProductDetails.as_view(), name='productdetail'),
+    path('cartaddproduct/<int:product_id>/', views.cart_add, name='cart_add_product'),
+    path('retrievefilteredsearchproduct/', views.SearchFilter.as_view(), name='productsearch'),
+    path('<slug:slug>/', views.ProductDetails.as_view(), name='productdetail'),
+    path('', views.ProductMain.as_view(), name='productmain')
 ]
 
 from django.conf import settings

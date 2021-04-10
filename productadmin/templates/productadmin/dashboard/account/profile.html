@@ -1,0 +1,236 @@
+{% extends 'bizadmin/index.html' %}
+{% load static %}
+{% load hosts %}
+{% block linescript %}
+{% endblock linescript %}
+{% load crispy_forms_tags %}
+{% block activedetails%}active{%endblock%}
+{% block java %}
+
+<script>
+$(document).ready(function() {
+    $("#inputmain").fileinput({
+        ajaxSettings:{
+            beforeSend: function(xhr, settings) {
+                if (!this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            }
+        },
+        uploadUrl: "{% host_url 'profileimg' host 'bizadmin' %}",
+        maxFileCount: 1,
+        maxFileSize: 5000,
+        browseIcon: '',
+        browseLabel: 'Upload new image',
+        'showCaption': false,
+        'showPreview': false,
+        'showRemove': false,
+        uploadClass: "btn btn-primary",
+        uploadLabel: "Confirm Upload",
+        uploadExtraData:{'csrfmiddlewaretoken': '{{ csrf_token }}'},
+        allowedFileTypes: ['image'],
+    });
+});
+</script>
+{% endblock java %}
+{% block businessadmin %}
+                    
+                    <!-- Main page content-->
+                    <div class="content">
+                        <div class="row">
+                        <div class="col-md-12 ml-auto mr-auto">
+                        <header class="page-header page-header-compact page-header-light mb-2">
+                        <div class="container-fluid">
+                            <div class="page-header-content">
+                                <div class="row align-items-center justify-content-between pt-3">
+                                    <div class="col-auto">
+                                        <h1 class="page-header-title">
+                                            Account Settings - Profile
+                                        </h1>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </header>
+                        <!-- Account page navigation-->
+                        <nav class="nav nav-borders">
+                            <a class="nav-link activate ml-0" href="{% host_url 'profile' host 'bizadmin'%}">Profile</a>
+                            <a class="nav-link" href="{% host_url 'staff_payments' host 'bizadmin'%}">Process Payments</a>
+                            <a class="nav-link" href="{% host_url 'bookingSetting' host 'bizadmin' %}">Booking Settings</a>
+                            <a class="nav-link" href="{% host_url 'security' host 'bizadmin'%}">Security</a>
+                            <a class="nav-link" href="{% host_url 'notifications' host 'bizadmin'%}">Notifications</a>
+                        </nav>
+                        <hr class="mt-0 mb-4"/>
+                        <div class="row">
+                            <div class="col-xl-4">
+                                <!-- Profile picture card-->
+                                <div class="card shadow">
+                                    <div class="card-header"><h4>Main Profile Photo</h4></div>
+                                    <div class="card-body text-center">
+                                        <!-- Profile picture image-->
+                                        <img class="img-account-profile rounded-circle mb-2" width="300px" src="{% if request.user.avatar %}{{ request.user.avatar.url }}{% else %}{% static 'img/Headshot-Placeholder.png' %}{% endif %}" alt="300x300" />
+                                        <!-- Profile picture help block-->
+                                        <div class="small font-italic text-muted mb-4">JPG or PNG no larger than 5 MB</div>
+                                        <!-- Profile picture upload button -->
+                                        <form action="{% host_url 'profileimg' host 'bizadmin' %}" method="POST" enctype="multipart/form-data" id="formUpload">
+                                        {% csrf_token %}
+                                            <input type="hidden" name="x" id="id_x"><input type="hidden" name="y" id="id_y"><input type="hidden" name="width" id="id_width"><input type="hidden" name="height" id="id_height">
+                                            <input type="file" id="inputimage" name="imageFile" class="btn btn-primary" accept="image/*" hidden >
+                                            {% comment %} <button type="button" id="btnimage" name="imageFile" class="btn btn-primary">Upload new image</button> {% endcomment %}
+                                            <div class="file-loading">
+                                                <input id="inputmain" name="imageFile" type="file">
+                                            </div> 
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-8">
+                                <!-- Account details card-->
+                                <div class="card shadow mb-4">
+                                    <div class="card-header"><h4>Account Details</h4></div>
+                                    <div class="card-body">
+                                        <form class="text-center" method="POST" id="accountUpdate">
+                                          
+                                            <!-- Form Row-->
+                                            {% csrf_token %}
+                                            <div class="row">
+                                                <div class="col-md-6 text-left" id="fname">
+                                                    {{ personal_form.first_name|as_crispy_field }}
+                                                </div>
+                                                <div class="col-md-6 text-left" id="lname">
+                                                    {{ personal_form.last_name|as_crispy_field }}
+                                                </div>
+                                                <div class="col-md-12 text-left" id="pemail">
+                                                    {{ personal_form.email|as_crispy_field}}
+                                                    <div class="invalid_feedback m-0 p-0" style="display:none"></div>
+                                                </div>
+                                                <div class="col-md-12 text-left" id="pphone">
+                                                    {{ personal_form.phone|as_crispy_field}}
+                                                    <div class="invalid_phone m-0 p-0" style="display:none; color:red;"></div>
+                                                </div>
+                                            </div>
+                                            <!-- Save changes button-->
+                                            <button class="btn btn-primary text-center" type="button" id="savePers">Save changes</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <script>
+                        function getCookie(name) {
+                            let cookieValue = null;
+                            if (document.cookie && document.cookie !== '') {
+                                const cookies = document.cookie.split(';');
+                                for (let i = 0; i < cookies.length; i++) {
+                                    const cookie = cookies[i].trim();
+                                    // Does this cookie string begin with the name we want?
+                                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                                        break;
+                                    }
+                                }
+                            }
+                                return cookieValue;
+                            }
+                            {% comment %} var csrftoken = getCookie('csrftoken'); {% endcomment %}
+
+                        
+                var businessemail = document.getElementById('id_email')
+
+                const feedBackEmail = document.querySelector('.invalid_feedback');
+                const feeBackPhone = document.querySelector('.invalid_phone')
+                businessemail.addEventListener('keyup', (e) =>{
+                const businessemailVal = e.target.value;
+                businessemail.classList.remove("has-danger");
+                businessemail.classList.add("has-success");
+                feedBackEmail.style.display="none";
+                    $.ajax({
+                        url: "{% host_url 'updateform' host 'bizadmin' %}",
+                        data: JSON.stringify({email: businessemailVal, name:'test', phone:'66666666'}),
+                        type: "POST",
+                        dataType: 'json',
+                        headers:{
+                            "X-CSRFToken": csrftoken
+                        },
+                        success: function (data) {
+                            if (data.email_error) {
+                                businessemail.classList.remove("has-success");
+                                businessemail.classList.add("has-danger");
+                                feedBackEmail.style.display="block";
+                                feedBackEmail.innerHTML=`<p style="color:red!important;">${data.email_error}</p>`
+                            }
+                            else {
+                                feedBackEmail.style.display="none";
+                            }
+
+                        },
+                    });
+                        
+                });
+                var businessphone = document.getElementById('id_phone')
+                businessphone.addEventListener('keyup', (e) =>{
+                    const businessphoneVal = e.target.value;
+                    businessphone.classList.remove("has-danger");
+                    businessphone.classList.add("has-success");
+                    feedBackEmail.style.display="none";
+                    $.ajax({
+                        url: "{% host_url 'updateform' host 'bizadmin' %}",
+                        data: JSON.stringify({email: "{{ request.user.email }}", name:'test', phone:businessphoneVal}),
+                        type: "POST",
+                        dataType: 'json',
+                        headers:{
+                            "X-CSRFToken": csrftoken
+                        },
+                        success: function (data) {
+                            if (data.phone_error) {
+                                businessphone.classList.remove("has-success");
+                                businessphone.classList.add("has-danger");
+                                feeBackPhone.style.display="block";
+                                feeBackPhone.innerHTML=`<p style="color:red!important;">${data.phone_error}</p>`
+                            }
+                            else {
+                                businessphone.classList.remove("has-danger");
+                                feeBackPhone.style.display="none";
+                            }
+
+                        },
+                    });
+                });
+                submitBtn = document.querySelector('#savePers');
+                submitBtn.addEventListener('click', (e)=>{
+                    $.ajax({
+                        data: $('#accountUpdate').serialize(),
+                        type: "post",
+                        url: "{% host_url 'accountCheck' host 'bizadmin' %}",
+                        headers:{
+                            "X-CSRFToken": csrftoken
+                        },
+                        success: function(data){
+                            if(data.errors){
+                                Swal.fire({
+                                    title:'There was an error in your form. We were unable to save the changes.',
+                                    icon: 'error',
+                                    customClass:{
+                                confirmButton: 'btn btn-primary',
+                                cancelButton: 'btn btn-danger',
+                            },
+                        buttonsStyling: false,
+                                });
+                            }
+                            if(data.good){
+                                $.notify({
+                        // options
+                        message: 'Your information has been saved'
+                    },{
+                        // settings
+                        type: 'success'
+                    });
+                            }
+
+                        }
+                    });
+                    return false;
+                });
+                
+</script>
+{% endblock %}

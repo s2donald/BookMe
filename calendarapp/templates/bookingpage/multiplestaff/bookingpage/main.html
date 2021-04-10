@@ -40,11 +40,11 @@
         {% endblock slideshow %} {% endcomment %}
         {% block header %}
             <div class="heading">
-                <div class="headingtext bg-light">
+                <div class="headingtext" style="background-color: black;">
                     <div class="container">
                     <div class="row justify-content-between">
-                        <a class="ml-3 mt-3" href="{% host_url 'bizadminmain' host 'bizadmin' %}"><img width="125px" height="18px" src="{% static "/img/favicon/logo/BookMe-whitebrown.svg" %}"></a>
-                        <a class="mr-3 mt-3" href="{% host_url 'bizadminmain' host 'bizadmin' %}"><div class="fa fa-shopping-cart text-white {% if company.business_type == "service" %}d-none{% endif %}" height="50"></div><div class="cartBadge {% if company.business_type == "service" %}d-none{% endif %}" id="cart">2</div></a>
+                        <a class="ml-3 my-2" href="{% host_url 'bizadminmain' host 'bizadmin' %}"><img width="125px" height="18px" src="{% static "/img/favicon/logo/BookMe-whitebrown.svg" %}"></a>
+                        <a class="mr-3 my-2" href="{% host_url 'bizadminmain' host 'bizadmin' %}"><div class="fa fa-shopping-cart text-white {% if company.business_type == "service" %}d-none{% endif %}" height="50"></div><div class="cartBadge {% if company.business_type == "service" %}d-none{% endif %}" id="cartvalue">2</div></a>
                     </div>
                     </div>
                 </div>

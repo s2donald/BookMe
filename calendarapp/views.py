@@ -425,25 +425,14 @@ class createAccountView(View):
             login(request, account)
         return JsonResponse({'good':'good'})
 
-@xframe_options_exempt
 def bookingurlupdated(request):
     user = request.user
     company = request.viewing_company
     dateWindowBefore = timezone.localtime(timezone.now()) + datetime.timedelta(days=company.before_window_day,hours=company.before_window_hour,minutes=company.before_window_min)
     dateWindowAfter = timezone.localtime(timezone.now()) + relativedelta(days=company.after_window_day,months=company.after_window_month)
     kanalytics = request.GET.get('k')
-    # if kanalytics:
-    #     print(company.company_views.kijiji)
-        # k = company.company_views.kijiji
-        # k += 1
-        # k.save()
-
-    # print(kanalytics)
-    if company.business_type == 'product':
-        return render(request, 'productspage/productpage.html',{'user':user,'company':company, 'dateWindowBefore':dateWindowBefore, 'dateWindowAfter':dateWindowAfter})
-    else:
-        pk = settings.STRIPE_PUBLISHABLE_KEY
-        return render(request, 'bookingpage/multiplestaff/bookingpage/bookingpage.html',{"pk_stripe":pk,'user':user,'company':company, 'dateWindowBefore':dateWindowBefore, 'dateWindowAfter':dateWindowAfter})
+    pk = settings.STRIPE_PUBLISHABLE_KEY
+    return render(request, 'bookingpage/multiplestaff/bookingpage/bookingpage.html',{"pk_stripe":pk,'user':user,'company':company, 'dateWindowBefore':dateWindowBefore, 'dateWindowAfter':dateWindowAfter})
 
 
 
@@ -1267,6 +1256,7 @@ class PaymentProcessingBooking(View):
                 confirm=True,
                 payment_method=payment_method_obj
             )
+            payment_intent['stripe_staff_account_id'] = staff.stripe_user_id
             request.session['payment_intent_id'] = payment_intent.id
             # print(subscription.latest_invoice.payment_intent)
             return JsonResponse(payment_intent)

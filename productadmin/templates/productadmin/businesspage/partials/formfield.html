@@ -1,0 +1,70 @@
+{% if company.category.name == 'Automotive Services' %}
+<tr>
+    <td class="text-center">Vehicle Year</td>
+    <td class="text-center">
+        <div class="form-check">
+            <label class="form-check-label">
+            <input class="form-check-input" data-id="{{ field.id }}" type="checkbox" checked disabled>
+            <span class="form-check-sign"></span>
+            </label>
+        </div>
+    </td>
+    <td></td>
+</tr>
+<tr>
+    <td class="text-center">Vehicle Make</td>
+    <td class="text-center">
+        <div class="form-check">
+            <label class="form-check-label">
+            <input class="form-check-input" data-id="{{ field.id }}" type="checkbox" checked disabled>
+            <span class="form-check-sign"></span>
+            </label>
+        </div>
+    </td>
+    <td></td>
+</tr>
+<tr>
+    <td class="text-center">Vehicle Model</td>
+    <td class="text-center">
+        <div class="form-check">
+            <label class="form-check-label">
+            <input class="form-check-input" data-id="{{ field.id }}" type="checkbox" checked disabled>
+            <span class="form-check-sign"></span>
+            </label>
+        </div>
+    </td>
+    <td></td>
+</tr>
+<tr>
+    <td class="text-center">Vehicle Trim</td>
+    <td class="text-center">
+        <div class="form-check">
+            <label class="form-check-label">
+            <input class="form-check-input" data-id="{{ field.id }}" type="checkbox" checked disabled>
+            <span class="form-check-sign"></span>
+            </label>
+        </div>
+    </td>
+    <td></td>
+</tr>
+{% endif %}
+{% for field in company.company_forms.all %}
+<tr>
+    {% comment %} <td class="text-center"><button class="btn btn-sm btn-info" style="border-radius: 100px!important;"><i class="fas fa-check-circle text-left"></i>  {{ field.label }}</button></td> {% endcomment %}
+    <td class="text-center">{{ field.label }}</td>
+    <td class="text-center">
+        <div class="form-check">
+            <label class="form-check-label">
+            <input class="form-check-input" data-id="{{ field.id }}" type="checkbox" {% if field.is_required == 'y' %}checked{% endif %}>
+            <span class="form-check-sign"></span>
+            </label>
+        </div>
+    </td>
+    <td class="text-center">
+        {% comment %} <button data-id="{{ field.id }}" role="button" class='btn btn-icon btn-sm editformfield'><i class="fas fa-pen"></i></button> {% endcomment %}
+        <button data-id="{{ field.id }}" class='btn btn-icon btn-danger btn-sm deleteformfield' role="button" data-toggle="popover" data-trigger="focus" title="Delete?" data-html='true'><i class="fas fa-trash"></i></button>
+    </td>
+</tr>
+{% empty %}
+<td colspan="8" class="text-center">Add form fields to collect specific information from clients</td>
+{% endfor %}

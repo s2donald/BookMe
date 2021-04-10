@@ -1,0 +1,218 @@
+{% extends 'bizadmin/index.html' %}
+{% load static %}
+{% load hosts %}
+{% load crispy_forms_tags %}
+{% block activedetails%}active{%endblock%}
+{% block businessadmin %}
+
+                    <!-- Main page content-->
+                    <div class="content">
+                        <div class="row">
+                        <div class="col-md-12 ml-auto mr-auto">
+                        <header class="page-header page-header-compact page-header-light mb-2">
+                        <div class="container-fluid">
+                            <div class="page-header-content">
+                                <div class="row align-items-center justify-content-between pt-3">
+                                    <div class="col-auto">
+                                        <h1 class="page-header-title">
+                                            Account Settings - Notifications
+                                        </h1>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </header>
+                        <!-- Account page navigation-->
+                        <nav class="nav nav-borders">
+                            <a class="nav-link ml-0" href="{% host_url 'profile' host 'bizadmin'%}">Profile</a>
+                            <a class="nav-link" href="{% host_url 'staff_payments' host 'bizadmin'%}">Process Payments</a>
+                            <a class="nav-link" href="{% host_url 'bookingSetting' host 'bizadmin' %}">Booking Settings</a>
+                            <a class="nav-link" href="{% host_url 'security' host 'bizadmin'%}">Security</a>
+                            <a class="nav-link activate" href="{% host_url 'notifications' host 'bizadmin'%}">Notifications</a>
+                        </nav>
+                        <hr class="mt-0 mb-4" />
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <!-- Security preferences card-->
+                                <div class="card mb-4">
+                                    <div class="card-header"><h4>Email Notifications</h4></div>
+                                    <div class="card-body">
+                                        <form>
+                                        {% csrf_token %}
+                                            <div class="col-12 align-items-center my-auto">
+                                                <p for="" class="small text-muted">Receive email reminders for upcoming appointments.</p>
+                                                <div class="custom-control custom-radio">
+                                                    <input class="custom-control-input" id="emailReminder" type="radio" name="reminders" {% if company.emailReminders %}checked{% endif %} />
+                                                    <label class="custom-control-label" name="radPublic" for="emailReminder">Receive email reminders</label>
+                                                </div>
+                                                <div class="custom-control custom-radio">
+                                                    <input class="custom-control-input" id="noemailReminder" type="radio" name="reminders" {% if company.emailReminders == False %}checked{% endif %} />
+                                                    <label class="custom-control-label" name="radPrivate"  for="noemailReminder">Don't receive email reminders</label>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <!-- Two factor authentication card-->
+                                <div class="card mb-4">
+                                    <div class="card-header"><h4>Text Notifications <p class="badge badge-primary text-white">Premium</p></h4></div>
+                                    <div class="card-body">
+                                    {% if company.subscriptionplan >= 1 %}
+                                        <p for="" class="small text-muted">Send automatic confirmation and reminder text messages to clients</p>
+                                        <div class="custom-control custom-radio">
+                                            <input class="custom-control-input" id="sendtextReminder" type="radio" name="sendreminders" checked />
+                                            <label class="custom-control-label" name="radPublic" for="sendtextReminder">Send text confirmation messages</label>
+                                        </div>
+                                        <div class="custom-control custom-radio">
+                                            <input class="custom-control-input" id="notextReminder" type="radio" name="sendreminders" {% if company.textReminders %}checked{% endif %} disabled/>
+                                            <label class="custom-control-label text-muted" name="radPrivate"  for="notextReminder">Don't receive text confirmation messages</label>
+                                        </div>
+                                        <br>
+                                        <p for="" class="small text-muted">Receive text confirmation</p>
+                                        <div class="custom-control custom-radio">
+                                            <input class="custom-control-input" id="textReminder" type="radio" name="textreminders" {% if company.textReminders %}checked{% endif %} disabled />
+                                            <label class="custom-control-label text-muted" name="radPublic" for="textReminder">Receive text confirmation messages</label>
+                                        </div>
+                                        <div class="custom-control custom-radio">
+                                            <input class="custom-control-input" id="notextReminder" type="radio" name="textreminders" {% if not company.textReminders %}checked{% endif %} />
+                                            <label class="custom-control-label" name="radPrivate"  for="notextReminder">Don't receive text confirmation messages</label>
+                                        </div>
+                                    {% else %}
+                                        <p class="small text-muted">Add another level of user experience for your clients by sending out automated text messages when they book an appointment.</p>
+                                    {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-12">
+                                <div class="card mb-4">
+                                    <div class="card-header"><h4>Notes to Clients</h4></div>
+                                    <div class="card-body">
+                                        <form id="notesForm">
+                                            {% csrf_token %}
+
+                                            <p class="small text-muted">Display policy information to your clients whenever they reach your booking page</p>
+                                            <div class="custom-control custom-radio">
+                                                <input class="custom-control-input" id="radioShowNotes" type="radio" name="radioShowNotes" {% if company.shownotes %}checked{% endif %} />
+                                                <label class="custom-control-label" name="radPublic" for="radioShowNotes">Display policy information to clients</label>
+                                            </div>
+                                            <div class="custom-control custom-radio">
+                                                <input class="custom-control-input" id="radioHideNotes" type="radio" name="radioShowNotes" {% if company.shownotes == False %}checked{% endif %} />
+                                                <label class="custom-control-label" name="radPrivate"  for="radioHideNotes">Don't display policy information to clients</label>
+                                            </div>
+                                            {{ notesForm.notes|as_crispy_field }}
+                                            <button class="btn btn-primary" id="notesButton" type="button">Save Notes Setting</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                        </div>
+                    </div>
+{% endblock %}
+{% block java %}
+    <script>
+
+    $(document).ready(function(){
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        const csrftoken = getCookie('csrftoken');
+        var emailBtn = document.getElementById("noemailReminder");
+        var notesBtn = document.getElementById("notesButton");
+        var emailrmdr = document.getElementById("emailReminder")
+        emailBtn.addEventListener('click', function(){
+            $.ajax({
+                url: '{% host_url "emailUpdate" host "bizadmin" %}',
+                data: JSON.stringify({emailReminder:emailrmdr.checked}),
+                type: "POST",
+                dataType: 'json',
+                headers:{
+                    "X-CSRFToken": csrftoken
+                },
+                success: function(data){
+                    $.notify({
+                            // options
+                            message: 'We have saved your email settings'
+                        },{
+                            // settings
+                            type: 'success'
+                        });
+                },
+            });
+        });
+        emailrmdr.addEventListener('click', function(){
+            $.ajax({
+                url: '{% host_url "emailUpdate" host "bizadmin" %}',
+                data: JSON.stringify({emailReminder:emailrmdr.checked}),
+                type: "POST",
+                dataType: 'json',
+                headers:{
+                    "X-CSRFToken": csrftoken
+                },
+                success: function(data){
+                    $.notify({
+                            // options
+                            message: 'We have saved your email settings'
+                        },{
+                            // settings
+                            type: 'success'
+                        });
+                },
+            });
+        });
+        
+        var clientMsgNotes = document.getElementById('radioShowNotes')
+        var clientNotes = document.getElementById('id_notes')
+        notesBtn.addEventListener('click',function(){
+            $.ajax({
+                url: '{% host_url "notesUpdate" host "bizadmin" %}',
+                data: JSON.stringify({isnotes:clientMsgNotes.checked, notes:clientNotes.value}),
+                type: "POST",
+                dataType: 'json',
+                headers:{
+                    "X-CSRFToken": csrftoken
+                },
+                success: function(data){
+                    if (data.error){
+                        Swal.fire({
+                            title: 'We could not save your policy information submission. Please try again later',
+                            icon: data.error,
+                            customClass:{
+                                confirmButton: 'btn btn-primary',
+                                cancelButton: 'btn btn-danger',
+                            },
+                        buttonsStyling: false,
+                        });
+                    }
+                    else{
+                        $.notify({
+                            // options
+                            message: 'We have saved your policy information settings'
+                        },{
+                            // settings
+                            type: 'success'
+                        });
+                    }
+                },
+            });
+        });
+    });
+    </script>
+{% endblock java %}

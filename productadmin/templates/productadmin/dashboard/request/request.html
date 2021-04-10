@@ -1,0 +1,225 @@
+{% extends 'bizadmin/index.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% load hosts %}
+{% block linescript %}
+{% endblock linescript %}
+{% block bizrequests %}active{%endblock%}
+{% block businessadmin %}
+                    
+                    <!-- Main page content-->
+                    <div class="content">
+                        <div class="row">
+                        <div class="col-md-12 ml-auto mr-auto">
+                        <header class="page-header page-header-compact page-header-light mb-2">
+                        <div class="container-fluid">
+                            <div class="page-header-content">
+                                <div class="row align-items-center justify-content-between pt-3">
+                                    <div class="col-auto">
+                                        <h1 class="page-header-title">
+                                            Company Requests
+                                        </h1>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        </header>
+                        <hr class="mt-0 mb-4" />
+                        <div class="row">
+                            <div class="col-md-12 col-lg-8">
+                                <!-- Account details card-->
+                                <div class="mb-4">
+                                    <div class="card shadow my-1" style="border-radius: 8px !important;">
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <h4 class="card-header p-2">All requests and updates</h4>
+                                            </div>
+                                        </div>       
+                                    </div>
+                                    <div id="service-t">
+                                            {% for req in requested %}
+                                                <div class="card">
+                                                    <div class="row">
+                                                        <div class="col-12">
+                                                            {% if req.is_addusertolist %}
+                                                                {% with user=req.user  %}
+                                                                    <div class="card-header"><h4>Add User</h4></div>
+                                                                    <div class="card-body d-lg-flex justify-content-between text-center">
+                                                                        <div class="row">
+                                                                            <div class="col-sm-12">
+                                                                                <p class="subtitle text-left"><strong>{{user.first_name}} {{ user.last_name }} </strong>{% if req.is_addusertolist %}wants to be added to your client list.{% endif %}</p>
+                                                                            </div>
+                                                                            <div class="col-12">
+                                                                                <p class="text-left"><strong>Client Email: </strong>{{ user.email }}{% if user.phone %},<strong>Phone:</strong> {{ user.phone }}{% endif %}</p>
+                                                                            </div>
+                                                                        <div class="col-md-6">
+                                                                            <button type="button" class="btn btn-primary btn-sm accept" data-url="{% host_url 'addRequested' req.id host 'bizadmin' %}">
+                                                                                <span class="spinner-border sr-only" id="spinneraccept" role="status" style="width:1rem; height:1rem;"></span>
+                                                                                <span id="btn-text-accept">Accept</span>
+                                                                            </button>
+                                                                            <button type="button" class="btn btn-danger btn-sm decline" data-url="{% host_url 'deleteRequested' req.id host 'bizadmin' %}">
+                                                                                <span class="spinner-border sr-only" id="spinnerdecline" role="status" style="width:1rem; height:1rem;"></span>
+                                                                                <span id="btn-text-decline">Decline</span>
+                                                                            </button>
+                                                                        </div>
+                                                                                
+                                                                        </div>
+                                                                    </div>
+                                                                    </div>
+                                                                {% endwith %}
+                                                            {% else %}
+                                                                {% with booking=req.booking_request %}
+                                                                    <div class="card-header"><h4>Respond to booking request</h4></div>
+                                                                    <div class="card-body d-lg-flex justify-content-between ">
+                                                                        <div class="row">
+                                                                        <div class="col-12">
+                                                                            <div class="card-header">
+                                                                                <ul class="list-unstyled text-left">
+                                                                                    {% with service=booking.service %}
+                                                                                        <li class="mb-1"><strong>Booking ID:</strong> {{ booking.slug }}</li>
+                                                                                        <li class="mb-1"><strong>Service:</strong> {{ service.name }}</li>
+                                                                                        <li class="mb-1"><strong>Staff:</strong> {{ booking.staffmem }}</li>
+                                                                                        <li class="mb-1"><strong>Cost:</strong> ${{ booking.price }}</li>
+                                                                                        <li class="mb-1">{{ req.booking_request.all }}<strong>Date:</strong> {{ booking.start|date:"D, M d, Y" }}</li>
+                                                                                        <li class="mb-1"><strong>Time:</strong> {{ booking.start|date:"g:i A e" }} - {{ booking.end|date:"g:i A e"}}</li>
+                                                                                    <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapse{{ booking.id }}" aria-expanded="true" aria-controls="collapseTwo">
+                                                                                        Click for more info
+                                                                                    </button>
+                                                                                    <div id="collapse{{ booking.id }}" class="collapse">
+                                                                                        {% if booking.user %}
+                                                                                            {% with cust=booking.user %}
+                                                                                            <li class="mb-1"><strong>Customer:</strong> {{ cust.first_name }} {{ cust.last_name }}</li>
+                                                                                            <li class="mb-1"><strong>Contact Info:</strong> {{ cust.email }} {{ cust.phone }}</li>
+                                                                                            {% endwith %}
+                                                                                        {% elif booking.guest %}
+                                                                                            {% with cust=booking.guest %}
+                                                                                                <li class="mb-1"><strong>Customer:</strong> {{ cust.first_name }} {{ cust.last_name }}</li>
+                                                                                                <li class="mb-1"><strong>Contact Info</strong></li>
+                                                                                                <li><strong>Email: </strong>{{ cust.email}}</li>
+                                                                                                <li><strong>Phone: </strong>{{ cust.phone }}</li>
+                                                                                            {% endwith %}
+                                                                                        {% endif %}
+                                                                                        
+                                                                                        <br>
+                                                                                        {% if booking.booking_forms.all %}
+                                                                                            <strong>Additional Info</strong>
+                                                                                            {% for x in booking.booking_forms.all %}
+                                                                                                <li class="mb-1"><strong>{{ x.label }}:</strong> {{ x.text }}</li>
+                                                                                            {% endfor %}
+                                                                                                {% comment %} <li class="mb-1"><strong>{{ extra.label }}:</strong> {{ extra.car_make }}</li>
+                                                                                                <li class="mb-1"><strong>{{ extra.label }}:</strong> {{ extra.car_model }}</li>
+                                                                                                <li class="mb-1"><strong>Vehicle Year:</strong> {{ extra.car_year }}</li> {% endcomment %}
+                                                                                        {% endif %}
+                                                                                        {% endwith %}
+                                                                                    </div>
+                                                                                    
+                                                                                </ul>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-6">
+                                                                            <button type="button" class="btn btn-primary btn-sm accept" data-url="{% host_url 'addRequested' req.id host 'bizadmin' %}">
+                                                                                <span class="spinner-border sr-only" id="spinneraccept" role="status" style="width:1rem; height:1rem;"></span>
+                                                                                <span id="btn-text-accept">Accept</span>
+                                                                            </button>
+                                                                        <button type="button" class="btn btn-danger btn-sm decline" data-url="{% host_url 'deleteRequested' req.id host 'bizadmin' %}">
+                                                                            <span class="spinner-border sr-only" id="spinnerdecline" role="status" style="width:1rem; height:1rem;"></span>
+                                                                            <span id="btn-text-decline">Decline</span>
+                                                                        </button>
+                                                                        </div>
+                                                                        </div>
+                                                                    </div>
+                                                                {% endwith %}
+                                                            {% endif %}
+                                                            
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            {% empty %}
+                                                <div class="card">
+                                                    <div class="card-header">You have no requests yet.</div>
+                                                </div>
+                                            {% endfor %}
+                                            {% include 'bizadmin/dashboard/reviews/pagination.html' with page=requested%}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+    <script>
+        $(document).ready(function(){
+            function getCookie(name) {
+                let cookieValue = null;
+                if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        const csrftoken = getCookie('csrftoken');
+
+            $(document).on('click', '.accept', function () {
+                var $this = $(this)
+                var urldata = $this.attr("data-url")
+                document.querySelector("#spinneraccept").classList.remove("sr-only");
+                document.querySelector("#btn-text-accept").classList.add("hidden");
+
+                $.ajax({
+                    url: urldata,
+                    type: 'post',
+                    headers:{
+                        "X-CSRFToken": csrftoken
+                    },
+                success: function(data){
+                    var el = document.querySelector('#service-t');
+                    el.innerHTML = data.html_string
+                    Swal.fire({
+                        title: data.added,
+                        icon: 'success',
+                        customClass:{
+                                confirmButton: 'btn btn-primary',
+                                cancelButton: 'btn btn-danger',
+                            },
+                        buttonsStyling: false,
+                        
+                    });
+                },
+                })
+            })
+
+            $(document).on('click', '.decline', function () {
+                var $this = $(this)
+                var urldata = $this.attr("data-url")
+                document.querySelector("#spinnerdecline").classList.remove("sr-only");
+                document.querySelector("#btn-text-decline").classList.add("hidden");
+                $.ajax({
+                    url: urldata,
+                    type: 'post',
+                    headers:{
+                        "X-CSRFToken": csrftoken
+                    },
+                success: function(data){
+                    var el = document.querySelector('#service-t');
+                    el.innerHTML = data.html_string
+                    Swal.fire({
+                        title: data.deleted,
+                        icon: 'success',
+                        customClass:{
+                                confirmButton: 'btn btn-primary',
+                                cancelButton: 'btn btn-danger',
+                            },
+                        buttonsStyling: false,
+                        
+                    });
+                },
+                })
+            })
+        });
+    </script>
+{% endblock %}

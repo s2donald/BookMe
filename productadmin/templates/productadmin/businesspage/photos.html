@@ -1,0 +1,276 @@
+{% extends 'bizadmin/index.html' %}
+{% load static %}
+{% load hosts %}
+{% block java %}
+
+<script>
+    $(document).ready(function() {
+        $("#input-700").fileinput({
+            ajaxSettings:{
+                beforeSend: function(xhr, settings) {
+                    if (!this.crossDomain) {
+                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                    }
+                }
+            },
+            uploadUrl: "{% host_url 'galleryupload' host 'bizadmin' %}",
+            maxFileCount: 15,
+            maxFileSize: 5000,
+            browseIcon: '',
+            uploadClass: "btn btn-primary",
+            uploadLabel: "Confirm Upload",
+            browseLabel: 'Add Photos to your gallary',
+            'showCaption': false,
+            uploadExtraData:{'csrfmiddlewaretoken': '{{ csrf_token }}'},
+            allowedFileTypes: ['image'],
+
+        });
+
+        $("#inputmain").fileinput({
+            ajaxSettings:{
+                beforeSend: function(xhr, settings) {
+                    if (!this.crossDomain) {
+                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                    }
+                }
+            },
+            uploadUrl: "{% host_url 'imageuploads' host 'bizadmin' %}",
+            maxFileCount: 1,
+            maxFileSize: 5000,
+            browseIcon: '',
+            browseLabel: 'Upload new image',
+            'showCaption': false,
+            'showPreview': false,
+            'showRemove': false,
+            uploadClass: "btn btn-primary",
+            uploadLabel: "Confirm Upload",
+            uploadExtraData:{'csrfmiddlewaretoken': '{{ csrf_token }}'},
+            allowedFileTypes: ['image'],
+
+        });
+
+        var $grid = $('.grid').masonry({
+            columnWidth: 250,
+            itemSelector: '.grid-item',
+            isFitWidth: true
+        });
+
+        $grid.on( 'click', '.grid-item-content', function( event ) {
+            $( event.currentTarget ).parent('.grid-item').toggleClass('is-expanded');
+            $grid.masonry();
+        });
+    });
+
+                            
+</script>
+{% endblock java %}
+{% block bpageact%}active{%endblock%}
+{% block businessadmin %}
+<!-- Main page content-->
+    <div class="content">
+        <div class="row">
+            <div class="col-md-12 ml-auto mr-auto">
+                <header class="page-header page-header-compact page-header-light mb-2">
+                    <div class="container-fluid">
+                        <div class="page-header-content">
+                            <div class="row align-items-center justify-content-between pt-3">
+                                <div class="col-auto">
+                                    <h1 class="page-header-title">
+                                        Business Page - Photos and Gallery
+                                    </h1>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </header>
+                <!-- Account page navigation-->
+                <nav class="nav nav-borders">
+                    <a class="nav-link activate ml-0" href="{% host_url 'photos' host 'bizadmin'%}">Photo and Gallery</a>
+                    <a class="nav-link " href="{% host_url 'amenities' host 'bizadmin'%}">Amenities and Tags</a>
+                    <a class="nav-link" href="{% host_url 'bpagecustomization' host 'bizadmin'%}">Customization</a>
+                </nav>
+                <hr class="mt-0 mb-4" />
+                <div class="row">
+                    <div class="col-lg-4 mb-4">
+                        <div class="card h-100 border-left-lg border-left-secondary">
+                            <div class="card-header"><h4>Main Profile Photo</h4></div>
+                            <div class="card-body text-center">
+                                <!-- Profile picture image-->
+                                <img class="img-account-profile mb-2" width="300px" src="{% if company.image %}{{ company.image.url }}{% else %}{% static 'img/Headshot-Placeholder.png' %}{% endif %}" alt="300x300" />
+                                <!-- Profile picture help block-->
+                                <div class="small font-italic text-muted mb-4">JPG or PNG no larger than 5 MB</div>
+                                <!-- Profile picture upload button -->
+                                <form action="{% host_url 'imageuploads' host 'bizadmin' %}" method="POST" enctype="multipart/form-data" id="formUpload">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="x" id="id_x"><input type="hidden" name="y" id="id_y"><input type="hidden" name="width" id="id_width"><input type="hidden" name="height" id="id_height">
+                                    <input type="file" id="inputimage" name="imageFile" class="btn btn-primary" accept="image/*" hidden >
+                                    {% comment %} <button type="button" id="btnimage" name="imageFile" class="btn btn-primary">Upload new image</button> {% endcomment %}
+                                    <div class="file-loading">
+                                        <input id="inputmain" name="imageFile" type="file">
+                                    </div>    
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-8 mb-4">
+                        <div class="card h-100 border-left-lg border-left-secondary">
+                            <div class="card-header"><h4>Gallery Photos</h4></div>
+                            <div class="card-body text-center">
+                                <!-- Gallary upload button -->
+                                <form action="{% host_url 'galleryupload' host 'bizadmin' %}" method="POST" enctype="multipart/form-data" id="galUpload">
+                                    {% csrf_token %}
+                                    <div class="file-loading">
+                                        <input id="input-700" name="kartik-input-700[]" type="file" multiple>
+                                    </div>
+                                </form>
+                                <div class="text-center justify-content-center" id="galphotos">
+                                <div class="grid">
+                                    {% for p in photos %}
+                                        <div class="grid-item containergrid">
+                                            <img class="grid-item-content" src="{{ p.photos.url }}" alt="">
+                                            <button class="mybtns trashcan{{ p.id }} delete"><i class="fas fa-trash"></i></button>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                                {% comment %} {% for p in photos %}
+                                    <div class="col-sm-12 col-md-6 col-lg-4 mt-2">
+                                        <div class="card hover-animate justify-content-center align-self-center show-image" id="{{ p.id }}">
+                                            <img src="{{ p.photos.url }}" alt="">
+                                            <a class="btn btn-danger d-none trashcan{{ p.id }} delete"><i class="fas fa-trash"></i></a>
+                                        </div>
+                                    </div>
+                                {% endfor %} {% endcomment %}
+                                </div>
+
+                                <br>
+                                {% include 'bizadmin/dashboard/reviews/pagination.html' with page=photos%}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- MODAL TO CROP THE IMAGE -->
+                        <div class="modal fade" id="modalCrop" data-backdrop="static" data-keyboard="false">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                        </button>
+                                        <h4 class="modal-title">Crop the photo</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <img src="" id="image" style="max-width: 100%;">
+                                    </div>
+                                    <div class="modal-footer">
+                                        <div class="btn-group pull-left" role="group">
+                                        <button type="button" class="btn btn-default js-zoom-in">
+                                            <span class="fas fa-search-plus"></span>
+                                        </button>
+                                        <button type="button" class="btn btn-default js-zoom-out">
+                                            <span class="fas fa-search-minus"></span>
+                                        </button>
+                                        </div>
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Nevermind</button>
+                                        <button type="button" class="btn btn-primary js-crop-and-upload">Crop and upload</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal fade" id="modalCropp" data-backdrop="static" data-keyboard="false">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                        </button>
+                                        <h4 class="modal-title">Crop the photo</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <img src="" id="images" style="max-width: 100%;">
+                                    </div>
+                                    <div class="modal-footer">
+                                        <div class="btn-group pull-left" role="group">
+                                        <button type="button" class="btn btn-default js-zoom-ins">
+                                            <span class="fas fa-search-plus"></span>
+                                        </button>
+                                        <button type="button" class="btn btn-default js-zoom-outs">
+                                            <span class="fas fa-search-minus"></span>
+                                        </button>
+                                        </div>
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Nevermind</button>
+                                        <button type="button" class="btn btn-primary js-crop-and-uploads">Crop and upload</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <script>
+                            function getCookie(name) {
+                            let cookieValue = null;
+                            if (document.cookie && document.cookie !== '') {
+                                const cookies = document.cookie.split(';');
+                                for (let i = 0; i < cookies.length; i++) {
+                                    const cookie = cookies[i].trim();
+                                    // Does this cookie string begin with the name we want?
+                                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                                        break;
+                                    }
+                                }
+                            }
+                                return cookieValue;
+                            }
+                            
+                            photo = document.querySelector("#galphotos");
+                            {% for p in photos %}
+                                $('#{{ p.id }}').hover(function(){
+                                    $('.trashcan{{ p.id }}').toggleClass('d-none') 
+                                });
+
+                                $('.trashcan{{ p.id }}').click(function(){
+                                    const swalStyles = Swal.mixin({
+                                        customClass:{
+                                            confirmButton: 'btn btn-primary',
+                                            cancelButton: 'btn btn-danger',
+                                        },
+                                        buttonsStyling: false
+
+                                    });
+                                    swalStyles.fire({
+                                        title: 'Are you sure you want to delete this picture from your gallery?',
+                                        imageUrl: '{{ p.photos.url }}',
+                                        icon: 'warning',
+                                        showCancelButton: true,
+                                        reverseButtons: true
+                                    }).then((result) => {
+                                        if (result.isConfirmed) {
+                                            $.ajax({
+                                                type:'POST',
+                                                dataType: 'json',
+                                                url: "{% host_url 'deletegalpic' host 'bizadmin' %}",
+                                                data: JSON.stringify({pics_id: '{{ p.id }}'}),
+                                                headers:{
+                                                    "X-CSRFToken": csrftoken
+                                                },
+                                                cache: false,
+                                            });
+                                            
+                                            swalStyles.fire({title: 'Gallery Picture Deleted!', text: 'Your file has been deleted.', icon: 'success' }).then(function(){ location.reload(); })
+                                        } else if (
+                                            /* Read more about handling dismissals below */
+                                            result.dismiss === Swal.DismissReason.cancel
+                                        ) {
+                                            swalStyles.fire(
+                                            'Cancelled',
+                                            'Your gallery picture is safe! 😊',
+                                            'error'
+                                            )
+                                        }
+                                    });
+                                });
+                            {% endfor %}
+                        </script>
+{% endblock %}

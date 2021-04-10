@@ -2235,6 +2235,19 @@ form{
         object-position:50% 50% !important;
     }
 }
+.bordpayment{
+  border: 0.5px solid #DEE4EA;
+}
+.borderpayment{
+  border: 0.5px solid #DEE4EA;
+  padding: 12px 3px;
+  font-size: 10px;
+}
+
+.creditcard{
+  height: 3vh;
+  width: 5.65vh;
+}
 
 /*---Firefox Bug Fix --*/
 .carousel-item {

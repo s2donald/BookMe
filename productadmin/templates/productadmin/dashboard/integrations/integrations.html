@@ -1,0 +1,203 @@
+{% extends 'bizadmin/index.html' %}
+{% load static %}
+{% load hosts %}
+{% load business_tags %}
+{% load crispy_forms_tags %}
+{% block activeint %}active{%endblock%}
+{% block businessadmin %}
+<div class="content">
+    <div class="row">
+        <div class="col-xxl-4 col-xl-12 mb-4">
+            <header class="page-header page-header-compact page-header-light mb-4">
+                <div class="container">
+                    <div class="page-header-content">
+                        <div class="row align-items-center justify-content-between pt-3">
+                            <div class="col-auto mb-3">
+                                <h1 class="page-header-title">
+                                    Integrations
+                                </h1>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+        </div>
+        <div class="col-lg-3 col-md-3">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-category">Calendar Syncing</h5>
+                    <h3 class="card-title">Calendar Syncing</h3>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-12">
+                            <ul class="nav nav-pills nav-pills-warning nav-pills-icons flex-md-column justify-content-center">
+                                <li class="nav-item">
+                                    <a href="#googleCalendar" class="nav-link" data-toggle="tab">
+                                        <i class="fab fa-google"></i>
+                                        Google Calendar
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="#outlookCalendar" class="nav-link mr-2" data-toggle="tab">
+                                        <i class="fab fa-microsoft"></i>
+                                        Outlook Calendar
+                                    </a>
+                                </li>
+                                {% comment %} <li class="nav-item">
+                                    <a href="#appleCalendar" class="nav-link mr-2" data-toggle="tab">
+                                        <i class="fab fa-apple"></i>
+                                        Apple Calendar
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="#mobileCalendar" class="nav-link mr-2" data-toggle="tab">
+                                        <i class="fab fa-apple"></i>
+                                        Mobile Calendar
+                                    </a>
+                                </li> {% endcomment %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-9 col-md-8">
+            <div class="tab-content">
+                <div class="tab-pane" id="googleCalendar">
+                    <p>Sync all your bookings between Google Calendar and BookMe. This allows you to stay organized across multiple calendars.</p>
+                    <hr>
+                    <h1>Instructions</h1>
+                    <div class="col-lg-9">
+                        <div class="card card-timeline card-plain">
+                            <div class="card-body">
+                                <div class="timeline timeline-simple">
+                                    <ul class="timeline timeline-simple">
+                                        <li class="timeline-inverted">
+                                            <div class="timeline-badge primary">
+                                                1.
+                                            </div>
+                                            <div class="timeline-panel">
+                                                <div class="timeline-heading"><span class="badge badge-primary">Step 1</span></div>
+                                                <div class="timeline-body">
+                                                    <p>Copy the Calendar URL below.</p>
+                                                    <div class="col-12">
+                                                        <div class="lds-facebook d-none"><div></div><div></div><div></div></div>
+                                                    </div>
+                                                    <br>
+                                                    <div class="row">
+                                                        <div class="col-sm-8">
+                                                            <input id="calendarOutlookURL" type="text" class="form-control" value="https:{% host_url 'calendarScheduleICS' request.user.id host 'bizadmin'%}" data-url="{% host_url 'calendarScheduleICS' request.user.id host 'bizadmin'%}" disabled>
+                                                        </div>
+                                                        <div class="col-sm-4">
+                                                            {% comment %} <button class="btn btn-primary" onclick="copyGoogleText()">Copy URL</button> {% endcomment %}
+                                                        </div>
+                                                    </div>
+                                                    <p class="activatatedq"></p>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="timeline-inverted">
+                                            <div class="timeline-badge primary">
+                                                2.
+                                            </div>
+                                            <div class="timeline-panel">
+                                                <div class="timeline-heading"><span class="badge badge-primary">Step 2</span></div>
+                                                <div class="timeline-body">
+                                                    <p>Go to Google Calendar and under the "Other Calendar" section click "Add URL".</p>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="timeline-inverted">
+                                            <div class="timeline-badge primary">
+                                                3.
+                                            </div>
+                                            <div class="timeline-panel">
+                                                <div class="timeline-heading"><span class="badge badge-primary">Step 3</span></div>
+                                                <div class="timeline-body">
+                                                    <p>Paste the URL copied in Step 1 into the form and "Add Calendar".</p>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="timeline-inverted">
+                                            <div class="timeline-badge primary">
+                                                4.
+                                            </div>
+                                            <div class="timeline-panel">
+                                                <div class="timeline-heading"><span class="badge badge-primary">Step 4</span></div>
+                                                <div class="timeline-body">
+                                                    <p>Your calendar should now have all of your current booking information from BookMe.</p>
+                                                    <p>Any new bookings will take 24 hours to be shown in Google Calendar</p>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="tab-pane" id="outlookCalendar">
+                    <p>Sync all your bookings between Office365 and BookMe. This allows you to stay organized across multiple calendars.</p>
+                    <hr>
+                    <h1>Instructions</h1>
+                    <div class="col-lg-6">
+                        <div class="card card-timeline card-plain">
+                            <div class="card-body">
+                                <div class="timeline timeline-simple">
+                                    <ul class="timeline timeline-simple">
+                                        <li class="timeline-inverted">
+                                            <div class="timeline-badge primary">
+                                                1.
+                                            </div>
+                                            <div class="timeline-panel">
+                                                <div class="timeline-heading"><span class="badge badge-primary">Step 1</span></div>
+                                                <div class="timeline-body">
+                                                    <p>Copy the Calendar URL below.</p>
+                                                    <div class="col-12">
+                                                        <div class="lds-facebook d-none"><div></div><div></div><div></div></div>
+                                                    </div>
+                                                    <br>
+                                                    <br>
+                                                    <div class="row">
+                                                        <div class="col-sm-8">
+                                                            <input id="calendarGoogleURL" type="text" class="form-control" value="https:{% host_url 'calendarScheduleICS' request.user.id host 'bizadmin'%}" data-url="{% host_url 'calendarScheduleICS' request.user.id host 'bizadmin'%}" disabled>
+                                                        </div>
+                                                        <div class="col-sm-4">
+                                                            {% comment %} <button class="btn btn-primary" onclick="copyOutlookText()">Copy URL</button> {% endcomment %}
+                                                        </div>
+                                                    </div>
+                                                    <p class="activatatedq"></p>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="timeline-inverted">
+                                            <div class="timeline-badge primary">
+                                                2.
+                                            </div>
+                                            <div class="timeline-panel">
+                                                <div class="timeline-heading"><span class="badge badge-primary">Step 2</span></div>
+                                                <div class="timeline-body">
+                                                    <p>Go to your Outlook Calendar then click under the "Add Calendar" section select "Subscribe from web". Afterwards paste the Calendar URL provided to you by BookMe and "Import".</p>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function copyGoogleText() {
+        var copyText = document.querySelector("#calendarGoogleURL");
+        copyText.select();
+        document.execCommand("copy");
+    }
+</script>
+{% endblock  %}

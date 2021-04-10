@@ -1,0 +1,277 @@
+{% extends 'bizadmin/index.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% load hosts %}
+{% block linescript %}
+{% endblock linescript %}
+{% block activecompinfo%}active{%endblock%}
+{% block businessadmin %}
+                    
+                    <!-- Main page content-->
+                    <div class="content">
+                        <div class="row">
+                        <div class="col-md-12 ml-auto mr-auto">
+                        <header class="page-header page-header-compact page-header-light mb-2">
+                        <div class="container-fluid">
+                            <div class="page-header-content">
+                                <div class="row justify-content-between pt-3">
+                                    <div class="col-auto">
+                                        <h1 class="page-header-title">
+                                            Company Clients
+                                        </h1>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        </header>
+                        <!-- Account page navigation-->
+                        <nav class="nav nav-borders">
+                            <a class="nav-link ml-0" href="{% host_url 'information' host 'bizadmin'%}">Company Info</a>
+                            <a class="nav-link" href="{% host_url 'hours' host 'bizadmin'%}">Business Hours</a>
+                            <a class="nav-link" href="{% host_url 'staffmemb' host 'bizadmin'%}">Staff Members</a>
+                            {% comment %} <a class="nav-link" href="{% host_url 'breaks_time' host 'bizadmin'%}">Breaks</a>
+                            <a class="nav-link" href="{% host_url 'timeoff_time' host 'bizadmin'%}">Time Off</a> {% endcomment %}
+                            <a class="nav-link" href="{% host_url 'service_detail' host 'bizadmin' %}">Services</a>
+                            <a class="nav-link activate" href="{% host_url 'client_list' host 'bizadmin' %}">Clients</a>
+                            {% comment %} <a class="nav-link" href="#">Staff Members</a> {% endcomment %}
+                        </nav>
+                        <hr class="mt-0 mb-4" />
+                        <div class="row">
+                            <div class="col-md-12 text-center mb-4">
+                                <button id="addclients" class="btn btn-primary" type="button" data-toggle="modal" data-target="#modal-client">Add Client</button>
+                            </div>
+
+                            <div class="col-xl-12">
+
+                                <div class="table-responsive">
+                                    <table class="table {% if company.darkmode %}table-dark {% else %}table-white{% endif %} table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th class="text-center" scope="col">Client</th>
+                                                <th class="text-center" scope="col">Phone</th>
+                                                <th class="text-center">Email</th>
+                                                <th class="text-center">Update/Delete</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="client-table">
+                                            {% for client in clients %}
+                                                <tr>
+                                                    <td class="text-center">{{ client.first_name }} {{ client.last_name }}</td>
+                                                    <td class="text-center">{{ client.phone }}</td>
+                                                    <td class="text-center">{{ client.email}}</td>
+                                                    <td class="text-center">
+                                                        <!-- Update Service buttons -->
+                                                        <button type="button" class="updatebtn btn btn-sm btn-outline-primary" data-toggle="modal" data-target="#modal-update" data-url="{%  host_url 'updateclient' client.id host 'bizadmin' %}">
+                                                            <span class="fa fa-pencil-alt"></span>
+                                                        </button>
+                                                        <!-- Delete Service buttons -->
+                                                        <button type="button" class="trashcan btn btn-sm btn-danger" data-toggle="modal" data-target="#modal-delete" data-url="{%  host_url 'deleteclient' client.id host 'bizadmin' %}">
+                                                            <span class="fa fa-trash"></span>
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            {% empty %}
+                                                <td colspan="8" class="text-center">You have no clients yet.</td>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+<div class="modal fade" id="modal-update" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content card">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Make some changes to this client</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form method="GET" action="" class="js-product-update-form">
+            
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary">Save changes</button>
+        </div>
+
+        </form>
+      </div>
+      
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modal-client" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content card">
+      <div class="modal-header">
+        <h5 class="modal-title {% if company.darkmode %}text-white{% endif %} font-weight-bold d-flex justify-content-center pr-1" id="exampleModalLabel">Add a client</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      <form method="POST" id="createclient">
+        {% csrf_token %}
+        <div class="row">
+            <div class="col-md-6">
+            <label for="">First Name</label>
+                {{ form.first_name|as_crispy_field }}
+            </div>
+            <div class="col-md-6">
+            <label for="">Last Name</label>
+                {{ form.last_name|as_crispy_field }}
+            </div>
+            <div class="col-md-12">
+            <label for="">Email</label>
+                {{ form.email|as_crispy_field }}
+            </div>
+            <div class="col-md-12">
+                {{ form.phone|as_crispy_field }}
+            </div>
+            <div class="col-md-12">
+            <label for="">Client Address</label>
+                {{ form.address|as_crispy_field }}
+            </div>
+            <div class="col-4">
+            <label for="">Province</label>
+                {{ form.province|as_crispy_field }}
+            </div>
+            <div class="col-4">
+            <label for="">Postal Code</label>
+                {{ form.postal|as_crispy_field }}
+            </div>
+            <div class="col-4">
+            <label for="">City</label>
+                {{ form.city|as_crispy_field }}
+            </div>
+
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary" id="saveNewClient">Add Client</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block java %}
+    <script>
+        $( document ).ready(function() {
+            function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+        return cookieValue;
+    }
+    const csrftoken = getCookie('csrftoken');
+
+                $(document).on('click','.trashcan',function(){
+                    const swalStyles = Swal.mixin({
+                        customClass:{
+                            confirmButton: 'btn btn-primary',
+                            cancelButton: 'btn btn-danger',
+                        },
+                        buttonsStyling: false
+                    });
+                    var $this = $(this)
+                    var urldata = $this.attr('data-url')
+                    swalStyles.fire({
+                        title: 'Are you sure you want to remove the client?',
+                        text: 'You will not be able to change this',
+                        showCancelButton: true,
+                        reverseButtons: true
+                                    }).then((result) => {
+                                        if (result.isConfirmed) {
+                                            $.ajax({
+                                                type:'GET',
+                                                dataType: 'json',
+                                                url: urldata,
+                                                success: function(data){
+                                                    var htmlcontent = data.html_service_list
+                                                    var el = document.querySelector('#client-table');
+                                                    el.innerHTML = htmlcontent
+                                                    Swal.fire({
+                                                        title: '{{ s.name }} Client Removed!', 
+                                                        text: 'Your client has been removed from your list.', 
+                                                        icon: 'success',customClass:{
+                                                            confirmButton: 'btn btn-primary',
+                                                            cancelButton: 'btn btn-danger',
+                                                        },
+                                                    buttonsStyling: false,
+                                                    });
+                                                }
+                                            });
+                                        } else if (
+                                            /* Read more about handling dismissals below */
+                                            result.dismiss === Swal.DismissReason.cancel
+                                        ) {
+                                            swalStyles.fire(
+                                            'Cancelled',
+                                            'Your client is still saved in your database! 😊',
+                                            'error',
+                                            )
+                                        }
+                                    });
+                                });
+
+            $('#createclient').submit(function(e){
+                e.preventDefault();
+                $.ajax({
+                    type:'POST',
+                    url: "{% host_url 'createclient' host 'bizadmin' %}",
+                    data: $('#createclient').serialize(),
+                    headers:{
+                        "X-CSRFToken": csrftoken
+                    },
+                    success:function(data){
+
+                        $('#modal-client').modal('hide');
+                        var htmlcontent = data.html_service_list
+                        var el = document.querySelector('#client-table');
+                        el.innerHTML = htmlcontent
+                        $.notify({
+                            // options
+                            message: data.view
+                        },{
+                            // settings
+                            type: data.icon
+                        });
+                        
+                    }
+                });
+            });
+
+
+            $(document).on('click', '.updatebtn', function () { 
+                var btn = $(this);
+                    $.ajax({
+                    url: btn.attr("data-url"),
+                    type: 'get',
+                    dataType: 'json',
+                    beforeSend: function () {
+                        $("#modal-update").modal("show");
+                    },
+                    success: function (data) {
+                        $("#modal-update .modal-content").html(data.html_form);
+                    }
+                });
+            });
+
+        });
+    </script>
+{% endblock java %}

@@ -1,0 +1,278 @@
+{% extends 'bizadmin/index.html' %}
+{% load static %}
+{% load hosts %}
+{% load crispy_forms_tags %}
+{% block activedetails%}active{%endblock%}
+{% block businessadmin %}
+
+                    <!-- Main page content-->
+<div class="content">
+    <div class="row">
+        <div class="col-md-12 ml-auto mr-auto">
+            <header class="page-header page-header-compact page-header-light mb-2">
+                <div class="container-fluid">
+                    <div class="page-header-content">
+                        <div class="row align-items-center justify-content-between pt-3">
+                            <div class="col-auto">
+                                <h1 class="page-header-title">
+                                    Subscribe to a plan
+                                </h1>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            <hr class="mt-0 mb-4" />
+            <div class="row">
+                <div class="col-lg-6">
+                    <!-- Security preferences card-->
+                    <div class="card mb-4">
+                        <div class="card-header text-center"><h1>Pro Plan</h1></div>
+                        <div class="card-body">
+                            <div class="row">
+                                {% for p in products %}
+                                <div class="col-12 align-items-center text-center my-auto">
+                                    <h1 for="" class="font-weight-bold mx-auto text-danger">$20.00 CAD</h1>
+                                    <p class="text-muted my-0">Per month</p>
+                                    <p class="text-muted">Billed monthly</p>
+                                    <div class="col-12">
+                                        <form id="subscription-form">
+                                            <div id="card-element">
+                                            <!-- Elements will create input elements here -->
+                                            </div>
+
+                                            {% comment %} This will need too change once more subscription plans come in {% endcomment %}
+                                            {% for plan in p.plan_set.all %}
+                                                <p hidden id="priceId">{{ plan.id }}</p>
+                                            {% endfor %}
+                                            
+                                            
+                                            <!-- We'll put the error messages in this element -->
+                                            <div id="card-element-errors" role="alert"></div>
+                                            <button class="btn btn-primary" id="submit" type="submit">
+                                            <div class="spinner-border sr-only" id="spinner" role="status">
+                                                <span class="sr-only">Loading...</span>
+                                            </div>
+                                            <span id="button-text">Subscribe</span>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                                
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block calendarscript %}
+<script src="https://js.stripe.com/v3/"></script>
+<script>
+    let stripe = Stripe('{{ pk_stripe }}');
+    let elements = stripe.elements();
+
+    let card = elements.create('card', {  });
+    card.mount('#card-element');
+    card.on('change', function (event) {
+        displayError(event);
+    });
+    function displayError(event) {
+        let displayError = document.getElementById('card-element-errors');
+        if (event.error) {
+            displayError.textContent = event.error.message;
+            document.getElementById("submit").disabled = false;
+            document.querySelector("#spinner").classList.add("sr-only");
+            document.querySelector("#button-text").classList.remove("hidden");
+
+        } else {
+            displayError.textContent = '';
+        }
+    }
+
+    //we'll add payment form handling here
+    let paymentForm = document.getElementById('subscription-form');
+  if (paymentForm) {
+
+    paymentForm.addEventListener('submit', function (evt) {
+      evt.preventDefault();
+      changeLoadingState(true);
+
+
+        // create new payment method & create subscription
+        createPaymentMethod({ card });
+    });
+  }
+
+  var changeLoadingState = function(isLoading) {
+  if (isLoading) {
+    document.getElementById("submit").disabled = true;
+    document.querySelector("#spinner").classList.remove("sr-only");
+    document.querySelector("#button-text").classList.add("hidden");
+  } else {
+    document.getElementById("submit").disabled = false;
+    document.querySelector("#spinner").classList.add("sr-only");
+    document.querySelector("#button-text").classList.remove("hidden");
+  }
+};
+
+
+
+
+function createPaymentMethod({ card }) {
+
+  // Set up payment method for recurring usage
+  let billingName = '{{ company.business_name }}';
+
+  stripe
+    .createPaymentMethod({
+      type: 'card',
+      card: card,
+      billing_details: {
+        name: billingName,
+      },
+    })
+    .then((result) => {
+      if (result.error) {
+        displayError(result);
+      } else {
+       const paymentParams = {
+          price_id: document.getElementById("priceId").innerHTML,
+          payment_method: result.paymentMethod.id,
+      };
+      var price_id = document.getElementById("priceId").innerHTML
+      var payment_method = result.paymentMethod.id
+      fetch("/create-sub", {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken':'{{ csrf_token }}',
+        },
+        credentials: 'same-origin',
+        body: JSON.stringify(paymentParams),
+      }).then((response) => {
+        return response.json(); 
+      }).then((result) => {
+        if (result.error) {
+          // The card had an error when trying to attach it to a customer
+          throw result;
+        }
+        return result;
+      })
+      .then((result) => {
+        return {
+          paymentMethodId: payment_method,
+          priceId: price_id,
+          subscription: result,
+        };
+      });
+      // Some payment methods require a customer to be on session
+      // to complete the payment process. Check the status of the
+      // payment intent to handle these actions.
+      .then(handlePaymentThatRequiresCustomerAction)
+      // If attaching this card to a Customer object succeeds,
+      // but attempts to charge the customer fail, you
+      // get a requires_payment_method error.
+      .then(handleRequiresPaymentMethod)
+      // No more actions required. Provision your service for the user.
+      .then((result) => {
+        if (result && result.subscription.status === 'active') {
+            window.location.href = '/complete';
+        };
+        if (result.result.paymentIntent.status === 'succeeded' ) {
+            window.location.href = '/complete';
+        }
+      })
+      .catch(function (error) {
+          displayError(error);
+      });
+      }
+    });
+}
+
+function handlePaymentThatRequiresCustomerAction({
+  subscription,
+  invoice,
+  priceId,
+  paymentMethodId,
+  isRetry,
+}) {
+
+  if (subscription && subscription.status === 'active') {
+    // Subscription is active, no customer actions required.
+    return { subscription, priceId, paymentMethodId };
+  }
+
+  // If it's a first payment attempt, the payment intent is on the subscription latest invoice.
+  // If it's a retry, the payment intent will be on the invoice itself.
+  let paymentIntent = invoice ? invoice.payment_intent : subscription.latest_invoice.payment_intent;
+
+  if (
+    paymentIntent.status === 'requires_action' ||
+    (isRetry === true && paymentIntent.status === 'requires_payment_method')
+  ) {
+    return stripe
+      .confirmCardPayment(paymentIntent.client_secret, {
+        payment_method: paymentMethodId,
+      })
+      .then((result) => {
+        if (result.error) {
+          // Start code flow to handle updating the payment details.
+          // Display error message in your UI.
+          // The card was declined (i.e. insufficient funds, card has expired, etc).
+          throw result;
+        } else {
+          if (result.paymentIntent.status === 'succeeded') {
+            // Show a success message to your customer.
+            return {
+              priceId: priceId,
+              subscription: subscription,
+              invoice: invoice,
+              paymentMethodId: paymentMethodId,
+              result: result
+            };
+          }
+        }
+      })
+      .catch((error) => {
+          displayError(error);
+          throw error;
+      });
+  } else {
+    // No customer action needed.
+    return { subscription, priceId, paymentMethodId };
+  }
+}
+function handleRequiresPaymentMethod({
+  subscription,
+  paymentMethodId,
+  priceId,
+  result,
+}) {
+  if (subscription.status === 'active') {
+    // subscription is active, no customer actions required.
+    return { subscription, priceId, paymentMethodId };
+  } else if (
+    subscription.latest_invoice.payment_intent.status ===
+    'requires_payment_method'
+  ) {
+    // Using localStorage to manage the state of the retry here,
+    // feel free to replace with what you prefer.
+    // Store the latest invoice ID and status.
+    localStorage.setItem('latestInvoiceId', subscription.latest_invoice.id);
+    localStorage.setItem(
+      'latestInvoicePaymentIntentStatus',
+      subscription.latest_invoice.payment_intent.status
+    );
+    throw { error: { message: 'Your card was declined.' } };
+  } else {
+    return { subscription, priceId, paymentMethodId, result };
+  }
+}
+</script>
+
+{% endblock  %}

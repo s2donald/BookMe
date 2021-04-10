@@ -1,0 +1,273 @@
+{% extends 'bookingpage/multiplestaff/bookingpage/main.html'%}
+{% load static %}
+{% load hosts %}
+{% load business_tags %}
+{% block title %}{{ company.business_name }} - BookMe.to{% endblock %}
+{% block companybizname %}{{ company.business_name }}{% endblock companybizname %}
+
+{% block booking %}
+<script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+<script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
+<script>
+    function changeheight() {
+        var readmore = $('#readmore');
+        if (readmore.text() == 'Read more') {
+            readmore.text("Read less");
+        } else {
+            readmore.text("Read more");
+        }
+        $('.productdescription').toggleClass("showentire");
+    };
+</script>
+<section class="py-0">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-7 p-3 grid-item">
+                <div class="swiper-container top-gallery">
+                    <!-- Additional required wrapper-->
+                    <div class="swiper-wrapper">
+                        <!-- Slides-->
+                        {% if product.mainimage %}
+                            <div class="swiper-slide"><a href="{{ product.mainimage.url }}"><img loading="lazy" class="center rounded" style="max-height:400px; width:100%; object-fit:contain;" src="{{ product.mainimage.url }}" alt="Images"></a></div>
+                        {% else %}
+                            <div class="swiper-slide"><a href="{% static 'img/default-product-image.png' %}"><img loading="lazy" class="center rounded" style="max-height:400px; width:100%; object-fit:contain;" src="{% static 'img/default-product-image.png' %}" alt="Images"></a></div>
+                        {% endif %}
+                        {% for product in product.product_gallary.all %}
+                            <div class="swiper-slide"><a href="{{ product.photos.url }}"><img loading="lazy" class="center align-middle rounded" style="max-height:400px; width:100%; object-fit:contain;" src="{{ product.photos.url }}" alt="Images"></a></div>
+                        {% endfor %}
+                    </div>
+                    {% if product.product_gallary.all %}
+                        <div class="swiper-pagination swiper-pagination-black"></div>
+                        <div class="swiper-button-prev swiper-button-black circle-slide"></div>
+                        <div class="swiper-button-next swiper-button-black circle-slide"></div>
+                    {% endif %}
+                </div>
+                
+                <div class="text-block text-left d-none d-md-block pt-3">
+                    <h4 id="fr">Reviews</h4>
+                    {% if reviews %}
+                        {% for review in reviews %}
+                            <hr>
+                            {% with reviewer=review.reviewer %}
+                            <div class="media d-block d-sm-flex review">
+                                <div class="text-md-left mr-4 mr-xl-5"><img class="d-block avatar avatar-xl p-2 mb-2" src="{% if reviewer.avatar %}{{ reviewer.avatar.url }}{% else %}https://epicattorneymarketing.com/wp-content/uploads/2016/07/Headshot-Placeholder-1.png{% endif %} " alt="{{ reviewer.first_name }} {{ reviewer.last_name }}"><span class="text-uppercase text-muted text-sm">{{ review.created|date:"M d, Y"}}</span></div>
+                                <div class="media-body text-left">
+                                <h6 class="mt-2 mb-1">{{ reviewer.first_name }} {{ reviewer.last_name }}</h6>
+                                <div class="mb-2">{% for x in '12345' %}<i class="fas fa-star {% if forloop.counter <= review.star %}text-warning{% else %}text-gray-300{% endif %}"></i>{% endfor %}
+                                </div>
+                                <p class="text-muted text-sm">{{ review.review }}</p>
+                                </div>
+                            </div>
+                            {% endwith %}
+
+                        {% endfor %}
+                        {% include 'productspage/details/pagination/pagination.html' with page=reviews %}
+                        <hr>
+                    {% else %}
+                        <h6>Be the first to write a review on this product after you've purchased.</h6>
+                        <hr>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-md-5 grid-item">
+                <div class="text-block text-left">
+                    <p><a href="{% host_url 'bookingurls' host 'bookingurl' slug=company.slug %}" class="hoverline">{{ company.business_name }}</a></p>
+                </div>
+                <div class="text-block text-left">
+                    <h1 style="font-weight:400;">{{ product.name }}</h1>
+                </div>
+                <div class="text-block text-left">
+                    <h4 class="font-weight-bold">{{ product.currency}}${{ product.price }}</h4>
+                </div>
+                <form action="" method="POST" id="addtocart" data-url="{% host_url 'cart_add_product' product_id=product.id host 'producturl' slug=company.slug %}">
+                    {% csrf_token %}
+                    {% if product.addon_product.all %}
+                    <div class="col-12 m-0 px-0 text-left justify-content-left align-items-center">
+                        <p class="font-weight-bold">Options:</p>
+                        <select name="addon_options" id="addon_options" class="addon_select selectpicker" data-size='6' data-live-search='true' data-live-search-placeholder='Select addons' multiple {% if not product.isaddon_multiple %}data-max-options="1"{% endif %} {% if product.isaddon_required %}required{% endif %}>
+                            {% for addon in product.addon_product.all %}
+                                <option value='{{ addon.id }}' id='prodaddon_{{ forloop.counter }}' data-price='{{ addon.price }}'>{{ addon.name|capfirst }} +{{ addon.price }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    {% endif %}
+                    {% if product.product_maindropdown.all %}
+                        {% for dropdown in product.product_maindropdown.all %}
+                        <div class="col-12 m-0 px-0 text-left justify-content-left align-items-center">
+                            <p class="font-weight-bold">{{ dropdown.placeholder }}{% if dropdown.is_required %}*{% endif %}:</p>
+                            <select name="addon_dropdown_{{ dropdown.id }}" id="addon_dropdown_{{ dropdown.id }}" class="addon_{{ dropdown.id }} selectpicker" data-size='6' data-live-search='true' data-live-search-placeholder='Select {{ dropdown.placeholder }}' multiple {% if dropdown.is_required %}required{% endif %} {% if not dropdown.is_multiple %}data-max-options="1"{% endif %}>
+                                {% for dropdowns in dropdown.main_dropdown.all %}
+                                    <option value='{{ dropdowns.id }}' id='dropdown_{{dropdown.id}}_{{ forloop.counter }}' data-price='{{ dropdowns.price }}'>{{ dropdowns.option|capfirst }} {% if dropdowns.price > 0.00 %}+{{ dropdowns.price }}{% endif %}</option>
+                                {% endfor %}
+                                
+                            </select>
+                        
+                        </div>
+                        {% endfor %}
+                    {% endif %} 
+                    <div class="col-12 m-0 px-0 text-left justify-content-left align-items-center">
+                        <p class="font-weight-bold">Total Price: {{product.currency}}$<span value="{{ product.price }}" id="totalprc">{{ product.price }}</span></p>
+                    </div>
+
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-block btn-outline-primary" data-product="{{ product.id }}">Add to cart</button>
+                    </div>
+                </form>
+                <div class="text-block mt-3 text-left">
+                    <div class="accordion" id="accordionExample">
+                        <div class="card">
+                            <div class="card-header py-0">
+                                <h2 class="mb-0" id="headingOne">
+                                    <button class="btn btn-plain btn-block text-left d-flex justify-content-between my-0 descr" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                        <h6 class="m-0">Description</h6>
+                                        <i class="fas fa-chevron-down text-line rotatemenow"></i>
+                                    </button>
+                                </h2>
+                            </div>
+                            <div id="collapseOne" class="collapse show text-center" aria-labelledby="headingOne" data-parent="#accordionExample">
+                                {% autoescape off %}
+                                    <div id="innerHTMLDescription" class="productdescription showentire mt-3 text-left">
+                                        {{ product.description }}
+                                    </div>
+                                {% endautoescape %}
+                                <a href="javascript:changeheight()" class="btn btn-outline-grey align-items-center" id="readmore">Read more</a>
+                            </div>
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+                <div class="text-block d-md-none pt-3">
+                    <h4 id="frs">Reviews</h4>
+                    {% if reviews %}
+                        {% for review in reviews %}
+                            <hr>
+                            {% with reviewer=review.reviewer %}
+                            <div class="media d-block d-sm-flex review">
+                                <div class="text-md-left mr-4 mr-xl-5"><img class="d-block avatar avatar-xl p-2 mb-2" src="{% if reviewer.avatar %}{{ reviewer.avatar.url }}{% else %}https://epicattorneymarketing.com/wp-content/uploads/2016/07/Headshot-Placeholder-1.png{% endif %} " alt="{{ reviewer.first_name }} {{ reviewer.last_name }}"><span class="text-uppercase text-muted text-sm">{{ review.created|date:"M d, Y"}}</span></div>
+                                <div class="media-body text-left">
+                                <h6 class="mt-2 mb-1">{{ reviewer.first_name }} {{ reviewer.last_name }}</h6>
+                                <div class="mb-2">{% for x in '12345' %}<i class="fas fa-star {% if forloop.counter <= review.star %}text-warning{% else %}text-gray-300{% endif %}"></i>{% endfor %}
+                                </div>
+                                <p class="text-muted text-sm">{{ review.review }}</p>
+                                </div>
+                            </div>
+                            {% endwith %}
+
+                        {% endfor %}
+                        {% include 'productspage/details/pagination/spagination.html' with page=reviews %}
+                        <hr>
+                    {% else %}
+                        <h6>Be the first to write a review on this product after you've purchased.</h6>
+                        <hr>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    $(document).ready(function() {
+        {% comment %} $('.row').masonry({
+            columnWidth: 200,
+            itemSelector: '.grid-item'
+        }); {% endcomment %}
+
+        var curHeight = $('.productdescription').height();
+        $('.productdescription').toggleClass("showentire");
+        if (curHeight <= 300) {
+            $('#readmore').hide();
+            $('.productdescription').addClass('showentire')
+        }
+        else {
+            $('#readmore').show();
+        }
+        $('.descr').on('click', function(e){
+            $('.rotatemenow').toggleClass('active')
+        })
+
+        {% if product.addon_product.all %}
+            let slctor = 'select[name="addon_options"]'
+            var prevprc = 0
+            $(slctor).on('changed.bs.select', function (e, clickedIndex, isSelected, previousValue) {
+                let price = $(`${slctor} option`).eq(clickedIndex).data('price')
+                if (isSelected){
+                    var spanprc = document.querySelector('#totalprc')
+                    var innerprc = parseFloat(spanprc.innerText) + parseFloat(price)
+                    spanprc.innerText = innerprc.toFixed(2);
+                    {% if not product.isaddon_multiple %}
+                        spanprc.innerText = parseFloat(spanprc.innerText) - prevprc
+                        prevprc = price
+                    {% endif %}
+                    
+                }
+                else {
+                    var spanprc = document.querySelector('#totalprc')
+                    var innerprc = parseFloat(spanprc.innerText) - parseFloat(price)
+                    spanprc.innerText = innerprc.toFixed(2);
+                    {% if not product.isaddon_multiple %}
+                        prevprc = 0
+                    {% endif %}
+                }
+                
+            })
+        {% endif %}
+        
+        {% for dropdowns in product.product_maindropdown.all %}
+            var prevprc{{dropdowns.id}} = 0
+            $('#addon_dropdown_{{ dropdowns.id }}').on('changed.bs.select', function (e, clickedIndex, isSelected, previousValue) {
+                let price = $(`${'#addon_dropdown_{{ dropdowns.id }}'} option`).eq(clickedIndex).data('price')
+                if (isSelected){
+                    var spanprc = document.querySelector('#totalprc')
+                    var innerprc = parseFloat(spanprc.innerText) + parseFloat(price)
+                    spanprc.innerText = innerprc.toFixed(2);
+                    {% if not dropdowns.is_multiple %}
+                        spanprc.innerText = parseFloat(spanprc.innerText) - prevprc{{dropdowns.id}}
+                        prevprc{{dropdowns.id}} = price
+                    {% endif %}
+                    
+                }
+                else {
+                    var spanprc = document.querySelector('#totalprc')
+                    var innerprc = parseFloat(spanprc.innerText) - parseFloat(price)
+                    spanprc.innerText = innerprc.toFixed(2);
+                    {% if not dropdowns.is_multiple %}
+                        prevprc{{dropdowns.id}} = 0
+                    {% endif %}
+                }
+            });
+
+        {% endfor %}
+
+
+
+        $(document).on('submit', '#addtocart',function(e){
+            e.preventDefault()
+            var form = $('#addtocart')
+            console.log()
+            console.log($(this).attr('data-url'))
+            $.ajax({
+                type:'POST',
+                url: $(this).attr('data-url'),
+                data: form.serialize(),
+                success:function(data){
+
+                    if (data.notvalid){
+                        console.log('hello')
+                    }
+                    else {
+                        console.log('hellos')
+                    }
+                    
+                }
+            });
+        });
+    })
+</script>
+
+{% endblock %}

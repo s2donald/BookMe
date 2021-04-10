@@ -1,0 +1,274 @@
+{% extends 'welcomes/main.html' %}
+{% block 'index_pricing' %}active{% endblock %}
+{% load static %}
+{% load hosts %}
+
+{% block custompath %}
+  <path class="cls-1" d="M0,160L48,186.7C96,213,192,267,288,288C384,309,480,299,576,250.7C672,203,768,117,864,106.7C960,96,1056,160,1152,154.7C1248,149,1344,75,1392,37.3L1440,0L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z"></path>
+{% endblock %}
+{% block header %}
+  <div class="container">
+    <div class="row">
+      <div class="col">
+        <div class="text-container text-left">
+          <h1>Subscription Plans</h1>
+          <div class="text-left">
+            <p>Get access to all of our premium offerings and priority support.</p>
+            <p>Let's make your business grow!</p>
+            {% comment %} <p>Change or cancel your plan at anytime. No hidden fees or surprises.</p> {% endcomment %}
+          </div>
+        </div> <!-- end of text-container -->
+      </div> <!-- end of col -->
+    </div> <!-- end of row -->
+  </div> <!-- end of container -->
+{% endblock header %}
+{% block businesscontent %}
+
+<section class="py-2">
+  <div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="container">
+          <div class="row">
+          <div class="col-md-4">
+            <div class="pricingTable10">
+              <div class="pricingTable-header">
+                <h3 class="heading">Basic</h3>
+                <span class="price-value">
+                  <span class="currency"></span> Free
+                  <span class="month"></span>
+                </span>
+              </div>
+              <div class="pricing-content">
+                <ul>
+                  <li><i class="fas fa-check"></i> Unlimited Bookings</li>
+                  <li><i class="fas fa-check"></i> Notify clients with email reminders</li>
+                  <li><i class="fas fa-check"></i> Google Calendar and Outlook integration</li>
+                  <li><i class="fas fa-check"></i> Personalized booking link</li>
+                  <li><i class="fas fa-check"></i> Basic Sales Data</li>
+                </ul>
+                <a href="{% host_url 'bizadminsignup' host 'prodadmin' %}" class="read">sign up</a>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="pricingTable10">
+              <div class="pricingTable-header">
+                <h3 class="heading">Pro</h3>
+                <span class="price-value">
+                  <span class="currency">$</span> 40
+                  <span class="month">/mo</span>
+                </span>
+              </div>
+              <div class="pricing-content">
+                <ul>
+                  <li><i class="fas fa-check"></i> Everything from the basic plan</li>
+                  <li><i class="fas fa-check"></i> Send text message reminders</li>
+                  <li><i class="fas fa-check"></i> Accept online payments</li>
+                  <li><i class="fas fa-check"></i> Ad spend valued at $10 per month</li>
+                  <li><i class="fas fa-check"></i> Above-average analytics (booking link visits, purchase conversion rates, etc)</li>
+                  <li><i class="fas fa-check"></i> SMS and Whatsapp Marketing Campaign</li>
+                  <li><i class="fas fa-check"></i> Better management tools</li>
+                  <li><i class="fas fa-check"></i> QR Code stickers to your booking pages</li>
+                  <li><i class="fas fa-times"></i> Point of Sale system coming soon</li>
+                </ul>
+                <a href="{% host_url 'bizadminsignup' host 'prodadmin' %}" class="read">5 day free trial</a>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+          <div class="pricingTable10">
+          <div class="pricingTable-header">
+          <h3 class="heading">Premium</h3>
+          <span class="price-value">
+          <span class="currency">$</span> 200
+          <span class="month">/mo</span>
+          </span>
+          </div>
+          <div class="pricing-content">
+          <ul>
+          <li><i class="fas fa-check"></i> Everything from the previous plans</li>
+          <li><i class="fas fa-check"></i> Unlimited staff members</li>
+          <li><i class="fas fa-check"></i> Unlimited text message and email reminders</li>
+          <li><i class="fas fa-check"></i> White label solution</li>
+          <li><i class="fas fa-check"></i> Ad spend valued at $80 per month</li>
+          </ul>
+          <a href="{% host_url 'bizadminsignup' host 'prodadmin' %}" class="read">5 day free trial</a>
+          </div>
+          </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section class="pricing-comp-section">
+<div class="container">
+  <div class="row pt-6">
+    <div class="col-md-6 pricing-comp-table">
+      <h2 class="hero-heading text-black">Plan comparison</h2>
+    </div>
+    <div class="col-md-6 pricing-comp-table">
+      <div class="row text-center">
+        <div class="col-4 text-center">
+          <h3 class="hero-heading pricing-comp-planitem text-center mt-6">Basic</h3>
+          <a class="btn btn-info" href="{% host_url 'bizadminsignup' host 'prodadmin' %}">Get Started</a>
+        </div>
+        <div class="col-4">
+          <h3 class="hero-heading pricing-comp-planitem text-center">Pro</h3>
+          <a class="btn btn-secondary" href="{% host_url 'bizadminsignup' host 'prodadmin' %}">5 Day Free Trial</a>
+        </div>
+        <div class="col-4">
+          <h3 class="hero-heading pricing-comp-planitem text-center d-none d-sm-block">Premium</h3>
+          <h3 class="hero-heading pricing-comp-planitem text-center d-block d-sm-none">Prem</h3>
+          <a class="btn btn-secondary" href="{% host_url 'bizadminsignup' host 'prodadmin' %}">5 Day Free Trial</a>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 p-6 m-6" style="margin-top:40px;">
+      <h4 class="pricing-comp-table-header hero-heading">Booking</h4>
+      <div class="row pricing-comp-table-row">
+        <div class="col-md-6"><p class="hero-heading text-muted">Staff Members Included</p></div>
+        <div class="col-md-6">
+          <div class="row hero-heading">
+            <div class="col-4 text-center text-muted">
+              1 Staff Member
+            </div>
+            <div class="col-4 text-center">
+              <p class="text-left text-muted">2 Staff Members included,</p>
+              <p class="text-left text-muted">$10 for additional users for the first 8 staffers; 10+ is no additional cost</p>
+            </div>
+            <div class="col-4 text-center text-muted">
+              Unlimited
+            </div>
+          </div>
+        </div>
+      </div>
+      <hr>
+      <div class="row pricing-comp-table-row">
+        <div class="col-md-6"><p class="hero-heading text-muted">Unlimited Appointments</p></div>
+        <div class="col-md-6">
+          <div class="row hero-heading">
+            <div class="col-4 text-center text-muted">
+              <i class="fas fa-check"></i>
+            </div>
+            <div class="col-4 text-center text-muted">
+              <i class="fas fa-check"></i>
+            </div>
+            <div class="col-4 text-center text-muted">
+              <i class="fas fa-check"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+      <hr>
+      <div class="row pricing-comp-table-row">
+        <div class="col-md-6"><p class="hero-heading text-muted">Email Reminders</p></div>
+        <div class="col-md-6">
+          <div class="row hero-heading">
+            <div class="col-4 text-center text-muted">
+              Includes 200
+            </div>
+            <div class="col-4 text-center text-muted">
+              Unlimited
+            </div>
+            <div class="col-4 text-center text-muted">
+              Unlimited
+            </div>
+          </div>
+        </div>
+      </div>
+      <hr>
+      <div class="row pricing-comp-table-row">
+        <div class="col-md-6"><p class="hero-heading text-muted">Text Reminders</p></div>
+        <div class="col-md-6">
+          <div class="row hero-heading">
+            <div class="col-4 text-center text-muted">
+              <i class="fas fa-times"></i>
+            </div>
+            <div class="col-4 text-center text-muted">
+              1000 per staffer
+            </div>
+            <div class="col-4 text-center text-muted">
+              Unlimited
+            </div>
+          </div>
+        </div>
+      </div>
+      <hr>
+      <div class="row pricing-comp-table-row">
+        <div class="col-md-6"><p class="hero-heading text-muted">Website Integration</p></div>
+        <div class="col-md-6">
+          <div class="row hero-heading">
+            <div class="col-4 text-center text-muted">
+              <i class="fas fa-check"></i>
+            </div>
+            <div class="col-4 text-center text-muted">
+              <i class="fas fa-check"></i>
+            </div>
+            <div class="col-4 text-center text-muted">
+              <i class="fas fa-check"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+      <hr>
+      <div class="row pricing-comp-table-row">
+        <div class="col-md-6"><p class="hero-heading text-muted">Google Calendar and Outlook Integration</p></div>
+        <div class="col-md-6">
+          <div class="row hero-heading">
+            <div class="col-4 text-center text-muted">
+              <i class="fas fa-check"></i>
+            </div>
+            <div class="col-4 text-center text-muted">
+              <i class="fas fa-check"></i>
+            </div>
+            <div class="col-4 text-center text-muted">
+              <i class="fas fa-check"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+      <hr>
+      <div class="row pricing-comp-table-row">
+        <div class="col-md-6"><p class="hero-heading text-muted">Custom link and themes for your booking page</p></div>
+        <div class="col-md-6">
+          <div class="row hero-heading">
+            <div class="col-4 text-center">
+              <i class="fas fa-check text-muted"></i>
+            </div>
+            <div class="col-4 text-center">
+              <i class="fas fa-check text-muted"></i>
+            </div>
+            <div class="col-4 text-center">
+              <i class="fas fa-check text-muted"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+      <hr>
+      <div class="row pricing-comp-table-row">
+        <div class="col-md-6"><p class="hero-heading text-muted">Accept payments</p></div>
+        <div class="col-md-6">
+          <div class="row hero-heading">
+            <div class="col-4 text-center text-muted">
+              Coming soon with Square
+            </div>
+            <div class="col-4 text-center text-muted">
+              Included with Stripe
+            </div>
+            <div class="col-4 text-center text-muted">
+              Included with Stripe
+            </div>
+          </div>
+        </div>
+      </div>
+      <hr>
+      {% comment %} <h4 class="pricing-comp-table-header hero-heading">Marketing</h4> {% endcomment %}
+    </div>
+  </div>
+</div>
+</section>
+
+{% endblock  %}

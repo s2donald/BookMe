@@ -1,0 +1,104 @@
+{% extends 'welcomes/main.html' %}
+{% load static %}
+{% load hosts %}
+{% block 'index_features' %}active{% endblock %}
+{% block custompath %}
+<path class="cls-1" d="M0,160L48,186.7C96,213,192,267,288,288C384,309,480,299,576,250.7C672,203,768,117,864,106.7C960,96,1056,160,1152,154.7C1248,149,1344,75,1392,37.3L1440,0L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z"></path>
+{% endblock %}
+{% block header %}
+        <!-- Text Logo - Use this if you don't have a graphic logo -->
+        <!-- <a class="logo-text" href="index.html">RIGA</a> -->
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-7">
+                    <div class="text-container text-left">
+                        <h1>ShopMe helps you sell more <span id="js-rotating">personalized gifts, vintage goods,  unique products, handmade items</span></h1>
+                        <div class="dynamicalchange">
+                        {% if user.is_business %}
+                                    <a class="btn-solid-lg" href="{% host_url 'completeprofile' host 'prodadmin' %}">Go to your business page</a>
+                        {% elif user.is_consumer %}
+                                    <a class="btn-solid-lg" href="{% host_url 'newbizcreate' host 'prodadmin' %}">Create a business page</a>
+                        {% else %}
+                                <a class="btn-solid-lg my-1" href="{% host_url 'bizadminlogin' host 'prodadmin' %}"><i class="fab fa-start"></i>Sign into ShopMe</a>
+                                <a class="btn-solid-lg my-1" href="{% host_url 'bizadminsignup' host 'prodadmin' %}"><i class="fab fa-start"></i>Get started for free</a>
+                        {% endif %}
+                    </div>
+                    </div> <!-- end of text-container -->
+                </div> <!-- end of col -->
+                <div class="col-lg-5">
+                    <div class="image-container">
+                        {% comment %} <object height="auto" width="100%" id="communicate-welcome" data="{% static 'css/svg-img/bizpage-welcome/business.svg' %}" type="image/svg+xml"></object> {% endcomment %}
+                        <img class="img-fluid" src="{% static 'img/business.png' %}" alt="alternative">
+                    </div> <!-- end of image-container -->
+                </div> <!-- end of col -->
+            </div> <!-- end of row -->
+        </div> <!-- end of container -->
+{% endblock header %}
+
+{% block businesscontent %}
+
+    <section class="py-lg-5">
+
+
+      <div class="container">
+        <div class="row">
+          
+          <div class="col-lg-6">
+            <ul class="smlr p-0">
+              <li class="slmr_item">
+                <img height="150px" width="150px"src="{% static 'img/icons/computer.svg'%}" alt="">
+                <h3>Manage orders</h3>
+                <p class="d-md-none">Manage your orders effortlessly by collecting order information effortlessly.</p>
+              </li>
+              <li class="slmr_item">
+                <img height="150px" width="150px"src="{% static 'img/icons/marketing.svg'%}" alt="">
+                <h3>Marketing</h3>
+                <p class="d-md-none">Share your website on Facebook and Instagram to get clients buying directly from you instantly!</p>
+                <p class="d-md-none">Collect requirements on custom orders .</p>
+              </li>
+              <li class="slmr_item">
+                <img height="150px" width="150px"src="{% static 'img/icons/location.svg'%}" alt="">
+                <h3>Connect With Locals</h3>
+                <p class='d-md-none'>Get your business listed on the BookMe Marketplace and get exposure to new customers!</p>
+              </li>
+              <li class="slmr_item">
+                <img height="150px" width="150px"src="{% static 'img/icons/email.svg'%}" alt="">
+                <h3>Automated Reminders</h3>
+                <p class="d-md-none">Send reminder emails and text messages to your clients before their appointment to reduce the number of no shows.</p>
+              </li>
+            </ul>
+          </div>
+          <div class="col-lg-6">
+            <h1 class="hero-heading welcome_intro">
+              BookMe can help your business thrive
+            </h1>
+            <p class="text-muted mt-3">Grow your business with BookMe. Allow your customers to conveniently book appointments with you.</p>
+            <p class="text-muted">We have simplified the scheduling process for you and your clients so you can spend more time providing services.</p>
+          </div>
+          
+        </div>
+      </div>
+
+      
+    </section>
+
+    {% comment %} <section class="py-lg-5">
+      <div class="container">
+        <div class="row">
+          <div class="col-12">
+              <h1 class="hero-heading welcome_intro">
+                Personalize your booking page
+              </h1>
+          </div>
+          <div class="col-md-6">
+
+          </div>
+          <div class="col-md-6">
+
+          </div>
+        </div>
+      </div>
+      
+    </section> {% endcomment %}
+
+{% endblock %}

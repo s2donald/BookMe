@@ -1,0 +1,413 @@
+{% extends 'bizadmin/index.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% load hosts %}
+{% block linescript %}
+{% endblock linescript %}
+{% block activecompinfo%}active{%endblock%}
+{% block java %}
+
+<script>
+$(document).ready(function() {
+    $("#inputmain").fileinput({
+        ajaxSettings:{
+            beforeSend: function(xhr, settings) {
+                if (!this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            }
+        },
+        uploadUrl: "{% host_url 'imageuploads' host 'bizadmin' %}",
+        maxFileCount: 1,
+        maxFileSize: 5000,
+        browseIcon: '',
+        browseLabel: 'Upload new image',
+        'showCaption': false,
+        'showPreview': false,
+        'showRemove': false,
+        uploadClass: "btn btn-primary",
+        uploadLabel: "Confirm Upload",
+        uploadExtraData:{'csrfmiddlewaretoken': '{{ csrf_token }}'},
+        allowedFileTypes: ['image'],
+    });
+});
+</script>
+{% endblock java %}
+{% block businessadmin %}
+                    
+                    <!-- Main page content-->
+                    <div class="content">
+                        <div class="row">
+                        <div class="col-md-12 ml-auto mr-auto">
+                        <header class="page-header page-header-compact page-header-light mb-2">
+                            <div class="container-fluid">
+                                <div class="page-header-content">
+                                    <div class="row align-items-center justify-content-between pt-3">
+                                        <div class="col-auto">
+                                            <h1 class="page-header-title">
+                                                Company Details
+                                            </h1>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </header>
+                        <!-- Account page navigation-->
+                        <nav class="nav nav-borders">
+                            <a class="nav-link activate ml-0" href="{% host_url 'information' host 'bizadmin'%}">Company Info</a>
+                            <a class="nav-link" href="{% host_url 'hours' host 'bizadmin'%}">Business Hours</a>
+                            <a class="nav-link" href="{% host_url 'staffmemb' host 'bizadmin'%}">Staff Members</a>
+                            {% comment %} <a class="nav-link" href="{% host_url 'breaks_time' host 'bizadmin'%}">Breaks</a>
+                            <a class="nav-link" href="{% host_url 'timeoff_time' host 'bizadmin'%}">Time Off</a> {% endcomment %}
+                            <a class="nav-link" href="{% host_url 'service_detail' host 'bizadmin' %}">Services</a>
+                            <a class="nav-link" href="{% host_url 'client_list' host 'bizadmin' %}">Clients</a>
+                            {% comment %} <a class="nav-link" href="#">Staff Members</a> {% endcomment %}
+                        </nav>
+                        <hr class="mt-0 mb-4" />
+                        <div class="row">
+                            <div class="col-xl-4">
+                                <!-- Profile picture card-->
+                                <div class="card">
+                                    <div class="card-header"><h4>Main Company Header Photo</h4></div>
+                                    <div class="card-body text-center">
+                                        <!-- Profile picture image-->
+                                        <img class="img-account-profile mb-2" width="300px" src="{% if company.image %}{{ company.image.url }}{% else %}{% static 'img/Headshot-Placeholder.png' %}{% endif %}" alt="{{ company.business_name }} Main Image" />
+                                        <!-- Profile picture help block-->
+                                        <div class="small font-italic text-muted mb-4">JPG or PNG no larger than 5 MB</div>
+                                        <!-- Profile picture upload button -->
+                                        <form action="{% host_url 'imageuploads' host 'bizadmin' %}" method="POST" enctype="multipart/form-data" id="formUpload">
+                                        {% csrf_token %}
+                                            <input type="hidden" name="x" id="id_x"><input type="hidden" name="y" id="id_y"><input type="hidden" name="width" id="id_width"><input type="hidden" name="height" id="id_height">
+                                            <input type="file" id="inputimage" name="imageFile" class="btn btn-primary" accept="image/*" hidden >
+                                            {% comment %} <button type="button" id="btnimage" name="imageFile" class="btn btn-primary">Upload new image</button> {% endcomment %}
+                                            <div class="file-loading">
+                                                <input id="inputmain" name="imageFile" type="file">
+                                            </div> 
+                                            
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-8">
+                                <!-- Account details card-->
+                                <div class="card mb-4">
+                                    <div class="card-header"><h4>Account Details</h4></div>
+                                    <div class="card-body">
+                                        <form id="updatedform">
+                                            {% csrf_token %}
+                                            <!-- Form Row-->
+                                            <div class="form-row">
+                                                <!-- Form Group (first name)-->
+                                                <div class="form-group col-md-12">
+                                                    <label class="small mb-1" for="businessName">Business Name</label>
+                                                    {{ updateform.business_name|as_crispy_field }}
+                                                    <div class="invalid_name m-0 p-0" style="display:none; color:red!important;"></div>
+                                                </div>
+                                            </div>
+                                            <div class="form-row">
+                                                <!-- Form Group (first name)-->
+                                                <div class="form-group col-md-12">
+                                                    <label class="small mb-1" for="businessName">About Section</label>
+                                                    {{ updateform.description|as_crispy_field }}
+                                                </div>
+                                            </div>
+                                            <!-- Form Row        -->
+                                            <div class="form-row">
+                                                <!-- Form Group (organization name)-->
+                                                <div class="form-group col-md-6">
+                                                    <label class="small mb-1" for="inputOrgName">Main Category</label>
+                                                    {{ updateform.category|as_crispy_field }}
+                                                </div>
+                                                <!-- Form Group (location)-->
+                                                <div class="form-group col-md-6">
+                                                    <label class="small mb-1" for="inputLocation">Business Categories</label>
+                                                    {{ updateform.subcategory|as_crispy_field }}
+                                                </div>
+                                            </div>
+                                            <!-- Form Group (email address)-->
+                                            <div class="form-row">
+                                                <div class="form-group col-md-6">
+                                                    <label class="small mb-1" for="inputEmailAddress">Business Contact Email</label>
+                                                    {{ updateform.email|as_crispy_field }}
+                                                    <div class="invalid_email m-0 p-0" style="display:none; color:red!important;"></div>
+                                                </div>
+                                                <!-- Form Group (phone number)-->
+                                                <div class="form-group col-md-6">
+                                                    <label class="small mb-1" for="inputPhone">Business Phone Number</label>
+                                                    {{ updateform.phone|as_crispy_field }}
+                                                    <div class="invalid_phone m-0 p-0" style="display:none; color:red!important;"></div>
+                                                </div>
+                                            </div>
+                                            <div class="form-row">
+                                                <div class="form-group col-md-4">
+                                                    <label for="">Business Address</label>
+                                                    {{ updateform.address|as_crispy_field }}
+                                                </div>
+                                                <div class="form-group col-md-4">
+                                                    <label for="">Postal Code</label>
+                                                    {{ updateform.postal|as_crispy_field }}
+                                                </div>
+                                                <div class="form-group col-md-2">
+                                                    <label for="">City</label>
+                                                    {{ updateform.city|as_crispy_field }}
+                                                </div>
+                                                <div class="form-group col-md-2">
+                                                    <label for="">Province</label>
+                                                    {{ updateform.state|as_crispy_field }}
+                                                </div>
+                                            </div>
+                                            <div class="form-row">
+                                                <div class="form-group col-md-6">
+                                                    <label for="">Personalized Booking Link</label>
+                                                    <div class="input-group justify-content-center mb-3" id="id_subdomain">
+                                                        <input type="text" class="form-control" id="subdomain" name="subdomain" placeholder="Enter a Subdomain, must only contain letters, numbers and hyphens. No spaces are allowed." aria-label="Users's subdomain" aria-describedby="basic-addon2" value="{{ company.slug }}">
+                                                        <div class="input-group-append">
+                                                            <span class="input-group-text" id="basic-addon2">.bookme.to</span>
+                                                        </div>
+                                                        <div class="invalid_subdomain m-0 p-0" style="display:none; color:red!important;"></div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-6">
+                                                    <label for="">Business Website Link</label>
+                                                    {{ updateform.website_link|as_crispy_field }}
+                                                    <div class="invalid_web m-0 p-0" style="display:none; color:red!important;"></div>
+                                                </div>
+                                            </div>
+                                            <div class="form-row">
+                                                <div class="form-group col-md-4">
+                                                    <label for="">Facebook Link</label>
+                                                    {{ updateform.fb_link|as_crispy_field }}
+                                                    <div class="invalid_fb m-0 p-0" style="display:none; color:red!important;"></div>
+                                                </div>
+                                                <div class="form-group col-md-4">
+                                                    <label for="">Twitter Link</label>
+                                                    {{ updateform.twitter_link|as_crispy_field }}
+                                                    <div class="invalid_twitter m-0 p-0" style="display:none; color:red!important;"></div>
+                                                </div>
+                                                <div class="form-group col-md-4">
+                                                    <label for="">Instagram Link</label>
+                                                    {{ updateform.instagram_link|as_crispy_field }}
+                                                    <div class="invalid_instagram m-0 p-0" style="display:none; color:red!important;"></div>
+                                                </div>
+                                            </div>
+                                            <div class="form-row text-center">
+                                                <label class="small mb-1" style="display:none;" id='error'></label>
+                                                <button class="btn btn-primary justify-content-center" type="button" id="saveform">Save changes</button>
+                                            </div>
+                                            <!-- Save changes button-->
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- MODAL TO CROP THE IMAGE -->
+                        <div class="modal fade" id="modalCrop" data-backdrop="static" data-keyboard="false">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                        </button>
+                                        <h4 class="modal-title">Crop the photo</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <img src="" id="image" style="max-width: 100%;">
+                                    </div>
+                                    <div class="modal-footer">
+                                        <div class="btn-group pull-left" role="group">
+                                        <button type="button" class="btn btn-default js-zoom-in">
+                                            <span class="fas fa-search-plus"></span>
+                                        </button>
+                                        <button type="button" class="btn btn-default js-zoom-out">
+                                            <span class="fas fa-search-minus"></span>
+                                        </button>
+                                        </div>
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Nevermind</button>
+                                        <button type="button" class="btn btn-primary js-crop-and-upload">Crop and upload</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <script>
+
+                        $('#id_updatecompany-category').change(function(){
+            var categoryId = $(this).val();
+            $.ajax({
+                url: '{% host_url "ajax_load_subcategories" host "bizadmin" %}',
+                data: {
+                    'category': categoryId
+                },
+                success: function(data){
+                    $('#id_updatecompany-subcategory').empty()
+                    $('#id_updatecompany-subcategory').append(data)
+                    $('#id_updatecompany-subcategory').selectpicker('refresh')
+                }
+            });
+        });
+
+    function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+        return cookieValue;
+    }
+
+    document.getElementById('btnimage').addEventListener('click', openDialog);
+
+    function openDialog() {
+        document.getElementById('inputimage').click();
+    }
+    
+    const businessname = document.querySelector("#id_updatecompany-business_name");
+    const businessemail = document.querySelector("#id_updatecompany-email");
+    const businessphone = document.querySelector("#id_updatecompany-phone");
+    const feedBackName = document.querySelector('.invalid_name');
+    const feedBackEmail = document.querySelector('.invalid_email');
+    const submitBtn = document.querySelector('#saveform');
+    const error = document.querySelector('#error');
+    businessname.addEventListener('keyup', (e) =>{
+        const businessnameVal = e.target.value;
+        businessname.classList.remove("has-danger");
+        businessname.classList.add("has-success");
+        feedBackName.style.display="none";
+        var csrftoken = getCookie('csrftoken');
+            $.ajax({
+                url: "{% host_url 'updateform' host 'bizadmin' %}",
+                data: JSON.stringify({name: businessnameVal, email:'test'}),
+                type: "POST",
+                dataType: 'json',
+                headers:{
+                    "X-CSRFToken": csrftoken
+                },
+                success: function (data) {
+                    if (data.name_error) {
+                        businessname.classList.remove("has-success");
+                        businessname.classList.add("has-danger");
+                        feedBackName.style.display="block";
+                        feedBackName.innerHTML=`<p style="color:red!important;">${data.name_error}</p>`
+                    }
+                    else {
+                        businessname.classList.remove("has-danger");
+                        feedBackName.style.display="none";
+                    }
+
+                },
+            });
+        
+    });
+
+    const feedBackreasubdomain = document.querySelector(".invalid_subdomain")
+    const subdomainField = document.querySelector("#id_subdomain");
+
+    subdomainField.addEventListener('keyup', (e) =>{
+        const subdomainVal = e.target.value;
+        subdomainField.classList.remove("has-danger");
+        subdomainField.classList.add("has-success");
+        feedBackreasubdomain.style.display="none";
+        var csrftoken = getCookie('csrftoken');
+            $.ajax({
+                url: "{% host_url 'subdomain' host 'bizadmin' %}",
+                data: JSON.stringify({subdomain: subdomainVal}),
+                type: "POST",
+                dataType: 'json',
+                headers:{
+                    "X-CSRFToken": csrftoken
+                },
+                success: function (data) {
+                    if (data.email_error) {
+                        subdomainField.classList.remove("has-success");
+                        subdomainField.classList.add("has-danger");
+                        feedBackreasubdomain.style.display="block";
+                        feedBackreasubdomain.innerHTML=`<p style="color:red!">${data.email_error}</p>`
+                    }
+                    else {
+                        subdomainField.classList.remove("has-danger");
+                        feedBackreasubdomain.style.display="none";
+                    }
+
+                },
+            });
+        
+    });
+
+    businessphone.addEventListener('keyup', (e) =>{
+        const businessphoneVal = e.target.value;
+        businessphone.classList.remove("has-danger");
+        businessphone.classList.add("has-success");
+        feedBackEmail.style.display="none";
+        var csrftoken = getCookie('csrftoken');
+            $.ajax({
+                url: "{% host_url 'updateform' host 'bizadmin' %}",
+                data: JSON.stringify({email: businessemailVal, name:'test'}),
+                type: "POST",
+                dataType: 'json',
+                headers:{
+                    "X-CSRFToken": csrftoken
+                },
+                success: function (data) {
+                    if (data.email_error) {
+                        businessphone.classList.remove("has-success");
+                        businessphone.classList.add("has-danger");
+                        feedBackEmail.style.display="block";
+                        feedBackEmail.innerHTML=`<p style="color:red!important;">${data.email_error}</p>`
+                    }
+                    else {
+                        businessphone.classList.remove("has-danger");
+                        feedBackEmail.style.display="none";
+                    }
+
+                },
+            });
+        
+    });
+
+    category = document.querySelector('#id_updatecompany-category')
+    subcategory = document.querySelector('#id_updatecompany-subcategory')
+    
+    submitBtn.addEventListener('click', (e)=>{
+        var csrftoken = getCookie('csrftoken');
+        $.ajax({
+            data: $('#updatedform').serialize(),
+            type: "post",
+            url: "{% host_url 'saveDetailForm' host 'bizadmin' %}",
+            headers:{
+                    "X-CSRFToken": csrftoken
+                },
+            success: function(data){
+                if(data.errors){
+                    Swal.fire({
+                        title:'There was an error in your form. We were unable to save the changes.',
+                        icon: 'error',
+                        customClass:{
+                            confirmButton: 'btn btn-primary',
+                            cancelButton: 'btn btn-danger',
+                       },
+                       buttonsStyling: false,
+                    });
+                }
+                if(data.good){
+                    $.notify({
+                        // options
+                        message: 'Your information has been saved'
+                    },{
+                        // settings
+                        type: 'success'
+                    });
+                }
+
+            }
+        });
+        return false;
+    });
+
+    </script>
+{% endblock %}

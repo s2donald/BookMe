@@ -1,32 +1,38 @@
 from decimal import Decimal
 from django.conf import settings
-from .models import Product, addOnProducts
-
+from .models import Product, addOnProducts, MainProductDropDown, ProductDropDown
+import decimal
 class ProductCart(object):
-    def add(self, product, addon_list, dropdown_list, quantity=1, override_quantity=False):
+    def add(self, product, addon_list, dropdown_list,prod_addon,dropdown_addon, quantity=1, override_quantity=False):
         product_id = str(product.id)
-        addon_and_dropdown = [addon_list, dropdown_list]
-        # print(addon_and_dropdown)
-        
+        price = decimal.Decimal(0)
+        for addsons in prod_addon:
+            price += addsons.price
+        for dropd in dropdown_addon:
+            price += dropd.price
+        price += product.price
+        self.cart.clear()
         if product_id not in self.cart:
             self.cart[product_id] = {'quantity': 0, 
-                                   'price':str(product.price),
-                                   'addon':[addon_and_dropdown]}
+                                   'price':str(price),
+                                   'addon':addon_list,
+                                   'dropdown':dropdown_list}
         else:
-            if (addon_and_dropdown in self.cart[product_id]['addon']):
-                self.cart[product_id]['quantity'] = self.cart[product_id]['quantity']
-            else:
-                self.cart[product_id]['quantity'] = self.cart[product_id]['quantity']
-                self.cart[product_id]['addon'].append(addon_and_dropdown)
-        for keyd in self.cart.keys():
-            for addon in self.cart[keyd]['addon']:
-                print(addon[1])
-            print()
+            self.cart[product_id]['addon'] = addon_list
+            self.cart[product_id]['dropdown'] = dropdown_list
+            self.cart[product_id]['price'] = str(price)
+            # if (addon_and_dropdown in self.cart[product_id]['addon']):
+            #     self.cart[product_id]['quantity'] = self.cart[product_id]['quantity']
+            #     # self.cart[product_id]['addon'][addon_and_dropdown][1]+=1
+            # else:
+            #     self.cart[product_id]['quantity'] = self.cart[product_id]['quantity']
+            #     self.cart[product_id]['addon'].append(addon_and_dropdown)
         if override_quantity:
             self.cart[product_id]['quantity'] = quantity
         else:
             self.cart[product_id]['quantity'] += quantity
-        # self.save()
+        print(self.cart)
+        self.save()
 
     def remove(self, product):
         product_id = str(product.id)
@@ -40,7 +46,10 @@ class ProductCart(object):
         cart = self.cart.copy()
         for product in products:
             cart[str(product.id)]['product'] = product
+
         for item in cart.values():
+            item['addons'] = addOnProducts.objects.filter(id__in=item['addon'])
+            item['dropdownoptions'] = ProductDropDown.objects.filter(id__in=item['dropdown'])
             item['price'] = Decimal(item['price'])
             item['total_price'] = item['price'] * item['quantity']
             yield item

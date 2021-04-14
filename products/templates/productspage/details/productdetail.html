@@ -1,4 +1,4 @@
-{% extends 'bookingpage/multiplestaff/bookingpage/main.html'%}
+{% extends 'productspage/main.html'%}
 {% load static %}
 {% load hosts %}
 {% load business_tags %}
@@ -79,12 +79,12 @@
                 <div class="text-block text-left">
                     <h4 class="font-weight-bold">{{ product.currency}}${{ product.price }}</h4>
                 </div>
-                <form action="" method="POST" id="addtocart" data-url="{% host_url 'cart_add_product' product_id=product.id host 'producturl' slug=company.slug %}">
+                <form action="{% host_url 'cart_add_product' product_id=product.id host 'producturl' slug=company.slug %}" method="POST" id="gotocheckout" data-url="{% host_url 'cart_add_product' product_id=product.id host 'producturl' slug=company.slug %}">
                     {% csrf_token %}
                     {% if product.addon_product.all %}
                     <div class="col-12 m-0 px-0 text-left justify-content-left align-items-center">
                         <p class="font-weight-bold">Options:</p>
-                        <select name="addon_options" id="addon_options" class="addon_select selectpicker" data-size='6' data-live-search='true' data-live-search-placeholder='Select addons' multiple {% if not product.isaddon_multiple %}data-max-options="1"{% endif %} {% if product.isaddon_required %}required{% endif %}>
+                        <select autocomplete="off" name="addon_options" id="addon_options" class="addon_select selectpicker" data-size='6' data-live-search='true' data-live-search-placeholder='Select addons' multiple {% if not product.isaddon_multiple %}data-max-options="1"{% endif %} {% if product.isaddon_required %}required{% endif %}>
                             {% for addon in product.addon_product.all %}
                                 <option value='{{ addon.id }}' id='prodaddon_{{ forloop.counter }}' data-price='{{ addon.price }}'>{{ addon.name|capfirst }} +{{ addon.price }}</option>
                             {% endfor %}
@@ -95,7 +95,7 @@
                         {% for dropdown in product.product_maindropdown.all %}
                         <div class="col-12 m-0 px-0 text-left justify-content-left align-items-center">
                             <p class="font-weight-bold">{{ dropdown.placeholder }}{% if dropdown.is_required %}*{% endif %}:</p>
-                            <select name="addon_dropdown_{{ dropdown.id }}" id="addon_dropdown_{{ dropdown.id }}" class="addon_{{ dropdown.id }} selectpicker" data-size='6' data-live-search='true' data-live-search-placeholder='Select {{ dropdown.placeholder }}' multiple {% if dropdown.is_required %}required{% endif %} {% if not dropdown.is_multiple %}data-max-options="1"{% endif %}>
+                            <select autocomplete="off" name="addon_dropdown_{{ dropdown.id }}" id="addon_dropdown_{{ dropdown.id }}" class="addon_{{ dropdown.id }} selectpicker" data-size='6' data-live-search='true' data-live-search-placeholder='Select {{ dropdown.placeholder }}' multiple {% if dropdown.is_required %}required{% endif %} {% if not dropdown.is_multiple %}data-max-options="1"{% endif %}>
                                 {% for dropdowns in dropdown.main_dropdown.all %}
                                     <option value='{{ dropdowns.id }}' id='dropdown_{{dropdown.id}}_{{ forloop.counter }}' data-price='{{ dropdowns.price }}'>{{ dropdowns.option|capfirst }} {% if dropdowns.price > 0.00 %}+{{ dropdowns.price }}{% endif %}</option>
                                 {% endfor %}
@@ -246,9 +246,9 @@
 
 
 
-        $(document).on('submit', '#addtocart',function(e){
+        {% comment %} $(document).on('submit', '#gotocheckout',function(e){
             e.preventDefault()
-            var form = $('#addtocart')
+            var form = $('#gotocheckout')
             console.log()
             console.log($(this).attr('data-url'))
             $.ajax({
@@ -256,17 +256,16 @@
                 url: $(this).attr('data-url'),
                 data: form.serialize(),
                 success:function(data){
-
+                    console.log(data)
                     if (data.notvalid){
                         console.log('hello')
                     }
                     else {
                         console.log('hellos')
                     }
-                    
                 }
             });
-        });
+        }); {% endcomment %}
     })
 </script>
 

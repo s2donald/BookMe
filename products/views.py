@@ -28,12 +28,13 @@ from django.template.loader import render_to_string
 import multiprocessing
 from dateutil.relativedelta import relativedelta
 from django.contrib.postgres.search import TrigramSimilarity
-from products.models import Product
+from products.models import Product, addOnProducts, MainProductDropDown, ProductDropDown
 from products.cart import ProductCart
 from django_hosts.resolvers import reverse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 class ProductMain(View):
+    @xframe_options_exempt
     def get(self, request):
         user = request.user
         company = request.viewing_company
@@ -74,20 +75,45 @@ class SearchFilter(View):
 
 
 # Create your views here.
-
+from django.contrib.admin.utils import flatten
 @require_POST
 def cart_add(request, product_id):
     cart = ProductCart(request)
+    user = request.user
+    company = request.viewing_company
     # print(request.POST)
     addon_options = request.POST.getlist('addon_options')
     product = get_object_or_404(Product, id=product_id)
+    product_addons = addOnProducts.objects.filter(id__in=addon_options)
     dropdownaddons = []
     for dropdowns in product.product_maindropdown.all():
         option = request.POST.getlist('addon_dropdown_'+str(dropdowns.id))
         if len(option) > 0:
             dropdownaddons.append(option)
-    
-    cart.add(product=product, addon_list=addon_options, dropdown_list=dropdownaddons , quantity=1, override_quantity=False)
+    drrop = ProductDropDown.objects.filter(id__in=flatten(dropdownaddons))
+    cart.add(product=product, addon_list=flatten(addon_options), dropdown_list=flatten(dropdownaddons), prod_addon=product_addons, dropdown_addon=drrop, quantity=1, override_quantity=True)
     # print(cart.clear())
     # print(cart.get_total_price())
-    return JsonResponse({'success':'success'})
+    return redirect(reverse('cart_checkout', host='producturl', host_args=(company.slug,)))
+
+
+class CartCheckoutView(View):
+    def get(self, request):
+        user = request.user
+        company = request.viewing_company
+        cart = ProductCart(request)
+        
+        # addon_options = request.GET.getlist('addon_options')
+        # product = get_object_or_404(Product, id=product_id)
+        # dropdownaddons = []
+        # for dropdowns in product.product_maindropdown.all():
+        #     option = request.GET.getlist('addon_dropdown_'+str(dropdowns.id))
+        #     if len(option) > 0:
+        #         dropdownaddons.append(option)
+        
+        # print(addon_options)
+        # print()
+        # print(product)
+        # print()
+        # print(dropdownaddons)
+        return render(request, 'productspage/details/productcheckout.html',{'user':user,'company':company, 'cart':cart})

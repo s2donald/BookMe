@@ -55,7 +55,8 @@ def bookingServiceView(request, pk):
     return render(request, 'bookingpage/onestaff/bookingpage/testBookingPage.html', {'extra_info_form':extra_info_form,'returnClient':returnClient,'user': user, 'company':company, 'service':service, 'personal_form':personal_form, 'gibele_form':gibele_form})
 
 from django.db.models import Q
-def time_slots(start_time, end_time, interval, duration_hour, duration_minute, year, month, day, company, staff_breaks, staff):
+#depricated
+def time_slot(start_time, end_time, interval, duration_hour, duration_minute, year, month, day, company, staff_breaks, staff):
     t = start_time
     servDate = timezone.localtime(timezone.make_aware(datetime.datetime(year,month,day)))
     
@@ -87,23 +88,11 @@ def time_slots(start_time, end_time, interval, duration_hour, duration_minute, y
                 before_durmin =0
                 after_durhour = 0
                 after_durmin = 0
-                # if buffer == 'bf':
-                #     before_durhour = obj.service.paddingtime_hour
-                #     before_durmin = obj.service.paddingtime_minute
-                #     after_durhour = obj.service.paddingtime_hour
-                #     after_durmin = obj.service.paddingtime_minute
-                # elif buffer == 'before':
-                #     before_durhour = obj.service.paddingtime_hour
-                #     before_durmin = obj.service.paddingtime_minute
-                # elif buffer == 'after':
-                #     after_durhour = obj.service.paddingtime_hour
-                #     after_durmin = obj.service.paddingtime_minute
-                #The start time of the already booked service
                 s = timezone.localtime(obj.start)
                 #The endtime of the already booked service
                 g = timezone.localtime(obj.end)
                 #Check if already booked service interfers with the proposed 
-                if((s<=servStart<g) or (s<endTime<g) or (end_time<endTime.time())):
+                if((s<=servStart<g) or (s<endTime<=g) or (end_time<=endTime.time())):
                     t = endTime.time()
                     #Since we know this booking time falls between an already booked service 
                     # We basically check if the ending time of the booking interval 't' is less than the booking time of the 
@@ -122,65 +111,50 @@ def time_slots(start_time, end_time, interval, duration_hour, duration_minute, y
                 if((servStart.time()<=breaks.from_hour<endTime.time()) or (servStart.time()<breaks.to_hour<endTime.time())):
                     count = 1
                     t=breaks.to_hour
-
+        # qs3 = staff.staff_bookings.filter(company=company, end__gte=serviceend, start__lte=time, is_cancelled_user=False, is_cancelled_company=False, is_cancelled_request=False)
+        # print(time, serviceend)
+        # print('from start')
+        # for qs in qs1:
+        #     print(timezone.localtime(qs.start), timezone.localtime(qs.end), qs)
+        # print('from end')
+        # for qs in qs2:
+        #     print(timezone.localtime(qs.start), timezone.localtime(qs.end), qs)
+        # print('from middle')
+        # for qs in qs3:
+        #     print(timezone.localtime(qs.start), timezone.localtime(qs.end), qs)
+        # print()
         if count==0:
             availableDay.append(t)
             t = timezone.localtime(timezone.make_aware(datetime.datetime.combine(datetime.date.today(), t) +
                 datetime.timedelta(minutes=interval))).time()
     return availableDay
 
-
-class bookingTimes(View):
-    def post(self, request):
-        data=json.loads(request.body)
-        s_id = data['id']
-        month = data['month']+1
-        year = data['year']
-        day = data['day']
-        weekday = data['weekday']
-        date=data['date']
-        company = request.viewing_company
-        open_hours = get_object_or_404(OpeningHours,company=company, weekday=weekday)
-        #We need to add the service time and validate whether the service can be fit in the timeslot
-        b_open = open_hours.from_hour
-        b_close = open_hours.to_hour
-        # print(b_open.hour)
-        naive = datetime.datetime(year, month, day, b_open.hour, b_open.minute)
-        # timezone.localtime(timezone.make_aware(naive))
-        interval= company.interval
-        duration_hour = Services.objects.get(pk=s_id).duration_hour
-        duration_minute = Services.objects.get(pk=s_id).duration_minute
-        #Check buffer before and after
-        # beforeafter = Services.objects.get(pk=s_id).padding
-        # buffer_durhour = Services.objects.get(pk=s_id).paddingtime_hour
-        # buffer_durmin = Services.objects.get(pk=s_id).paddingtime_minute
-        is_auth = request.user.is_authenticated
-
-        # #This code has to change once staff members are added
-        if company.staffmembers.count() == 1:
-            breakss = company.staffmembers.all()[0].staff_breaks.all()
-        else:
-            breakss = None
-        staff_breaks = []
-        if breakss:
-            for breaks in breakss:
-                if weekday == breaks.weekday:
-                    staff_breaks.append(breaks)
-
-        # #This code has to change once staff members are added
-        # for staffmem in company.staffmembers.all():
-        #     staff_break = staffmem.staff_breaks.all()
-        
-        if open_hours.is_closed==False:
-            slist = list(time_slots(b_open,b_close,interval, duration_hour, duration_minute, year, month, day, company, staff_breaks, staff))
-            # appslot = list(appointmentValid(slist, duration_hour, duration_minute, len(slist)))
-        else:
-            slist = []
-        services = Services.objects.filter(id=s_id)
-        # com = serializers.serialize("json",open_hours)
-        
-        
-        return JsonResponse({'appointment_slots':slist, 'auth':is_auth})
+def time_slots(interval, duration, hours, company, staff_breaks, staff):
+    availableDay = []
+    time = hours[0]
+    while time < hours[1]:
+        count = 0
+        serviceend = time + duration
+        qs1 = staff.staff_bookings.filter(
+            Q(company=company, start__lt=serviceend, start__gt=time, is_cancelled_user=False, is_cancelled_company=False, is_cancelled_request=False)|
+            Q(company=company, end__lt=serviceend, end__gt=time, is_cancelled_user=False, is_cancelled_company=False, is_cancelled_request=False)|
+            Q(company=company, end__gte=serviceend, start__lte=time, is_cancelled_user=False, is_cancelled_company=False, is_cancelled_request=False))
+        qs2 = hours[1]<serviceend
+        if (qs1.count() >= 1):
+            count = 1
+            time += datetime.timedelta(minutes=interval)
+        if qs2:
+            count = 1
+            time=serviceend
+        if count == 0:
+            for breaks in staff_breaks:
+                if((time.time()<=breaks.from_hour<serviceend.time()) or (time.time()<breaks.to_hour<serviceend.time())):
+                    count=1
+                    time = time.replace(hour=breaks.to_hour.hour, minute=breaks.to_hour.minute)
+        if count == 0:
+            availableDay.append(time.time())
+            time += datetime.timedelta(minutes=interval)
+    return availableDay
 
 import stripe 
 def get_or_create_customer(email, token, stripe_access_token, stripe_account):
@@ -508,10 +482,22 @@ class bookingCalendarRender(View):
         interval= company.interval
         duration_hour = Services.objects.get(pk=s_id).duration_hour
         duration_minute = Services.objects.get(pk=s_id).duration_minute
+        duration=datetime.timedelta(hours=duration_hour, minutes=duration_minute)
         is_auth = request.user.is_authenticated
 
         # #This code has to change once staff members are added
         breakss = staff.staff_breaks.all()
+        
+        
+        if datetime.datetime(year,month,day).date() == timezone.localtime(timezone.now()).date():
+            init_time = timezone.localtime(timezone.now() + datetime.timedelta(hours=company.before_window_hour, minutes=company.before_window_min)).time()
+            t = b_open
+            while init_time>t:
+                t = timezone.localtime(timezone.make_aware(datetime.datetime.combine(datetime.date.today(), t) +
+                datetime.timedelta(minutes=interval))).time()
+            hours = (timezone.localtime(timezone.make_aware(datetime.datetime(year, month, day, t.hour, t.minute))), timezone.localtime(timezone.make_aware(datetime.datetime(year, month, day, b_close.hour, b_close.minute))))
+        else:
+            hours = (timezone.localtime(timezone.make_aware(datetime.datetime(year, month, day, b_open.hour, b_open.minute))), timezone.localtime(timezone.make_aware(datetime.datetime(year, month, day, b_close.hour, b_close.minute))))
         
         staff_breaks = []
         if breakss:
@@ -519,7 +505,8 @@ class bookingCalendarRender(View):
                 if weekday == breaks.weekday:
                     staff_breaks.append(breaks)
         if staff_hours.is_off==False:
-            slist = list(time_slots(b_open,b_close,interval, duration_hour, duration_minute, year, month, day, company, staff_breaks, staff))
+            # slist = list(time_slots(b_open,b_close,interval, duration, year, month, day, company, staff_breaks, staff))
+            slist = list(time_slots(interval, duration, hours, company, staff_breaks, staff))
         else:
             slist = []
         service = Services.objects.get(id=s_id)
@@ -546,7 +533,11 @@ class confirmationMessageRender(View):
         staff = StaffMember.objects.get(pk=staff_id)
         service = Services.objects.get(pk=s_id)
         servprice = service.price
-        if staff.collectpayment and staff.stripe_user_id and request.user.is_authenticated:
+        if servprice == 0.00:
+            collectpayment = False
+            paymentduelater = float(servprice)
+            thepayment = 0
+        elif staff.collectpayment and staff.stripe_user_id and request.user.is_authenticated:
             collectpayment = True
             price = (float(servprice))
             thepayment = round(price, 2)
@@ -602,7 +593,11 @@ class confirmationMessageRender(View):
         
         if not user.is_authenticated:
             servprc = service.price
-            if staff.collectpayment and staff.stripe_user_id:
+            if servprc == 0.00:
+                collectpayment = False
+                paymentduelater = float(servprc)
+                thepayment = 0
+            elif staff.collectpayment and staff.stripe_user_id:
                 collectpayment = True
                 price = (float(servprc))
                 thepayment = round(price, 2)
@@ -613,7 +608,7 @@ class confirmationMessageRender(View):
                 thepayment = round(price, 2)
                 paymentduelater = round(float(servprc) - price, 2)
                 if paymentduelater < 0:
-                    thepayment = round(servprice, 2)
+                    thepayment = round(servprc, 2)
                     paymentduelater = 0
             else:
                 collectpayment = False
@@ -697,7 +692,6 @@ class confirmationMessageRender(View):
                 booking.bookingreq = reqc
                 booking.save()
                 delettime = timezone.localtime(timezone.now() + datetime.timedelta(days=6))
-                print(delettime)
                 deleteCompanyReqAuto.apply_async(args=[reqc.id], eta=delettime, task_id=booking.slug)
                 #Send request sent and recieved to customer and client respectively
                 #Text
@@ -811,7 +805,11 @@ class guestNewFormRender(View):
         date = datetime.date(year, month, day)
         personal_form = GuestPersonalForm(initial={'phone_code':"CA"})
         servpmnt = service.price
-        if staff.collectpayment and staff.stripe_user_id:
+        if servpmt == 0.00:
+            collectpayment = False
+            paymentduelater = float(servpmnt)
+            thepayment = 0
+        elif staff.collectpayment and staff.stripe_user_id:
             collectpayment = True
             price = (float(servpmnt))
             thepayment = round(price, 2)
@@ -822,7 +820,7 @@ class guestNewFormRender(View):
             thepayment = round(price, 2)
             paymentduelater = round(float(servpmnt) - price, 2)
             if paymentduelater < 0:
-                thepayment = round(servprice, 2)
+                thepayment = round(servpmnt, 2)
                 paymentduelater = 0
         else:
             collectpayment = False

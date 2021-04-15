@@ -1,6 +1,7 @@
 
 var btnBookMe = document.querySelector('#BookMePlugin');
 var BookMeUrl = btnBookMe.dataset.url
+console.log(BookMeUrl)
 var color = btnBookMe.dataset.color
 var DOM_img = document.createElement("img")
 DOM_img.src = "https://django-gibele.s3.amazonaws.com/img/favicon/logo/BookMe-blackgrad.svg"
@@ -197,7 +198,7 @@ class BookmeModal {
         elementStyle.backgroundColor = '#'+color;
 
         this.buttonCallBookmeModalRef.onclick = () => {
-            var windowWidth		=	jQuery(window).width();
+            var windowWidth = document.documentElement.clientWidth;
             if( windowWidth < 600 )
             {
                 window.open( BookMeUrl , '_blank' );

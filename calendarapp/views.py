@@ -399,6 +399,7 @@ class createAccountView(View):
             login(request, account)
         return JsonResponse({'good':'good'})
 
+@xframe_options_exempt
 def bookingurlupdated(request):
     user = request.user
     company = request.viewing_company
@@ -407,8 +408,6 @@ def bookingurlupdated(request):
     kanalytics = request.GET.get('k')
     pk = settings.STRIPE_PUBLISHABLE_KEY
     return render(request, 'bookingpage/multiplestaff/bookingpage/bookingpage.html',{"pk_stripe":pk,'user':user,'company':company, 'dateWindowBefore':dateWindowBefore, 'dateWindowAfter':dateWindowAfter})
-
-
 
 def bookingStaffUrl(request, slug):
     user = request.user

@@ -210,8 +210,8 @@ if not DEBUG:
     DEFAULT_FILE_STORAGE = 'gibele.storage_backends.MediaStorage'
     STATIC_URL = '/static/'
     # Tell django-storages the domain to use to refer to static files.
-    # AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
-    AWS_S3_CUSTOM_DOMAIN = 'www.shopmeto.ca'
+    AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
+    # AWS_S3_CUSTOM_DOMAIN = 'www.shopmeto.ca'
     # Tell the staticfiles app to use S3Boto3 storage when writing the collected static files (when
     # you run `collectstatic`).
     STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'

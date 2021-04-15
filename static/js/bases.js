@@ -16,6 +16,17 @@ $(document).ready(function (){
         });
     });
 
+    $('.top-gallery').each(function () { // the containers for all your galleries
+        $(this).magnificPopup({
+            delegate: 'a', // the selector for gallery item
+            type: 'image',
+            gallery: {
+                enabled: true,
+                tCounter: '' // markup of counter
+            }
+        });
+    });
+
     $('.gallery').each(function () { // the containers for all your galleries
         $(this).magnificPopup({
             delegate: 'a', // the selector for gallery item
@@ -25,6 +36,15 @@ $(document).ready(function (){
             }
         });
     });
+    var $selectpicker = $('.selectpicker');
+
+    //    Activate bootstrap-select
+    if ($selectpicker.length != 0) {
+        $selectpicker.selectpicker({
+        iconBase: "fas",
+        tickIcon: "fa-check"
+        });
+    }
 
     // =====================================================
     //     Reset input
@@ -131,7 +151,30 @@ $(document).ready(function (){
             nextEl: '.swiper-button-next',
             prevEl: '.swiper-button-prev',
         },
-    });    
+    });
+    
+    var galleryThumbs = new Swiper('.gallery-thumbs', {
+        spaceBetween: 10,
+      slidesPerView: 4,
+      watchSlidesVisibility: true,
+      watchSlidesProgress: true,
+      centerInsufficientSlides: true,
+      slideToClickedSlide: true,
+      });
+
+      var galleryTop = new Swiper('.top-gallery', {
+        spaceBetween: 10,
+        centeredSlides: true,
+        navigation: {
+          nextEl: '.swiper-button-next',
+          prevEl: '.swiper-button-prev',
+        },
+        pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+            dynamicBullets: true
+        },
+      });
 
     // =====================================================
     //      Items slider

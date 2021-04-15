@@ -1687,12 +1687,12 @@ textarea.form-control {
   border-color: #00f2c3;
   box-shadow: 0 0 0 0 rgba(0, 242, 195, 0.25); }
 
-.invalid-feedback {
+.invalid-feedback, #id_addcompany-description-error, #id_addcompany-address-error, #id_addcompany-state {
   display: none;
   width: 100%;
   margin-top: 0.25rem;
   font-size: 80%;
-  color: #ff8d72; }
+  color: #f5365c !important; }
 
 .invalid-tooltip {
   position: absolute;
@@ -1709,14 +1709,14 @@ textarea.form-control {
   border-radius: 0.25rem; }
 
 .was-validated .form-control:invalid, .form-control.is-invalid {
-  border-color: #ff8d72;
+  border-color: #f5365c;
   padding-right: 2.25rem;
   background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='%23ff8d72' viewBox='-2 -2 7 7'%3e%3cpath stroke='%23ff8d72' d='M0 0l3 3m0-3L0 3'/%3e%3ccircle r='.5'/%3e%3ccircle cx='3' r='.5'/%3e%3ccircle cy='3' r='.5'/%3e%3ccircle cx='3' cy='3' r='.5'/%3e%3c/svg%3E");
   background-repeat: no-repeat;
   background-position: center right calc(0.35714em + 0.25rem);
   background-size: calc(0.71429em + 0.5rem) calc(0.71429em + 0.5rem); }
   .was-validated .form-control:invalid:focus, .form-control.is-invalid:focus {
-    border-color: #ff8d72;
+    border-color: #f5365c;
     box-shadow: 0 0 0 0 rgba(255, 141, 114, 0.25); }
   .was-validated .form-control:invalid ~ .invalid-feedback,
   .was-validated .form-control:invalid ~ .invalid-tooltip, .form-control.is-invalid ~ .invalid-feedback,
@@ -1728,11 +1728,11 @@ textarea.form-control {
   background-position: top calc(0.35714em + 0.25rem) right calc(0.35714em + 0.25rem); }
 
 .was-validated .custom-select:invalid, .custom-select.is-invalid {
-  border-color: #ff8d72;
+  border-color: #f5365c;
   padding-right: calc((1em + 1rem) * 3 / 4 + 1.7rem);
   background: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 5'%3e%3cpath fill='%2332325d' d='M2 0L0 2h4zm0 5L0 3h4z'/%3e%3c/svg%3e") no-repeat right 0.7rem center/8px 10px, url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='%23ff8d72' viewBox='-2 -2 7 7'%3e%3cpath stroke='%23ff8d72' d='M0 0l3 3m0-3L0 3'/%3e%3ccircle r='.5'/%3e%3ccircle cx='3' r='.5'/%3e%3ccircle cy='3' r='.5'/%3e%3ccircle cx='3' cy='3' r='.5'/%3e%3c/svg%3E") transparent no-repeat center right 1.7rem/calc(0.71429em + 0.5rem) calc(0.71429em + 0.5rem); }
   .was-validated .custom-select:invalid:focus, .custom-select.is-invalid:focus {
-    border-color: #ff8d72;
+    border-color: #f5365c;
     box-shadow: 0 0 0 0 rgba(255, 141, 114, 0.25); }
   .was-validated .custom-select:invalid ~ .invalid-feedback,
   .was-validated .custom-select:invalid ~ .invalid-tooltip, .custom-select.is-invalid ~ .invalid-feedback,
@@ -1745,7 +1745,7 @@ textarea.form-control {
   display: block; }
 
 .was-validated .form-check-input:invalid ~ .form-check-label, .form-check-input.is-invalid ~ .form-check-label {
-  color: #ff8d72; }
+  color: #f5365c; }
 
 .was-validated .form-check-input:invalid ~ .invalid-feedback,
 .was-validated .form-check-input:invalid ~ .invalid-tooltip, .form-check-input.is-invalid ~ .invalid-feedback,
@@ -1753,9 +1753,9 @@ textarea.form-control {
   display: block; }
 
 .was-validated .custom-control-input:invalid ~ .custom-control-label, .custom-control-input.is-invalid ~ .custom-control-label {
-  color: #ff8d72; }
+  color: #f5365c; }
   .was-validated .custom-control-input:invalid ~ .custom-control-label::before, .custom-control-input.is-invalid ~ .custom-control-label::before {
-    border-color: #ff8d72; }
+    border-color: #f5365c; }
 
 .was-validated .custom-control-input:invalid ~ .invalid-feedback,
 .was-validated .custom-control-input:invalid ~ .invalid-tooltip, .custom-control-input.is-invalid ~ .invalid-feedback,
@@ -1763,17 +1763,17 @@ textarea.form-control {
   display: block; }
 
 .was-validated .custom-control-input:invalid:checked ~ .custom-control-label::before, .custom-control-input.is-invalid:checked ~ .custom-control-label::before {
-  border-color: #ffb6a5;
-  background-color: #ffb6a5; }
+  border-color: #f5365c;
+  background-color: #f5365c; }
 
 .was-validated .custom-control-input:invalid:focus ~ .custom-control-label::before, .custom-control-input.is-invalid:focus ~ .custom-control-label::before {
   box-shadow: 0 0 0 0 rgba(255, 141, 114, 0.25); }
 
 .was-validated .custom-control-input:invalid:focus:not(:checked) ~ .custom-control-label::before, .custom-control-input.is-invalid:focus:not(:checked) ~ .custom-control-label::before {
-  border-color: #ff8d72; }
+  border-color: #f5365c; }
 
 .was-validated .custom-file-input:invalid ~ .custom-file-label, .custom-file-input.is-invalid ~ .custom-file-label {
-  border-color: #ff8d72; }
+  border-color: #f5365c; }
 
 .was-validated .custom-file-input:invalid ~ .invalid-feedback,
 .was-validated .custom-file-input:invalid ~ .invalid-tooltip, .custom-file-input.is-invalid ~ .invalid-feedback,
@@ -1781,7 +1781,7 @@ textarea.form-control {
   display: block; }
 
 .was-validated .custom-file-input:invalid:focus ~ .custom-file-label, .custom-file-input.is-invalid:focus ~ .custom-file-label {
-  border-color: #ff8d72;
+  border-color: #f5365c;
   box-shadow: 0 0 0 0 rgba(255, 141, 114, 0.25); }
 
 .form-inline {
@@ -11193,8 +11193,8 @@ fieldset[disabled]
 
 .has-success:after,
 .has-danger:after {
-  font-family: 'nucleo';
-  content: "\ea1b";
+  font-family: 'Font Awesome 5 Pro';
+  content: "\f00c";
   display: inline-block;
   position: absolute;
   right: 20px;
@@ -13354,14 +13354,22 @@ textarea.form-control {
 .nav-pills .nav-item i {
   display: block;
   font-size: 24px;
-  line-height: 60px; }
+  line-height: 60px;
+ }
 
 .nav-pills.nav-pills-neutral .nav-item .nav-link {
-  background-color: rgba(255, 255, 255, 0.2);
+  background-color: #27293d;;
   color: #ffffff; }
   .nav-pills.nav-pills-neutral .nav-item .nav-link.active, .nav-pills.nav-pills-neutral .nav-item .nav-link.active:focus, .nav-pills.nav-pills-neutral .nav-item .nav-link.active:hover {
-    background-color: #ffffff;
-    color: #005B97; }
+    background-color: #191f31;
+    color: white; }
+
+  .white-content .nav-pills.nav-pills-neutral .nav-item .nav-link {
+    background-color: #FFe6D9;;
+    color: #ffffff; }
+    .white-content .nav-pills.nav-pills-neutral .nav-item .nav-link.active, .white-content .nav-pills.nav-pills-neutral .nav-item .nav-link.active:focus, .white-content .nav-pills.nav-pills-neutral .nav-item .nav-link.active:hover {
+      background-color: #FFe6D9;
+      color: #005B97; }
 
 .nav-pills.nav-pills-warning .nav-item .nav-link.active, .nav-pills.nav-pills-warning .nav-item .nav-link.active:focus, .nav-pills.nav-pills-warning .nav-item .nav-link.active:hover {
   background: #005B97;
@@ -14061,8 +14069,8 @@ table.tablesorter thead tr .headerSortDown {
   background-color: #005B97; }
 
 .form-check .form-check-sign::after {
-  font-family: 'nucleo';
-  content: "\ea1b";
+  font-family: 'Font Awesome 5 Pro';
+  content: "\f00c";
   top: 0px;
   text-align: center;
   font-size: 14px;
@@ -14909,6 +14917,9 @@ table.tablesorter thead tr .headerSortDown {
       padding-left: 30px; } }
 
 @media (min-width: 992px) {
+  .main-panel {
+    padding: 10px;
+  }
   .sidebar,
   .main-panel,
   .sidebar-wrapper {
@@ -17213,8 +17224,8 @@ tbody.fc-body tr > .fc-widget-content {
 tr:first-child > td > .fc-day-grid-event {
   margin-top: 2px; }
 
-.card-calendar table td {
-  text-align: right; }
+/* .card-calendar table td {
+  text-align: right; } */
 
 /* icons within buttons */
 .fc-button .fc-icon {
@@ -18643,8 +18654,8 @@ select.selectpicker {
       opacity: 0;
       background-color: transparent; }
     .bootstrap-tagsinput .tag [data-role="remove"]:after {
-      font-family: 'Nucleo';
-      content: "\ea48";
+      font-family: 'Font Awesome 5 Pro';
+      content: "\f00c";
       padding: 0px 2px; }
 
 /*
@@ -20780,7 +20791,7 @@ Copyright (c) 2015 Daniel Eden
     .white-content .full-page .footer .copyright {
       color: #1d253b; }
   .white-content .nav-pills .nav-item .nav-link:not(.active) {
-    background: #d3d7e9;
+    background: #ffffff;
     color: #1d253b; }
     .white-content .nav-pills .nav-item .nav-link:not(.active):hover {
       background: #cccccc; }
@@ -20957,8 +20968,8 @@ Copyright (c) 2015 Daniel Eden
     height: 200px;
     position: relative; }
   .card .avatar {
-    width: 30px;
-    height: 30px;
+    width: 70px;
+    height: 70px;
     overflow: hidden;
     border-radius: 50%;
     margin-bottom: 15px; }

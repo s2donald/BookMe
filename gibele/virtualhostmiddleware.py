@@ -3,12 +3,15 @@ from django.conf import settings
 
 
 virtual_hosts = {
+    "hh5l.gibele.com:8000":"calendarapp.urls",
+    "eurocharged-automotive.gibele.com:8000":"products.urls",
     "biz.bookme.com:8000":"businessadmin.urls",
     "biz.shopme.com:8000":"productadmin.urls",
     "shopme.com:8000":"products.urls",
     "bookme.com:8000":"calendarapp.urls",
     "marketplace.bookme.com:8000":"gibele.urls",
     "marketplace.bookme.to":"gibele.urls",
+    "marketplace.gibele.com:8000":"gibele.urls",
     "biz.bookme.to":"businessadmin.urls",
     "biz.shopme.to":"productadmin.urls",
     "shopme.to":"products.urls",

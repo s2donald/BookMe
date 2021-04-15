@@ -418,6 +418,7 @@ class staffofferingservice(View):
     def post(self, request):
         # handle login or create account
         pass
+    @xframe_options_exempt
     def get(self, request):
         company = request.viewing_company
         service_id = request.GET.get('service_id')
@@ -447,11 +448,13 @@ class staffofferingservice(View):
         return JsonResponse({'html_content':html})
 
 class bookingTimesView(View):
+    @xframe_options_exempt
     def get(self, request):
         service_id = request.session.get('service_id')
         company = request.viewing_company
         staff_id = request.GET.get('staff_id')
         request.session['staff_id'] = staff_id
+        print(service_id)
         service = Services.objects.get(pk=service_id)
         staff = company.staffmembers.filter(services=service)
         staffmem = StaffMember.objects.get(pk=staff_id)

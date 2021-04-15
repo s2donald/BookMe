@@ -174,8 +174,8 @@ class BookmeModal {
     createButtonCallBookmeModal() {
         this.buttonCallBookmeModalRef = document.getElementById('BookMePlugin');
         this.buttonCallBookmeModalRef.appendChild(document.createTextNode(this.config.buttonCallBookmeModalText));
-        this.buttonCallBookmeModalRef.appendChild(document.createElement("br"));
-        this.buttonCallBookmeModalRef.appendChild(DOM_img);
+        // this.buttonCallBookmeModalRef.appendChild(document.createElement("br"));
+        // this.buttonCallBookmeModalRef.appendChild(DOM_img);
 
         const mycolor = this.isHexColor(color);
         if (!mycolor){

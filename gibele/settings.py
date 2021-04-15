@@ -200,8 +200,8 @@ USE_TZ = True
 CART_SESSION_ID = 'cart'
 
 if not DEBUG:
-    AWS_STORAGE_BUCKET_NAME = 'django-gibele'
-    # AWS_STORAGE_BUCKET_NAME = 'www.shopmeto.ca'
+    # AWS_STORAGE_BUCKET_NAME = 'django-gibele'
+    AWS_STORAGE_BUCKET_NAME = 'www.shopmeto.ca'
     AWS_S3_REGION_NAME = 'us-east-1'  # e.g. us-east-2
     AWS_ACCESS_KEY_ID = 'AKIA5YCTBN72JSC3D4WZ'
     AWS_SECRET_ACCESS_KEY = 'RIBukj+HMffN2oWSeR+BosSPz0tlLve+XVAxpBKc'
@@ -212,8 +212,8 @@ if not DEBUG:
     DEFAULT_FILE_STORAGE = 'gibele.storage_backends.MediaStorage'
     STATIC_URL = '/static/'
     # Tell django-storages the domain to use to refer to static files.
-    AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
-    # AWS_S3_CUSTOM_DOMAIN = 'www.shopmeto.ca'
+    # AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
+    AWS_S3_CUSTOM_DOMAIN = 'www.shopmeto.ca'
     # Tell the staticfiles app to use S3Boto3 storage when writing the collected static files (when
     # you run `collectstatic`).
     STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'

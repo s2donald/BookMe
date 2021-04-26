@@ -53,7 +53,7 @@
   </head>
   <body class="sidebar-mini {% if not company.darkmode %}white-content{% endif %}">
     <div class="wrapper">
-    <div class="sidebar" id="sidebar" data="orange">
+    <div class="sidebar" id="sidebar" data="blue">
       <div class="sidebar-wrapper">
         <div class="logo">
           <a href="{% host_url 'bookingurls' host 'bookingurl' slug=company.slug %}" class="simple-text logo-mini text-white">
@@ -65,15 +65,21 @@
         </div>
         <ul class="nav marg-6">
           <li class="{% block activehome %}{%endblock%}">
-            <a href="{% host_url 'home' host 'bizadmin'%}">
+            <a href="{% host_url 'home' host 'prodadmin'%}">
               <i class="fas fa-home"></i>
               <p>Homepage</p>
             </a>
           </li>
           <li class="{% block activecal%}{%endblock%}">
-            <a href="{% host_url 'schedule' host 'bizadmin'%}">
-              <i class="fas fa-calendar-alt"></i>
-              <p>Schedule</p>
+            <a href="{% host_url 'orders' host 'prodadmin'%}">
+              <i class="fas fa-clipboard-list"></i>
+              <p>Orders</p>
+            </a>
+          </li>
+          <li class="{% block activeprod%}{%endblock%}">
+            <a href="{% host_url 'service_detail' host 'prodadmin' %}">
+              <i class="fas fa-box"></i>
+              <p> Products </p>
             </a>
           </li>
           <li class="{% block activecompinfo%}{%endblock%}"> 
@@ -105,12 +111,6 @@
                   </a>
                 </li>
                 <li>
-                  <a href="{% host_url 'service_detail' host 'bizadmin' %}">
-                    <span class="sidebar-mini-icon"><i class="fas fa-concierge-bell"></i></span>
-                    <span class="sidebar-normal"> Services </span>
-                  </a>
-                </li>
-                <li>
                   <a href="{% host_url 'client_list' host 'bizadmin' %}">
                     <span class="sidebar-mini-icon"><i class="fas fa-users"></i></span>
                     <span class="sidebar-normal"> Clients </span>
@@ -119,7 +119,6 @@
               </ul>
             </div>
           </li>
-
           <li class="{% block bpageact %}{%endblock%}">
             <a data-toggle="collapse" href="#portfolio">
               <i class="fas fa-id-card"></i>
@@ -240,7 +239,7 @@
 
       </div>
     </div>
-    <div class="main-panel">
+    <div class="main-panel" data-color="blue">
       <!-- Navbar -->
       <nav class="navbar navbar-expand-lg {% if not company.darkmode %}navbar-transparent{% endif %}">
         <div class="container-fluid">
@@ -287,7 +286,7 @@
                 
               </li> {% endcomment %}
               <li class="nav-item px-0">
-                <a href="javascript:void(0)" class="nav-link" id="lightdarkmode">
+                <a href="javascript:void(0)" class="nav-link d-none" id="lightdarkmode">
                   <div class="d-none d-lg-block d-xl-block"></div>
                   <i class="fas fa-lightbulb"></i>
                   <p class="d-lg-none">
@@ -361,6 +360,7 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.2.3/flatpickr.js"></script>
         <script src="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.4.1/js/swiper.min.js"></script>
         <script src="{% static 'js/vendor/bootstrap-switch.js' %}"></script>
         <script src="{% static 'js/vendor/bootstrap-datetimepicker.js' %}"></script>
         <script src="{% static 'js/vendor/dropzone.min.js' %}"></script>

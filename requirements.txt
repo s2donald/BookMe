@@ -112,3 +112,6 @@ websocket-client==0.57.0
 Werkzeug==0.16.0
 whitenoise==5.2.0
 yarl==1.6.3
+django-address==0.2.5
+django-countries==7.1
+django-cities==0.6

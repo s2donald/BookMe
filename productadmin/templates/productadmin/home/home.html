@@ -15,7 +15,7 @@
           <div class="row align-items-center">
             <div class="col-md-6 col-xxl-12">
               <div class="text-left px-4 mb-4 mb-xl-0 mb-xxl-4">
-                <h1 class="text-primary">Welcome Back!</h1>
+                <h1 class="text-info">Welcome Back!</h1>
                 <p class="text-gray-700 mb-0">View your <a href="{% host_url 'schedule' host 'bizadmin' %}" >schedule</a> or update your <a href="{% host_url 'profile' host 'bizadmin'%}">account</a> settings.</p>
               </div>
             </div>
@@ -95,14 +95,14 @@
             </div>
             <div class="col-sm-6">
               <div class="btn-group btn-group-toggle float-right" data-toggle="buttons">
-                <label class="btn btn-sm btn-primary btn-simple active" id="0">
+                <label class="btn btn-sm btn-info btn-simple active" id="0">
                   <input type="radio" name="options" checked>
                   <span class="d-none d-md-block d-lg-block d-xl-block">Sales Per Week</span>
                   <span class="d-block d-md-none">
                     <i class="fas fa-dollar-sign"></i>
                   </span>
                 </label>
-                <label class="btn btn-sm btn-primary btn-simple" id="1">
+                <label class="btn btn-sm btn-info btn-simple" id="1">
                   <input type="radio" class="d-none d-sm-none" name="options">
                   <span class="d-none d-md-block d-lg-block d-xl-block">Sales per month</span>
                   <span class="d-block d-md-none">
@@ -165,7 +165,7 @@
         barPercentage: 1.6,
         gridLines: {
           drawBorder: false,
-          color: 'rgba(225,78,202,0.1)',
+          color: 'rgba(137, 196, 244, 1)',
           zeroLineColor: "transparent",
         },
         scaleLabel: {
@@ -187,8 +187,8 @@
 
   var gradientStroke = ctx.createLinearGradient(0, 230, 0, 50);
 
-  gradientStroke.addColorStop(1, 'rgba(255,114,126,0.2)');
-  gradientStroke.addColorStop(0.4, 'rgba(225,114,126,0.0)');
+  gradientStroke.addColorStop(1, 'rgba(137, 196, 244, 1)');
+  gradientStroke.addColorStop(0.4, 'rgba(30, 139, 195, 1)');
   gradientStroke.addColorStop(0, 'rgba(119,52,169,0)'); //purple colors
   var config = {
     type: 'line',
@@ -198,13 +198,13 @@
         label: "Earned",
         fill: true,
         backgroundColor: gradientStroke,
-        borderColor: '#ff8d72',
+        borderColor: '#1d8cf8',
         borderWidth: 2,
         borderDash: [],
         borderDashOffset: 0.0,
-        pointBackgroundColor: '#ff8d72',
+        pointBackgroundColor: '#1d8cf8',
         pointBorderColor: 'rgba(255,255,255,0)',
-        pointHoverBackgroundColor: '#ff8d72',
+        pointHoverBackgroundColor: '#1d8cf8',
         pointBorderWidth: 20,
         pointHoverRadius: 4,
         pointHoverBorderWidth: 15,

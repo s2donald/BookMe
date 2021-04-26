@@ -80,6 +80,8 @@ class Bookings(models.Model):
     # time_zone = TimeZoneField(default='America/Toronto')
     bookingreq = models.OneToOneField(CompanyReq, related_name='booking_request', on_delete=models.SET_NULL, null=True, blank=True)
 
+    is_off_day = models.BooleanField(default=False)
+
 
     class Meta:
         ordering = ('-start',)

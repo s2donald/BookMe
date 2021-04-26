@@ -55,79 +55,6 @@ def bookingServiceView(request, pk):
     return render(request, 'bookingpage/onestaff/bookingpage/testBookingPage.html', {'extra_info_form':extra_info_form,'returnClient':returnClient,'user': user, 'company':company, 'service':service, 'personal_form':personal_form, 'gibele_form':gibele_form})
 
 from django.db.models import Q
-#depricated
-def time_slot(start_time, end_time, interval, duration_hour, duration_minute, year, month, day, company, staff_breaks, staff):
-    t = start_time
-    servDate = timezone.localtime(timezone.make_aware(datetime.datetime(year,month,day)))
-    
-    #We check if the date they are looking to book an appointment is today. If so, we get the earliest available time
-    if timezone.localtime(timezone.now()).date() == servDate.date():
-        init_time = timezone.localtime(timezone.now() + datetime.timedelta(hours=company.before_window_hour, minutes=company.before_window_min)).time()
-        while init_time>t:
-            t = timezone.localtime(timezone.make_aware(datetime.datetime.combine(datetime.date.today(), t) +
-             datetime.timedelta(minutes=interval))).time()
-    availableDay = []
-    #end_time is the closing hour of the shop
-    while t < end_time:
-        if t == datetime.time(00,00,00):
-            break
-        servStart = timezone.localtime(timezone.make_aware(datetime.datetime.combine(servDate, t)))
-        endTime = timezone.localtime(timezone.make_aware(datetime.datetime.combine(servDate, t) + datetime.timedelta(hours=duration_hour,minutes=duration_minute)))
-        objects = staff.staff_bookings.filter(company=company, start__gte=servDate, is_cancelled_user=False, is_cancelled_company=False, is_cancelled_request=False)
-        # objlength = len(objects)
-        count = 0
-        if endTime.time() <= t:
-            endTime = timezone.localtime(timezone.make_aware(datetime.datetime.combine(servDate, datetime.time(23,59,59))))
-            break
-        for obj in objects:
-            #Check if the booking date from the loop is the same as the requested date
-            if (timezone.localtime(obj.start).date() == timezone.localtime(servStart).date()):
-                #Check the buffer option that applies to this booking
-                # buffer = obj.service.padding
-                before_durhour = 0
-                before_durmin =0
-                after_durhour = 0
-                after_durmin = 0
-                s = timezone.localtime(obj.start)
-                #The endtime of the already booked service
-                g = timezone.localtime(obj.end)
-                #Check if already booked service interfers with the proposed 
-                if((s<=servStart<g) or (s<endTime<=g) or (end_time<=endTime.time())):
-                    t = endTime.time()
-                    #Since we know this booking time falls between an already booked service 
-                    # We basically check if the ending time of the booking interval 't' is less than the booking time of the 
-                    # already booked service. If it is then we use that time 'g' to start the new interval.
-                    if(t<g.time()):
-                        t=g.time()
-                    count = 1
-                
-        if not objects:
-            if end_time<endTime.time():
-                t = endTime.time()
-                count = 1
-
-        if count == 0:
-            for breaks in staff_breaks:
-                if((servStart.time()<=breaks.from_hour<endTime.time()) or (servStart.time()<breaks.to_hour<endTime.time())):
-                    count = 1
-                    t=breaks.to_hour
-        # qs3 = staff.staff_bookings.filter(company=company, end__gte=serviceend, start__lte=time, is_cancelled_user=False, is_cancelled_company=False, is_cancelled_request=False)
-        # print(time, serviceend)
-        # print('from start')
-        # for qs in qs1:
-        #     print(timezone.localtime(qs.start), timezone.localtime(qs.end), qs)
-        # print('from end')
-        # for qs in qs2:
-        #     print(timezone.localtime(qs.start), timezone.localtime(qs.end), qs)
-        # print('from middle')
-        # for qs in qs3:
-        #     print(timezone.localtime(qs.start), timezone.localtime(qs.end), qs)
-        # print()
-        if count==0:
-            availableDay.append(t)
-            t = timezone.localtime(timezone.make_aware(datetime.datetime.combine(datetime.date.today(), t) +
-                datetime.timedelta(minutes=interval))).time()
-    return availableDay
 
 def time_slots(interval, duration, hours, company, staff_breaks, staff):
     availableDay = []
@@ -405,7 +332,9 @@ def bookingurlupdated(request):
     company = request.viewing_company
     dateWindowBefore = timezone.localtime(timezone.now()) + datetime.timedelta(days=company.before_window_day,hours=company.before_window_hour,minutes=company.before_window_min)
     dateWindowAfter = timezone.localtime(timezone.now()) + relativedelta(days=company.after_window_day,months=company.after_window_month)
-    kanalytics = request.GET.get('k')
+    kanalytics = request.GET.get('integration')
+    if kanalytics == 'website':
+        settings.SESSION_COOKIE_SAMESITE = 'None'
     pk = settings.STRIPE_PUBLISHABLE_KEY
     return render(request, 'bookingpage/multiplestaff/bookingpage/bookingpage.html',{"pk_stripe":pk,'user':user,'company':company, 'dateWindowBefore':dateWindowBefore, 'dateWindowAfter':dateWindowAfter})
 
@@ -516,6 +445,7 @@ class bookingCalendarRender(View):
         return JsonResponse({'html_content':html_content, 'auth':is_auth})
 
 class confirmationMessageRender(View):
+    @xframe_options_exempt
     def get(self, request):
         company = request.viewing_company
         s_id = request.session.get('service_id')
@@ -560,6 +490,7 @@ class confirmationMessageRender(View):
         conf_content = render_to_string('bookingpage/multiplestaff/bookingpage/partials/confirmationside/confirmationside.html', {'company':company,'service':service, 'staff':staff }, request)
         return JsonResponse({'html_content':html_content, 'conf_content':conf_content, 'collectpayment':collectpayment})
 
+    @xframe_options_exempt
     def post(self, request):
         user = request.user
         company = request.viewing_company

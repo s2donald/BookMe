@@ -1,0 +1,368 @@
+{% extends 'productspage/main.html'%}
+{% load countries %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% load hosts %}
+{% load business_tags %}
+{% block title %}{{ company.business_name }} - ShopMe.to{% endblock %}
+{% block companybizname %}{{ company.business_name }}{% endblock companybizname %}
+
+{% block booking %}
+<script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+<script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
+<script>
+    function changeheight() {
+        var readmore = $('#readmore');
+        if (readmore.text() == 'Read more') {
+            readmore.text("Read less");
+        } else {
+            readmore.text("Read more");
+        }
+        $('.productdescription').toggleClass("showentire");
+    };
+</script>
+<section class="py-0">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-7 p-0 p-md-3 order-2 order-md-1">
+                <div class="col-12 p-0 text-left">
+                    {% if enabled %}
+                    <form method="post" action="{% host_url 'commitpurchase' host 'producturl' slug=company.slug %}" class="justify-content-center pt-1" id="paymentform" enctype="multipart/form-data">
+                        <div class="text-block my-2">
+                            <h4>Payment Method</h4>
+                        </div>
+                        <p class="text-muted small">All transactions are secure and encrypted. ShopMe won't save your card.</p>
+                        <div class="py-3 pr-1 pl-0 rounded mt-2 bordpayment">
+                            {% csrf_token %}
+                            <div class="d-flex align-items-center">
+                                {% comment %} <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" class="" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M256 76c48.1 0 93.3 18.7 127.3 52.7S436 207.9 436 256s-18.7 93.3-52.7 127.3S304.1 436 256 436c-48.1 0-93.3-18.7-127.3-52.7S76 304.1 76 256s18.7-93.3 52.7-127.3S207.9 76 256 76m0-28C141.1 48 48 141.1 48 256s93.1 208 208 208 208-93.1 208-208S370.9 48 256 48z"></path><path d="M363.5 148.5C334.8 119.8 296.6 104 256 104c-40.6 0-78.8 15.8-107.5 44.5C119.8 177.2 104 215.4 104 256s15.8 78.8 44.5 107.5C177.2 392.2 215.4 408 256 408c40.6 0 78.8-15.8 107.5-44.5C392.2 334.8 408 296.6 408 256s-15.8-78.8-44.5-107.5z"></path></svg> {% endcomment %}
+                                <div class="w-100 ml-3">
+                                    <div class="d-flex align-ittems-center justify-content-between">
+                                        <p style="font-weight:500">Credit Card</p>
+                                        <div class="d-flex align-items-center">
+                                            <img alt="visa" src="{% static 'css/svg-img/cards/visa.svg' %}" class="creditcard"></img:alt:src:class>
+                                            <img alt="mastercard" src="{% static 'css/svg-img/cards/mc_vrt_rev.svg' %}" class="creditcard"></img:alt:src:class>
+                                            <img alt="amex" src="{% static 'css/svg-img/cards/amex.svg' %}" class="creditcard"></img:alt:src:class>
+                                            <p class="text-muted small my-auto">&amp; more</p>
+                                        </div>
+                                    </div>
+                                    <div id="card-element" class="rounded mt-2 borderpayment" style="padding: 12px 8px;">
+                                    <!-- Elements will create input elements here -->
+                                    </div>
+                                    <!-- We'll put the error messages in this element -->
+                                    <div id="card-element-errors" role="alert"></div>
+                                    
+                                </div>
+                            </div>
+                            <button data-sitekey="6LeimeAZAAAAAE119rtvZivK4DW9csX6QhEo5Yla" data-callback='onSubmit' data-action='submit' class="btn btn-outline-primary px-3 my-3 mx-1" id="collectpayfirst" type="submit">
+                                <div class="spinner-border sr-only" id="spinner" role="status">
+                                    <span class="sr-only">Loading...</span>
+                                </div>
+                                <span id="button-text">Confirm Purchase</span>
+                            </button>
+                        </div>
+                    
+                    </form>
+                    {% else %}
+                    <div class="text-block my-2">
+                        <h4>Payment Method</h4>
+                    </div>
+                    <p class="text-muted small">Payment processing has not been enabled by the vendor.</p>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-md-5 order-1 order-md-2">
+                {% for item in order.items.all %}
+                    {% with product=item.product %}
+                        <div class="d-flex align-items-center pb-2">
+                            <div class="">
+                                {% if product.mainimage %}
+                                    <img class="rounded" style="object-fit: cover; width:90px; height:90px;" src="{{ product.mainimage.url }}" alt="{{ company.business_name }} Image">
+                                {% else %}
+                                    <img class="rounded" style="object-fit: cover; width:90px; height:90px;" src="{% static 'img/default-product-image.png' %}" alt="Stock Image">
+                                {% endif %}
+                                
+                            </div>
+                            <div class="ml-3 w-100 text-left">
+                                <p class="m-0">{{product.name}}</p>
+                                <div class="d-flex">
+                                    <span style="font-weight:600;">${{ product.price }}</span>
+                                </div>
+                                <div class="d-flex flex-wrap"></div>
+                            </div>
+                        </div>
+                        {% for addon in item.addon.all %}
+                            <div class="d-flex justify-content-between align-items-center mt-0 py-0">
+                                <p class="mb-1 text-muted">{{ addon.name }}:</p>
+                                <p class=" mb-1 text-muted">${{ addon.price }}</p>
+                            </div>
+                        {% endfor %}
+                        {% for dropdownoptions in item.dropdown.all %}
+                            <div class="d-flex justify-content-between align-items-center mt-0 py-0">
+                                <p class="mb-1 text-muted">{{ dropdownoptions.option }}:</p>
+                                <p class=" mb-1 text-muted">${{ dropdownoptions.price }}</p>
+                            </div>
+                        {% endfor %}
+                        <hr class="mt-0">
+                        <div class="d-flex justify-content-between align-items-center mt-0 py-0">
+                            <p class="mb-1 text-muted">Subtotal:</p>
+                            <p class=" mb-1 text-muted">${{ item.price }}</p>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mt-0">
+                            <p class="mb-1 text-muted">Shipping</p>
+                            {% if item.shipping %}
+                                <h5>$<span style="font-weight:500">{{ item.shipping }}</span></h5>
+                            {% else %}
+                                <p class="mb-1 text-muted">Pick up</p>
+                            {% endif %}
+                            
+                        </div>
+                        <hr class="mt-0">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <p style="font-weight:600">Total</p>
+                            <h5>$<span style="font-weight:600">{{ item.price }}</span></h5>
+                        </div>
+                        <div class="text-block text-left">
+                            <p class="text-muted">In the event your order gets cancelled or unapproved, you will be refunded in full.</p>
+                            {% if product.request %}<p class="text-muted">Depending on the request of your order, vendors may reach out for additional payment.</p>{% endif %}
+                        </div>
+                    {% endwith %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+{% block scripts %}
+<script>
+    $(document).ready(function(){
+            
+
+            function displayError(event) {
+            let displayError = document.getElementById('card-element-errors');
+            if (event.error) {
+                if (event.error.message){
+                    displayError.textContent = event.error.message;
+                }
+                else {
+                    displayError.textContent = event.error
+                }
+                
+                document.getElementById("collectpayfirst").disabled = false;
+                document.querySelector("#spinner").classList.add("sr-only");
+                document.querySelector("#button-text").classList.remove("hidden");
+
+            } else {
+                displayError.textContent = '';
+            }
+        }
+        function CommitPurchase(form){
+            // Add your logic to submit to your backend server here.
+            $.ajax({
+                type:'POST',
+                url: "{% host_url 'commitpurchase' host 'producturl' slug=company.slug %}",
+                data: form,
+                success:function(data){
+                    console.log(data)
+                }
+            });
+        }
+        let stripe = Stripe('{{ pk_stripe }}');
+        var elements = stripe.elements();
+        var style = {
+            base: {
+                color: "#131313",
+                fontFamily: 'Arial, sans-serif',
+                fontSmoothing: "antialiased",
+                fontSize: "16px",
+                "::placeholder": {
+                color: "#131313"
+                }
+            },
+            invalid: {
+                fontFamily: 'Arial, sans-serif',
+                color: "#ED4337",
+                iconColor: "#ED4337"
+            }
+        };
+        var changeLoadingState = function(isLoading) {
+            if (isLoading) {
+                document.getElementById("collectpayfirst").disabled = true;
+                document.querySelector("#spinner").classList.remove("sr-only");
+                document.querySelector("#button-text").classList.add("hidden");
+            } else {
+                document.getElementById("collectpayfirst").disabled = false;
+                document.querySelector("#spinner").classList.add("sr-only");
+                document.querySelector("#button-text").classList.remove("hidden");
+            }
+        };
+
+        var card = elements.create("card", { style: style });
+        card.mount("#card-element");
+        card.on('change', function (event) {
+            displayError(event);
+        });
+        $(document).on('submit', '#paymentform', function(e){
+            e.preventDefault();
+            changeLoadingState(true);
+            var form = $(this).serialize();
+            createPaymentMethod({ card }, form);
+            
+            //Create a new payment method
+            
+        });
+        function createPaymentMethod({ card }, form, formtosub) {
+        stripe
+            .createPaymentMethod({
+                type: 'card',
+                card: card
+            })
+            .then((result) => {
+                if (result.error) {
+                    displayError(result);
+                } else {
+                const paymentParams = {
+                    payment_method: result.paymentMethod.id,
+                };
+                var payment_method = result.paymentMethod.id
+                fetch("{% host_url 'newpaymentprocessing' host 'producturl' slug=company.slug %}", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken':'{{ csrf_token }}',
+                    },
+                    credentials: 'same-origin',
+                    body: JSON.stringify(paymentParams),
+                }).then((response) => {
+                    return response.json(); 
+                }).then((result) => {
+                    if (result.error) {
+                        displayError(result);
+                    // The card had an error when trying to attach it to a customer
+                    throw result;
+                    }
+                    return result;
+                })
+                .then((result) => {
+                    return {
+                        paymentMethodId: payment_method,
+                        subscription: result,
+                    };
+                })
+                // Some payment methods require a customer to be on session
+                // to complete the payment process. Check the status of the
+                // payment intent to handle these actions.
+                .then(handlePaymentThatRequiresCustomerAction)
+                // If attaching this card to a Customer object succeeds,
+                // but attempts to charge the customer fail, you
+                // get a requires_payment_method error.
+                .then(handleRequiresPaymentMethod)
+                // No more actions required. Provision your service for the user.
+                .then((result) => {
+                    console.log(result)
+                    console.log(formtosub)
+                    if (result.subscription.status === 'succeeded' || result.subscription.status === "requires_capture"){
+                        //window.location.href = '/complete';
+                        {% comment %} CommitPurchase(form) {% endcomment %}
+                        document.getElementById('paymentform').submit();
+                    }
+                    else if (result.result.paymentIntent.status === ''||result.result.paymentIntent.status === "requires_capture") {
+                        {% comment %} CommitPurchase(form) {% endcomment %}
+                        document.getElementById('paymentform').submit();
+                    }
+                    else if (result.paymentIntent.status === ''||result.paymentIntent.status === "requires_capture") {
+                        {% comment %} CommitPurchase(form) {% endcomment %}
+                        document.getElementById('paymentform').submit();
+                    }
+                    else if (result.result.error){
+                        display(result.result.error)
+                    }
+                    else {
+                        display({'error':"There was an error please try a different card."})
+                    }
+
+                })
+                .catch(function (error) {
+                    displayError(error);
+                });
+                }
+            });
+        }
+
+        function handlePaymentThatRequiresCustomerAction({
+            subscription,
+            invoice,
+            paymentMethodId,
+            isRetry,
+        }) {
+        if (subscription && subscription.status === 'succeeded') {
+            // Subscription is active, no customer actions required.
+            return { subscription, paymentMethodId };
+        }
+        // If it's a first payment attempt, the payment intent is on the subscription latest invoice.
+        // If it's a retry, the payment intent will be on the invoice itself.
+        let paymentIntent = subscription;
+
+        if (
+            paymentIntent.status === 'requires_action' ||
+            (isRetry === true && paymentIntent.status === 'requires_payment_method')
+        ) {
+            let stripes = Stripe('{{ pk_stripe }}', {stripeAccount:paymentIntent.stripe_staff_account_id});
+            return stripes
+            .confirmCardPayment(paymentIntent.client_secret)
+            .then((result) => {
+                if (result.error) {
+                // Start code flow to handle updating the payment details.
+                // Display error message in your UI.
+                // The card was declined (i.e. insufficient funds, card has expired, etc).
+                throw result;
+                } else {
+                if (result.paymentIntent.status === 'succeeded' || result.paymentIntent.status === 'requires_capture') {
+                    // Show a success message to your customer.
+                    return {
+                    subscription: subscription,
+                    invoice: invoice,
+                    paymentMethodId: paymentMethodId,
+                    result: result
+                    };
+                }
+                }
+            })
+            .catch((error) => {
+                displayError(error);
+                throw error;
+            });
+        } else {
+            // No customer action needed.
+            return { subscription, paymentMethodId };
+        }
+        }
+        function handleRequiresPaymentMethod({
+        subscription,
+        paymentMethodId,
+        result,
+        }) {
+        if (subscription.status === 'succeeded') {
+            // subscription is active, no customer actions required.
+            return { subscription, paymentMethodId };
+        } else if (
+            subscription.status ===
+            'requires_payment_method'
+        ) {
+            // Using localStorage to manage the state of the retry here,
+            // feel free to replace with what you prefer.
+            // Store the latest invoice ID and status.
+            localStorage.setItem('latestInvoiceId', subscription.invoice.id);
+            localStorage.setItem(
+            'latestInvoicePaymentIntentStatus',
+            subscription.status
+            );
+            throw { error: { message: 'Your card was declined.' } };
+        } else {
+            return { subscription, paymentMethodId, result };
+        }
+        }
+        
+    });
+</script>
+{% endblock  %}

@@ -1,10 +1,7 @@
 from django.contrib import admin
-from .models import Product, addOnProducts, GallaryProductImage, MainProductDropDown, ProductDropDown, ProductReviews
-# Register your models here.
+from .models import Product, GallaryProductImage, MainProductDropDown, ProductDropDown, ProductReviews, Order, OrderItem, ProductCategory, OrderItem, QuestionModels, AnswerModels
 
-class ProductInline(admin.TabularInline):
-    model = addOnProducts
-    extra = 0
+# Register your models here.
 
 class GallaryProductInline(admin.TabularInline):
     model = GallaryProductImage
@@ -18,12 +15,27 @@ class ProductDropDownInline(admin.TabularInline):
     model = ProductDropDown
     extra = 0
 
+class OrderItemInline(admin.TabularInline):
+    model = OrderItem
+    extra = 0
+
+@admin.register(ProductCategory)
+class ProductCategoryAdmin(admin.ModelAdmin):
+    list_display = ['name', 'slug', 'company']
+    prepopulated_fields = {'slug':('name',)}
 
 @admin.register(Product)
 class ProductsAdmin(admin.ModelAdmin):
     list_display = ['business','name', 'request']
-    inlines = [ ProductInline, GallaryProductInline, MainProductDropDownInline ]
+    inlines = [ GallaryProductInline, MainProductDropDownInline ]
 
+@admin.register(QuestionModels)
+class ProductsAdmin(admin.ModelAdmin):
+    list_display = ['question','product']
+
+@admin.register(AnswerModels)
+class ProductsAdmin(admin.ModelAdmin):
+    list_display = ['question','orderitem']
 
 @admin.register(MainProductDropDown)
 class MainProductsDropDownAdmin(admin.ModelAdmin):
@@ -33,3 +45,10 @@ class MainProductsDropDownAdmin(admin.ModelAdmin):
 @admin.register(ProductReviews)
 class ProductsAdmin(admin.ModelAdmin):
     list_display = ['reviewer','guest', 'product']
+
+@admin.register(Order)
+class OrderAdmin(admin.ModelAdmin):
+    list_display = ['id', 'company','slug', 'first_name', 'paid', 'created', 'updated']
+    list_filter = ['paid', 'created', 'updated']
+    inlines = [ OrderItemInline ]
+

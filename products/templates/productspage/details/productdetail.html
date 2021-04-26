@@ -110,7 +110,7 @@
                     </div>
 
                     <div class="col-12">
-                        <button type="submit" class="btn btn-block btn-outline-primary" data-product="{{ product.id }}">Add to cart</button>
+                        <button type="submit" class="btn btn-block btn-outline-primary" data-product="{{ product.id }}"> {% if product.request %}Request Custom Product{% else %}Add to cart{% endif %}</button>
                     </div>
                 </form>
                 <div class="text-block mt-3 text-left">

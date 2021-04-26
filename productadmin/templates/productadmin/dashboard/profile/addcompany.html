@@ -1,7 +1,10 @@
-{% extends 'bizadmin/index.html' %}
+{% extends 'productadmin/index.html' %}
 {% load static %}
 {% load hosts %}
 {% load crispy_forms_tags %}
+{% block linkscript %}
+{{ product_form.media }}
+{% endblock linkscript %}
 {% block businessadmin %}
 <div class="modal fade" id="modal-delete" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
@@ -39,7 +42,7 @@
             
         <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary">Save changes</button>
+            <button type="button" class="btn btn-info">Save changes</button>
         </div>
 
         </form>
@@ -49,68 +52,15 @@
   </div>
 </div>
 
-<div class="modal fade" id="modal-service" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content card">
-      <div class="modal-header {% if company.darkmode %}text-white{% endif %}">
-        <h5 class="modal-title {% if company.darkmode %}text-white{% endif %}" id="exampleModalLabel">Add your services</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-      <form method="POST" action="{% host_url 'service_create' host 'bizadmin' %}" class="js-product-create-form">
-        {% csrf_token %}
-        {{ service_form.name|as_crispy_field }}
-        {{ service_form.description|as_crispy_field }}
-        {{ service_form.is_request|as_crispy_field }}
-        <div class="form-row">
-            <div class="form-group col mb-0">
-                        {{ service_form.price_type|as_crispy_field }}
-                    </div>
-                    <div class="form-group col mb-0">
-                        {{ service_form.price|as_crispy_field }}
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group col mb-0">
-                        {{ service_form.duration_hour|as_crispy_field }}
-                    </div>
-                    <div class="form-group col mb-0"> 
-                        {{ service_form.duration_minute|as_crispy_field }}
-                    </div>
-                </div>
-                <a class="licolor" href="#simpleCollapse" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="simpleCollapse">Advanced Options</a>
-                <div class="collapse" id="simpleCollapse">
-                    {{ service_form.checkintime|as_crispy_field }}
-                    <div id="padd">
-                        {{ service_form.padding|as_crispy_field }}
-                    </div>
-                    <div id="show-padding" class="form-row">
-                        <div class="form-group col mb-0"> 
-                            {{ service_form.paddingtime_hour|as_crispy_field }}
-                        </div>
-                        <div class="form-group col mb-0"> 
-                            {{ service_form.paddingtime_minute|as_crispy_field }}
-                        </div>
-                    </div>
-                </div>
-        </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="submit" class="btn btn-primary">Add Service</button>
-        </div>
-      </form>
-    </div>
-  </div>
-</div>
+
+
 
 <div class="content-fluid">
         <div class="col-md-12">
           <!--      Wizard container        -->
           <div class="wizard-container">
-            <div class="card card-wizard" data-color="orange" id="wizardProfile">
-              <form method="post" action="{% host_url 'completeprofile' host 'bizadmin' %}">
+            <div class="card card-wizard" data-color="blue" id="wizardProfile">
+              <form method="post" action="{% host_url 'completeprofile' host 'prodadmin' %}">
               {% csrf_token %}
                 <div class="card-header text-center">
                   <h3 class="card-title">
@@ -129,21 +79,9 @@
                         </a>
                       </li>
                       <li class="nav-item">
-                        <a class="nav-link" href="#servicesform" data-toggle="tab">
-                          <i class="fas fa-bell"></i>
-                          <p class="d-none d-sm-block">Add Services</p>
-                        </a>
-                      </li>
-                      <li class="nav-item">
-                        <a class="nav-link" href="#hoursform" data-toggle="tab">
-                          <i class="fas fa-clock"></i>
-                          <p class="d-none d-sm-block">Business Hours</p>
-                        </a>
-                      </li>
-                      <li class="nav-item">
                         <a class="nav-link" href="#bookingSettings" data-toggle="tab">
                           <i class="fas fa-cog"></i>
-                          <p class="d-none d-sm-block">Booking Settings</p>
+                          <p class="d-none d-sm-block">Website Settings</p>
                         </a>
                       </li>
                       <li class="nav-item">
@@ -160,320 +98,62 @@
                   <div class="tab-content">
                     <div class="tab-pane show active" id="about">
                       <h5 class="info-text"> Tell us about {{ company.business_name }}</h5>
+                      <div class="container">
                       <div class="row">
-                    <div class="col-md-6">
-                        <label for="" class="font-weight-bold d-flex justify-content-center pr-1">Main Category <a data-toggle="tooltip" data-placement="top" title="Select the main category of your business"> <i class="fas fa-question-circle licolor"></i></a></label>
-                        {{ biz_form.category|as_crispy_field }}
+                        <div class="col-md-12">
+                            <label for="" class="font-weight-bold d-flex justify-content-center pr-1">Brief Business Description <a data-toggle="tooltip" data-placement="top" title="This brief company description will appear in the about section on your business page."> <i class="fas fa-question-circle licolor"></i></a></label>
+                            {{ biz_form.description|as_crispy_field }}
+                        </div>
+                        <div class="col-md-12">
+                            <label for="" class="font-weight-bold d-flex justify-content-center pr-1">Business Address <a data-toggle="tooltip" data-placement="top" title="The address of your business"> <i class="fas fa-question-circle licolor"></i></a></label>
+                            {{ biz_form.address|as_crispy_field }}
+                        </div>
+                        <div class="col-md-4">
+                            <label for="" class="font-weight-bold d-flex justify-content-center pr-1">Postal Code/ZIP Code <a data-toggle="tooltip" data-placement="top" title="Postal Code or Zip Code"> <i class="fas fa-question-circle licolor"></i></a></label>
+                            {{ biz_form.postal|as_crispy_field }}
+                        </div>
+                        <div class="col-md-4">
+                            <label for="" class="font-weight-bold d-flex justify-content-center pr-1">Province/State <a data-toggle="tooltip" data-placement="top" title="Province or State"> <i class="fas fa-question-circle licolor"></i></a></label>
+                            {{ biz_form.state|as_crispy_field }}
+                        </div>
+                        <div class="col-md-4">
+                            <label for="" class="font-weight-bold d-flex justify-content-center pr-1">City <a data-toggle="tooltip" data-placement="top" title="City"> <i class="fas fa-question-circle licolor"></i></a></label>
+                            {{ biz_form.city|as_crispy_field }}
+                        </div>
                     </div>
-                    <div class="col-md-6">
-                        <label for="" class="font-weight-bold d-flex justify-content-center pr-1">Business Categories <a data-toggle="tooltip" data-placement="top" title="Select as many subcategories your business offers services in"> <i class="fas fa-question-circle licolor"></i></a></label>
-                        {{ biz_form.subcategory|as_crispy_field }}
-                    </div>
-                    <div class="col-md-12">
-                        <label for="" class="font-weight-bold d-flex justify-content-center pr-1">Brief Business Description <a data-toggle="tooltip" data-placement="top" title="This brief company description will appear in the about section on your business page."> <i class="fas fa-question-circle licolor"></i></a></label>
-                        {{ biz_form.description|as_crispy_field }}
-                    </div>
-                    <div class="col-md-12">
-                        <label for="" class="font-weight-bold d-flex justify-content-center pr-1">Business Address <a data-toggle="tooltip" data-placement="top" title="The address of your business"> <i class="fas fa-question-circle licolor"></i></a></label>
-                        {{ biz_form.address|as_crispy_field }}
-                    </div>
-                    <div class="col-md-4">
-                        <label for="" class="font-weight-bold d-flex justify-content-center pr-1">Postal Code/ZIP Code <a data-toggle="tooltip" data-placement="top" title="Postal Code or Zip Code"> <i class="fas fa-question-circle licolor"></i></a></label>
-                        {{ biz_form.postal|as_crispy_field }}
-                    </div>
-                    <div class="col-md-4">
-                        <label for="" class="font-weight-bold d-flex justify-content-center pr-1">Province/State <a data-toggle="tooltip" data-placement="top" title="Province or State"> <i class="fas fa-question-circle licolor"></i></a></label>
-                        {{ biz_form.state|as_crispy_field }}
-                    </div>
-                    <div class="col-md-4">
-                        <label for="" class="font-weight-bold d-flex justify-content-center pr-1">City <a data-toggle="tooltip" data-placement="top" title="City"> <i class="fas fa-question-circle licolor"></i></a></label>
-                        {{ biz_form.city|as_crispy_field }}
-                    </div>
-                </div>
+                      </div>
+                      
 
-                    </div>
-                    <div class="tab-pane" id="servicesform">
-                      <h5 class="info-text"> Add the services you offer to customers</h5>
-                      <div class="row justify-content-center">
-                        <div class="col-lg-10 text-center">
-                          <div class="row justify-content-center">
-                                <button id="createservice" class="btn btn-primary mb-3 js-create-product justify-content-center" type="button" data-toggle="modal" data-target="#modal-service" >Add Service</button>
-                            </div>
-                            <div class="table-responsive">
-                                <table id="service-table" class="table {% if company.darkmode %}table-dark{% endif %} table-hover">
-                                    <thead>
-                                        <tr>
-                                        <th class="text-center" scope="col">#</th>
-                                        <th class="text-center" scope="col">Service</th>
-                                        <th class="text-center" scope="col">Price ($)</th>
-                                        <th class="text-center">Update/Delete</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {% for service in services %}
-                                            <tr>
-                                                <td class="text-center" scope="row">{{ forloop.counter }}</td>
-                                                <td class="text-center">{{ service.name }}</td>
-                                                <td class="text-center">{{ service.price }}</td>
-                                                <td class="text-center">
-                                                    <!-- Update Service buttons -->
-                                                    <button type="button" class="js-update-product btn btn-sm btn-outline-primary" data-toggle="modal" data-target="#modal-update" data-url="{% host_url 'service_update' service.id host 'bizadmin' %}">
-                                                        <span class="fa fa-pencil-alt"></span>
-                                                    </button>
-                                                    <!-- Delete Service buttons -->
-                                                    <button type="button" class="js-delete-product btn btn-sm btn-danger" data-toggle="modal" data-target="#modal-delete" data-url="{% host_url 'service_delete' service.id host 'bizadmin' %}">
-                                                        <span class="fa fa-trash"></span>
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                        {% empty %}
-                                            <td colspan="8" class="text-center">You do not have any services available</td>
-                                        {% endfor %}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="tab-pane" id="hoursform">
-                      <div class="row justify-content-center">
-                        <div class="col-sm-12">
-                          <h5 class="info-text"> Add your business hours </h5>
-                        </div>
-                        <div class="col-md-12 mt-1">
-                        <div class="justify-content-center my-auto align-items-center text-center mx-auto">
-                            <strong for="">Sunday Business Hours</strong>
-                            {% comment %} {{ sundayform.is_closed|as_crispy_field }} {% endcomment %}
-                            <input type="checkbox" name="sunOpen" {% if sunday.is_closed %}{% else %}checked{% endif %} class="bootstrap-switch bootstrap-switch-red my-0" id="sunOpen" data-on-label="OPEN" data-off-label=""/>
-                        </div>
-                            <div class="row justify-content-center" id="sundaytimes">
-                                <div class="col-sm-6 col-lg-4 col-lg-2">
-                                    
-                                        <label class="font-weight-bold d-flex justify-content-center pr-1">Open Time</label>
-                                        {{ sundayform.dayfrom|as_crispy_field }}
-                                    
-                                    {% comment %} <input type="text" class="datetimepicker form-control text-center" name="sunOpenHour" id="sunOpenHour" value="{{ sunday.from_hour }}"/> {% endcomment %}
-                            
-                                </div>
-                                <div class="col-sm-6 col-lg-4 col-lg-2">
-                                        <label class="font-weight-bold d-flex justify-content-center pr-1">Close Time</label>
-                                        {{ sundayform.dayto|as_crispy_field }}
-                                    
-                                    {% comment %} <input type="text" class="datetimepicker form-control text-center" name="sunCloseHour" id="sunCloseHour" value="{{ sunday.to_hour }}"/> {% endcomment %}
-                            
-                                </div>
-                            </div>
-                    
-                    <div class="col-md-12 mt-1">
-                        <div class="justify-content-center my-auto align-items-center text-center mx-auto">
-                            <strong for="">Monday Business Hours</strong>
-                            <input name="monOpen" {% if monday.is_closed %}{% else %}checked{% endif %} type="checkbox" class="bootstrap-switch bootstrap-switch-red my-0" data-on-label="OPEN" data-off-label=""/>
-                        </div>
-                            <div class="row justify-content-center" id="sundaytimes">
-                                <div class="col-sm-6 col-lg-4 col-lg-2">
-                                    
-                                        <label class="font-weight-bold d-flex justify-content-center pr-1">Open Time</label>
-                                        {{ mondayform.dayfrom|as_crispy_field }}
-                                    
-                                    {% comment %} <input type="text" class="datetimepicker form-control text-center" name="sunOpenHour" id="sunOpenHour" value="{{ sunday.from_hour }}"/> {% endcomment %}
-                            
-                                </div>
-                                <div class="col-sm-6 col-lg-4 col-lg-2">
-                                        <label class="font-weight-bold d-flex justify-content-center pr-1">Close Time</label>
-                                        {{ mondayform.dayto|as_crispy_field }}
-                                    
-                                    {% comment %} <input type="text" class="datetimepicker form-control text-center" name="sunCloseHour" id="sunCloseHour" value="{{ sunday.to_hour }}"/> {% endcomment %}
-                            
-                                </div>
-                            </div>
-                    </div>
-                    <div class="col-md-12 mt-1">
-                        <div class="justify-content-center my-auto align-items-center text-center mx-auto">
-                            <strong for="">Tuesday Business Hours</strong>
-                            <input name="tuesOpen" {% if tuesday.is_closed %}{% else %}checked{% endif %} type="checkbox" class="bootstrap-switch bootstrap-switch-red my-0" data-on-label="OPEN" data-off-label=""/>
-                        </div>
-                            <div class="row justify-content-center" id="sundaytimes">
-                                <div class="col-sm-6 col-lg-4 col-lg-2">
-                                    
-                                        <label class="font-weight-bold d-flex justify-content-center pr-1">Open Time</label>
-                                        {{ tuesdayform.dayfrom|as_crispy_field }}
-                                    
-                                    {% comment %} <input type="text" class="datetimepicker form-control text-center" name="sunOpenHour" id="sunOpenHour" value="{{ sunday.from_hour }}"/> {% endcomment %}
-                            
-                                </div>
-                                <div class="col-sm-6 col-lg-4 col-lg-2">
-                                        <label class="font-weight-bold d-flex justify-content-center pr-1">Close Time</label>
-                                        {{ tuesdayform.dayto|as_crispy_field }}
-                                    
-                                    {% comment %} <input type="text" class="datetimepicker form-control text-center" name="sunCloseHour" id="sunCloseHour" value="{{ sunday.to_hour }}"/> {% endcomment %}
-                            
-                                </div>
-                            </div>
-                    </div>
-                    <div class="col-md-12 mt-1">
-                        <div class="justify-content-center my-auto align-items-center text-center mx-auto">
-                            <strong for="">Wednesday Business Hours</strong>
-                            <input name="wedOpen" {% if wednesday.is_closed %}{% else %}checked{% endif %} type="checkbox" class="bootstrap-switch bootstrap-switch-red my-0" data-on-label="OPEN" data-off-label=""/>
-                        </div>
-                            <div class="row justify-content-center" id="sundaytimes">
-                                <div class="col-sm-6 col-lg-4 col-lg-2">
-                                    
-                                        <label class="font-weight-bold d-flex justify-content-center pr-1">Open Time</label>
-                                        {{ wednesdayform.dayfrom|as_crispy_field }}
-                                    
-                                    {% comment %} <input type="text" class="datetimepicker form-control text-center" name="sunOpenHour" id="sunOpenHour" value="{{ sunday.from_hour }}"/> {% endcomment %}
-                            
-                                </div>
-                                <div class="col-sm-6 col-lg-4 col-lg-2">
-                                        <label class="font-weight-bold d-flex justify-content-center pr-1">Close Time</label>
-                                        {{ wednesdayform.dayto|as_crispy_field }}
-                                    
-                                    {% comment %} <input type="text" class="datetimepicker form-control text-center" name="sunCloseHour" id="sunCloseHour" value="{{ sunday.to_hour }}"/> {% endcomment %}
-                            
-                                </div>
-                            </div>
-                    </div>
-                    <div class="col-md-12 mt-1">
-                        <div class="justify-content-center my-auto align-items-center text-center mx-auto">
-                            <strong for="">Thursday Business Hours</strong>
-                            <input name="thursOpen" {% if thursday.is_closed %}{% else %}checked{% endif %} type="checkbox" class="bootstrap-switch bootstrap-switch-red my-0" data-on-label="OPEN" data-off-label=""/>
-                        </div>
-                            <div class="row justify-content-center" id="sundaytimes">
-                                <div class="col-sm-6 col-lg-4 col-lg-2">
-                                    
-                                        <label class="font-weight-bold d-flex justify-content-center pr-1">Open Time</label>
-                                        {{ thursdayform.dayfrom|as_crispy_field }}
-                                    
-                                    {% comment %} <input type="text" class="datetimepicker form-control text-center" name="sunOpenHour" id="sunOpenHour" value="{{ sunday.from_hour }}"/> {% endcomment %}
-                            
-                                </div>
-                                <div class="col-sm-6 col-lg-4 col-lg-2">
-                                        <label class="font-weight-bold d-flex justify-content-center pr-1">Close Time</label>
-                                        {{ thursdayform.dayto|as_crispy_field }}
-                                    
-                                    {% comment %} <input type="text" class="datetimepicker form-control text-center" name="sunCloseHour" id="sunCloseHour" value="{{ sunday.to_hour }}"/> {% endcomment %}
-                            
-                                </div>
-                            </div>
-                    </div>
-                    <div class="col-md-12 mt-1">
-                        <div class="justify-content-center my-auto align-items-center text-center mx-auto">
-                            <strong for="">Friday Business Hours</strong>
-                            <input name="friOpen" {% if friday.is_closed %}{% else %}checked{% endif %} type="checkbox" class="bootstrap-switch bootstrap-switch-red my-0" data-on-label="OPEN" data-off-label=""/>
-                        </div>
-                            <div class="row justify-content-center" id="sundaytimes">
-                                <div class="col-sm-6 col-lg-4 col-lg-2">
-                                    
-                                        <label class="font-weight-bold d-flex justify-content-center pr-1">Open Time</label>
-                                        {{ fridayform.dayfrom|as_crispy_field }}
-                                    
-                                    {% comment %} <input type="text" class="datetimepicker form-control text-center" name="sunOpenHour" id="sunOpenHour" value="{{ sunday.from_hour }}"/> {% endcomment %}
-                            
-                                </div>
-                                <div class="col-sm-6 col-lg-4 col-lg-2">
-                                        <label class="font-weight-bold d-flex justify-content-center pr-1">Close Time</label>
-                                        {{ fridayform.dayto|as_crispy_field }}
-                                    
-                                    {% comment %} <input type="text" class="datetimepicker form-control text-center" name="sunCloseHour" id="sunCloseHour" value="{{ sunday.to_hour }}"/> {% endcomment %}
-                            
-                                </div>
-                            </div>
-                    </div>
-                    <div class="col-md-12 mt-1">
-                        <div class="justify-content-center my-auto align-items-center text-center mx-auto">
-                            <strong for="">Saturday Business Hours</strong>
-                            <input name="satOpen" {% if saturday.is_closed %}{% else %}checked{% endif %} type="checkbox" class="bootstrap-switch bootstrap-switch-red my-0" data-on-label="OPEN" data-off-label=""/>
-                        </div>
-                            <div class="row justify-content-center" id="sundaytimes">
-                                <div class="col-sm-6 col-lg-4 col-lg-2">
-                                    
-                                        <label class="font-weight-bold d-flex justify-content-center pr-1">Open Time</label>
-                                        {{ saturdayform.dayfrom|as_crispy_field }}
-                                    
-                                    {% comment %} <input type="text" class="datetimepicker form-control text-center" name="sunOpenHour" id="sunOpenHour" value="{{ sunday.from_hour }}"/> {% endcomment %}
-                            
-                                </div>
-                                <div class="col-sm-6 col-lg-4 col-lg-2">
-                                        <label class="font-weight-bold d-flex justify-content-center pr-1">Close Time</label>
-                                        {{ saturdayform.dayto|as_crispy_field }}
-                                    
-                                    {% comment %} <input type="text" class="datetimepicker form-control text-center" name="sunCloseHour" id="sunCloseHour" value="{{ sunday.to_hour }}"/> {% endcomment %}
-                            
-                                </div>
-                            </div>
-                    </div>
-                </div>
-                      </div>
                     </div>
                     <div class="tab-pane" id="bookingSettings">
+                      <div class="container">
                       <div class="row justify-content-center">
                         <div class="col-sm-12">
-                          <h5 class="info-text"> Configure some settings to make your booking experience unique </h5>
+                          <h5 class="info-text"> Configure some settings to make your website experience unique </h5>
                         </div>
                         <div class="col-md-12 col-lg-6 mx-auto justify-content-center">
-                        <label for="" class="font-weight-bold d-flex justify-content-center pr-1">Personalized Booking Link <a data-toggle="tooltip" data-placement="top" title="Choose a custom subdomain for your booking link which you can send to your clients or share to social media"> <i class="fas fa-question-circle licolor"></i></a></label>
-                        <div class="col-md-12 justify-content-center">
-                            <div class="input-group justify-content-center mb-3" id="id_subdomain">
-                                <input type="text" class="form-control" id="subdomain" name="subdomain" placeholder="Enter a Subdomain, must only contain letters, numbers and hyphens. No spaces are allowed." aria-label="Users's subdomain" aria-describedby="basic-addon2" value="{{ company.slug }}">
-                                <div class="input-group-append">
-                                    <span class="input-group-text" id="basic-addon2">.bookme.to</span>
-                                </div>
-                            </div>
-                            <div class="invalid_subdomain m-0 p-0" style="display:none; color:red!important;"></div>
+                          <label for="" class="font-weight-bold d-flex justify-content-center pr-1">Personalized Product Link <a data-toggle="tooltip" data-placement="top" title="Choose a custom subdomain for your booking link which you can send to your clients or share to social media"> <i class="fas fa-question-circle licolor"></i></a></label>
+                          <div class="col-sm-12 col-md-6 mx-auto text-center">
+                              <div class="input-group justify-content-center mb-3 text-center" id="id_subdomain">
+                                  <input type="text" class="form-control text-right" id="subdomain" name="subdomain" placeholder="Enter a Subdomain, must only contain letters, numbers and hyphens. No spaces are allowed." aria-label="Users's subdomain" aria-describedby="basic-addon2" value="{{ company.slug }}">
+                                  <div class="input-group-append">
+                                      <span class="input-group-text" id="basic-addon2">.shopme.to</span>
+                                  </div>
+                              </div>
+                              <div class="invalid_subdomain m-0 p-0" style="display:none; color:red!important;"></div>
+                          </div>
                         </div>
-                    </div>
-                    <div class="col-md-12 input-group justify-content-center">
-                    <div class="col-md-4">
-                        <label for="" class="font-weight-bold d-flex justify-content-center pr-1">Booking Interval <a data-toggle="tooltip" data-placement="top" title="Set the duration for appointment slots"> <i class="fas fa-question-circle licolor"></i></a></label>
-                        {{ booking_form.interval|as_crispy_field }}
-                    </div>
-                    <div class="col-md-4">
-                        <label for="" class="font-weight-bold d-flex justify-content-center pr-1">Cancellation Policy <a data-toggle="tooltip" data-placement="top" title="The length of time before an appointment which a customer can cancel"> <i class="fas fa-question-circle licolor"></i></a></label>
-                        {{ booking_form.cancellation|as_crispy_field }}
-                    </div>
-                    </div>
-                    <div class="col-md-12 input-group justify-content-center">
-
-                    <div class="col-md-4 text-left">
-                        <label for="" class="font-weight-bold d-flex justify-content-left pr-1">Advanced Notice Time<a data-toggle="tooltip" data-placement="top" title="The time required in advance prior to setting an appointment"> <i class="fas fa-question-circle licolor"></i></a></label>
-                        <div class="row">
-                            <div class="col-4 pr-0">
-                                {{ booking_form.before_window_day|as_crispy_field }}
-                            </div>
-                            <div class="col-4 px-0">
-                                {{ booking_form.before_window_hour|as_crispy_field }}
-                            </div>
-                            <div class="col-4 pl-0">
-                                {{ booking_form.before_window_min|as_crispy_field }}
-                            </div>
+                        <div class="col-md-8 mx-auto">
+                            <label for="" class="font-weight-bold d-flex justify-content-center pr-1">Notes for customers(Optional) <a data-toggle="tooltip" data-placement="top" title="Display a popup message when clients first enter your website."> <i class="fas fa-question-circle licolor"></i></a></label>
+                            {{ booking_form.notes|as_crispy_field }}
                         </div>
-                    </div>
-                    <div class="col-md-4 text-left">
-                        <label for="" class="font-weight-bold d-flex justify-content-left pr-1">Scheduling Window<a data-toggle="tooltip" data-placement="top" title="How far in advance are clients allowed to book a service?"> <i class="fas fa-question-circle licolor"></i></a></label>
-                        <div class="row">
-                            <div class="col-6 pr-0">
-                                {{ booking_form.after_window_month|as_crispy_field }}
-                            </div>
-                            <div class="col-6 pl-0">
-                                {{ booking_form.after_window_day|as_crispy_field }}
-                            </div>
-                        </div>
-                    </div>
-                    </div>
-                    <div class="col-md-12 mx-auto text-center">
-                        <label for="" class="font-weight-bold d-flex justify-content-center pr-1">Returning Clients Only<a data-toggle="tooltip" data-placement="top" title="Only accept clients who are on your client list"> <i class="fas fa-question-circle licolor"></i></a></label>
-                        <input name="returning" type="checkbox" class="bootstrap-switch bootstrap-switch-red my-0" data-on-label="True" data-off-label=""/>
-                    </div>
-                    <div class="col-md-12">
-                        <label for="" class="font-weight-bold d-flex justify-content-center pr-1">Notes for customers(Optional) <a data-toggle="tooltip" data-placement="top" title="Display a popup message when clients first enter your booking link."> <i class="fas fa-question-circle licolor"></i></a></label>
-                        {{ booking_form.notes|as_crispy_field }}
-                    </div>
+                      </div>
                       </div>
                     </div>
                     <div class="tab-pane" id="confirmForm">
                       <div class="row justify-content-center">
                         <div class="col-sm-12">
-                          <h5 class="info-text"> Confirm everything that you have filled out then lets get booking! </h5>
+                          <h5 class="info-text"> Confirm everything that you have filled out then lets start selling! </h5>
                         </div>
                         
                       </div>
@@ -482,8 +162,8 @@
                 </div>
                 <div class="card-footer">
                   <div class="pull-right">
-                    <input type='button' class='btn btn-next btn-fill btn-primary btn-wd' name='next' value='Next' />
-                    <input type='submit' class='btn btn-finish btn-fill btn-primary btn-wd' name='finish' value='Finish' />
+                    <input type='button' class='btn btn-next btn-fill btn-info btn-wd' name='next' value='Next' />
+                    <input type='submit' class='btn btn-finish btn-fill btn-info btn-wd' name='finish' value='Finish' />
                   </div>
                   <div class="pull-left">
                     <input type='button' class='btn btn-previous btn-fill btn-default btn-wd' name='previous' value='Previous' />
@@ -495,20 +175,6 @@
           </div>
 
         <script>
-        $('#id_addcompany-category').change(function(){
-            var categoryId = $(this).val();
-            $.ajax({
-                url: '{% host_url "ajax_load_subcategories" host "bizadmin" %}',
-                data: {
-                    'category': categoryId
-                },
-                success: function(data){
-                    $('#id_addcompany-subcategory').empty()
-                    $('#id_addcompany-subcategory').append(data)
-                    $('#id_addcompany-subcategory').selectpicker('refresh')
-                }
-            });
-        });
 
         demo = {
             initNowUiWizard: function() {
@@ -674,6 +340,8 @@
       setTimeout(function() {
         $('.card.card-wizard').addClass('active');
       }, 600);
+      $("#modal-product").on("submit", "#prod-create-form", saveFormProduct);
+      
     });
 
     const feedBackreasubdomain = document.querySelector(".invalid_subdomain")

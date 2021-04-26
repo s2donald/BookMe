@@ -23,7 +23,7 @@ urlpatterns = [
 
     
 
-    re_path(r'dashboard/schedule/$', views.scheduleView, name='schedule'),
+    re_path(r'dashboard/orders/$', views.orderView, name='orders'),
     re_path(r'dashboard/profile/booking/$', views.bookingSettingViews, name='bookingSetting'),
     re_path(r'dashboard/profile/security/$',views.profileSecurityViews, name='security'),
     re_path(r'dashboard/profile/notifs/$', views.notifViews, name='notifications'),
@@ -45,7 +45,7 @@ urlpatterns = [
     re_path('darkmode/', views.changeDarkMode.as_view(), name='changeDarkMode'),
 
     re_path(r'detail/info/$', views.compinfoViews, name='information'),
-    re_path(r'detail/service/$', views.servicesDetailView, name='service_detail'),
+    re_path(r'detail/products/$', views.servicesDetailView, name='service_detail'),
     re_path(r'get/getstaffservice/', views.staffServicesViews.as_view(), name='getstaffservice'),
     re_path(r'post/addstaffservice/', views.addstaffServicesViews.as_view(), name='addstaffservice'),
     re_path(r'post/removestaffservice/', views.removestaffServicesViews.as_view(), name='removestaffservice'),
@@ -63,19 +63,19 @@ urlpatterns = [
     re_path(r'detail/breaks/$', views.businessBreaksView, name='breaks_time'),
     re_path(r'detail/timeoff/$', views.businessTimeOffView, name='timeoff_time'),
     re_path(r'api/update/staff/detail/$', views.UpdateStaffDetails.as_view() , name='updatestaffdetails'),
-
-
-    re_path(r'creating/$', views.createserviceViews, name='service_create'),
+    re_path(r'creating/$', views.createproductViews, name='product_create'),#Created Product
     re_path(r'delete/(?P<pk>\d+)/$', views.deleteserviceViews, name='service_delete'),
     re_path(r'update/(?P<pk>\d+)/$', views.updateserviceViews, name='service_update'),
 
     re_path(r'deletecategory/(?P<pk>\d+)/$', views.deleteCategoryAPI.as_view(), name='category_delete_view'),
 
-    re_path(r'creatings/$', views.createserviceAPI.as_view(), name='createservice'),
-    re_path(r'creatingserv/(?P<pk>\d+)/$', views.createserviceAPII.as_view(), name='createservices'),
-    re_path(r'creatingcate/$', views.createcategoryAPI.as_view(), name='createservicecate'),
-    re_path(r'deletes/(?P<pk>\d+)/$', views.deleteserviceAPI.as_view(), name='deleteservice'),
-    re_path(r'updates/(?P<pk>\d+)/$', views.updateserviceAPI.as_view(), name='updateservice'),
+    re_path(r'creatingproduct/(?P<pk>\d+)/$', views.createserviceAPII.as_view(), name='createproducts'),#needed
+    re_path(r'deletes/(?P<pk>\d+)/$', views.deleteserviceAPI.as_view(), name='deleteproduct'),#Updated
+    re_path(r'updates/(?P<pk>\d+)/$', views.updateserviceAPI.as_view(), name='updateproduct'),#Updated
+    re_path(r'adddropdown/(?P<pk>\d+)/$', views.addDropdownOption.as_view(), name='adddropdownprod'),#Added
+    re_path(r'addquestion/(?P<pk>\d+)/$', views.addQuestionOption.as_view(), name='addquestionprod'),#Added
+    re_path(r'removedropdown/(?P<pk>\d+)/$', views.removeDropDownOption.as_view(), name='removedropdown'),#added
+    re_path(r'removequestion/(?P<pk>\d+)/$', views.removeQuestionOption.as_view(), name='removequestion'),#added
 
     re_path(r'creatingclient/$', views.createclientAPI.as_view(), name='createclient'),
     re_path(r'deleteclient/(?P<pk>\d+)$', views.deleteclientAPI.as_view(), name='deleteclient'),
@@ -95,7 +95,7 @@ urlpatterns = [
     re_path(r'^updatecompanyform/$',views.updateCompanyDetail.as_view(), name='updateform'),
     re_path(r'^companyformsave/$', views.saveCompanyDetail.as_view(), name='saveDetailForm'),
     re_path(r'^accountFormSave/$', views.personDetailSave.as_view(), name='accountCheck'),
-    re_path(r'home/$', views.homepageViews, name='home'),
+    re_path(r'home/$', views.homepageViews, name='home'),#Changed
 
     re_path(r'getbook/$', views.getBooking.as_view(), name='getBookingId'),
 

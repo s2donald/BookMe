@@ -2,42 +2,93 @@
 {% load static %}
 {% load hosts %}
 {% block 'index_features' %}active{% endblock %}
-{% block custompath %}
-<path class="cls-1" d="M0,160L48,186.7C96,213,192,267,288,288C384,309,480,299,576,250.7C672,203,768,117,864,106.7C960,96,1056,160,1152,154.7C1248,149,1344,75,1392,37.3L1440,0L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z"></path>
-{% endblock %}
 {% block header %}
-        <!-- Text Logo - Use this if you don't have a graphic logo -->
-        <!-- <a class="logo-text" href="index.html">RIGA</a> -->
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-7">
-                    <div class="text-container text-left">
-                        <h1>ShopMe helps you sell more <span id="js-rotating">personalized gifts, vintage goods,  unique products, handmade items</span></h1>
-                        <div class="dynamicalchange">
-                        {% if user.is_business %}
-                                    <a class="btn-solid-lg" href="{% host_url 'completeprofile' host 'prodadmin' %}">Go to your business page</a>
-                        {% elif user.is_consumer %}
-                                    <a class="btn-solid-lg" href="{% host_url 'newbizcreate' host 'prodadmin' %}">Create a business page</a>
-                        {% else %}
-                                <a class="btn-solid-lg my-1" href="{% host_url 'bizadminlogin' host 'prodadmin' %}"><i class="fab fa-start"></i>Sign into ShopMe</a>
-                                <a class="btn-solid-lg my-1" href="{% host_url 'bizadminsignup' host 'prodadmin' %}"><i class="fab fa-start"></i>Get started for free</a>
-                        {% endif %}
-                    </div>
-                    </div> <!-- end of text-container -->
-                </div> <!-- end of col -->
-                <div class="col-lg-5">
+  <header class="header-2">
+            <div class="page-header bg-gradient-info section-height-85 relative">
+            <div class="container">
+                <div class="logo-image d-inline">
+                <a href="{% host_url 'bizadminmain' host 'prodadmin' %}">
+                    <img src="{% static "img/favicon/logo/BookMe-whitebrown.svg" %}" style="position: absolute;top: 1.5rem;left: 1rem;width: 8.625rem;height: 3rem; z-index:9;">
+                </a>
+            </div>
+                <div class="row">
+                <div class="col-lg-7 text-center mx-auto">
+                    <h1 class="text-white pt-3 mt-n5">Selling online made simple </h1>
+                    <p class="text-white mt-3" style="font-size:20px;">ShopMe helps you sell more <span id="js-rotating" style="color: #ffcca7;"><i>personalized gifts, vintage goods,  unique products, handmade items</i></span> </p>
+                    {% if user.is_business %}
+                                <a class="btn-solid-lg" href="{% host_url 'completeprofile' host 'prodadmin' %}">Go to your business page</a>
+                    {% elif user.is_consumer %}
+                                <a class="btn-solid-lg" href="{% host_url 'newbizcreate' host 'prodadmin' %}">Create a business page</a>
+                    {% else %}
+                            <a class="btn-solid-lg my-1" href="{% host_url 'bizadminlogin' host 'prodadmin' %}"><i class="fab fa-start"></i>Sign into ShopMe</a>
+                            <a class="btn-solid-lg my-1" href="{% host_url 'bizadminsignup' host 'prodadmin' %}"><i class="fab fa-start"></i>Get started for free</a>
+                    {% endif %}
+                </div>
+                <div class="col-lg-5 d-none d-lg-block">
                     <div class="image-container">
                         {% comment %} <object height="auto" width="100%" id="communicate-welcome" data="{% static 'css/svg-img/bizpage-welcome/business.svg' %}" type="image/svg+xml"></object> {% endcomment %}
-                        <img class="img-fluid" src="{% static 'img/business.png' %}" alt="alternative">
+                        <img style="max-height:100%;height:300px;" src="{% static 'img/business.png' %}" alt="alternative">
                     </div> <!-- end of image-container -->
                 </div> <!-- end of col -->
-            </div> <!-- end of row -->
-        </div> <!-- end of container -->
+                </div>
+            </div>
+            <div class="position-absolute w-100 z-index-1 bottom-0">
+                <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 40" preserveAspectRatio="none" shape-rendering="auto">
+                <defs>
+                    <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
+                </defs>
+                <g class="moving-waves">
+                    <use xlink:href="#gentle-wave" x="48" y="-1" fill="rgba(255,255,255,0.40" />
+                    <use xlink:href="#gentle-wave" x="48" y="3" fill="rgba(255,255,255,0.35)" />
+                    <use xlink:href="#gentle-wave" x="48" y="5" fill="rgba(255,255,255,0.25)" />
+                    <use xlink:href="#gentle-wave" x="48" y="8" fill="rgba(255,255,255,0.20)" />
+                    <use xlink:href="#gentle-wave" x="48" y="13" fill="rgba(255,255,255,0.15)" />
+                    <use xlink:href="#gentle-wave" x="48" y="16" fill="rgba(255,255,255,0.95" />
+                </g>
+                </svg>
+            </div>
+            </div>
+        </header>
 {% endblock header %}
 
-{% block businesscontent %}
 
-    <section class="py-lg-5">
+
+{% block businesscontent %}
+    <section class="pt-3 pb-4 d-none d-md-block" id="count-stats">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-9 z-index-2 border-radius-xl mt-n10 mx-auto py-3 blur shadow-blur">
+                        <div class="row">
+                            <div class="col-md-4 position-relative">
+                            <div class="p-3 text-center">
+                                <h1 class="text-gradient text-primary"><i class="fas fa-rocket"></i></h1>
+                                <h5 class="mt-3">Easy to start</h5>
+                                <p class="text-sm text-dark">Open your online store in less than a few minutes</p>
+                            </div>
+                            <hr class="vertical dark">
+                            </div>
+                            <div class="col-md-4 position-relative">
+                            <div class="p-3 text-center">
+                                <h1 class="text-gradient text-primary"><i class="fas fa-credit-card"></i></h1>
+                                <h5 class="mt-3">Secure checkout</h5>
+                                <p class="text-sm text-dark">Collect payments and get them straight into your bank account</p>
+                            </div>
+                            <hr class="vertical dark">
+                            </div>
+                            <div class="col-md-4">
+                            <div class="p-3 text-center">
+                                <h1 class="text-gradient text-primary"><i class="fas fa-tasks"></i></h1>
+                                <h5 class="mt-3">Custom Requests</h5>
+                                <p class="text-sm text-dark">Capture specific details about your customers needs without the back and forth.</p>
+                            </div>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+    <section class="py-5">
 
 
       <div class="container">
@@ -59,24 +110,52 @@
               <li class="slmr_item">
                 <img height="150px" width="150px"src="{% static 'img/icons/location.svg'%}" alt="">
                 <h3>Connect With Locals</h3>
-                <p class='d-md-none'>Get your business listed on the BookMe Marketplace and get exposure to new customers!</p>
+                <p class='d-md-none'>A customized payment flow that will attract new customers!</p>
               </li>
               <li class="slmr_item">
                 <img height="150px" width="150px"src="{% static 'img/icons/email.svg'%}" alt="">
-                <h3>Automated Reminders</h3>
-                <p class="d-md-none">Send reminder emails and text messages to your clients before their appointment to reduce the number of no shows.</p>
+                <h3>Automated updates</h3>
+                <p class="d-md-none">Send update emails and text messages to your customers to keep them updated on the status of their orders.</p>
               </li>
             </ul>
           </div>
           <div class="col-lg-6">
             <h1 class="hero-heading welcome_intro">
-              BookMe can help your business thrive
+              ShopMe can help your business thrive
             </h1>
-            <p class="text-muted mt-3">Grow your business with BookMe. Allow your customers to conveniently book appointments with you.</p>
-            <p class="text-muted">We have simplified the scheduling process for you and your clients so you can spend more time providing services.</p>
+            <p class="text-muted mt-3">Grow your business with ShopMe. Allow your customers to conveniently purchase products from your website.</p>
+            <p class="text-muted">We have simplified the process in which your collect and maintain custom orders. Be able to give your customers the best experience possible when they purchase a custom product from your website.</p>
           </div>
           
         </div>
+      </div>
+      <div class="container" style="z-index: 99999994!important;">
+        <div class="py-4">
+          <h2 class="mb-5 z-4 list-item-title" style="z-index: 4!important;">Sell More</h2>
+          <div class="row">
+            <div class="col-md-6">
+              <h5 class="list-item-title">How does ShopMe work?</h5>
+              <p class="text-muted mb-4">ShopMe offers a straightforward web application which allows you to view your booking schedule, add or cancel appointments for any service and offers a platform which your customers can use to purchase any type of product you have to offer.</p>
+              
+              </div>
+            <div class="col-md-6">
+              <h5 class="list-item-title">What is a Product Page URL?</h5>
+              <p class="text-muted mb-4">The Product Page URL refers to the url which ShopMe offers to your business which can be put in your Instagram bio's, embedded in your business websites and/or shared to your clients. This URL will take your clients to your product page where they can view all of the products that you have to offer and purchase them. These customers can modify the products to their specification and provide all the extra notes needed for their custom product.</p>
+              <p class="text-muted mb-4">This allows your clients to purchase custom made products directly from you without the back and forth conversation.</p>
+            </div>
+          </div>
+        </div>
+        <hr>
+        <div class="py-4">
+          <h2 class="mb-5 list-item-title">Process Orders</h2>
+          <div class="row">
+            <div class="col-md-6">
+              <h5 class="list-item-title">Payment Processing</h5>
+              <p class="text-muted mb-4">All payments will be handled by Stripe. </p>
+            </div>
+          </div>
+        </div>
+        <hr>
       </div>
 
       

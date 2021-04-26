@@ -18,15 +18,46 @@
   <ellipse stroke="#000" ry="100" rx="1000" id="svg_2" cy="50" cx="650" stroke-opacity="null" stroke-width="0" fill="url(#linear-gradient)"/>
  </g>
 {% endblock %}
-
 {% block header %}
+  <header class="header-2">
+            <div class="page-header relative" style="height: 100px; background: #141727; background-image: linear-gradient(310deg,#141727,#3a416f);">
+            <div class="container">
+                <div class="logo-image d-inline">
+                <a href="{% host_url 'bizadminmain' host 'prodadmin' %}">
+                    <img src="{% static "img/favicon/logo/BookMe-whitebrown.svg" %}" style="position: absolute;top: 1.5rem;left: 1rem;width: 8.625rem;height: 3rem; z-index:9;">
+                </a>
+            </div>
+                
+            </div>
+            </div>
+        </header>
+{% endblock header %}
+{% block businesscontent %}
 
-    <div class="container mb-3">
+    <div class="container mb-3 py-4">
         <div class="row justify-content-center">
             <div class="col-lg-5">
                 <!-- Basic login form-->
-                <div class="card licolor shadow-lg border-0 rounded-lg">
-                    <div class="card-header justify-content-center"><h3 class="font-weight-bold licolor my-4">Log into your business account</h3></div>
+                <div class="card shadow-lg">
+                    <div class="card-header bg-gradient-info p-5 position-relative">
+                        <h3 class="text-white mb-0">Log into your ShopMe account</h3>
+                        <p class="text-white opacity-8 mb-4"></p>
+                        <div class="position-absolute w-100 z-index-1 bottom-0 ms-n5">
+                        <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 40" preserveAspectRatio="none" shape-rendering="auto" style="height:7vh;min-height:50px;">
+                            <defs>
+                            <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z"></path>
+                            </defs>
+                            <g class="moving-waves">
+                            <use xlink:href="#gentle-wave" x="48" y="-1" fill="rgba(255,255,255,0.40"></use>
+                            <use xlink:href="#gentle-wave" x="48" y="3" fill="rgba(255,255,255,0.35)"></use>
+                            <use xlink:href="#gentle-wave" x="48" y="5" fill="rgba(255,255,255,0.25)"></use>
+                            <use xlink:href="#gentle-wave" x="48" y="8" fill="rgba(255,255,255,0.20)"></use>
+                            <use xlink:href="#gentle-wave" x="48" y="13" fill="rgba(255,255,255,0.15)"></use>
+                            <use xlink:href="#gentle-wave" x="48" y="16" fill="rgba(255,255,255,0.95"></use>
+                            </g>
+                        </svg>
+                        </div>
+                    </div>
                     <div class="card-body">
                     <!-- Login form-->
                         <form method="post">
@@ -34,22 +65,22 @@
                             {{ user_form|crispy }}
                                 <!-- Form Group (remember password checkbox)-->
                                 <div class="form-group">
-                                    <div class="custom-control custom-checkbox">
-                                        <input class="custom-control-input" id="rememberPasswordCheck" type="checkbox" />
-                                        <label class="custom-control-label" for="rememberPasswordCheck">Remember password</label>
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" id="rememberPasswordCheck">
+                                        <label class="form-check-label" for="rememberPasswordCheck">Remember me</label>
                                     </div>
                                 </div>
                                 <!-- Form Group (login box)-->
                                 <div class="form-group d-flex align-items-center justify-content-between mt-4 mb-0">
                                     
-                                    <button class="btn btn-primary btn-block" type="submit">Login</button>
+                                    <button class="btn btn-lg bg-gradient-info btn-lg w-100 mt-4 mb-0" type="submit">Login</button>
                                 </div>
                         </form>
                     </div>
 
                     <div class="card-footer text-center">
-                        <div class="small mb-1"><a class="licolor ls-modal" href="{% host_url 'password_reset' host 'bizadmin' %}">Forgot Password?</a></div>
-                        <div class="small"><a href="{% host_url 'bizadminsignup' host 'bizadmin' %}" class="licolor">Need an account? Sign up!</a></div>
+                        <div class="small mb-1"><a class="licolor font-weight-bold ls-modal" href="{% host_url 'password_reset' host 'bizadmin' %}">Forgot Password?</a></div>
+                        <div class="small"><a href="{% host_url 'bizadminsignup' host 'bizadmin' %}" class="licolor font-weight-bold">Need an account? Sign up!</a></div>
                     </div>
                 </div>
             </div>

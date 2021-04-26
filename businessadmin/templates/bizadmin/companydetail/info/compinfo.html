@@ -79,7 +79,6 @@ $(document).ready(function() {
                                         {% csrf_token %}
                                             <input type="hidden" name="x" id="id_x"><input type="hidden" name="y" id="id_y"><input type="hidden" name="width" id="id_width"><input type="hidden" name="height" id="id_height">
                                             <input type="file" id="inputimage" name="imageFile" class="btn btn-primary" accept="image/*" hidden >
-                                            {% comment %} <button type="button" id="btnimage" name="imageFile" class="btn btn-primary">Upload new image</button> {% endcomment %}
                                             <div class="file-loading">
                                                 <input id="inputmain" name="imageFile" type="file">
                                             </div> 
@@ -260,8 +259,6 @@ $(document).ready(function() {
     }
         return cookieValue;
     }
-
-    document.getElementById('btnimage').addEventListener('click', openDialog);
 
     function openDialog() {
         document.getElementById('inputimage').click();

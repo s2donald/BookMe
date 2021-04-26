@@ -5,7 +5,7 @@
     <h3>Results({{ products.count }})</h3>
 </div>
 {% for products in products.all %}
-    <div class="col-6-lg col-6-md text-left m-1 hoverproductclick">
+    <div class="col-6-lg col-6-md text-left m-auto hoverproductclick">
         <a href="{% host_url 'productdetail' slug=products.slug host 'producturl' slug=company.slug %}" style="color: black !important;">
             {% if products.mainimage %}
                 <img src="{{ products.mainimage.url }}" class="mainproductimages" alt="{{ company.business_name }} Image">

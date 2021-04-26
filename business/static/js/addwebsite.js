@@ -1,11 +1,10 @@
 
 var btnBookMe = document.querySelector('#BookMePlugin');
 var BookMeUrl = btnBookMe.dataset.url
-console.log(BookMeUrl)
 var color = btnBookMe.dataset.color
 var DOM_img = document.createElement("img")
 DOM_img.src = "https://django-gibele.s3.amazonaws.com/img/favicon/logo/BookMe-blackgrad.svg"
-DOM_img.width = '50'
+DOM_img.width = '51'
 
 class BookmeModalConfig {
     // iframeUrl = 'https://hh5l.gibele.com:8000';

@@ -1,0 +1,39 @@
+{% extends 'productspage/main.html'%}
+{% load countries %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% load hosts %}
+{% load business_tags %}
+{% block title %}{{ company.business_name }} - ShopMe.to{% endblock %}
+{% block companybizname %}{{ company.business_name }}{% endblock companybizname %}
+
+{% block booking %}
+<script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+<script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
+<script>
+    function changeheight() {
+        var readmore = $('#readmore');
+        if (readmore.text() == 'Read more') {
+            readmore.text("Read less");
+        } else {
+            readmore.text("Read more");
+        }
+        $('.productdescription').toggleClass("showentire");
+    };
+</script>
+<section class="py-0">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="text-center ch-style">
+                <div class="checkmark"></div>
+                </div>
+                
+                <h5>Thank You!</h5>
+                <p>You have placed an order request. The payment will be collected once the vendor accepts the order.</p>
+                <p>Order ID: {{ order.slug }}</p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

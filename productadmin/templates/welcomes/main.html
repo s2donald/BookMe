@@ -28,6 +28,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.2.3/themes/dark.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     <link rel="stylesheet" href="{% static "css/magnific-popup.css"%}">
+    <link rel="stylesheet" href="{% static "css/landingpagev1.css"%}">
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-188806615-1"></script>
     <script>
     window.dataLayer = window.dataLayer || [];
@@ -48,44 +49,37 @@
             <span></span>
             <span></span>
 
-        {% comment %} <button class="navbar-toggler order-0 collapsed" type="button" data-toggle="collapse" data-target="#navbarBusinessWelcome" aria-controls="navbarBusinessWelcome" aria-expanded="true" aria-label="Toggle navigation">
-            <span class="icon-bar top-bar"></span>
-            <span class="icon-bar middle-bar"></span>
-            <span class="icon-bar bottom-bar"></span>
-            <span class="sr-only">Toggle navigation</span>
-        </button> {% endcomment %}
-
             <ul id="menu">
                 <li class="nav-item {% block 'index_features' %}{% endblock %}">
-                    <a class="nav-link d-md-inline-block" href="{% host_url 'bizadminmain' host 'prodadmin' %}">Features</a>
+                    <a class="nav-link d-md-inline-block text-white" href="{% host_url 'bizadminmain' host 'prodadmin' %}">Features</a>
                 </li>
                 <li class="nav-item {% block 'index_pricing' %}{% endblock %}">
-                    <a class="nav-link d-md-inline-block" href="{% host_url 'pricingBusiness' host 'prodadmin' %}">Pricing</a>
+                    <a class="nav-link d-md-inline-block text-white" href="{% host_url 'pricingBusiness' host 'prodadmin' %}">Pricing</a>
                 </li>
                 <li class="nav-item {% block 'index_faq' %}{% endblock %}">
-                    <a class="nav-link d-md-inline-block" href="{% host_url 'faqbusiness' host 'prodadmin' %}">FAQ</a>
+                    <a class="nav-link d-md-inline-block text-white" href="{% host_url 'faqbusiness' host 'prodadmin' %}">FAQ</a>
                 </li>
             {% if user.is_business %}
                     <li class="nav-item">
-                        <a class="btn btn-outline-light" href="{% host_url 'completeprofile' host 'prodadmin' %}">Go to your business page</a>
+                        <a class="btn btn-outline-light text-white" href="{% host_url 'completeprofile' host 'prodadmin' %}">Go to your business page</a>
                     </li>
                     <li class="nav-item pt-1">
-                        <a class="nav-link d-md-inline-block" href="{% host_url 'bizadminlogout' host 'prodadmin' %}">Log Out</a>
+                        <a class="nav-link d-md-inline-block text-white" href="{% host_url 'bizadminlogout' host 'prodadmin' %}">Log Out</a>
                     </li>
             {% elif user.is_consumer %}
                     <li class="nav-item pb-1">
-                        <a class="btn btn-outline-light btn-sm" href="{% host_url 'newbizcreate' host 'prodadmin' %}">Create a business page</a>
+                        <a class="btn btn-outline-light btn-sm text-white" href="{% host_url 'newbizcreate' host 'prodadmin' %}">Create a business page</a>
                     </li>
                     <li class="nav-item pt-1">
-                        <a class="nav-link d-md-inline-block" href="{% host_url 'bizadminlogout' host 'prodadmin' %}">Log Out</a>
+                        <a class="nav-link d-md-inline-block text-white" href="{% host_url 'bizadminlogout' host 'prodadmin' %}">Log Out</a>
                     </li>
             {% else %}
 
                     <li class="nav-item {% block 'index_login' %}{% endblock %}">
-                        <a class="nav-link d-md-inline-block" href="{% host_url 'bizadminlogin' host 'prodadmin' %}">Log In</a>
+                        <a class="nav-link d-md-inline-block text-white" href="{% host_url 'bizadminlogin' host 'prodadmin' %}">Log In</a>
                     </li>
                     <li class="nav-item {% block 'index_signup' %}{% endblock %}">
-                        <a class="nav-link d-md-inline-block" href="{% host_url 'bizadminsignup' host 'prodadmin' %}">Sign Up</a>
+                        <a class="nav-link d-md-inline-block text-white" href="{% host_url 'bizadminsignup' host 'prodadmin' %}">Sign Up</a>
                     </li>
             {% endif %}
 
@@ -93,10 +87,10 @@
     </div>
     </nav>
         <!-- Header -->
-        <header id="header" class="header-shopme mb-6" width="100%">
-            {% comment %} <svg class="header-bg" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" viewBox="0 0 1720.053 1080"><defs><style>.cls-1{fill:url(#linear-gradient);}</style><linearGradient id="linear-gradient" x1="190.62" y1="-190.62" x2="1472.363" y2="1091.123" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#41abc7"/><stop offset="0.156" stop-color="#4fb8d2"/><stop offset="0.415" stop-color="#65dff1"/><stop offset="0.742" stop-color="#5ffbf1"/><stop offset="1" stop-color="#6dd5ed"/></linearGradient></defs><title>header-background</title><path class="cls-1" d="M1455.1,1080L72.853,1000.374A73.067,73.067,0,0,1,0,927.521V0H1720.053l-2.3,12.065-189.8,995.082C1520,1050.667,1495.165,1080,1455.1,1080Z"/></svg> {% endcomment %}
+        {% comment %} <header id="header" class="header-shopme mb-6" width="100%">
+            <svg class="header-bg" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" viewBox="0 0 1720.053 1080"><defs><style>.cls-1{fill:url(#linear-gradient);}</style><linearGradient id="linear-gradient" x1="190.62" y1="-190.62" x2="1472.363" y2="1091.123" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#41abc7"/><stop offset="0.156" stop-color="#4fb8d2"/><stop offset="0.415" stop-color="#65dff1"/><stop offset="0.742" stop-color="#5ffbf1"/><stop offset="1" stop-color="#6dd5ed"/></linearGradient></defs><title>header-background</title><path class="cls-1" d="M1455.1,1080L72.853,1000.374A73.067,73.067,0,0,1,0,927.521V0H1720.053l-2.3,12.065-189.8,995.082C1520,1050.667,1495.165,1080,1455.1,1080Z"/></svg>
             <svg class="header-bg" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" viewBox="0 0 1300 300"><defs><style>.cls-1{fill:url(#linear-gradient);}</style><linearGradient id="linear-gradient" x1="190.62" y1="-190.62" x2="1472.363" y2="1091.123" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#41abc7"/><stop offset="0.156" stop-color="#4fb8d2"/><stop offset="0.415" stop-color="#65dff1"/><stop offset="0.742" stop-color="#5ffbf1"/><stop offset="1" stop-color="#6dd5ed"/></linearGradient></defs><title>Background</title>
-            {% comment %} <path class="cls-1" fill="#0099ff" fill-opacity="1" d="M0,288L48,261.3C96,235,192,181,288,170.7C384,160,480,192,576,186.7C672,181,768,139,864,128C960,117,1056,139,1152,128C1248,117,1344,75,1392,53.3L1440,32L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z"></path> {% endcomment %}
+            <path class="cls-1" fill="#0099ff" fill-opacity="1" d="M0,288L48,261.3C96,235,192,181,288,170.7C384,160,480,192,576,186.7C672,181,768,139,864,128C960,117,1056,139,1152,128C1248,117,1344,75,1392,53.3L1440,32L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z"></path>
             {% block custompath %}
             {% endblock %}
             </svg>
@@ -110,7 +104,8 @@
             {% endblock  %}
             {% block header %}
             {% endblock header %}
-        </header>
+        </header> {% endcomment %}
+        {% block header %}{% endblock header %}
 
             <script type="text/javascript" src="https://kit.fontawesome.com/a07c5b9658.js" crossorigin="anonymous"></script>
             {% comment %} <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script> {% endcomment %}

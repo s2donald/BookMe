@@ -29,10 +29,16 @@
                 </ul>
                 <hr>
                 <div class="tab-content" id="pillscontent">
-                    <div class="tab-pane fade show active" role="tabpanel" id="serviceList">
+                    <div class="tab-pane fade show active p-0" role="tabpanel" id="serviceList">
                         <div class="justify-content-between align-baseline pl-4 row mb-6 lorem">
                             <div class="row align-middle">
                                 <h4> {{ company.business_name }}'s Store</h4>
+                                <form action="" id="searchFilter">
+                                    {% comment %} <select name="" id="" class="form-control">
+                                        <option value="key">Key</option>
+                                        <option value="cat">Two</option>
+                                    </select> {% endcomment %}
+                                </form>
                             </div>
                             <div class="row">
                                 <form action="" id="searchFilter">
@@ -45,41 +51,35 @@
                                 </form>
                             </div>
                         </div>
-                        <div class="row justify-new-content" id="listofallproducts">
-                        {% for products in company.products_offered.all %}
-                            <div class="col-6-lg col-6-md text-left m-1 hoverproductclick">
-                                <a href="{% host_url 'productdetail' slug=products.slug host 'producturl' slug=company.slug %}" style="color: black !important;">
-                                    {% if products.mainimage %}
-                                        <img src="{{ products.mainimage.url }}" class="mainproductimages" alt="{{ company.business_name }} Image">
-                                    {% else %}
-                                        <img src="{% static 'img/default-product-image.png' %}" class="mainproductimages" alt="">
-                                    {% endif %}
-                                    <h3 class="heading-text-caption text-truncate" style="max-width:300px;">{{ products.name }}</h3>
-                                    <h5>{{ products.currency }} ${{ products.price }}</h5>
-                                </a>
-                            </div>
-                        {% endfor %}
+                        <div class="row justify-new-content m-3" id="listofallproducts">
+                            {% for product in products %}
+                                <div class="col-6-lg col-6-sm text-left justify-content-left mx-auto my-2 hoverproductclick">
+                                    <a href="{% host_url 'productdetail' slug=product.slug host 'producturl' slug=company.slug %}" style="color: black !important;">
+                                        {% if product.mainimage %}
+                                            <img src="{{ product.mainimage.url }}" class="mainproductimages" alt="{{ company.business_name }} Image">
+                                        {% else %}
+                                            <img src="{% static 'img/default-product-image.png' %}" class="mainproductimages" alt="">
+                                        {% endif %}
+                                        <div class="row px-3 justify-content-between">
+                                            <div>
+                                                <h3 class="heading-text-caption text-truncate" style="max-width:300px;">{{ product.name }}</h3>
+                                                <h5>{{ product.currency }} ${{ product.price }}</h5>
+                                            </div>
+                                            <div class="">
+                                                {% if product.product_questions.all.count > 0 %} <div><span class="badge badge-info">Custom</span></div>{% endif %}
+                                                {% if product.request %}<div><span class="badge badge-success">Request</span></div>{% endif %}
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                            {% empty %}
+                                <div class="text-muted">No Products Are Available</div>
+                            {% endfor %}
                         </div>
                         
                     </div>
                     <!-- Amenities-->
                     <div class="tab-pane fade" role="tabpanel" id="aboutList">
-                        {% if company.company_amenity.all %}
-                        <div class="text-block">
-                        <h3 class="mb-4">Amenities Offered</h3>
-                        <ul class="amenities-list list-inline">
-                            {% for a in company.company_amenity.all %}
-                            <li class="list-inline-item mb-3">
-                            <div class="d-flex align-items-center">
-                                <div class="icon-circle bg-secondary mr-2"><i class="fa fa-check"></i></div><span class="text-capitalize">{{ a.amenity }}</span>
-                            </div>
-                            </li>
-                            {% endfor %}
-                        </ul>
-                        <hr>
-                        </div>
-                        {% endif %}
-
 
 
                         <div class="text-block">
@@ -88,147 +88,133 @@
                             <hr>
                         </div>
 
-                        <div class="col-lg-5">
-                <!-- Contact-->
-                    <div class="card border-0 shadow mb-5">
-                        <div class="card-topcol bg-light"></div>
-                        <div class="card-body" id="informationcompstaff">
-                            <div class="media align-items-center">
-                                <div class="media-body">
-                                    <h4 class="mb-0">Business Information</h4>
+                        <div class="col-lg-7 mx-auto">
+                            <!-- Contact-->
+                            <div class="card border-0 shadow mb-5">
+                                <div class="card-topcol bg-light"></div>
+                                <div class="card-body" id="informationcompstaff">
+                                    <div class="media align-items-center">
+                                        <div class="media-body">
+                                            <h4 class="mb-0">Business Information</h4>
+                                        </div>
+                                    </div>
+                                    <ul class="list-unstyled mb-4">
+                                        <li class="mb-0 pb-0"> 
+                                            <a rel="nofollow" class="licolor text-sm text-decoration-none" href="tel:{{ company.phone }}">
+                                            <div class="row my-0 py-0">
+                                                <div class="col-2 mb-0 pb-0">
+                                                <i class="fa fa-phone mr-3"></i>
+                                                </div>
+                                                <div class="col-10 pb-0 text-left">
+                                                <span class="text-muted">{{ company.phone }}</span>
+                                                </div>
+                                            </div>
+                                            </a>
+                                        </li>
+                                        <li class="mb-2"> 
+                                            <a rel="nofollow" class="licolor text-sm text-decoration-none" href="mailto:{{ company.email }}">
+                                            <div class="row my-0 py-0">
+                                                <div class="col-2 my-0 pb-0">
+                                                <i class="fa fa-envelope mr-3"></i>
+                                                </div>
+                                                <div class="col-10 pb-0 text-left">
+                                                <span class="text-muted">{{ company.email }}</span>
+                                                </div>
+                                            </div>
+                                            </a>
+                                        </li>
+                                        {% if company.fb_link %}
+                                            <li class="mb-2"> 
+                                            <a rel="nofollow" class="licolor text-blue text-sm text-decoration-none" href="{{ company.fb_link}}">
+                                                <div class="row my-0 py-0">
+                                                <div class="col-2 my-0 pb-0">
+                                                    <i class="fab fa-facebook mr-3"></i>
+                                                </div>
+                                                <div class="col-10 pb-0 text-left">
+                                                    <span class="text-muted">Facebook</span>
+                                                </div>
+                                                </div>
+                                            </a>
+                                            </li>
+                                        {% endif %}
+                                        {% if company.twitter_link %}
+                                            <li class="mb-2"> 
+                                                <a rel="nofollow" class="licolor text-sm text-decoration-none" href="{{ company.twitter_link}}">
+                                                    <div class="row my-0 py-0">
+                                                    <div class="col-2 my-0 pb-0">
+                                                        <i class="fab fa-twitter mr-3"></i>
+                                                    </div>
+                                                    <div class="col-10 pb-0 text-left">
+                                                        <span class="text-muted">Twitter</span>
+                                                    </div>
+                                                    </div>
+                                                </a>
+                                            </li>
+                                        {% endif %}
+                                        {% if company.instagram_link %}
+                                            <li class="mb-2"> 
+                                                <a rel="nofollow" class="licolor text-sm text-decoration-none" href="{{ company.instagram_link}}">
+                                                    <div class="row my-0 py-0">
+                                                    <div class="col-2 my-0 pb-0">
+                                                        <i class="fab fa-instagram licolor mr-3"></i>
+                                                    </div>
+                                                    <div class="col-10 pb-0 text-left">
+                                                        <span class="text-muted">Instagram</span>
+                                                    </div>
+                                                    </div>
+                                                </a>
+                                            </li>
+                                        {% endif %}
+                                    </ul>
                                 </div>
                             </div>
-                            <ul class="list-unstyled mb-4">
-                                <li class="mb-0 pb-0"> 
-                                    <a rel="nofollow" class="licolor text-sm text-decoration-none" href="tel:{{ company.phone }}">
-                                    <div class="row my-0 py-0">
-                                        <div class="col-2 mb-0 pb-0">
-                                        <i class="fa fa-phone mr-3"></i>
-                                        </div>
-                                        <div class="col-10 pb-0 text-left">
-                                        <span class="text-muted">{{ company.phone }}</span>
-                                        </div>
-                                    </div>
-                                    </a>
-                                </li>
-                                <li class="mb-2"> 
-                                    <a rel="nofollow" class="licolor text-sm text-decoration-none" href="mailto:{{ company.email }}">
-                                    <div class="row my-0 py-0">
-                                        <div class="col-2 my-0 pb-0">
-                                        <i class="fa fa-envelope mr-3"></i>
-                                        </div>
-                                        <div class="col-10 pb-0 text-left">
-                                        <span class="text-muted">{{ company.email }}</span>
-                                        </div>
-                                    </div>
-                                    </a>
-                                </li>
-                                {% if company.website_link %}
-                                    <li class="mb-2"> 
-                                    <a rel="nofollow" class="licolor text-sm text-decoration-none" href="{{ company.website_link }}">
-                                        <div class="row my-0 py-0">
-                                        <div class="col-2 my-0 pb-0">
-                                            <i class="fa fa-globe mr-3"></i>
-                                        </div>
-                                        <div class="col-10 pb-0 text-left">
-                                            <span class="text-muted">{{ company.website_link }}</span>
-                                        </div>
-                                        </div>
-                                    </a>
-                                    </li>
-                                {% endif %}
-                                {% if company.fb_link %}
-                                    <li class="mb-2"> 
-                                    <a rel="nofollow" class="licolor text-blue text-sm text-decoration-none" href="{{ company.fb_link}}">
-                                        <div class="row my-0 py-0">
-                                        <div class="col-2 my-0 pb-0">
-                                            <i class="fab fa-facebook mr-3"></i>
-                                        </div>
-                                        <div class="col-10 pb-0 text-left">
-                                            <span class="text-muted">Facebook</span>
-                                        </div>
-                                        </div>
-                                    </a>
-                                    </li>
-                                {% endif %}
-                                {% if company.twitter_link %}
-                                    <li class="mb-2"> 
-                                        <a rel="nofollow" class="licolor text-sm text-decoration-none" href="{{ company.twitter_link}}">
-                                            <div class="row my-0 py-0">
-                                            <div class="col-2 my-0 pb-0">
-                                                <i class="fab fa-twitter mr-3"></i>
-                                            </div>
-                                            <div class="col-10 pb-0 text-left">
-                                                <span class="text-muted">Twitter</span>
-                                            </div>
-                                            </div>
-                                        </a>
-                                    </li>
-                                {% endif %}
-                                {% if company.instagram_link %}
-                                    <li class="mb-2"> 
-                                        <a rel="nofollow" class="licolor text-sm text-decoration-none" href="{{ company.instagram_link}}">
-                                            <div class="row my-0 py-0">
-                                            <div class="col-2 my-0 pb-0">
-                                                <i class="fab fa-instagram licolor mr-3"></i>
-                                            </div>
-                                            <div class="col-10 pb-0 text-left">
-                                                <span class="text-muted">Instagram</span>
-                                            </div>
-                                            </div>
-                                        </a>
-                                    </li>
-                                {% endif %}
-                            </ul>
                         </div>
-                    </div>
-            </div>
                     </div>
                     
                     <div class="tab-pane fade" role="tabpanel" id="reviewlist">
                         <div class="d-flex justify-content-center">
                             <h3 class="mb-3">Reviews</h3>
                         </div>
-                    {% if company.company_reviews.all %}
-                        {% for review in company.company_reviews.all %}
-                            <hr>
-                            {% with reviewer=review.reviewer %}
-                            <div class="media d-block d-sm-flex review">
-                                <div class="text-md-left mr-4 mr-xl-5"><img class="d-block avatar avatar-xl p-2 mb-2" src="{% if reviewer.avatar %}{{ reviewer.avatar.url }}{% else %}https://epicattorneymarketing.com/wp-content/uploads/2016/07/Headshot-Placeholder-1.png{% endif %} " alt="{{ reviewer.first_name }} {{ reviewer.last_name }}"><span class="text-uppercase text-muted text-sm">{{ review.created|date:"M d, Y"}}</span></div>
-                                <div class="media-body text-left">
-                                <h6 class="mt-2 mb-1">{{ reviewer.first_name }} {{ reviewer.last_name }}</h6>
-                                <div class="mb-2">{% for x in '12345' %}<i class="fas fa-star {% if forloop.counter <= review.star %}text-warning{% else %}text-gray-300{% endif %}"></i>{% endfor %}
+                        {% if company.company_reviews.all %}
+                            {% for review in company.company_reviews.all %}
+                                <hr>
+                                {% with reviewer=review.reviewer %}
+                                <div class="media d-block d-sm-flex review">
+                                    <div class="text-md-left mr-4 mr-xl-5"><img class="d-block avatar avatar-xl p-2 mb-2" src="{% if reviewer.avatar %}{{ reviewer.avatar.url }}{% else %}https://epicattorneymarketing.com/wp-content/uploads/2016/07/Headshot-Placeholder-1.png{% endif %} " alt="{{ reviewer.first_name }} {{ reviewer.last_name }}"><span class="text-uppercase text-muted text-sm">{{ review.created|date:"M d, Y"}}</span></div>
+                                    <div class="media-body text-left">
+                                    <h6 class="mt-2 mb-1">{{ reviewer.first_name }} {{ reviewer.last_name }}</h6>
+                                    <div class="mb-2">{% for x in '12345' %}<i class="fas fa-star {% if forloop.counter <= review.star %}text-warning{% else %}text-gray-300{% endif %}"></i>{% endfor %}
+                                    </div>
+                                    <p class="text-muted text-sm">{{ review.review }}     </p>
+                                    </div>
                                 </div>
-                                <p class="text-muted text-sm">{{ review.review }}     </p>
-                                </div>
-                            </div>
-                            {% endwith %}
+                                {% endwith %}
 
-                        {% endfor %}
-                        {% include 'business/company/pagination_review/pagination.html' with page=reviews %}
-                        <hr>
-                    {% else %}
-                        <h6>Be the first to write a review on this business after you complete a service with them.</h6>
-                        <hr>
-                    {% endif %}
-                    
+                            {% endfor %}
+                            {% include 'business/company/pagination_review/pagination.html' with page=reviews %}
+                            <hr>
+                        {% else %}
+                            <h6>Be the first to write a review on this business after you complete a service with them.</h6>
+                            <hr>
+                        {% endif %}
+                        
                     
                     </div>
 
                     <div class="tab-pane fade" role="tabpanel" id="gallarylist">
-                    <div class="row text-center justify-content-center" id="galphotos">
-                        {% for p in company.gallary.all %}
-                        <div class="col-sm-12 col-md-6 col-lg-4 mt-2">
-                            <div class="card justify-content-center align-self-center show-image" id="{{ p.id }}">
-                            <img width="100%" class="rounded" src="{{ p.photos.url }}" alt="">
+                        <div class="row text-center justify-content-center" id="galphotos">
+                            {% for p in company.gallary.all %}
+                            <div class="col-sm-12 col-md-6 col-lg-4 mt-2">
+                                <div class="card justify-content-center align-self-center show-image" id="{{ p.id }}">
+                                <img width="100%" class="rounded" src="{{ p.photos.url }}" alt="">
+                                </div>
                             </div>
+                            {% empty %}
+                                <h6>No images have been uploaded by {{ company.business_name }}</h6>
+                            {% endfor %}
                         </div>
-                        {% empty %}
-                            <h6>No images have been uploaded by {{ company.business_name }}</h6>
-                        {% endfor %}
-                    </div>
-                    <br>
-                    {% include 'bizadmin/dashboard/reviews/pagination.html' with page=photos%}
+                        <br>
+                        {% include 'bizadmin/dashboard/reviews/pagination.html' with page=photos%}
                     </div>
                 </div>
             </div>
@@ -264,22 +250,62 @@
                 });
             }
         $(document).ready(function() {
-
-            $(document).on('submit', '#searchFilter', function(e){
+            var page = 1;
+            var empty_page = false;
+            var block_request = false;
+            var is_search_result = false;
+            $(document).on('keyup', '#searchFilter', function(e){
+                block_request = true;
                 e.preventDefault()
                 var form = $(this).serialize()
+                var  removeheading = document.querySelector('#listofallproducts');
+                removeheading.innerHTML = '<div class="d-flex justify-content-center mx-auto mt-4"><div class="spinner-border" role="status"><span class="sr-only">Loading...</span></div></div>'
                 $.ajax({
                     type:'GET',
                     url: "{% host_url 'productsearch' host 'producturl' slug=company.slug %}",
                     data: form,
                     success: function(data){
                         var  removeheading = document.querySelector('#listofallproducts');
-                        console.log(data.html_content)
+                        {% comment %} is_search_result = true;
+                        page=1;
+                        empty_page=false;
+                        block_request = false; {% endcomment %}
                         removeheading.innerHTML = data.html_content
                     }
                 })
-            })
+            });
+
+            
+
+            $(document.body).on('touchmove', onScroll); // for mobile
+            $(window).on('scroll', onScroll);
+
+            function onScroll(){
+                var margin = $(document).height() - $(window).height() - 200;
+                console.log(margin)
+                console.log($(window).scrollTop())
+                console.log()
+                if($(window).scrollTop() > margin && empty_page == false && block_request==false){
+                    block_request=true;
+                    page+=1;
+                    $.get('?page=' + page, function(data){
+                        if(data == ''){
+                            empty_page = true;
+                        }
+                        else {
+                            block_request = false;
+                            $('#listofallproducts').append(data)
+                        }
+                    });
+                    
+                }
+            }
+
+            $(window).on('scroll', function() {
+                
+            });
         });
+        
     </script>
     <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBaZM_O3d1-xDrecS_fbcbvoT5qDmLmje0&callback=initMap"
     type="text/javascript"></script>

@@ -1,45 +1,37 @@
-{% extends 'bizadmin/index.html' %}
+{% extends 'productadmin/index.html' %}
 {% load static %}
 {% load crispy_forms_tags %}
 {% load hosts %}
-{% block linescript %}
-{% endblock linescript %}
-{% block activecompinfo %}active{%endblock%}
+{% block linkscript %}
+    {{ product_form.media }}
+{% endblock linkscript %}
+{% block linescripe %}
+
+{% endblock linescripe %}
+{% block activeprod %}active{%endblock%}
 {% block businessadmin %}
-                    
                     <!-- Main page content-->
                     <div class="content">
                         <div class="row">
                         <div class="col-md-12 ml-auto mr-auto">
                         <header class="page-header page-header-compact page-header-light mb-2">
-                        <div class="container-fluid">
-                            <div class="page-header-content">
-                                <div class="row align-items-center justify-content-between pt-3">
-                                    <div class="col-auto">
-                                        <h1 class="page-header-title">
-                                            Company Services
-                                        </h1>
+                            <div class="container-fluid">
+                                <div class="page-header-content">
+                                    <div class="row align-items-center justify-content-between pt-3">
+                                        <div class="col-auto">
+                                            <h1 class="page-header-title">
+                                                Products
+                                            </h1>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
                         </header>
-                        <!-- Account page navigation-->
-                        <nav class="nav nav-borders">
-                            <a class="nav-link ml-0" href="{% host_url 'information' host 'bizadmin'%}">Company Info</a>
-                            <a class="nav-link" href="{% host_url 'hours' host 'bizadmin'%}">Business Hours</a>
-                            <a class="nav-link" href="{% host_url 'staffmemb' host 'bizadmin'%}">Staff Members</a>
-                            {% comment %} <a class="nav-link" href="{% host_url 'breaks_time' host 'bizadmin'%}">Breaks</a>
-                            <a class="nav-link" href="{% host_url 'timeoff_time' host 'bizadmin'%}">Time Off</a> {% endcomment %}
-                            <a class="nav-link activate" href="{% host_url 'service_detail' host 'bizadmin' %}">Services</a>
-                            <a class="nav-link" href="{% host_url 'client_list' host 'bizadmin' %}">Clients</a>
-                            {% comment %} <a class="nav-link" href="#">Staff Members</a> {% endcomment %}
-                        </nav>
                         <hr class="mt-0 mb-4" />
                         <div class="row">
-                            <div class="col-md-4">
+                            {% comment %} <div class="col-md-4">
                                 <div class="text-center mt-2">
-                                        <button id="addcategory" class="btn btn-primary mb-3" data-toggle="modal" data-target="#modal-addcategory">Add Category</button>
+                                        <button id="addcategory" class="btn btn-info mb-3" data-toggle="modal" data-target="#modal-category">Add Category</button>
                                     </div>
                                 <div class="card shadow mb-4 p-3" id="categorylisttab">
                                     <div id="accordion" role="tablist" aria-multiselectable="true" class="card-collapse">
@@ -53,11 +45,11 @@
                                             </div>
 
                                             <div id="collapseOne" class="collapse something" role="tabpanel" aria-labelledby="headingOne">
-                                                <div class="card-body">
-                                                    <ul class="nav nav-pills nav-pills-neutral flex-column">
-                                                        <li class="nav-item"><a class="nav-link active" style="border-radius:10px;" href="#tabAll" data-toggle="tab">All Services</a></li>
-                                                        {% for category in company.service_category.all %}
-                                                            <li class="nav-item"><a class="nav-link" style="border-radius:10px;" href="#tab{{ forloop.counter }}" data-toggle="tab">{{ category.name }} Services</a></li>
+                                                <div class="card-body p-0 mt-0">
+                                                    <ul class="nav nav-pills-neutral flex-column">
+                                                        <li class="nav-item"><a class="nav-link active" style="border-radius:10px;" id="allTabs" href="#tabAll" data-toggle="tab">All Products</a></li>
+                                                        {% for category in company.product_category.all %}
+                                                            <li class="nav-item"><a class="nav-link" style="border-radius:10px;" href="#tab{{ forloop.counter }}" data-toggle="tab">{{ category.name }}</a></li>
                                                         {% endfor %}
                                                     </ul>
                                                 </div>
@@ -67,77 +59,158 @@
 
                                 </div>
                                 
-                            </div>
-                            <div class="col-md-8" id="service-t">
+                            </div> {% endcomment %}
+                            <div class="col-md-12" id="service-t">
                                 <div class="tab-content">
 
                                     <div class="tab-pane active" id="tabAll">
                                         <div class="card shadow my-1" style="border-radius: 8px !important;">
                                             <div class="row">
                                                 <div class="col-6">
-                                                    <h4 class="card-header p-2">Category - All Services</h4>
+                                                    <h4 class="card-header p-2">Category - All Products</h4>
                                                 </div>
                                                 <div class="col-6 text-right">
                                                     <div class="card-header p-2">
-                                                            <button class="btn btn-primary btn-sm mb-3 justify-content-center addnewservice" type="button" data-toggle="modal" data-target="#modal-service" data-url="{% host_url 'createservices' 0 host 'bizadmin' %}">Add Service <i class="fas fa-plus"></i></button>
+                                                            <button class="btn btn-info btn-sm mb-3 justify-content-center addnewproduct" type="button" data-toggle="modal" data-target="#modal-product" data-url="{% host_url 'createproducts' 0 host 'prodadmin' %}">Add Product <i class="fas fa-plus"></i></button>
                                                     </div>
                                                 </div>
                                             </div>       
                                         </div>
-                                                    {% for s in services %}
-                                                        <div class="card shadow">
+                                          <div class="allmyprods">
+                                                    {% for s in company.products_offered.all %}
+                                                        <div class="card shadow" style="border-radius: 8px !important;">
                                                             <div class="row">
                                                                 <div class="col-12">
                                                                     {% comment %} <div class="card-header">{{ s.name }}</div> {% endcomment %}
-                                                                    <div class="card-body">
-                                                                        {% comment %} <div>
-                                                                            <p class="subtitle text-left">${{s.price}}</p>
-                                                                            <p class="text-muted text-left">{{ s.description }}</p>
-                                                                        </div>
-                
-                                                                        <div>
-                                                                            <button class="btn btn-danger btn-sm trashcan" data-url="{% host_url 'deleteservice' s.id host 'bizadmin' %}"><i class="fas fa-trash"></i></button>
-                                                                            <button type="button" class="updatebtn btn btn-sm btn-primary" data-toggle="modal" data-target="#modal-update" data-url="{% host_url 'updateservice' s.id host 'bizadmin' %}"><i class="fas fa-pencil-alt"></i></button>
-                                                                        </div> {% endcomment %}
-                                                                        {% with hour=s.duration_hour min=s.duration_minute type=s.price_type %}                          
+                                                                    <div class="card-body">                      
                                                                         <div class="row p-2 justify-content-between text-left align-self-center">
-                                                                            <div class="col-8 p-0">
-                                                                            <p class="mb-1">{{ s.name }}</p>
-                                                                            <p class="text-muted">{{ s.description }}</p>
-                                                                            </div>
-                                                                            <div class="col-4 p-1 text-right">
-                                                                            <div class="row">
                                                                             <div class="col-12">
-                                                                            <strong class="text-header text-muted m-1">{% if not hour == 0 %}{{ hour }}h{% endif %} {% if not min == 0 and not hour == 0 %}&amp;{% endif %} {% if not min == 0 %}{{ min }} min{% endif %}</strong>
+                                                                              <h3 class="mb-1">{{ s.name }} - ${{ s.price }}</h3>
+                                                                                {% if s.mainimage %}
+                                                                                    <img src="{{ s.mainimage.url }}" width="150px" height="150px" class="rounded" style="object-fit: cover;">
+                                                                                {% endif %}
+                                                                                
                                                                             </div>
-                                                                            <div class="col-12">
-                                                                            {% if not type == 'dont' %}<p class="m-1">{% if type == "fixed" %}Fixed price of{% elif type == 'start' %}Prices start at{% elif type == 'variable' %}<strong>Prices Varies</strong>{% endif %}{% if type == 'variable' %}{% elif type == 'free' %}<strong>Free</strong> {% else %} <strong>${{ s.price }}</strong>{% endif %}</p>{% endif %}
+                                                                            <div class="col-8 p-0 mt-2 order-3 order-md-2">
+                                                                            
+                                                                                
+                                                                                <div class="accordion" id="accordionExample">
+                                                                                    <div class="card">
+                                                                                        <div class="card-header py-0">
+                                                                                            <h2 class="mb-0" id="headingOne">
+                                                                                                <button class="btn btn-link text-left d-flex justify-content-between my-0 descr" type="button" data-toggle="collapse" data-target="#collapseFun{{s.id}}" aria-expanded="false" aria-controls="collapseFun{{s.id}}">
+                                                                                                    Product Description
+                                                                                                    <i class="fas fa-chevron-down text-line rotatemenow"></i>
+                                                                                                </button>
+                                                                                            </h2>
+                                                                                        </div>
+                                                                                        <div id="collapseFun{{s.id}}" class="collapse text-center" aria-labelledby="headingOne" data-parent="#accordionExample">
+                                                                                            <div class="col-12">
+                                                                                                <ul style="list-style:none; text-align:left;">
+                                                                                                    <li>
+                                                                                                    {% autoescape off %}
+                                                                                                        <div id="innerHTMLDescription" class="productdescription showentire mt-3 text-left ml-auto">
+                                                                                                            {{ s.description }}
+                                                                                                        </div>
+                                                                                                    {% endautoescape %}
+                                                                                                    </li>
+                                                                                                </ul>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+
+
+                                                                                </div>
+                                                                                {% if s.product_maindropdown.all.count > 0 or s.product_questions.all.count > 0 %}
+                                                                                <div class="accordion" id="accordionExample">
+                                                                                    <div class="card">
+                                                                                        <div class="card-header py-0">
+                                                                                            <h2 class="mb-0" id="headingOne">
+                                                                                                <button class="btn btn-link text-left d-flex justify-content-between my-0 descr" type="button" data-toggle="collapse" data-target="#collapseReq{{s.id}}" aria-expanded="true" aria-controls="collapseReq{{s.id}}">
+                                                                                                    Additional Requirements
+                                                                                                    <i class="fas fa-chevron-down text-line rotatemenow"></i>
+                                                                                                </button>
+                                                                                            </h2>
+                                                                                        </div>
+                                                                                        <div id="collapseReq{{s.id}}" class="collapse show text-center" aria-labelledby="headingOne" data-parent="#accordionExample">
+                                                                                            <div class="row">
+                                                                                                <div class="col-12">
+                                                                                                    <ul style="list-style:none; text-align:left;" id="dropdownslist">
+                                                                                                        {% for maindropdown in s.product_maindropdown.all %}
+                                                                                                        <li style="position:relative;">
+                                                                                                            <div class="additional-options">
+                                                                                                                <div class="row d-flex">
+                                                                                                                    <span class="dropdown-loop-label">Dropdown</span>
+                                                                                                                </div>
+                                                                                                                <b style="color: #404145;font-size: 14px;line-height: 22px;">{{maindropdown.placeholder}}</b>
+                                                                                                                <p class="text-sm" style="color: #7a7d85; font-size: 14px; line-height: 22px;">{% for options in maindropdown.main_dropdown.all %}{{ options.option }}, {% endfor %}</p>
+                                                                                                            </div>
+                                                                                                            {% comment %} <button tabindex="0" data-staff="{{ staff.id }}" data-weekday="{{ day.weekday }}" class="popover fit-popover fit-popover-bottom fit-popover-clickable popover-actions" role="button" data-toggle="popover" data-trigger="focus" title="Edit?" data-html='true' data-sanitize='false' style="z-index:1 !important;" data-content="Are you sure you want to delete? <button class='btn btn-sm btn-danger removebreak' data-breakid='{{ breakday.id }}' data-staff='{{ staff.id }}' >Delete</button><button class='btn btn-sm '>Edit</button>">
+                                                                                                            <span class="fit-popover-content" ><div class="three-dots-link"><i></i></div></span>
+                                                                                                            </button> <li class="option editdrop" id="{{maindropdown.id}}"><span>Edit</span></li>{% endcomment %}
+                                                                                                            <div class="fit-popover fit-popover-bottom fit-popover-clickable popover-actions" title="" tabindex="0" data-toggle="popover" data-html='true' data-trigger='focus' data-placement="right" data-dropid="{{ maindropdown.id }}" data-content='<ul class="dropdown-list"><li class="option removedrop" id="{{maindropdown.id}}"><span>Remove</span></li></ul>'>
+                                                                                                            <span class="fit-popover-content"><div class="three-dots-link"><i></i></div></span>
+                                                                                                            </div>
+                                                                                                        </li>
+                                                                                                        {% endfor %}
+                                                                                                        {% for questions in s.product_questions.all %}
+                                                                                                        <li style="position:relative;">
+                                                                                                            <div class="additional-options">
+                                                                                                                <div class="row d-flex">
+                                                                                                                    <span class="dropdown-loop-label">Question</span>
+                                                                                                                </div>
+                                                                                                                <b style="color: #404145;font-size: 14px;line-height: 22px;">{{questions.question}}</b>
+                                                                                                            </div>
+                                                                                                            <div class="fit-popover fit-popover-bottom fit-popover-clickable popover-actions" title="" tabindex="0" data-toggle="popover" data-html='true' data-trigger='focus' data-placement="right" data-dropid="{{ questions.id }}" data-content='<ul class="dropdown-list"><li class="option removeques" id="{{questions.id}}"><span>Remove</span></li></ul>'>
+                                                                                                                <span class="fit-popover-content"><div class="three-dots-link"><i></i></div></span>
+                                                                                                            </div>
+                                                                                                        </li>
+
+                                                                                                        {% endfor %}
+
+                                                                                                    </ul>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    
+
+                                                                                </div>
+
+                                                                                {% endif %}
+
+                                                                                <div class="text-block">
+                                                                                    <button class="btns btn-outline-info m-1 adddropdown" title="Add extra add ons and options to products" data-toggle="modal" data-target="#modal-update" data-url="{% host_url 'adddropdownprod' s.id host 'prodadmin' %}">+ Add Dropdown Options</button>
+                                                                                    <button class="btns btn-outline-info m-1 addquestion" title="Ask additional questions before a product order is placed" data-toggle="modal" data-target="#modal-update" data-url="{% host_url 'addquestionprod' s.id host 'prodadmin' %}">+ Attach a Question</button>
+                                                                                </div>
+                                                                              
                                                                             </div>
-                                                                            <div class="col-12">
-                                                                            <button type="button" class="updatebtn btn btn-sm" data-toggle="modal" data-target="#modal-update" data-url="{% host_url 'updateservice' s.id host 'bizadmin' %}"><i class="fas fa-pencil-alt"></i></button>
-                                                                                                                                                        <button class="btn btn-danger btn-sm trashcan" data-url="{% host_url 'deleteservice' s.id host 'bizadmin' %}"><i class="fas fa-trash"></i></button>
-                                                                            </div>
-                                                                            </div>
+                                                                            <div class="col-md-4 col-12 p-1 order-sm-2 text-md-right text-left">
+                                                                                <div class="row">
+                                                                                    <div class="col-6 col-md-12">
+                                                                                        <button type="button" class="updatebtn btn btn-sm" data-toggle="modal" data-target="#modal-update" data-url="{% host_url 'updateproduct' s.id host 'prodadmin' %}"><i class="fas fa-pencil-alt"></i> Edit Product</button>
+                                                                                        <button class="btn btn-danger btn-sm trashcan" data-url="{% host_url 'deleteproduct' s.id host 'prodadmin' %}"><i class="fas fa-trash"></i> Delete Product</button>
+                                                                                    </div>
+                                                                                </div>
                                                                             </div>
                                                                         </div>
-
-                                                                        {% endwith %}
                                                                     </div>
                                                                     
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     {% empty %}
-                                                        <div class="card">
-                                                            <div class="card-header">No Services Added</div>
+                                                        <div class="card shadow" style="border-radius: 8px !important;">
+                                                            <div class="card-header">No Products Added</div>
                                                         </div>
                                                     {% endfor %}
-                                                    <div class="card pt-2">
+                                                </div>
+                                                    {% comment %} <div class="card pt-2">
                                                         {% include 'bizadmin/dashboard/reviews/pagination.html' with page=services%}
-                                                    </div>
+                                                    </div> {% endcomment %}
                                                     
                                     </div>
-                                    {% for category in company.service_category.all  %}
+                                    {% for category in company.product_category.all  %}
 
                                         <div class="tab-pane" id="tab{{ forloop.counter }}">
                                             <div class="card shadow my-1" style="border-radius: 8px !important;">
@@ -148,56 +221,40 @@
                                                     </div>
                                                     <div class="col-6 text-right">
                                                         <div class="card-header p-2">
-                                                                <button class="btn btn-primary btn-sm justify-content-center addnewservice" type="button" data-toggle="modal" data-target="#modal-service" data-url="{% host_url 'createservices' category.id host 'bizadmin' %}">Add Service <i class="fas fa-plus"></i></button>
-                                                                <button class="btn btn-link btn-danger btn-sm categorydelete" type="button" data-catename="{{ category.name }}" data-url="{% host_url 'category_delete_view' category.id host 'bizadmin' %}">Delete Category <i class="fas fa-trash"></i></button>
+                                                            <button class="btn btn-info btn-sm justify-content-center addnewservice" type="button" data-toggle="modal" data-target="#modal-product" data-url="{% host_url 'createproducts' category.id host 'prodadmin' %}">Add Product <i class="fas fa-plus"></i></button>
+                                                            <button class="btn btn-link btn-danger btn-sm categorydelete" type="button" data-catename="{{ category.name }}" data-url="{% host_url 'category_delete_view' category.id host 'bizadmin' %}">Delete Category <i class="fas fa-trash"></i></button>
                                                         </div>
                                                     </div>
                                                 </div>
                                                 
                                             </div>
-                                            {% for s in category.services.all %}
-                                                <div class="card shadow">
-                                                            <div class="row">
-                                                                <div class="col-12">
-                                                                    {% comment %} <div class="card-header">{{ s.name }}</div> {% endcomment %}
-                                                                    <div class="card-body">
-                                                                        {% comment %} <div>
-                                                                            <p class="subtitle text-left">${{s.price}}</p>
-                                                                            <p class="text-muted text-left">{{ s.description }}</p>
-                                                                        </div>
-                
-                                                                        <div>
-                                                                            <button class="btn btn-danger btn-sm trashcan" data-url="{% host_url 'deleteservice' s.id host 'bizadmin' %}"><i class="fas fa-trash"></i></button>
-                                                                            <button type="button" class="updatebtn btn btn-sm btn-primary" data-toggle="modal" data-target="#modal-update" data-url="{% host_url 'updateservice' s.id host 'bizadmin' %}"><i class="fas fa-pencil-alt"></i></button>
-                                                                        </div> {% endcomment %}
-                                                                        {% with hour=s.duration_hour min=s.duration_minute type=s.price_type %}                          
-                                                                        <div class="row p-2 justify-content-between text-left align-self-center">
-                                                                            <div class="col-8 p-0">
-                                                                            <p class="mb-1">{{ s.name }}</p>
-                                                                            <p class="text-muted">{{ s.description }}</p>
-                                                                            </div>
-                                                                            <div class="col-4 p-1 text-right">
-                                                                            <div class="row">
-                                                                            <div class="col-12">
-                                                                            <strong class="text-header text-muted m-1">{% if not hour == 0 %}{{ hour }}h{% endif %} {% if not min == 0 and not hour == 0 %}&amp;{% endif %} {% if not min == 0 %}{{ min }} min{% endif %}</strong>
-                                                                            </div>
-                                                                            <div class="col-12">
-                                                                            {% if not type == 'dont' %}<p class="m-1">{% if type == "fixed" %}Fixed price of{% elif type == 'start' %}Prices start at{% elif type == 'variable' %}<strong>Prices Varies</strong>{% endif %}{% if type == 'variable' %}{% elif type == 'free' %}<strong>Free</strong> {% else %} <strong>${{ s.price }}</strong>{% endif %}</p>{% endif %}
-                                                                            </div>
-                                                                            <div class="col-12">
-                                                                            <button type="button" class="updatebtn btn btn-sm" data-toggle="modal" data-target="#modal-update" data-url="{% host_url 'updateservice' s.id host 'bizadmin' %}"><i class="fas fa-pencil-alt"></i></button>
-                                                                            <button class="btn btn-danger btn-sm trashcan" data-url="{% host_url 'deleteservice' s.id host 'bizadmin' %}"><i class="fas fa-trash"></i></button>
-                                                                            </div>
-                                                                            </div>
-                                                                            </div>
-                                                                        </div>
-
-                                                                        {% endwith %}
+                                            {% for s in category.products.all %}
+                                                <div class="card shadow" style="border-radius: 8px !important;">
+                                                    <div class="row">
+                                                        <div class="col-12">
+                                                            <div class="card-body">
+                                                                {% with hour=s.duration_hour min=s.duration_minute type=s.price_type %}                          
+                                                                <div class="row p-2 justify-content-between text-left align-self-center">
+                                                                    <div class="col-8 p-0">
+                                                                    <p class="mb-1">{{ s.name }} - ${{s.price}}</p>
+                                                                    <p class="text-muted">{{ s.description }}</p>
                                                                     </div>
-                                                                    
+                                                                    <div class="col-4 p-1 text-right">
+                                                                    <div class="row">
+                                                                    <div class="col-12">
+                                                                    <button type="button" class="updatebtn btn btn-sm" data-toggle="modal" data-target="#modal-update" data-url="{% host_url 'updateproduct' s.id host 'prodadmin' %}"><i class="fas fa-pencil-alt"></i></button>
+                                                                    <button class="btn btn-danger btn-sm trashcan" data-url="{% host_url 'deleteservice' s.id host 'bizadmin' %}"><i class="fas fa-trash"></i></button>
+                                                                    </div>
+                                                                    </div>
+                                                                    </div>
                                                                 </div>
+
+                                                                {% endwith %}
                                                             </div>
+                                                            
                                                         </div>
+                                                    </div>
+                                                </div>
                                             {% endfor %}
                                         </div>
                                     {% endfor %}
@@ -210,17 +267,17 @@
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content card">
       <div class="modal-header">
-        <h5 class="modal-title {% if company.darkmode %}text-white{% endif %}" id="exampleModalLabel">Make some changes to this service</h5>
+        <h5 class="modal-title {% if company.darkmode %}text-white{% endif %}" id="exampleModalLabel">Make some changes to this product</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
-        <form method="GET" action="" class="js-product-update-form">
+        <form method="GET" class="">
             
         <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary">Save changes</button>
+            <button type="button" class="btn btn-info">Save changes</button>
         </div>
 
         </form>
@@ -230,54 +287,49 @@
   </div>
 </div>
 
-<div class="modal fade" id="modal-service" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="modal-product" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content card">
-      <div class="modal-header">
-        <h5 class="modal-title {% if company.darkmode %}text-white{% endif %} font-weight-bold d-flex justify-content-center pr-1 page-header-title" id="exampleModalLabel">Add your services</h5>
+      <div class="modal-header {% if company.darkmode %}text-white{% endif %}">
+        <h5 class="modal-title {% if company.darkmode %}text-white{% endif %}" id="exampleModalLabel">Add your products</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
-      <form method="POST" id="createserv">
+      <form method="POST" action="{% host_url 'product_create' host 'prodadmin' %}" id="prod-create-form" enctype="multipart/form-data">
         {% csrf_token %}
-        {{ service_form.name|as_crispy_field }}
-        {{ service_form.description|as_crispy_field }}
-        {% if company.service_category.all %}
-            {{ category_form.category|as_crispy_field }}
-        {% endif %}
-        <div class="form-row">
-            <div class="form-group col mb-0">
-                        {{ service_form.price_type|as_crispy_field }}
-                    </div>
-                    <div class="form-group col mb-0">
-                        {{ service_form.price|as_crispy_field }}
-                    </div>
+        {{ product_form.name|as_crispy_field }}
+        <div class="row align-items-center">
+            <div class="col-md-6">
+            {{ product_form.price|as_crispy_field }}
+            </div>
+            <div class="col-md-6">
+                <div class="">
+                    <label for="id_mainimage">Main Product Image</label>
+                    <div>{{ product_form.mainimage }}</div>
                 </div>
-                <div class="form-row">
-                    <div class="form-group col mb-0">
-                        {{ service_form.duration_hour|as_crispy_field }}
-                    </div>
-                    <div class="form-group col mb-0"> 
-                        {{ service_form.duration_minute|as_crispy_field }}
-                    </div>
+            
+            </div>
+            <div class="col-md-6">
+                {{ product_form.dispatch|as_crispy_field }}
+            </div>
+            <div class="col-md-6">
+                <div class="form-check">
+                    <label class="form-check-label">
+                        <input class="form-check-input" name="requestedinput" type="checkbox">
+                        <span class="form-check-sign"></span>
+                        Must be approved before accepting payment
+                    </label>
                 </div>
-                <a class="licolor" href="#simpleCollapse" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="simpleCollapse">Advanced Options</a>
-                <div class="collapse" id="simpleCollapse">
-                    {{ service_form.checkintime|as_crispy_field }}
-                    <div id="padd">
-                        {{ service_form.padding|as_crispy_field }}
-                    </div>
-                    <div id="show-padding" class="form-row">
-                        <div class="form-group col mb-0"> 
-                            {{ service_form.paddingtime_hour|as_crispy_field }}
-                        </div>
-                        <div class="form-group col mb-0"> 
-                            {{ service_form.paddingtime_minute|as_crispy_field }}
-                        </div>
-                    </div>
-                </div>
+            </div>
+        </div>
+        {{ product_form.description|as_crispy_field }}
+        
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-info">Add Products</button>
         </div>
       </form>
     </div>
@@ -296,11 +348,9 @@
       <div class="modal-body">
       <form method="POST" id="createcate">
         {% csrf_token %}
-        {{ servcategory_form.name|as_crispy_field }}
-        {{ servcategory_form.services|as_crispy_field }}
         <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="submit" class="btn btn-primary" id="addCategory">Add Service Category</button>
+            <button type="submit" class="btn btn-info" id="addCategory">Add Service Category</button>
         </div>
       </form>
     </div>
@@ -310,7 +360,47 @@
 
 {% block java %}
     <script>
+        var data = new FormData();
+        var saveFormProduct = function () {
+                var form = $(this)
+                $.ajax({
+                    url: form.attr("action"),
+                    data: form.serialize(),
+                    type: form.attr("method"),
+                    dataType: 'json',
+                    success: function (data) {
+                        if (data.form_is_valid) {
+                        $(".allmyprods").html(data.html_service_list);
+                        $("#modal-product").modal("hide");
+                        $("#modal-delete").modal("hide");
+                        $("#modal-update").modal("hide");
+                        $("#allTabs").tab("show")
+                        $.notify({
+                            // options
+                            message: data.view
+                            },{
+                                // settings
+                                type: 'success'
+                            });
+                        }
+                        else {
+                        $("#modal-product .modal-content .modal-body").html(data.html_form);
+                        }
+                    }
+                });
+                return false;
+            };
         $( document ).ready(function() {
+
+            if('{{ errors }}' == 'True'){
+                $.notify({
+                // options
+                message: '{{ errormsg }}'
+                },{
+                    // settings
+                    type: '{{success}}'
+                });
+            }
 
             function getCookie(name) {
             let cookieValue = null;
@@ -334,17 +424,17 @@
             }
 
                 $(document).on('click','.trashcan',function(){
+                    var $this = $(this)
+                    var urldata = $this.attr('data-url');
                     const swalStyles = Swal.mixin({
                         customClass:{
-                            confirmButton: 'btn btn-primary',
+                            confirmButton: 'btn btn-info',
                             cancelButton: 'btn btn-danger',
                         },
                         buttonsStyling: false
                     });
-                    var $this = $(this)
-                    var urldata = $this.attr('data-url');
                     swalStyles.fire({
-                        title: 'Are you sure you want to delete the service?',
+                        title: 'Are you sure you want to delete the product?',
                         text: 'You will not be able to change this',
                         icon: 'warning',
                         showCancelButton: true,
@@ -352,23 +442,26 @@
                     }).then((result) => {
                         if (result.isConfirmed) {
                             $.ajax({
-                                type:'GET',
+                                type:'POST',
                                 dataType: 'json',
                                 url: urldata,
+                                headers:{
+                                    "X-CSRFToken": csrftoken
+                                },
                                 cache: false,
                                 success: function(data){
-                                    var htmlcontent = data.html_service_list
+                                    var htmlcontent = data.html_product_list
                                     var el = document.querySelector('#service-t');
                                     el.innerHTML = htmlcontent
-                                    var htmlcontents = data.html_category_list
+                                    {% comment %} var htmlcontents = data.html_category_list
                                     var catel = document.querySelector('#categorylisttab');
-                                    catel.innerHTML = htmlcontents
+                                    catel.innerHTML = htmlcontents {% endcomment %}
                                     Swal.fire({
-                                        title: '{{ s.name }} Service Deleted!', 
-                                        text: 'Your service has been deleted.', 
+                                        title: '{{ s.name }} Product Deleted!', 
+                                        text: 'Your product has been deleted.', 
                                         icon: 'success',
                                         customClass:{
-                                            confirmButton: 'btn btn-primary',
+                                            confirmButton: 'btn btn-info',
                                             cancelButton: 'btn btn-danger',
                                         },
                                         buttonsStyling: false,
@@ -381,7 +474,7 @@
                         ) {
                             swalStyles.fire(
                                 'Cancelled',
-                                'We still have your service saved! 😊',
+                                'We still have your product saved! 😊',
                                 'error'
                             )
                         }
@@ -401,9 +494,138 @@
                         $("#modal-service .modal-body").html(data.html_form);
                     }
                 });
-            })
+            });
+            $(function () {   
+                $('[data-toggle="popover"]').popover() 
+            });
+            $(document).on('click', '.editdrop', function(e){
+                console.log($(this).attr('id'))
+            });
+            $(document).on('click', '.removedrop', function(e){
+                var removedropid = $(this).attr('id')
+                const swalStyles = Swal.mixin({
+                    customClass:{
+                        confirmButton: 'btn btn-info',
+                        cancelButton: 'btn btn-danger',
+                    },
+                    buttonsStyling: false
+                });
+                swalStyles.fire({
+                    title: 'Are you sure you want to delete the dropdown option?',
+                    text: 'You will not be able to change this',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    reverseButtons: true
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        console.log("{% host_url 'removedropdown' pk=0 host 'prodadmin' %}".replace('/0/', '/'+ removedropid))
+                        $.ajax({
+                            type:'POST',
+                            dataType: 'json',
+                            url: "{% host_url 'removedropdown' pk=0 host 'prodadmin' %}".replace('/0/', '/'+removedropid+'/'),
+                            headers:{
+                                "X-CSRFToken": csrftoken
+                            },
+                            cache: false,
+                            success: function(data){
+                                var htmlcontent = data.html_product_list
+                                var el = document.querySelector('#service-t');
+                                el.innerHTML = htmlcontent
+                                {% comment %} var htmlcontents = data.html_category_list
+                                var catel = document.querySelector('#categorylisttab');
+                                catel.innerHTML = htmlcontents {% endcomment %}
+                                Swal.fire({
+                                    title: 'Dropdown Option Deleted!', 
+                                    text: 'The dropdown option has been deleted.', 
+                                    icon: 'success',
+                                    customClass:{
+                                        confirmButton: 'btn btn-info',
+                                        cancelButton: 'btn btn-danger',
+                                    },
+                                    buttonsStyling: false,
+                                }).then((result) => {
+                                    if (result.isConfirmed){
+                                        location.reload();
+                                    }
+                                });
+                                
+                            }
+                        });
+                    } else if (
+                        /* Read more about handling dismissals below */
+                        result.dismiss === Swal.DismissReason.cancel
+                    ) {
+                        swalStyles.fire(
+                            'Cancelled',
+                            'We still have your dropdown options saved! 😊',
+                            'error'
+                        )
+                    }
+                });
+            });
+            $(document).on('click', '.removeques', function(e){
+                var removedropid = $(this).attr('id')
+                const swalStyles = Swal.mixin({
+                    customClass:{
+                        confirmButton: 'btn btn-info',
+                        cancelButton: 'btn btn-danger',
+                    },
+                    buttonsStyling: false
+                });
+                swalStyles.fire({
+                    title: 'Are you sure you want to remove the question?',
+                    text: 'You will not be able to change this',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    reverseButtons: true
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        console.log("{% host_url 'removequestion' pk=0 host 'prodadmin' %}".replace('/0/', '/'+ removedropid))
+                        $.ajax({
+                            type:'POST',
+                            dataType: 'json',
+                            url: "{% host_url 'removequestion' pk=0 host 'prodadmin' %}".replace('/0/', '/'+removedropid+'/'),
+                            headers:{
+                                "X-CSRFToken": csrftoken
+                            },
+                            cache: false,
+                            success: function(data){
+                                var htmlcontent = data.html_product_list
+                                var el = document.querySelector('#service-t');
+                                el.innerHTML = htmlcontent
+                                {% comment %} var htmlcontents = data.html_category_list
+                                var catel = document.querySelector('#categorylisttab');
+                                catel.innerHTML = htmlcontents {% endcomment %}
+                                Swal.fire({
+                                    title: 'Question has been detached!', 
+                                    text: 'The question is no longer attached to the product.', 
+                                    icon: 'success',
+                                    customClass:{
+                                        confirmButton: 'btn btn-info',
+                                        cancelButton: 'btn btn-danger',
+                                    },
+                                    buttonsStyling: false,
+                                }).then((result) => {
+                                    if (result.isConfirmed){
+                                        location.reload();
+                                    }
+                                });
+                            }
+                        });
+                    } else if (
+                        /* Read more about handling dismissals below */
+                        result.dismiss === Swal.DismissReason.cancel
+                    ) {
+                        swalStyles.fire(
+                            'Cancelled',
+                            'We still have your question saved! 😊',
+                            'error'
+                        )
+                    }
+                });
+            });
 
-            $('#createserv').submit(function(e){
+            $('#createserv').submit(function(e) {
                 e.preventDefault();
                 {% comment %} btn.attr("data-category") {% endcomment %}
                 $.ajax({
@@ -443,12 +665,12 @@
                     },
                     success:function(data){
                         $('#modal-addcategory').modal('hide');
-                        var htmlcontent = data.html_service_list
+                        var htmlcontent = data.html_product_list
                         var el = document.querySelector('#service-t');
                         el.innerHTML = htmlcontent
-                        var htmlcontent = data.html_category_list
-                        var catel = document.querySelector('#categorylisttab');
-                        catel.innerHTML = htmlcontent
+                        {% comment %} var htmlcontent = data.html_category_list {% endcomment %}
+                        {% comment %} var catel = document.querySelector('#categorylisttab'); {% endcomment %}
+                        {% comment %} catel.innerHTML = htmlcontent {% endcomment %}
                         $.notify({
                             // options
                             message: data.view
@@ -475,10 +697,42 @@
                 });
             });
 
+            $(document).on('click', '.adddropdown', function () { 
+                var btn = $(this);
+                console.log(btn)
+                $.ajax({
+                    url: btn.attr("data-url"),
+                    type: 'get',
+                    dataType: 'json',
+                    beforeSend: function () {
+                        $("#modal-update").modal("show");
+                    },
+                    success: function (data) {
+                        $("#modal-update .modal-content").html(data.html_form);
+                    }
+                });
+            });
+
+            $(document).on('click', '.addquestion', function () { 
+                var btn = $(this);
+                console.log(btn)
+                $.ajax({
+                    url: btn.attr("data-url"),
+                    type: 'get',
+                    dataType: 'json',
+                    beforeSend: function () {
+                        $("#modal-update").modal("show");
+                    },
+                    success: function (data) {
+                        $("#modal-update .modal-content").html(data.html_form);
+                    }
+                });
+            });
+
             $(document).on('click', '.categorydelete', function(){
                 const swalStyles = Swal.mixin({
                         customClass:{
-                            confirmButton: 'btn btn-primary',
+                            confirmButton: 'btn btn-info',
                             cancelButton: 'btn btn-danger',
                         },
                         buttonsStyling: false
@@ -503,18 +757,18 @@
                                 url: urldata,
                                 cache: false,
                                 success: function(data){
-                                    var htmlcontent = data.html_service_list
+                                    var htmlcontent = data.html_product_list
                                     var htmlcategory = data.html_category_list
                                     var el = document.querySelector('#service-t');
-                                    var catel = document.querySelector('#categorylisttab');
+                                    {% comment %} var catel = document.querySelector('#categorylisttab'); {% endcomment %}
                                     el.innerHTML = htmlcontent
-                                    catel.innerHTML = htmlcategory
+                                    {% comment %} catel.innerHTML = htmlcategory {% endcomment %}
                                     Swal.fire({
                                         title: 'Category has been removed!', 
                                         text: 'Your category has been removed.', 
                                         icon: 'success',
                                         customClass:{
-                                            confirmButton: 'btn btn-primary',
+                                            confirmButton: 'btn btn-info',
                                             cancelButton: 'btn btn-danger',
                                         },
                                         buttonsStyling: false,
@@ -554,6 +808,7 @@
                     }
                 });
             });
+            {% comment %} $("#modal-product").on("submit", "#prod-create-form", saveFormProduct); {% endcomment %}
         });
     </script>
 {% endblock java %}

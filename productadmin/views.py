@@ -15,8 +15,11 @@ from django_hosts.resolvers import reverse
 from django.http import JsonResponse
 import json
 from django.http.response import HttpResponse
-from business.forms import AddCompanyForm, AddServiceForm, UpdateServiceForm, BookingSettingForm
+from business.forms import AddServiceForm, UpdateServiceForm, BookingSettingForm
+from .forms import AddCompanyForm, AddProductForm, questionProductForm
 from django.forms import inlineformset_factory
+from products.models import Product as ProductModel
+from products.models import MainProductDropDown, ProductDropDown, QuestionModels, Order, OrderItem
 from django.views import View
 from slugify import slugify
 from businessadmin.forms import MainPhoto, ServicePaymentCollectForm
@@ -29,7 +32,7 @@ import urllib
 from django.conf import settings
 import requests
 import djstripe
-
+from .forms import dropDownForm, dropDownOptionsForm
 # Create your views here.
 def businessadmin(request):
     user = request.user
@@ -89,7 +92,6 @@ def createNewBusiness(request):
     
     
     return render(request, 'accountprod/createbusiness.html', {'user':user, 'none':'d-none', 'user_form':user_form})
-
 @login_required
 def completeViews(request):
     if not request.user.is_authenticated:
@@ -99,203 +101,57 @@ def completeViews(request):
     email = request.user.email
     user = get_object_or_404(Account, email=email)
     biz_form = AddCompanyForm()
-    service_form = AddServiceForm()
+    product_form = AddProductForm()
     company = Company.objects.get(user=user)
-    sunday = OpeningHours.objects.get(company=company, weekday=0)
-    monday = OpeningHours.objects.get(company=company, weekday=1)
-    tuesday = OpeningHours.objects.get(company=company, weekday=2)
-    wednesday = OpeningHours.objects.get(company=company, weekday=3)
-    thursday = OpeningHours.objects.get(company=company, weekday=4)
-    friday = OpeningHours.objects.get(company=company, weekday=5)
-    saturday = OpeningHours.objects.get(company=company, weekday=6)
     booking_form = BookingSettingForm()
-    sundayform = AddHoursForm(initial={'dayfrom':sunday.from_hour, 'dayto':sunday.to_hour}, prefix='sun')
-    mondayform = AddHoursForm(initial={'dayfrom':monday.from_hour, 'dayto':monday.to_hour},prefix='mon')
-    tuesdayform = AddHoursForm(initial={'dayfrom':tuesday.from_hour, 'dayto':tuesday.to_hour},prefix='tues')
-    wednesdayform = AddHoursForm(initial={'dayfrom':wednesday.from_hour, 'dayto':wednesday.to_hour},prefix='wed')
-    thursdayform = AddHoursForm(initial={'dayfrom':thursday.from_hour, 'dayto':thursday.to_hour},prefix='thurs')
-    fridayform = AddHoursForm(initial={'dayfrom':friday.from_hour, 'dayto':friday.to_hour},prefix='fri')
-    saturdayform = AddHoursForm(initial={'dayfrom':saturday.from_hour, 'dayto':saturday.to_hour},prefix='sat')
+    addon_form = dropDownForm()
     if user.on_board:
         return redirect(reverse('home', host='prodadmin')) 
     if request.method == 'POST':
         biz_form = AddCompanyForm(request.POST)
         booking_form = BookingSettingForm(request.POST)
-        sundayform = AddHoursForm(request.POST,prefix='sun')
-        mondayform = AddHoursForm(request.POST,prefix='mon')
-        tuesdayform = AddHoursForm(request.POST,prefix='tues')
-        wednesdayform = AddHoursForm(request.POST, prefix='wed')
-        thursdayform = AddHoursForm(request.POST,prefix='thurs')
-        fridayform = AddHoursForm(request.POST,prefix='fri')
-        saturdayform = AddHoursForm(request.POST,prefix='sat')
         if biz_form.is_valid() and booking_form.is_valid():
-            category = biz_form.cleaned_data.get('category')
-            subcategory = biz_form.cleaned_data.get('subcategory')
             description = biz_form.cleaned_data.get('description')
             address = biz_form.cleaned_data.get('address')
             postal = biz_form.cleaned_data.get('postal')
             state = biz_form.cleaned_data.get('state')
             city = biz_form.cleaned_data.get('city')
-            interval = booking_form.cleaned_data.get('interval')
             notes = booking_form.cleaned_data.get('notes')
-            cancellation = booking_form.cleaned_data.get('cancellation')
-
-            before_window_day = booking_form.cleaned_data.get('before_window_day')
-            before_window_hour = booking_form.cleaned_data.get('before_window_hour')
-            before_window_min = booking_form.cleaned_data.get('before_window_min')
-            after_window_month = booking_form.cleaned_data.get('after_window_month')
-            after_window_day = booking_form.cleaned_data.get('after_window_day')
 
             subdomain = request.POST.get('subdomain', company.slug)
             returning = request.POST.get('returning', False)
-            sun_from = request.POST.get('sun-dayfrom')
-            sun_to = request.POST.get('sun-dayto')
-            sun_closed = not request.POST.get('sunOpen', False)
-            mon_from = request.POST.get('mon-dayfrom')
-            mon_to = request.POST.get('mon-dayto')
-            mon_closed = not request.POST.get('monOpen', False)
-            tues_from = request.POST.get('tues-dayfrom')
-            tues_to = request.POST.get('tues-dayto')
-            tues_closed = not request.POST.get('tuesOpen', False)
-            wed_from = request.POST.get('wed-dayfrom')
-            wed_to = request.POST.get('wed-dayto')
-            wed_closed = not request.POST.get('wedOpen', False)
-            thurs_from = request.POST.get('thurs-dayfrom')
-            thurs_to = request.POST.get('thurs-dayto')
-            thurs_closed = not request.POST.get('thursOpen', False)
-            fri_from = request.POST.get('fri-dayfrom')
-            fri_to = request.POST.get('fri-dayto')
-            fri_closed = not request.POST.get('friOpen', False)
-            sat_from = request.POST.get('sat-dayfrom')
-            sat_to = request.POST.get('sat-dayto')
-            sat_closed = not request.POST.get('satOpen', False)
-
+            
             status = 'published'
-            company.category = category
             company.description = description
             company.address = address
             company.postal = postal
             company.state = state
             company.city = city
             company.status = status
-            company.interval = interval
             if returning:
                 company.returning = True
             company.notes = notes
-            company.cancellation = cancellation
-            company.before_window_day = before_window_day
-            company.before_window_hour = before_window_hour
-            company.before_window_min = before_window_min
-            company.after_window_month = after_window_month
-            company.after_window_day = after_window_day
             if subdomain != company.slug:
                 if not Company.objects.filter(slug=subdomain).exists():
                     company.slug = slugify(subdomain)
             try:
+                company.background = 'carbon'
                 company.save()
-                if company.category.name == 'Automotive Services':
-                    company.background = 'carbon'
-                    company.save()
             except ValueError:
                 biz_form.add_error('address','Check your address again. Could not find the location.')
                 biz_form.add_error('postal','Check your postal code')
                 biz_form.add_error('city','Check the city')
-                subcategories = SubCategory.objects.all()
-                services = Services.objects.filter(business=company)
-                return render(request, 'bizadmin/dashboard/profile/addcompany.html', {'sundayform':sundayform,'saturdayform':saturdayform,'mondayform':mondayform,'tuesdayform':tuesdayform,'wednesdayform':wednesdayform,'thursdayform':thursdayform,'fridayform':fridayform,
-                                                                                'booking_form':booking_form,'biz_form':biz_form, 'service_form':service_form,'subcategories':subcategories,'company':company,
-                                                                                'services':services})
+                return render(request, 'productadmin/dashboard/profile/addcompany.html', {'booking_form':booking_form,'biz_form':biz_form, 'addon_form':addon_form, 'product_form':product_form,'company':company,})
             user.on_board = True
             user.save()
-            objs = [
-                OpeningHours.objects.get(company=company, weekday=0),
-                OpeningHours.objects.get(company=company, weekday=1),
-                OpeningHours.objects.get(company=company, weekday=2),
-                OpeningHours.objects.get(company=company, weekday=3),
-                OpeningHours.objects.get(company=company, weekday=4),
-                OpeningHours.objects.get(company=company, weekday=5),
-                OpeningHours.objects.get(company=company, weekday=6),
-            ]
-
-            objs[0].is_closed = sun_closed
-            objs[1].is_closed = mon_closed
-            objs[2].is_closed = tues_closed
-            objs[3].is_closed = wed_closed
-            objs[4].is_closed = thurs_closed
-            objs[5].is_closed = fri_closed
-            objs[6].is_closed = sat_closed
-
-            objs[0].from_hour = datetime.strptime(sun_from,"%I:%M %p")
-            objs[1].from_hour = datetime.strptime(mon_from,"%I:%M %p")
-            objs[2].from_hour = datetime.strptime(tues_from,"%I:%M %p")
-            objs[3].from_hour = datetime.strptime(wed_from,"%I:%M %p")
-            objs[4].from_hour = datetime.strptime(thurs_from,"%I:%M %p")
-            objs[5].from_hour = datetime.strptime(fri_from,"%I:%M %p")
-            objs[6].from_hour = datetime.strptime(sat_from,"%I:%M %p")
-
-            objs[0].to_hour = datetime.strptime(sun_to,"%I:%M %p")
-            objs[1].to_hour = datetime.strptime(mon_to,"%I:%M %p")
-            objs[2].to_hour = datetime.strptime(tues_to,"%I:%M %p")
-            objs[3].to_hour = datetime.strptime(wed_to,"%I:%M %p")
-            objs[4].to_hour = datetime.strptime(thurs_to,"%I:%M %p")
-            objs[5].to_hour = datetime.strptime(fri_to,"%I:%M %p")
-            objs[6].to_hour = datetime.strptime(sat_to,"%I:%M %p")
-
-            OpeningHours.objects.bulk_update(objs,['is_closed','from_hour','to_hour'])
-
-            staff = company.staffmembers.get(user=user)
-            objss = [
-                StaffWorkingHours.objects.get(staff=staff, weekday=0),
-                StaffWorkingHours.objects.get(staff=staff, weekday=1),
-                StaffWorkingHours.objects.get(staff=staff, weekday=2),
-                StaffWorkingHours.objects.get(staff=staff, weekday=3),
-                StaffWorkingHours.objects.get(staff=staff, weekday=4),
-                StaffWorkingHours.objects.get(staff=staff, weekday=5),
-                StaffWorkingHours.objects.get(staff=staff, weekday=6),
-            ]
-
-            objss[0].is_off = sun_closed
-            objss[1].is_off = mon_closed
-            objss[2].is_off = tues_closed
-            objss[3].is_off = wed_closed
-            objss[4].is_off = thurs_closed
-            objss[5].is_off = fri_closed
-            objss[6].is_off = sat_closed
-
-            objss[0].from_hour = datetime.strptime(sun_from,"%I:%M %p")
-            objss[1].from_hour = datetime.strptime(mon_from,"%I:%M %p")
-            objss[2].from_hour = datetime.strptime(tues_from,"%I:%M %p")
-            objs[3].from_hour = datetime.strptime(wed_from,"%I:%M %p")
-            objss[4].from_hour = datetime.strptime(thurs_from,"%I:%M %p")
-            objss[5].from_hour = datetime.strptime(fri_from,"%I:%M %p")
-            objss[6].from_hour = datetime.strptime(sat_from,"%I:%M %p")
-
-            objss[0].to_hour = datetime.strptime(sun_to,"%I:%M %p")
-            objss[1].to_hour = datetime.strptime(mon_to,"%I:%M %p")
-            objss[2].to_hour = datetime.strptime(tues_to,"%I:%M %p")
-            objss[3].to_hour = datetime.strptime(wed_to,"%I:%M %p")
-            objss[4].to_hour = datetime.strptime(thurs_to,"%I:%M %p")
-            objss[5].to_hour = datetime.strptime(fri_to,"%I:%M %p")
-            objss[6].to_hour = datetime.strptime(sat_to,"%I:%M %p")
-
-            StaffWorkingHours.objects.bulk_update(objss,['is_off','from_hour','to_hour'])
-
-            for s in subcategory:
-                company.subcategory.add(s)
+            
             bizCreatedEmailSent.delay(user.id)
             return redirect(reverse('home', host='prodadmin'))
-        
-        # else:
-        #     print(sundayform.errors)
-
-    subcategories = SubCategory.objects.all()
+        else:
+            print(booking_form.errors)
     company = Company.objects.get(user=user)
-    services = Services.objects.filter(business=company)
-    
 
-    return render(request, 'bizadmin/dashboard/profile/addcompany.html', {'sundayform':sundayform,'saturdayform':saturdayform,'mondayform':mondayform,'tuesdayform':tuesdayform,'wednesdayform':wednesdayform,'thursdayform':thursdayform,'fridayform':fridayform,
-                                                                                'booking_form':booking_form,'biz_form':biz_form, 'service_form':service_form,'subcategories':subcategories,'company':company,
-                                                                                'services':services})
+    return render(request, 'productadmin/dashboard/profile/addcompany.html', {'booking_form':booking_form,'biz_form':biz_form, 'addon_form':addon_form, 'product_form':product_form,'company':company,})
 
 def load_subcat(request):
     cat_id = request.GET.get('category')
@@ -493,7 +349,7 @@ class notesUpdate(View):
 
 
 @login_required
-def scheduleView(request):
+def orderView(request):
     user = request.user
     if user.is_authenticated and user.is_business:
         if user.on_board:
@@ -502,9 +358,25 @@ def scheduleView(request):
             if day >= 7:
                 day = 0
             openhour = OpeningHours.objects.get(company=company, weekday=day).from_hour
-            bookings = Bookings.objects.filter(company=company, is_cancelled_user=False, is_cancelled_company=False,is_cancelled_request=False)
-            addbooking = AddBookingForm(initial={'company':company, 'timepick':openhour, 'datepick':datetime.today().strftime('%m/%d/%Y')})
-            return render(request, 'bizadmin/dashboard/schedule.html', {'company':company, 'bookings':bookings, 'addbooking':addbooking})
+            search = request.GET.get('search')
+            pending = False
+            completed = False
+            upcoming = False
+            cancelled = False
+
+            if search == 'pending':
+                orders = Order.objects.filter(company=company, orderplaced=True,pendingapproval=True, completed=False, cancelled=False).order_by('-created')
+                pending = True
+            elif search == 'completed':
+                orders = Order.objects.filter(company=company, paid=True, orderplaced=True,pendingapproval=False, completed=True, cancelled=False).order_by('-created')
+                completed = True
+            elif search == 'cancelled':
+                orders = Order.objects.filter(company=company, orderplaced=True, cancelled=True).order_by('-created')
+                cancelled = True
+            else:
+                orders = Order.objects.filter(company=company, orderplaced=True).order_by('-created')
+                upcoming = True
+            return render(request, 'productadmin/dashboard/orders/orders_upcoming.html', {'company':company, 'orders':orders, 'pending':pending, 'completed':completed, 'upcoming':upcoming, 'cancelled':cancelled})
         else:
             return redirect(reverse('completeprofile', host='prodadmin'))
     else:
@@ -516,57 +388,47 @@ def fileUploadView(request):
 
 def LogoutView(request):
     logout(request)
-    return render(request, 'welcome/welcome.html', {'business':False})
+    return redirect(reverse('bizadminmain', host='prodadmin'))
+
 
 from django.template.loader import render_to_string
 def save_service_form(request, form, template_name):
     data=dict()
+    company = Company.objects.get(user=request.user)
     if request.method=='POST':
         if form.is_valid():
             name = form.cleaned_data.get('name')
             description = form.cleaned_data.get('description')
-            price_type = form.cleaned_data.get('price_type')
             price = form.cleaned_data.get('price')
-            is_requested = form.cleaned_data.get('is_request')
-            if is_requested == 'n':
-                requ = False
+            mainimage = form.cleaned_data.get('mainimage')
+            dispatch = form.cleaned_data.get('dispatch')
+            is_requested = request.POST.get('requestedinput')
+            if is_requested is not None:
+                is_requested = True
             else:
-                requ = True
-            duration_hour = form.cleaned_data.get('duration_hour')
-            duration_minute = form.cleaned_data.get('duration_minute')
-            checkintime=form.cleaned_data.get('checkintime')
-            padding=form.cleaned_data.get('padding')
-            paddingtime_hour=form.cleaned_data.get('paddingtime_hour')
-            paddingtime_minute=form.cleaned_data.get('paddingtime_minute')
+                is_requested = False
             avail = True
             company = Company.objects.get(user=request.user)
-            service = Services.objects.create(business=company,name=name,description=description,price=price, available=avail, 
-                                                price_type=price_type,duration_hour=duration_hour,duration_minute=duration_minute,checkintime=checkintime,
-                                                padding=padding,paddingtime_hour=paddingtime_hour,paddingtime_minute=paddingtime_minute,request=requ)
-            
-            service.save()
+            product = ProductModel.objects.create(business=company,name=name,description=description, price=price, mainimage=mainimage, stock=1, dispatch=dispatch, request=is_requested)
+            product.save()
             user = request.user
-            staff = StaffMember.objects.get(user=user)
-            staff.services.add(service)
             data['form_is_valid'] = True
-            services = Services.objects.filter(business=company)
-            data['html_service_list'] = render_to_string('bizadmin/dashboard/profile/services/partial_service_list.html', {'services':services, 'company':company})
-            data['view'] = 'Your service has been created!'
+            product = ProductModel.objects.filter(business=company)
+            #Temp Solution
+            request.session['formsuccess'] = 'Your product has been created!'
+            return redirect(reverse('service_detail', host='prodadmin'))
         else:
+            request.session['formerror'] = 'There was an error creating your product. Please ensure all values are entered correctly.'
             data['form_is_valid'] = False
-        return JsonResponse(data)
-    
-    context = {'service_form':form, 'company':company}
-    data['html_form'] = render_to_string(template_name, context, request=request)
-    return JsonResponse(data)
+    return redirect(reverse('service_detail', host='prodadmin'))
 
 #used in the onboarding page
-def createserviceViews(request):
+def createproductViews(request):
     if request.method=='POST':
-        service_form = AddServiceForm(request.POST)
+        service_form = AddProductForm(request.POST, request.FILES)
     else:
-        service_form = AddServiceForm()
-    return save_service_form(request, service_form, 'bizadmin/dashboard/profile/services/partial_service_create.html')
+        service_form = AddProductForm()
+    return save_service_form(request, service_form, 'productadmin/dashboard/profile/services/partial_service_create.html')
 
 #used in the bizadmin page
 class createserviceAPI(View):
@@ -654,12 +516,12 @@ class createserviceAPII(View):
     def get(self, request, pk):
         company = Company.objects.get(user=request.user)
         if int(pk)==0:
-            sc = company.service_category.none()
+            sc = company.product_category.none()
             allstaff = company.staffmembers.none()
             allformfields = company.company_forms.none()
         else:
-            sc = company.service_category.filter(id=pk)
-        form = AddServiceForm()
+            sc = company.product_category.filter(id=pk)
+        form = AddProductForm()
         form2 = AddServiceToCategory(initial={'company':company, 'category':sc, 'staff':allstaff, 'formfield':allformfields})
         context = {'company':company}
         html2 = render_to_string('bizadmin/companydetail/services/partial_category/category_list.html', context, request=request)
@@ -768,22 +630,14 @@ def deleteserviceViews(request, pk):
 
 #used in the bizadmin page
 class deleteserviceAPI(View):
-    def get(self, request, pk):
+    def post(self, request, pk):
         data = dict()
         company = Company.objects.get(user=request.user)
-        service = get_object_or_404(Services, pk=pk, business=company)
-        service.delete()
-        services = Services.objects.filter(business=company)
-        paginator = Paginator(services, 5)
-        page = request.GET.get('page')
-        try:
-            services = paginator.page(page)
-        except PageNotAnInteger:
-            services = paginator.page(1)
-        except EmptyPage:
-            services = paginator.page(paginator.num_pages)
-        data['html_service_list'] = render_to_string('bizadmin/companydetail/services/partial/partial_service_list.html', {'page':page,'services':services, 'company':company})
-        data['html_category_list'] = render_to_string('bizadmin/companydetail/services/partial_category/category_list.html',{'company':company})
+        product = get_object_or_404(ProductModel, pk=pk, business=company)
+        product.delete()
+        services = ProductModel.objects.filter(business=company)
+        data['html_product_list'] = render_to_string('productadmin/companydetail/services/partial/partial_service_list.html', {'services':services, 'company':company})
+        # data['html_category_list'] = render_to_string('bizadmin/companydetail/services/partial_category/category_list.html',{'company':company})
         return JsonResponse(data)
 
 class updateclientAPI(View):
@@ -953,118 +807,170 @@ def updateserviceViews(request, pk):
 #Used in the bizadmin page
 class updateserviceAPI(View):
     def get(self, request, pk):
-        service = get_object_or_404(Services, pk=pk)
+        product = get_object_or_404(ProductModel, pk=pk)
         company = Company.objects.get(user=request.user)
-        if service.request == False:
-            req = 'n'
-        else:
-            req = 'y'
         dat = {
-                'name': service.name, 
-                'description': service.description, 
-                'price_type':service.price_type, 
-                'price':service.price, 
-                'available':service.available, 
-                'duration_hour':service.duration_hour, 
-                'duration_minute':service.duration_minute, 
-                'checkintime':service.checkintime, 
-                'padding':service.padding, 
-                'paddingtime_hour':service.paddingtime_hour, 
-                'paddingtime_minute':service.paddingtime_minute,
-                'is_request':req}
+                'name': product.name, 
+                'description': product.description,
+                'price':product.price, 
+                'mainimage':product.mainimage,
+                'dispatch':product.dispatch,
+                'request':product.request,
+            }
         data=dict()
-        form = UpdateServiceForm(initial=dat)
-        form2 = AddServiceToCategory(initial={'company':company, 'category':company.service_category.filter(services=service), 'staff':company.staffmembers.filter(services=service),'formfield':company.company_forms.filter(services=service)})
+        form = AddProductForm(initial=dat)
         
-        context = {'service_form':form, 'category_form':form2,'service':service,'company':company}
-        data['html_form'] = render_to_string('bizadmin/companydetail/services/partial/partial_service_update.html', context, request=request)
-        services = Services.objects.filter(business=company)
-        paginator = Paginator(services, 5)
-        page = request.GET.get('page')
-        try:
-            services = paginator.page(page)
-        except PageNotAnInteger:
-            services = paginator.page(1)
-        except EmptyPage:
-            services = paginator.page(paginator.num_pages)
-        data['html_service_list'] = render_to_string('bizadmin/companydetail/services/partial/partial_service_list.html', {'page':page,'services':services, 'company':company})
-        data['html_category_list'] = render_to_string('bizadmin/companydetail/services/partial_category/category_list.html',{'company':company})
+        context = {'product_form':form, 'product':product,'company':company}
+        data['html_form'] = render_to_string('productadmin/companydetail/services/partial/partial_service_update.html', context, request=request)
         return JsonResponse(data)
 
     def post(self, request, pk):
-        service = get_object_or_404(Services, pk=pk)
+        product = get_object_or_404(ProductModel, pk=pk)
         company = Company.objects.get(user=request.user)
-        form = UpdateServiceForm(request.POST)
-        form2 = AddServiceToCategory(request.POST, initial={'company':company})
+        form = AddProductForm(request.POST, request.FILES)
         data=dict()
-        if form.is_valid() and form2.is_valid():
-            service.name = form.cleaned_data.get('name')
-            service.description = form.cleaned_data.get('description')
-            service.price_type = form.cleaned_data.get('price_type')
-            service.price = form.cleaned_data.get('price')
-            service.duration_hour = form.cleaned_data.get('duration_hour')
-            service.duration_minute = form.cleaned_data.get('duration_minute')
-            service.checkintime = form.cleaned_data.get('checkintime')
-            service.padding = form.cleaned_data.get('padding')
-            service.paddingtime_hour = form.cleaned_data.get('paddingtime_hour')
-            service.paddingtime_minute = form.cleaned_data.get('paddingtime_minute')
-            service.avail = True
-            is_req = form.cleaned_data.get('is_request')
-            if is_req == 'n':
-                requ=False
+        if form.is_valid():
+            name = form.cleaned_data.get('name')
+            description = form.cleaned_data.get('description')
+            price = form.cleaned_data.get('price')
+            mainimage = form.cleaned_data.get('mainimage')
+            dispatch = form.cleaned_data.get('dispatch')
+            is_requested = request.POST.get('requestedinput')
+            if is_requested is not None:
+                is_requested = True
             else:
-                requ=True
-            service.request = requ
-            company = Company.objects.get(user=request.user)
-            service.save()
-
-            allservCat = company.service_category.filter(services=service)
-            # print(allservCat)
-            for s in allservCat:
-                sc = ServiceCategories.objects.get(name=s.name, services=service)
-                sc.services.remove(service)
-
-            staffname = form2.cleaned_data.get('staff')
-            for staff in company.staffmembers.all():
-                staffmem = StaffMember.objects.get(id=staff.id)
-                staffmem.services.remove(service)
-            for staff in staffname:
-                staffmem = StaffMember.objects.get(id=staff.id)
-                staffmem.services.add(service)
-
-            catename = form2.cleaned_data.get('category')
-            for cate in catename:
-                sc = ServiceCategories.objects.get(name=cate.name, company=company)
-                sc.services.add(service)
-
+                is_requested = False
+            avail = True
+            product.name = name
+            product.request = is_requested
+            product.description = description
+            product.price = price
+            product.dispatch = dispatch
+            if mainimage:
+                product.mainimage = mainimage
+            product.save()
+            user = request.user
             data['form_is_valid'] = True
-            services = Services.objects.filter(business=company)
-            paginator = Paginator(services, 5)
-            page = request.GET.get('page')
-            try:
-                services = paginator.page(page)
-            except PageNotAnInteger:
-                services = paginator.page(1)
-            except EmptyPage:
-                services = paginator.page(paginator.num_pages)
-
+            request.session['formsuccess'] = product.name + ' product has been updated.'
+            #Temp Solution
+            return redirect(reverse('service_detail', host='prodadmin'))
             
-            data['html_service_list'] = render_to_string('bizadmin/companydetail/services/partial/partial_service_list.html', {'page':page,'services':services})
-            data['view'] = 'Your service has been updated'
         else:
+            request.session['formerror'] = 'There was an error updating your product. Please ensure all values are entered correctly.'
             data['form_is_valid'] = False
-        services = Services.objects.filter(business=company)
-        paginator = Paginator(services, 5)
-        page = request.GET.get('page')
-        try:
-            services = paginator.page(page)
-        except PageNotAnInteger:
-            services = paginator.page(1)
-        except EmptyPage:
-            services = paginator.page(paginator.num_pages)
-        data['html_service_list'] = render_to_string('bizadmin/companydetail/services/partial/partial_service_list.html', {'page':page,'services':services, 'company':company})
-        data['html_category_list'] = render_to_string('bizadmin/companydetail/services/partial_category/category_list.html',{'company':company})
+            return redirect(reverse('service_detail', host='prodadmin'))
+
+from django.forms import formset_factory
+class addQuestionOption(View):
+    def get(self, request, pk):
+        product = get_object_or_404(ProductModel, pk=pk)
+        company = Company.objects.get(user=request.user)
+        form = questionProductForm()
+        data=dict()
+        context = {'question_form':form,'product':product,'company':company}
+        data['html_form'] = render_to_string('productadmin/companydetail/services/partial/partial_question_form.html', context, request=request)
         return JsonResponse(data)
+    def post(self, request, pk):
+        product = get_object_or_404(ProductModel, pk=pk)
+        company = Company.objects.get(user=request.user)
+        if product.business != company:
+            return redirect(reverse('service_detail', host='prodadmin'))
+        form = questionProductForm(request.POST)
+        is_required = request.POST.get('requiredinput')
+        if is_required is not None:
+            is_required = True
+        else:
+            is_required = False
+        
+        if form.is_valid():
+            question = form.cleaned_data.get('question')
+            placeholder = form.cleaned_data.get('placeholder')
+            QuestionModels.objects.create(question=question, is_required=is_required, product=product, placeholder=placeholder)
+            request.session['formsuccess'] = 'Your question has been attached to ' + product.name + '.'
+        else:
+            request.session['formerror'] = 'There was an error attaching the question to your product. The question can be a maximum 400 characters.'
+            return redirect(reverse('service_detail', host='prodadmin'))
+        return redirect(reverse('service_detail', host='prodadmin'))
+
+class addDropdownOption(View):
+    def get(self, request, pk):
+        product = get_object_or_404(ProductModel, pk=pk)
+        company = Company.objects.get(user=request.user)
+        form = dropDownForm()
+        form2 = formset_factory(dropDownOptionsForm, extra=2)
+        data=dict()
+        context = {'placeholder_form':form, 'option_form':form2,'product':product,'company':company}
+        data['html_form'] = render_to_string('productadmin/companydetail/services/partial/partial_dropdown_form.html', context, request=request)
+        return JsonResponse(data)
+    def post(self, request, pk):
+        product = get_object_or_404(ProductModel, pk=pk)
+        company = Company.objects.get(user=request.user)
+        if product.business != company:
+            return redirect(reverse('service_detail', host='prodadmin'))
+        form = dropDownForm(request.POST)
+        DropDownOptionFormSet = formset_factory(dropDownOptionsForm, extra=2)
+        formset = DropDownOptionFormSet(request.POST)
+        is_required = request.POST.get('requiredinput')
+        is_multiple = request.POST.get('multiplechoices')
+        if is_required is not None:
+            is_required = True
+        else:
+            is_required = False
+
+        if is_multiple is not None:
+            is_multiple = True
+        else:
+            is_multiple = False
+        
+        if formset.is_valid() and form.is_valid():
+            dropdownname = form.cleaned_data.get('placeholder')
+            mpdd = MainProductDropDown.objects.create(placeholder=dropdownname, is_required=is_required,is_multiple=is_multiple, product=product)
+            for forms in formset:
+                option = forms.cleaned_data.get('option')
+                price = forms.cleaned_data.get('price')
+                if price is None:
+                    price = 0.00
+                if option is not None:
+                    ProductDropDown.objects.create(option=option, price=price, dropdown=mpdd)
+            request.session['formsuccess'] = ' A dropdown option has been added to ' + product.name + '.'
+        else:
+            request.session['formerror'] = 'There was an error adding the dropdown option to your product. Please ensure all values are entered correctly.'
+            return redirect(reverse('service_detail', host='prodadmin'))
+        return redirect(reverse('service_detail', host='prodadmin'))
+
+class updateDropDownOption(View):
+    def get(self, request, pk):
+        product = get_object_or_404(ProductModel, pk=pk)
+        company = Company.objects.get(user=request.user)
+        form = dropDownForm()
+        form2 = formset_factory(dropDownOptionsForm, extra=2)
+        data=dict()
+        context = {'placeholder_form':form, 'option_form':form2,'product':product,'company':company}
+        data['html_form'] = render_to_string('productadmin/companydetail/services/partial/partial_dropdown_form.html', context, request=request)
+        return JsonResponse(data)
+
+class removeDropDownOption(View):
+    def post(self, request, pk):
+        mpdd = MainProductDropDown.objects.get(pk=pk)
+        company = Company.objects.get(user=request.user)
+        if mpdd.product.business == company:
+            mpdd.delete()
+        services = ProductModel.objects.filter(business=company)
+        data = dict()
+        data['html_product_list'] = render_to_string('productadmin/companydetail/services/partial/partial_service_list.html', {'services':services, 'company':company})
+        return JsonResponse(data)
+
+class removeQuestionOption(View):
+    def post(self, request, pk):
+        mpdd = QuestionModels.objects.get(pk=pk)
+        company = Company.objects.get(user=request.user)
+        if mpdd.product.business == company:
+            mpdd.delete()
+        services = ProductModel.objects.filter(business=company)
+        data = dict()
+        data['html_product_list'] = render_to_string('productadmin/companydetail/services/partial/partial_service_list.html', {'services':services, 'company':company})
+        return JsonResponse(data)
+
 
 
 
@@ -1219,7 +1125,7 @@ def homepageViews(request):
 
             month = [int(month12),int(month11),int(month10),int(month9),int(month8),int(month7),int(month6),int(month5),int(month4),int(month3),int(month2),int(month1),]
             monthlabel = [labelM12,labelM11,labelM10,labelM9,labelM8,labelM7,labelM6,labelM5,labelM4,labelM3,labelM2,labelM1]
-            return render(request,'bizadmin/home/home.html', {'ttpp':ttpp,'tpp':tpp,'sdb':sdb,'cdb':cdb,'company':company, 'week':week, 'weeklabel':weeklabel, 'month':month, 'monthlabel':monthlabel, 'bpp':bpp})
+            return render(request,'productadmin/home/home.html', {'ttpp':ttpp,'tpp':tpp,'sdb':sdb,'cdb':cdb,'company':company, 'week':week, 'weeklabel':weeklabel, 'month':month, 'monthlabel':monthlabel, 'bpp':bpp})
         else:
             return redirect(reverse('completeprofile', host='prodadmin'))
     else:
@@ -1664,8 +1570,8 @@ def servicesDetailView(request):
         return redirect(reverse('completeprofile', host='prodadmin'))
 
     company = Company.objects.get(user=user)
-    services = Services.objects.filter(business=company)
-    paginator = Paginator(services, 5)
+    products = ProductModel.objects.filter(business=company)
+    paginator = Paginator(products, 20)
     page = request.GET.get('page')
     try:
         services = paginator.page(page)
@@ -1673,11 +1579,31 @@ def servicesDetailView(request):
         services = paginator.page(1)
     except EmptyPage:
         services = paginator.page(paginator.num_pages)
-    service_form = AddServiceForm()
+    product_form = AddProductForm()
     servcategory_form = AddServiceCategoryForm(initial={'company':company})
     category_form = AddServiceToCategory(initial={'company':company})
-
-    return render(request,'bizadmin/companydetail/services/service.html', {'page':page,'company':company, 'services':services, 'service_form':service_form, 'category_form':category_form,'servcategory_form':servcategory_form})
+    errors = False
+    success = 'success'
+    msg=''
+    try:
+        errormsg = request.session.get('formerror')
+        if errormsg:
+            success = 'danger'
+            msg=errormsg
+            errors = True
+            del request.session['formerror']
+    except:
+        errormsg = None
+    try:
+        errormsg = request.session.get('formsuccess')
+        if errormsg:
+            success = 'success'
+            msg=errormsg
+            errors = True
+            del request.session['formsuccess']
+    except:
+        errormsg = None
+    return render(request,'productadmin/companydetail/services/service.html', {'errors':errors,'errormsg':msg,'success':success,'company':company, 'products':products, 'product_form':product_form, 'category_form':category_form,'servcategory_form':servcategory_form})
 
 from itertools import chain
 

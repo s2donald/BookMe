@@ -17,7 +17,7 @@
     <link rel="shortcut icon" type="image/png" href="{% static 'img/favicon/logo/favicon15.png'%}"/>
     <link rel="apple-touch-icon" href="{% static '/img/favicon/logo/bookme-appicon.png'%}">
     <meta name="robots" content="noindex, nofollow">
-    <meta name="description" content="Book your appointments online with {% block companybizname %}{% endblock  %} using the BookMe booking tool.">
+    <meta name="description" content="{{ company.description }}">
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
     <link rel="stylesheet" href="{% static "css/bases.css" %}">
@@ -32,8 +32,9 @@
     <script src="https://kit.fontawesome.com/2c8e21dfe2.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <script src="https://js.stripe.com/v3/"></script>
+    {% block linkscript %}{% endblock linkscript %}
     {% comment %} <script src="{% static 'js/vendor/stripe_client.js'%}"></script> {% endcomment %}
-    <title>{{ company.business_name }} - BookMe Bookings</title>
+    <title>{{ company.business_name }} - ShopMe</title>
   </head>
   <body class="mainpage" data-background="{{ company.background }}">
         {% comment %} {% block slideshow %}
@@ -112,11 +113,11 @@
             </script>
             <p class="font-weight-bold text-black m-2" style="color:black; margin:2px"></p>
             <div class="bookingfooter">
-                <button id="BookMePlugin" data-url="https://proctor-cleaning.bookme.to" data-color="82EEDD"></button>
-                {% comment %} <button id="BookMePlugin" data-url="https://hh5l.gibele.com:8000" data-color="EEDD82"></button> {% endcomment %}
-                <script src="{% static "js/addwebsite.js" %}"></script>
-              <span>Powered by</span>
-              <a href="{% host_url 'bizadminmain' host 'bizadmin' %}"><img width="72px" src="{% static "/img/favicon/logo/BookMe-blackgrad.svg" %}"></a>
+                {% comment %} <button id="BookMePlugin" data-url="https://proctor-cleaning.bookme.to" data-color="82EEDD"></button> {% endcomment %}
+                {% comment %} <button id="BookMePlugin" data-url="http://hh5l.bookme.com:8000/?integration=website" data-color="EEDD82"></button> {% endcomment %}
+                {% comment %} <script src="{% static "js/addwebsite.js" %}"></script> {% endcomment %}
+                <span>Powered by</span>
+                <a href="{% host_url 'bizadminmain' host 'bizadmin' %}"><img width="72px" src="{% static "/img/favicon/logo/BookMe-blackgrad.svg" %}"></a>
             </div>
         </div>
     <!-- Optional JavaScript -->

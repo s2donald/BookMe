@@ -280,14 +280,14 @@ class AddServiceForm(forms.ModelForm):
     #             pass
 
 class BookingSettingForm(forms.Form):
-    interval = forms.ChoiceField(label='',choices=minute_choices_no_zero_with_hours,initial='30', widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control', 'data-size':'5', 'data-dropdown-align-right':'true','data-live-search':"true"}))
-    cancellation = forms.ChoiceField(label='',choices=cancellationtime, initial= '0', widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control', 'data-size':'5', 'data-dropdown-align-right':'true'}))
+    interval = forms.ChoiceField(label='',required=False,choices=minute_choices_no_zero_with_hours,initial='30', widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control', 'data-size':'5', 'data-dropdown-align-right':'true','data-live-search':"true"}))
+    cancellation = forms.ChoiceField(label='', required=False,choices=cancellationtime, initial= '0', widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control', 'data-size':'5', 'data-dropdown-align-right':'true'}))
     notes = forms.CharField(label='',max_length=250, required=False, widget=forms.Textarea(attrs={'rows':4, 'cols':20}))
-    before_window_day = forms.ChoiceField(label='',choices=day, initial= '0', widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control', 'data-size':'5', 'data-dropdown-align-right':'true'}))
-    before_window_hour = forms.ChoiceField(label='',choices=hours_choices, initial= '0', widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control', 'data-size':'5', 'data-dropdown-align-right':'true'}))
-    before_window_min = forms.ChoiceField(label='',choices=minute_choices, initial= '0', widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control', 'data-size':'5', 'data-dropdown-align-right':'true'}))
-    after_window_month = forms.ChoiceField(label='',choices=month_int_choices, initial= '0', widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control', 'data-size':'5', 'data-dropdown-align-right':'true'}))
-    after_window_day = forms.ChoiceField(label='',choices=day, initial=29, widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control', 'data-size':'5', 'data-dropdown-align-right':'true'}))
+    before_window_day = forms.ChoiceField(label='',required=False,choices=day, initial= '0', widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control', 'data-size':'5', 'data-dropdown-align-right':'true'}))
+    before_window_hour = forms.ChoiceField(label='',required=False,choices=hours_choices, initial= '0', widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control', 'data-size':'5', 'data-dropdown-align-right':'true'}))
+    before_window_min = forms.ChoiceField(label='',required=False,choices=minute_choices, initial= '0', widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control', 'data-size':'5', 'data-dropdown-align-right':'true'}))
+    after_window_month = forms.ChoiceField(label='',required=False,choices=month_int_choices, initial= '0', widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control', 'data-size':'5', 'data-dropdown-align-right':'true'}))
+    after_window_day = forms.ChoiceField(label='',required=False,choices=day, initial=29, widget=forms.Select(attrs={'class':'selectcolor selectpicker show-tick form-control', 'data-size':'5', 'data-dropdown-align-right':'true'}))
 
 class UpdateServiceForm(forms.ModelForm):
     name = forms.CharField(label='Service Name',max_length=200,widget=forms.TextInput(attrs={'class':'form-control'}))

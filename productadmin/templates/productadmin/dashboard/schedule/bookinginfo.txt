@@ -1,7 +1,0 @@
-Service Booked: {{ booking.service.name }}
-Customer: {{ cust.first_name }} {{ cust.last_name }}
-Customer Email: {{ cust.email }}
-Customer Phone Number: {{ cust.phone }}
-
-Booking ID: {{ booking.slug }}
-Service Cost: {{ booking.cost }}

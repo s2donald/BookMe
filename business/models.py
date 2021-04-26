@@ -300,6 +300,9 @@ class Company(models.Model):
     before_window_min = models.IntegerField(choices=minute_choices, default=0)
     after_window_month = models.IntegerField(choices=month_int_choices, default=0)
     after_window_day = models.IntegerField(choices=day, default=29)
+    #This is used to collect product payments
+    stripe_access_token_prod = models.CharField(verbose_name="Stripe Access Token", max_length=260, unique=True, null=True, blank=True)
+    stripe_user_id_prod = models.CharField(verbose_name="Stripe User Id", max_length=260, unique=True, null=True, blank=True)
 
     class Meta:
         ordering = ('-updated',)

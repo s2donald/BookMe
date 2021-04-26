@@ -1,0 +1,41 @@
+{% load static %}
+{% load hosts %}
+{% for s in company.products_offered.all %}
+    <div class="card shadow" style="border-radius: 8px !important;">
+        <div class="row">
+            <div class="col-12">
+                {% comment %} <div class="card-header">{{ s.name }}</div> {% endcomment %}
+                <div class="card-body">                      
+                    <div class="row p-2 justify-content-between text-left align-self-center">
+                        <div class="col-12">
+                            {% if s.mainimage %}
+                                <img src="{{ s.mainimage.url }}" width="150px" height="150px">
+                            {% endif %}
+                        </div>
+                        <div class="col-8 p-0">
+                            <p class="mb-1">{{ s.name }}</p>
+                            {% autoescape off %}
+                            <p class="text-muted">{{ s.description }}</p>
+                            {% endautoescape %}
+                            
+                        </div>
+                        <div class="col-4 p-1 text-right">
+                            <div class="row">
+                                <div class="col-12">
+                                    <button type="button" class="updatebtn btn btn-sm" data-toggle="modal" data-target="#modal-update" data-url="{% host_url 'updateservice' s.id host 'bizadmin' %}"><i class="fas fa-pencil-alt"></i></button>
+                                    <button class="btn btn-danger btn-sm trashcan" data-url="{% host_url 'deleteservice' s.id host 'bizadmin' %}"><i class="fas fa-trash"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+{% empty %}
+    <div class="card shadow" style="border-radius: 8px !important;">
+        <div class="card-header">No Products Added</div>
+    </div>
+{% endfor %}

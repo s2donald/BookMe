@@ -3,29 +3,62 @@
 {% load static %}
 {% load crispy_forms_tags %}
 {% load hosts %}
-{% block custompath %}
-    {% comment %} <path class="cls-1" d="M0,160L48,186.7C96,213,192,267,288,288C384,309,480,299,576,250.7C672,203,768,117,864,106.7C960,96,1056,160,1152,154.7C1248,149,1344,75,1392,37.3L1440,0L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z"></path> {% endcomment %}
-     <g>
-  <title>background</title>
-  <rect fill="none" id="canvas_background" height="602" width="802" y="-1" x="-1"/>
-  <g display="none" overflow="visible" y="0" x="0" height="100%" width="100%" id="canvasGrid">
-   <rect fill="url(#linear-gradient)" stroke-width="0" y="0" x="0" height="100%" width="100%"/>
-  </g>
- </g>
- <g>
-  <title>backgroundl</title>
-  <rect stroke="#000" id="svg_1" height="50" width="2000" y="-13.54687" x="-35.75" stroke-width="1.5" fill="url(#linear-gradient)"/>
-  <ellipse stroke="#000" ry="100" rx="1000" id="svg_2" cy="50" cx="650" stroke-opacity="null" stroke-width="0" fill="url(#linear-gradient)"/>
- </g>
-{% endblock %}
-
 {% block header %}
-<div class="container">
+  <header class="header-2">
+            <div class="page-header relative" style="height: 100px; background: #141727; background-image: linear-gradient(310deg,#141727,#3a416f);">
+            <div class="container">
+                <div class="logo-image d-inline">
+                <a href="{% host_url 'bizadminmain' host 'prodadmin' %}">
+                    <img src="{% static "img/favicon/logo/BookMe-whitebrown.svg" %}" style="position: absolute;top: 1.5rem;left: 1rem;width: 8.625rem;height: 3rem; z-index:9;">
+                </a>
+            </div>
+                
+            </div>
+            {% comment %} <div class="position-absolute w-50 z-index-1 bottom-0">
+                <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 40" preserveAspectRatio="none" shape-rendering="auto">
+                <defs>
+                    <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
+                </defs>
+                <g class="moving-waves">
+                    <use xlink:href="#gentle-wave" x="48" y="-1" fill="rgba(255,255,255,0.40" />
+                    <use xlink:href="#gentle-wave" x="48" y="3" fill="rgba(255,255,255,0.35)" />
+                    <use xlink:href="#gentle-wave" x="48" y="5" fill="rgba(255,255,255,0.25)" />
+                    <use xlink:href="#gentle-wave" x="48" y="8" fill="rgba(255,255,255,0.20)" />
+                    <use xlink:href="#gentle-wave" x="48" y="13" fill="rgba(255,255,255,0.15)" />
+                    <use xlink:href="#gentle-wave" x="48" y="16" fill="rgba(255,255,255,0.95" />
+                </g>
+                </svg>
+            </div> {% endcomment %}
+            </div>
+        </header>
+{% endblock header %}
+
+{% block businesscontent %}
+<div class="container py-4">
 <div class="row justify-content-center">
     <div class="col-lg-7">
         <!-- Basic registration form-->
-            <div class="card licolor shadow-lg border-0 rounded-lg">
-                <div class="card-header justify-content-center licolor"><h3 class="font-weight-bold licolor my-4">Create your business account</h3></div>
+            <div class="card shadow-lg">
+                    <div class="card-header bg-gradient-info p-5 position-relative">
+                        <h3 class="text-white mb-0">Create your ShopMe store</h3>
+                        <p class="text-white opacity-8 mb-4"></p>
+                        <div class="position-absolute w-100 z-index-1 bottom-0 ms-n5">
+                        <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 40" preserveAspectRatio="none" shape-rendering="auto" style="height:7vh;min-height:50px;">
+                            <defs>
+                            <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z"></path>
+                            </defs>
+                            <g class="moving-waves">
+                            <use xlink:href="#gentle-wave" x="48" y="-1" fill="rgba(255,255,255,0.40"></use>
+                            <use xlink:href="#gentle-wave" x="48" y="3" fill="rgba(255,255,255,0.35)"></use>
+                            <use xlink:href="#gentle-wave" x="48" y="5" fill="rgba(255,255,255,0.25)"></use>
+                            <use xlink:href="#gentle-wave" x="48" y="8" fill="rgba(255,255,255,0.20)"></use>
+                            <use xlink:href="#gentle-wave" x="48" y="13" fill="rgba(255,255,255,0.15)"></use>
+                            <use xlink:href="#gentle-wave" x="48" y="16" fill="rgba(255,255,255,0.95"></use>
+                            </g>
+                        </svg>
+                        </div>
+                    </div>
+                {% comment %} <div class="card-header justify-content-center licolor"><h3 class="font-weight-bold licolor my-4">Create your business account</h3></div> {% endcomment %}
                 <div class="card-body">
                     <!-- Registration form-->
                     <form method='post'>
@@ -60,11 +93,11 @@
                             </div>
                         </div>
                         <!-- Form Group (create account submit)-->
-                        <div class="form-group mt-4 mb-0"><button class="btn btn-primary btn-block" type="submit">Create Account</button></div>
+                        <div class="form-group mt-4 mb-0"><button class="btn btn-lg bg-gradient-info btn-lg w-100 mt-4 mb-0" type="submit">Create Account</button></div>
                     </form>
                 </div>
                 <div class="card-footer text-center">
-                    <div class="small"><a class="licolor" href="{% host_url 'bizadminlogin' host 'bizadmin' %}">Have an account? Go to login</a></div>
+                    <div class="small"><a class="licolor font-weight-bold" href="{% host_url 'bizadminlogin' host 'bizadmin' %}">Have an account? Go to login</a></div>
                 </div>
             </div>
         </div>

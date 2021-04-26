@@ -23,13 +23,13 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'b3+j2=q*i#mg^c!2ndq#00y5bobz6*xq&v#7^^7&+$73_#e=8e'
 
 GOOGLE_RECAPTCHA_SECRET_KEY = '6LcBkeEZAAAAAAKGHUafGtEV-xiuIWofHGQwSx0j' #your reCAPTCHA secret key 
-
+GOOGLE_API_KEY="AIzaSyBaZM_O3d1-xDrecS_fbcbvoT5qDmLmje0"
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
 TIME_INPUT_FORMATS = ['%I:%M %p',]
 
-ALLOWED_HOSTS = ['pure-fjord-45840.herokuapp.com','.pure-fjord-45840.herokuapp.com','gibele.com', '.gibele.com','.gibele.ca','gibele.ca', '.shopme.com', '.bookme.com', 'bookme.to', '.bookme.to','.shopme.to']
+ALLOWED_HOSTS = ['pure-fjord-45840.herokuapp.com','.pure-fjord-45840.herokuapp.com','gibele.com', '.gibele.com','.gibele.ca','.shopmeto.ca', '.shopme.com', '.bookme.com', 'bookme.to', '.bookme.to','.shopme.to']
 if DEBUG:
     SESSION_COOKIE_DOMAIN= 'shopme.com'
     DOMAIN_NAME= 'shopme.com'
@@ -46,6 +46,9 @@ INSTALLED_APPS = [
     'social_django',
     'widget_tweaks',
     "djstripe",
+    'django_countries',
+    'address',
+    'cities',
     'tinymce',
     'account.apps.AccountConfig',
     'business.apps.BusinessConfig',
@@ -69,7 +72,7 @@ INSTALLED_APPS = [
 ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
-
+PHONENUMBER_DEFAULT_REGION = 'US'
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.BasicAuthentication',
@@ -95,7 +98,7 @@ MIDDLEWARE = [
 
 SESSION_EXPIRE_AT_BROWSER = True
 SESSION_COOKIE_AGE = 60*60*24*7*4
-SESSION_COOKIE_SAMESITE = None  # As a string
+# SESSION_COOKIE_SAMESITE = 'Lax'  # As a string
 
 ROOT_URLCONF = 'gibele.urls'
 ROOT_HOSTCONF = 'gibele.hosts'
@@ -118,7 +121,8 @@ TEMPLATES = [
 ]
 
 TINYMCE_DEFAULT_CONFIG = {
-    "plugins": "image", #plugins  
+    "plugins": "image", #plugins
+    "menubar":"false"
 }
 
 
@@ -198,7 +202,9 @@ USE_L10N = True
 USE_TZ = True
 
 CART_SESSION_ID = 'cart'
-
+CITIES_VALIDATE_POSTAL_CODES = True
+CITIES_SKIP_CITIES_WITH_EMPTY_REGIONS = True
+CITIES_POSTAL_CODES = ['US', 'CA']
 if not DEBUG:
     AWS_STORAGE_BUCKET_NAME = 'django-gibele'
     # AWS_STORAGE_BUCKET_NAME = 'www.shopmeto.ca'
@@ -210,10 +216,11 @@ if not DEBUG:
     STATICFILES_STORAGE = 'gibele.storage_backends.StaticStorage'
     MEDIAFILES_LOCATION = 'media'
     DEFAULT_FILE_STORAGE = 'gibele.storage_backends.MediaStorage'
-    STATIC_URL = '/static/'
     # Tell django-storages the domain to use to refer to static files.
+    # AWS_S3_CUSTOM_DOMAIN = 's3.amazonaws.com/%s' % AWS_STORAGE_BUCKET_NAME
     AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
     # AWS_S3_CUSTOM_DOMAIN = 'www.shopmeto.ca'
+    STATIC_URL = '/static/'
     # Tell the staticfiles app to use S3Boto3 storage when writing the collected static files (when
     # you run `collectstatic`).
     STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
@@ -247,7 +254,6 @@ if not DEBUG:
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
     SECURE_SSL_REDIRECT=True
-    SESSION_COOKIE_SAMESITE = 'None'
 else:
     SESSION_COOKIE_SECURE = False
 

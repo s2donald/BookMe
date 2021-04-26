@@ -34,6 +34,7 @@ class VirtualHostMiddleware:
         settings.DOMAIN_NAME = domain + '.' + tdls
         settings.PARENT_HOST = domain + '.' + tdl
         settings.SESSION_COOKIE_DOMAIN= domain + '.' + tdls
+        # print(settings.DOMAIN_NAME)
         #Now we check if the domain comes from 
         if not (request.urlconf):
             subdomain = host.split('.')[0]

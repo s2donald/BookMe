@@ -3,95 +3,268 @@
 {% load hosts %}
 {% block 'index_faq' %}active{% endblock %}
 
-
-{% block custompath %}
-    {% comment %} <path class="cls-1" d="M0,160L48,186.7C96,213,192,267,288,288C384,309,480,299,576,250.7C672,203,768,117,864,106.7C960,96,1056,160,1152,154.7C1248,149,1344,75,1392,37.3L1440,0L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z"></path> {% endcomment %}
-     <g>
-  <title>background</title>
-  <rect fill="none" id="canvas_background" height="602" width="802" y="-1" x="-1"/>
-  <g display="none" overflow="visible" y="0" x="0" height="100%" width="100%" id="canvasGrid">
-   <rect fill="url(#linear-gradient)" stroke-width="0" y="0" x="0" height="100%" width="100%"/>
-  </g>
- </g>
- <g>
-  <title>backgroundl</title>
-  <rect stroke="#000" id="svg_1" height="100" width="2000" y="-13.54687" x="-35.75" stroke-width="1.5" fill="url(#linear-gradient)"/>
-  <ellipse stroke="#000" ry="100" rx="1000" id="svg_2" cy="85" cx="650" stroke-opacity="null" stroke-width="0" fill="url(#linear-gradient)"/>
- </g>
-{% endblock %}
-
-
 {% block header %}
-        <div class="container">
-            <div class="row">
-                <div class="col">
-                    <div class="text-container text-left">
-                        <h1>Frequently Asked Questions</h1>
-                    </div> <!-- end of text-container -->
-                </div> <!-- end of col -->
-            </div> <!-- end of row -->
-        </div> <!-- end of container -->
+  <header class="header-2">
+            <div class="page-header relative" style="height: 100px; background: #141727; background-image: linear-gradient(310deg,#141727,#3a416f);">
+            <div class="container">
+                <div class="logo-image d-inline">
+                <a href="{% host_url 'bizadminmain' host 'prodadmin' %}">
+                    <img src="{% static "img/favicon/logo/BookMe-whitebrown.svg" %}" style="position: absolute;top: 1.5rem;left: 1rem;width: 8.625rem;height: 3rem; z-index:9;">
+                </a>
+            </div>
+                
+            </div>
+            {% comment %} <div class="position-absolute w-50 z-index-1 bottom-0">
+                <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 40" preserveAspectRatio="none" shape-rendering="auto">
+                <defs>
+                    <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
+                </defs>
+                <g class="moving-waves">
+                    <use xlink:href="#gentle-wave" x="48" y="-1" fill="rgba(255,255,255,0.40" />
+                    <use xlink:href="#gentle-wave" x="48" y="3" fill="rgba(255,255,255,0.35)" />
+                    <use xlink:href="#gentle-wave" x="48" y="5" fill="rgba(255,255,255,0.25)" />
+                    <use xlink:href="#gentle-wave" x="48" y="8" fill="rgba(255,255,255,0.20)" />
+                    <use xlink:href="#gentle-wave" x="48" y="13" fill="rgba(255,255,255,0.15)" />
+                    <use xlink:href="#gentle-wave" x="48" y="16" fill="rgba(255,255,255,0.95" />
+                </g>
+                </svg>
+            </div> {% endcomment %}
+            </div>
+        </header>
 {% endblock header %}
 
 {% block businesscontent %}
-<section class="mb-5 z-4 list-item-title" style="z-index: 99999994!important;">
+<section class="mb-5 z-4 mt-5 list-item-title" style="z-index: 99999994!important;">
+
       <div class="container" style="z-index: 99999994!important;">
-        <h1 class="mb-5 z-4 list-item-title" style="z-index: 4!important;">Knowledge base coming soon! Contact <a style="color:#854fee;" href="mailto:suppot@bookme.to"><strong>support@bookme.to</strong></a> for any questions or concerns.</h1>
-        {% comment %} <div class="py-4">
-          <h2 class="mb-5 z-4 list-item-title" style="z-index: 4!important;">Client First Booking Approach</h2>
-          <div class="row">
-            <div class="col-md-6">
-              <h5 class="list-item-title">How does BookMe work?</h5>
-              <p class="text-muted mb-4">BookMe offers a straightforward web application which allows you to view your booking schedule, add or cancel appointments for any service and offers a platform which your clients can use to stay connected with you.</p>
-              <h5 class="list-item-title">What is a Booking Page URL?</h5>
-              <p class="text-muted mb-4">The Booking Page URL refers to the url which BookMe offers to your business which can be put in your Instagram bio's, embedded in your business websites and/or shared to your clients. This URL will take your clients to your booking page where they can view all of the services that you have to offer and schedule an appointment based on the availability of your schedule.</p>
-              <p class="text-muted mb-4">This allows your clients to view your availability and schedule themselves in for appointments without having to contact you directly.</p>
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <div class="card shadow-lg">
+          <div class="card-header bg-gradient-info p-5 position-relative">
+            <h3 class="text-white mb-0">FAQ</h3>
+            <p class="text-white opacity-8 mb-4"></p>
+            <div class="position-absolute w-100 z-index-1 bottom-0 ms-n5">
+              <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 40" preserveAspectRatio="none" shape-rendering="auto" style="height:7vh;min-height:50px;">
+                <defs>
+                  <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z"></path>
+                </defs>
+                <g class="moving-waves">
+                  <use xlink:href="#gentle-wave" x="48" y="-1" fill="rgba(255,255,255,0.40"></use>
+                  <use xlink:href="#gentle-wave" x="48" y="3" fill="rgba(255,255,255,0.35)"></use>
+                  <use xlink:href="#gentle-wave" x="48" y="5" fill="rgba(255,255,255,0.25)"></use>
+                  <use xlink:href="#gentle-wave" x="48" y="8" fill="rgba(255,255,255,0.20)"></use>
+                  <use xlink:href="#gentle-wave" x="48" y="13" fill="rgba(255,255,255,0.15)"></use>
+                  <use xlink:href="#gentle-wave" x="48" y="16" fill="rgba(255,255,255,0.95"></use>
+                </g>
+              </svg>
+            </div>
+          </div>
+          <div class="card-body p-sm-5 pt-0">
+            <h4 class="my-4 ps-3">Coming Soon</h4>
+            {% comment %} <div class="accordion" id="accordionFaq">
+              <div class="accordion-item mb-3">
+                <h6 class="accordion-header" id="headingOne">
+                  <button class="accordion-button border-bottom font-weight-bold text-start collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                    How do I order?
+                    <i class="collapse-close fa fa-plus text-xs pt-1 position-absolute end-0 me-3" aria-hidden="true"></i>
+                    <i class="collapse-open fa fa-minus text-xs pt-1 position-absolute end-0 me-3" aria-hidden="true"></i>
+                  </button>
+                </h6>
+                <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionFaq" style="">
+                  <div class="accordion-body text-sm opacity-8">
+                    We’re not always in the position that we want to be at. We’re constantly growing. We’re constantly making mistakes. We’re constantly trying to express ourselves and actualize our dreams. If you have the opportunity to play this game
+                    of life you need to appreciate every moment. A lot of people don’t appreciate the moment until it’s passed.
+                  </div>
+                </div>
               </div>
-            <div class="col-md-6">
-              <h5 class="list-item-title">What is a Business Page?</h5>
-              <p class="text-muted mb-4">Your business page will be listed on the BookMe marketplace where potential customers can read reviews and look at the services that your business has to offer. You can customize this business page by adding a banner image, up to 10 images to the gallary section of your business and list amenities to showcase to the world what your business has to offer!</p>
-              <h5 class="list-item-title">How do we stay connected with clients?</h5>
-              <p class="text-muted mb-4">We offer an online marketplace where potential customers can browse and view all of the services you have to offer from your Booking Page. Depending on the subscription your business has with BookMe, we send out email notifications and text message reminders to your clients to ensure they are ready for their booked appointment.</p>
+              <div class="accordion-item mb-3">
+                <h6 class="accordion-header" id="headingTwo">
+                  <button class="accordion-button border-bottom font-weight-bold text-start" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                    How can i make the payment?
+                    <i class="collapse-close fa fa-plus text-xs pt-1 position-absolute end-0 me-3" aria-hidden="true"></i>
+                    <i class="collapse-open fa fa-minus text-xs pt-1 position-absolute end-0 me-3" aria-hidden="true"></i>
+                  </button>
+                </h6>
+                <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionFaq">
+                  <div class="accordion-body text-sm opacity-8">
+                    It really matters and then like it really doesn’t matter. What matters is the people who are sparked by it. And the people who are like offended by it, it doesn’t matter. Because it's about motivating the doers. Because I’m here to
+                    follow my dreams and inspire other people to follow their dreams, too.
+                  </div>
+                </div>
+              </div>
+              <div class="accordion-item mb-3">
+                <h6 class="accordion-header" id="headingThree">
+                  <button class="accordion-button border-bottom font-weight-bold text-start" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                    How much time does it take to receive the order?
+                    <i class="collapse-close fa fa-plus text-xs pt-1 position-absolute end-0 me-3" aria-hidden="true"></i>
+                    <i class="collapse-open fa fa-minus text-xs pt-1 position-absolute end-0 me-3" aria-hidden="true"></i>
+                  </button>
+                </h6>
+                <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionFaq">
+                  <div class="accordion-body text-sm opacity-8">
+                    The time is now for it to be okay to be great. People in this world shun people for being great. For being a bright color. For standing out. But the time is now to be okay to be the greatest you. Would you believe in what you
+                    believe in, if you were the only one who believed it?
+                    If everything I did failed - which it doesn't, it actually succeeds - just the fact that I'm willing to fail is an inspiration. People are so scared to lose that they don't even try. Like, one thing people can't say is that I'm not
+                    trying, and I'm not trying my hardest, and I'm not trying to do the best way I know how.
+                  </div>
+                </div>
+              </div>
+              <div class="accordion-item mb-3">
+                <h6 class="accordion-header" id="headingFour">
+                  <button class="accordion-button border-bottom font-weight-bold text-start" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                    Can I resell the products?
+                    <i class="collapse-close fa fa-plus text-xs pt-1 position-absolute end-0 me-3" aria-hidden="true"></i>
+                    <i class="collapse-open fa fa-minus text-xs pt-1 position-absolute end-0 me-3" aria-hidden="true"></i>
+                  </button>
+                </h6>
+                <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#accordionFaq">
+                  <div class="accordion-body text-sm opacity-8">
+                    I always felt like I could do anything. That’s the main thing people are controlled by! Thoughts- their perception of themselves! They're slowed down by their perception of themselves. If you're taught you can’t do anything, you
+                    won’t do anything. I was taught I could do everything.
+                  </div>
+                </div>
+              </div>
+              <div class="accordion-item mb-3">
+                <h6 class="accordion-header" id="headingFifth">
+                  <button class="accordion-button border-bottom font-weight-bold text-start" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFifth" aria-expanded="false" aria-controls="collapseFifth">
+                    Where do I find the shipping details?
+                    <i class="collapse-close fa fa-plus text-xs pt-1 position-absolute end-0 me-3" aria-hidden="true"></i>
+                    <i class="collapse-open fa fa-minus text-xs pt-1 position-absolute end-0 me-3" aria-hidden="true"></i>
+                  </button>
+                </h6>
+                <div id="collapseFifth" class="accordion-collapse collapse" aria-labelledby="headingFifth" data-bs-parent="#accordionFaq">
+                  <div class="accordion-body text-sm opacity-8">
+                    There’s nothing I really wanted to do in life that I wasn’t able to get good at. That’s my skill. I’m not really specifically talented at anything except for the ability to learn. That’s what I do. That’s what I’m here for. Don’t be
+                    afraid to be wrong because you can’t learn anything from a compliment.
+                    I always felt like I could do anything. That’s the main thing people are controlled by! Thoughts- their perception of themselves! They're slowed down by their perception of themselves. If you're taught you can’t do anything, you
+                    won’t do anything. I was taught I could do everything.
+                  </div>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-        <hr>
-        <div class="py-4">
-          <h2 class="mb-5 list-item-title">Payment Processing</h2>
-          <div class="row">
-            <div class="col-md-6">
-              <h5 class="list-item-title">Stripe</h5>
-              <p class="text-muted mb-4">All payments will be handled with Stripe.</p> {% endcomment %}
-              {% comment %} <h5 class="list-item-title">Payment methods accepted</h5>
-              <p class="text-muted mb-4">Credit Ca.</p> {% endcomment %}
-            {% comment %} </div> {% endcomment %}
-            {% comment %} <div class="col-md-6">
-              <h5 class="list-item-title">BookMe Service Fees</h5>
-              <p class="text-muted mb-4">For businesses under the 'BASIC TIER and PREMIUM TIER' plan, there is no BookMe service fee charged to your customers or to the business.</p>
-              <p class="text-muted mb-4">For businesses under the 'MID TIER' plan, a service fee will only be charged when BookMe has to process a deposit for a service or process a cancellation fee. The service fee in this case will only be 1% of the processed deposit or cancellation fee. Businesses have the option to forward this cost to their clients.</p>
-              <p class="text-muted mb-4">For businesses under all plans, Stripe fees are still included.</p>
+            <h4 class="mt-5 mb-4 ps-3">Account &amp; Settings</h4>
+            <div class="accordion" id="accordionFaq2">
+              <div class="accordion-item mb-3">
+                <h6 class="accordion-header" id="headingOne">
+                  <button class="accordion-button border-bottom font-weight-bold text-start" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne1" aria-expanded="false" aria-controls="collapseOne1">
+                    How do I change my password?
+                    <i class="collapse-close fa fa-plus text-xs pt-1 position-absolute end-0 me-3" aria-hidden="true"></i>
+                    <i class="collapse-open fa fa-minus text-xs pt-1 position-absolute end-0 me-3" aria-hidden="true"></i>
+                  </button>
+                </h6>
+                <div id="collapseOne1" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionFaq2">
+                  <div class="accordion-body text-sm opacity-8">
+                    Society has put up so many boundaries, so many limitations on what’s right and wrong that it’s almost impossible to get a pure thought out. It’s like a little kid, a little boy, looking at colors, and no one told him what colors are good, before somebody tells you you shouldn’t like pink because that’s for girls, or you’d instantly become a gay two-year-old.
+                  </div>
+                </div>
+              </div>
+              <div class="accordion-item mb-3">
+                <h6 class="accordion-header" id="headingTwo">
+                  <button class="accordion-button border-bottom font-weight-bold text-start" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo1" aria-expanded="false" aria-controls="collapseTwo1">
+                    How can I delete my account?
+                    <i class="collapse-close fa fa-plus text-xs pt-1 position-absolute end-0 me-3" aria-hidden="true"></i>
+                    <i class="collapse-open fa fa-minus text-xs pt-1 position-absolute end-0 me-3" aria-hidden="true"></i>
+                  </button>
+                </h6>
+                <div id="collapseTwo1" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionFaq2">
+                  <div class="accordion-body text-sm opacity-8">
+                    Why would anyone pick blue over pink? Pink is obviously a better color. Everyone’s born confident, and everything’s taken away from you <br><br>
+                    We’re not always in the position that we want to be at. We’re constantly growing. We’re constantly making mistakes.
+                  </div>
+                </div>
+              </div>
+              <div class="accordion-item mb-3">
+                <h6 class="accordion-header" id="headingThree">
+                  <button class="accordion-button border-bottom font-weight-bold text-start" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree1" aria-expanded="false" aria-controls="collapseThree1">
+                    How can I change account make account settings?
+                    <i class="collapse-close fa fa-plus text-xs pt-1 position-absolute end-0 me-3" aria-hidden="true"></i>
+                    <i class="collapse-open fa fa-minus text-xs pt-1 position-absolute end-0 me-3" aria-hidden="true"></i>
+                  </button>
+                </h6>
+                <div id="collapseThree1" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionFaq2">
+                  <div class="accordion-body text-sm opacity-8">
+                    People in this world shun people for being great. For being a bright color. We’re constantly trying to express ourselves and actualize our dreams. If you have the opportunity to play this game of life you need to appreciate every moment. A lot of people don’t appreciate the moment until it’s passed.
+                  </div>
+                </div>
+              </div>
+              <div class="accordion-item mb-3">
+                <h6 class="accordion-header" id="headingFour">
+                  <button class="accordion-button border-bottom font-weight-bold text-start" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour1" aria-expanded="false" aria-controls="collapseFour1">
+                    How to reset my password?
+                    <i class="collapse-close fa fa-plus text-xs pt-1 position-absolute end-0 me-3" aria-hidden="true"></i>
+                    <i class="collapse-open fa fa-minus text-xs pt-1 position-absolute end-0 me-3" aria-hidden="true"></i>
+                  </button>
+                </h6>
+                <div id="collapseFour1" class="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#accordionFaq2">
+                  <div class="accordion-body text-sm opacity-8">
+                    What matters is the people who are sparked by it. And the people who are like offended by it, it doesn’t matter. Because it's about motivating the doers. Because I’m here to follow my dreams and inspire other people to follow their dreams, too.
+                  </div>
+                </div>
+              </div>
+            </div>
+            <h4 class="mt-5 mb-4 ps-3">Licenses</h4>
+            <div class="accordion" id="accordionFaq3">
+              <div class="accordion-item mb-3">
+                <h6 class="accordion-header" id="headingOne">
+                  <button class="accordion-button border-bottom font-weight-bold text-start" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne2" aria-expanded="false" aria-controls="collapseOne2">
+                    What are the differences between the licenses on the website?
+                    <i class="collapse-close fa fa-plus text-xs pt-1 position-absolute end-0 me-3" aria-hidden="true"></i>
+                    <i class="collapse-open fa fa-minus text-xs pt-1 position-absolute end-0 me-3" aria-hidden="true"></i>
+                  </button>
+                </h6>
+                <div id="collapseOne2" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionFaq3">
+                  <div class="accordion-body text-sm opacity-8">
+                    We’re constantly trying to express ourselves and actualize our dreams. If you have the opportunity to play this game of life you need to appreciate every moment. A lot of people don’t appreciate the moment until it’s passed.
+                    The time is now for it to be okay to be great.
+                  </div>
+                </div>
+              </div>
+              <div class="accordion-item mb-3">
+                <h6 class="accordion-header" id="headingTwo">
+                  <button class="accordion-button border-bottom font-weight-bold text-start" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo2" aria-expanded="false" aria-controls="collapseTwo2">
+                    Can I use a premium product in an open source project?
+                    <i class="collapse-close fa fa-plus text-xs pt-1 position-absolute end-0 me-3" aria-hidden="true"></i>
+                    <i class="collapse-open fa fa-minus text-xs pt-1 position-absolute end-0 me-3" aria-hidden="true"></i>
+                  </button>
+                </h6>
+                <div id="collapseTwo2" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionFaq3">
+                  <div class="accordion-body text-sm opacity-8">
+                    People in this world shun people for being great. For being a bright color. For standing out. But the time is now to be okay to be the greatest you. Would you believe in what you believe in, if you were the only one who believed it?
+                    As we live, our hearts turn colder.
+                  </div>
+                </div>
+              </div>
+              <div class="accordion-item mb-3">
+                <h6 class="accordion-header" id="headingThree">
+                  <button class="accordion-button border-bottom font-weight-bold text-start" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree2" aria-expanded="false" aria-controls="collapseThree2">
+                    Can I use my Freelancer/Startup License on an alias domain?
+                    <i class="collapse-close fa fa-plus text-xs pt-1 position-absolute end-0 me-3" aria-hidden="true"></i>
+                    <i class="collapse-open fa fa-minus text-xs pt-1 position-absolute end-0 me-3" aria-hidden="true"></i>
+                  </button>
+                </h6>
+                <div id="collapseThree2" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionFaq3">
+                  <div class="accordion-body text-sm opacity-8">
+                    Cause pain is what we go through as we become older. We get insulted by others, lose trust for those others. We get back stabbed by friends. It becomes harder for us to give others a hand. We get our heart broken by people we love, even that we give them all we have. Then we lose family over time. What else could rust the heart more over time? Blackgold.
+                  </div>
+                </div>
+              </div>
+              <div class="accordion-item mb-3">
+                <h6 class="accordion-header" id="headingFour">
+                  <button class="accordion-button border-bottom font-weight-bold text-start" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour2" aria-expanded="false" aria-controls="collapseFour2">
+                    Can I use my Freelancer/Startup License on an alias domain?
+                    <i class="collapse-close fa fa-plus text-xs pt-1 position-absolute end-0 me-3" aria-hidden="true"></i>
+                    <i class="collapse-open fa fa-minus text-xs pt-1 position-absolute end-0 me-3" aria-hidden="true"></i>
+                  </button>
+                </h6>
+                <div id="collapseFour2" class="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#accordionFaq3">
+                  <div class="accordion-body text-sm opacity-8">
+                    Cause pain is what we go through as we become older. We get insulted by others, lose trust for those others. We get back stabbed by friends. It becomes harder for us to give others a hand. We get our heart broken by people we love, even that we give them all we have. Then we lose family over time. What else could rust the heart more over time? Blackgold.
+                  </div>
+                </div>
+              </div>
             </div> {% endcomment %}
-          {% comment %} </div>
-        </div>
-        <hr> {% endcomment %}
-        {% comment %} <div class="py-4">
-          <h2 class="mb-5 list-item-title">Advertisement</h2>
-          <div class="row">
-            <div class="col-md-6">
-              <h5 class="list-item-title">Why are there ads on my booking and business page?</h5>
-              <p class="text-muted mb-4">There are no ads placed on your booking pages.</p>
-              <h5 class="list-item-title">How can I get more views on my business and booking pages</h5>
-              <p class="text-muted mb-4">There are plenty of ways to market your pages. One way is to encourage your clients to book appointments using the BookMe web application by sharing your business pages to as many social media platforms. Contact our marketing department and we can work with you to help make your business known. Your success is also our success.</p>
-            </div>
-            <div class="col-md-6">
-              <h5 class="list-item-title">Why should I remove ads?</h5>
-              <p class="text-muted mb-4">Removing ads from your booking and business pages gives your clients a premium user experience. Providing your clients with a premium user experience shows them how much you value their experience and in return can boost your sales!</p>
-              <h5 class="list-item-title">How can I remove ads from my booking and business page?</h5>
-              <p class="text-muted mb-4">Removing ads from your booking page can be done by subscribing to BookMe's 'MID TIER' plan.</p>
-              <p class="text-muted mb-4">Subscribing to BookMe's 'PREMIUM TIER' plan removes ads from both your booking and business page.</p>
-            </div>
           </div>
-        </div> {% endcomment %}
+        </div>
+        </div>        
       </div>
     </section>
 {% endblock businesscontent %}

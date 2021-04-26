@@ -515,7 +515,7 @@ def fileUploadView(request):
 
 def LogoutView(request):
     logout(request)
-    return render(request, 'welcome/welcome.html', {'business':False})
+    return redirect(reverse('bizadminmain', host='bizadmin'))
 
 from django.template.loader import render_to_string
 def save_service_form(request, form, template_name):

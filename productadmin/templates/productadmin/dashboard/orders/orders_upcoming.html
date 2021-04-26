@@ -1,0 +1,126 @@
+{% extends 'productadmin/index.html' %}
+{% load static %}
+{% load hosts %}
+{% load business_tags %}
+{% load crispy_forms_tags %}
+{% block linkscript %}
+    <link rel="stylesheet" href="{% static "css/calendarmain.css"%}">
+    <script src="{% static "js/calendarmain.js" %}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+{% endblock linkscript %}
+{% block activecal%}active{%endblock%}
+{% block businessadmin %}
+        <!-- Main page content-->
+        
+<div class="content">
+    <div class="row">
+        <div class="col-12">
+            <header class="page-header page-header-compact page-header-light">
+                <div class="container-fluid">
+                    <div class="page-header-content">
+                        <div class="row align-items-center justify-content-between pt-3">
+                            <div class="col-12">
+                                <h1 class="page-header-title">
+                                    Manage Orders
+                                </h1>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <nav class="nav nav-borders">
+                <a class="nav-link ml-0 {% if upcoming %}activate{% endif %}" href="{% host_url 'orders' host 'prodadmin'%}?search=all">All</a>
+                <a class="nav-link {% if pending %}activate{% endif %}" href="{% host_url 'orders' host 'prodadmin'%}?search=pending">Requested</a>
+                <a class="nav-link {% if completed %}activate{% endif %}" href="{% host_url 'orders' host 'prodadmin'%}?search=completed">Completed</a>
+                <a class="nav-link {% if cancelled %}activate{% endif %}" href="{% host_url 'orders' host 'prodadmin'%}?search=cancelled">Cancelled</a>
+            </nav>
+        
+        </div>
+
+        <div class="col-md-12 mt-3">
+            <div class="card" style="border-radius:5px;">
+                <div class="card-header">
+                    <h4> {% if upcoming %}All{% elif pending %}Requested{% elif completed %}Completed{% else %}Cancelled{% endif %} Orders:</h4>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive" style="overflow-y: hidden;">
+                        <table class="table align-items-center table-flush">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th scope="col" class="sort" data-sort="name">Product</th>
+                                    <th scope="col" class="sort" data-sort="budget">Person</th>
+                                    <th scope="col" class="sort" data-sort="status">Price</th>
+                                    <th scope="col">Whats this</th>
+                                    <th scope="col" class="sort" data-sort="completion">Completion</th>
+                                    <th scope="col"></th>
+                                </tr>
+                            </thead>
+                            <tbody class="orderlist">
+                            {% for order in orders %}
+                                <tr>
+                                    {% for item in order.items.all %}
+                                    <th scope="row">
+                                        <div class="media align-items-center">
+                                            <a href="#" class="mr-3">
+                                            <img class="avatar rounded-circle" style="object-fit: cover;" alt="Image placeholder" src="{% if item.product.mainimage %}{{ item.product.mainimage.url }}{% endif %}">
+                                            </a>
+                                            <div class="media-body">
+                                            <span class="name mb-0 text-sm">{{ item.product.name }}</span>
+                                            </div>
+                                        </div>
+                                    </th>
+                                    <td class="budget">
+                                        {{ order.first_name }} {{ order.last_name }}
+                                    </td>
+                                    <td>
+                                        ${{ item.price}}
+                                    </td>
+                                    <td>
+                                        Whats this
+                                    </td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <span class="completion mr-2">60%</span>
+                                            <div>
+                                            <div class="progress">
+                                                <div class="progress-bar bg-warning" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;"></div>
+                                            </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="text-right">
+                                        <div class="dropdown">
+                                            <a class="three-dots-link" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                {% comment %} <i class="fas fa-ellipsis-v"></i> {% endcomment %}
+                                                <i></i>
+                                            </a>
+                                            <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
+                                            <a class="dropdown-item" href="#">Action</a>
+                                            <a class="dropdown-item" href="#">Remove</a>
+                                            <a class="dropdown-item" href="#">Something else here</a>
+                                            </div>
+                                        </div>
+                                    </td>
+
+                                    {% endfor %}
+                                </tr>
+                            {% empty %}
+                                <tr>
+                                    <th>
+                                    No {% if upcoming %}{% elif pending %}requested{% elif completed %}completed{% else %}cancelled{% endif %} orders to view.
+                                    </th>
+                                    
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                        </div>
+                </div>
+            
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -505,7 +505,7 @@ input[type='checkbox'] {
 	width: 2.0625rem;
 	height: 0.25rem;
 	margin-bottom: 0.3125rem;
-	background: #44404d;
+	background: #ffffff;
 	border-radius: 0.125rem;
 	transform-origin: 4px 0px;
 	transition: transform 0.5s cubic-bezier(0.77,0.2,0.05,1.0),
@@ -552,6 +552,8 @@ input[type='checkbox'] {
 	transform-origin: 0% 0%;
 	transform: translate(115%, 0);
 	transition: transform 0.5s cubic-bezier(0.77,0.2,0.05,1.0);
+	font: 700 1.15rem/2.25rem "Poppins", sans-serif !important;
+	color: white !important;
 }
 
 #menu li {

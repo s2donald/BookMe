@@ -24,6 +24,8 @@ urlpatterns = [
     
 
     re_path(r'dashboard/orders/$', views.orderView, name='orders'),
+    re_path(r'api/grabthemodalorder/$', views.modalGetOrderType.as_view(), name='ordermodalview'),
+
     re_path(r'dashboard/profile/booking/$', views.bookingSettingViews, name='bookingSetting'),
     re_path(r'dashboard/profile/security/$',views.profileSecurityViews, name='security'),
     re_path(r'dashboard/profile/notifs/$', views.notifViews, name='notifications'),

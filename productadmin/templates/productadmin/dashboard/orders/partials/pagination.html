@@ -1,0 +1,26 @@
+<div class="card pt-3 pagination justify-content-center">
+        <ul class="pagination pagination-template d-flex justify-content-center">
+            {% if page.has_previous %}
+                <li class="page-item"><a class="page-link" href="?page={{ page.previous_page_number }}&search={{ search }}"> <i class="fa fa-angle-left"></i></a></li>
+            {% endif %}
+            {% if page.number|add:'-1' > 1 %}
+                <li class="page-item"><a class="page-link" href="?page={{ page.number|add:'-2' }}&search={{ search }}">&hellip;</a></li>
+            {% endif %}
+            {% for i in page.paginator.page_range %}
+                {% if i == page.number %}
+                    <li class="page-item active"><a class="page-link" href="?page={{ i }}&search={{ search }}">{{ i }}</a></li>
+                {% elif i > page.number|add:'-2' and i < page.number|add:'2' %}
+                    <li class="page-item"><a class="page-link" href="?page={{ i }}&search={{ search }}">{{ i }}</a></li>
+                {% endif %}
+                
+            {% endfor %}
+
+            {% if page.paginator.num_pages > page.number|add:'1' %}
+                <li class="page-item"><a class="page-link" href="?page={{ page.number|add:'2' }}&search={{ search }}">&hellip;</a></li>
+            {% endif %}
+            
+            {% if page.has_next %}
+                <li class="page-item"><a class="page-link" href="?page={{ page.next_page_number }}&search={{ search }}"> <i class="fa fa-angle-right"></i></a></li>
+            {% endif %}
+        </ul>
+</div>

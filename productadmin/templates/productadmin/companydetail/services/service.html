@@ -91,7 +91,7 @@
                                                                                 {% endif %}
                                                                                 
                                                                             </div>
-                                                                            <div class="col-8 p-0 mt-2 order-3 order-md-2">
+                                                                            <div class="col-md-8 pl-0 mt-2 order-3 order-md-2">
                                                                             
                                                                                 
                                                                                 <div class="accordion" id="accordionExample">
@@ -545,6 +545,9 @@
                                     buttonsStyling: false,
                                 }).then((result) => {
                                     if (result.isConfirmed){
+                                        location.reload();
+                                    }
+                                    else{
                                         location.reload();
                                     }
                                 });

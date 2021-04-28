@@ -11,7 +11,44 @@
 {% block activecal%}active{%endblock%}
 {% block businessadmin %}
         <!-- Main page content-->
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModal" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">View Details</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
         
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="myModals" tabindex="-1" role="dialog" aria-labelledby="myModal" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">View Details</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="content">
     <div class="row">
         <div class="col-12">
@@ -32,8 +69,10 @@
 
             <nav class="nav nav-borders">
                 <a class="nav-link ml-0 {% if upcoming %}activate{% endif %}" href="{% host_url 'orders' host 'prodadmin'%}?search=all">All</a>
+                <a class="nav-link {% if active %}activate{% endif %}" href="{% host_url 'orders' host 'prodadmin'%}?search=active">Active</a>
                 <a class="nav-link {% if pending %}activate{% endif %}" href="{% host_url 'orders' host 'prodadmin'%}?search=pending">Requested</a>
-                <a class="nav-link {% if completed %}activate{% endif %}" href="{% host_url 'orders' host 'prodadmin'%}?search=completed">Completed</a>
+                {% comment %} <a class="nav-link {% if delivered %}activate{% endif %}" href="{% host_url 'orders' host 'prodadmin'%}?search=delivered">Delivered</a> {% endcomment %}
+                <a class="nav-link {% if completed %}activate{% endif %}" href="{% host_url 'orders' host 'prodadmin'%}?search=completed">Fulfilled</a>
                 <a class="nav-link {% if cancelled %}activate{% endif %}" href="{% host_url 'orders' host 'prodadmin'%}?search=cancelled">Cancelled</a>
             </nav>
         
@@ -42,81 +81,102 @@
         <div class="col-md-12 mt-3">
             <div class="card" style="border-radius:5px;">
                 <div class="card-header">
-                    <h4> {% if upcoming %}All{% elif pending %}Requested{% elif completed %}Completed{% else %}Cancelled{% endif %} Orders:</h4>
+                    <h4> {% if upcoming %}All{% elif pending %}Requested{% elif completed %}Fulfilled{% elif active%}Active{% elif delivered %}Delivered{% else %}Cancelled{% endif %} Orders:</h4>
                 </div>
                 <div class="card-body">
-                    <div class="table-responsive" style="overflow-y: hidden;">
-                        <table class="table align-items-center table-flush">
+                    <div class="col-12">
+                    <div class="table-responsive" style="overflow-y:hidden !important;">
+                        <table class="table align-items-center table-hover" style="margin-bottom:100px;">
                             <thead class="thead-light">
                                 <tr>
                                     <th scope="col" class="sort" data-sort="name">Product</th>
-                                    <th scope="col" class="sort" data-sort="budget">Person</th>
-                                    <th scope="col" class="sort" data-sort="status">Price</th>
-                                    <th scope="col">Whats this</th>
-                                    <th scope="col" class="sort" data-sort="completion">Completion</th>
-                                    <th scope="col"></th>
+                                    <th scope="col" class="sort" data-sort="budget">Buyer</th>
+                                    <th scope="col" class="sort" data-sort="status">Total</th>
+                                    <th scope="col">Details</th>
+                                    <th scope="col" class="sort" data-sort="completion">Status</th>
+                                    <th scope="col">Actions</th>
                                 </tr>
                             </thead>
                             <tbody class="orderlist">
                             {% for order in orders %}
                                 <tr>
                                     {% for item in order.items.all %}
-                                    <th scope="row">
+                                    <th scope="row" class="tableclickme" data-id="{{ order.id }}" data-type="detail">
                                         <div class="media align-items-center">
                                             <a href="#" class="mr-3">
-                                            <img class="avatar rounded-circle" style="object-fit: cover;" alt="Image placeholder" src="{% if item.product.mainimage %}{{ item.product.mainimage.url }}{% endif %}">
+                                            <img class="avatar rounded-circle" style="object-fit: cover;" alt="Image placeholder" src="{% if item.product.mainimage %}{{ item.product.mainimage.url }}{% else %}{% static 'img/default-product-image.png' %}{% endif %}">
                                             </a>
                                             <div class="media-body">
                                             <span class="name mb-0 text-sm">{{ item.product.name }}</span>
                                             </div>
                                         </div>
                                     </th>
-                                    <td class="budget">
+                                    <td class="tableclickme" data-id="{{ order.id }}" data-type="detail">
                                         {{ order.first_name }} {{ order.last_name }}
                                     </td>
-                                    <td>
+                                    <td class="tableclickme" data-id="{{ order.id }}" data-type="detail">
                                         ${{ item.price}}
                                     </td>
-                                    <td>
-                                        Whats this
+                                    <td class="tableclickme" data-id="{{ order.id }}" data-type="detail">
+                                        <a class="btn btn-link ml-0 px-0" type="button" >View</a>
                                     </td>
-                                    <td>
-                                        <div class="d-flex align-items-center">
-                                            <span class="completion mr-2">60%</span>
-                                            <div>
-                                            <div class="progress">
-                                                <div class="progress-bar bg-warning" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;"></div>
-                                            </div>
-                                            </div>
-                                        </div>
+                                    <td class="tableclickme" data-id="{{ order.id }}" data-type="detail">
+                                        {% if order.pendingapproval %}
+                                            <div class="badge badge-warning">Request</div>
+                                        {% elif order.confirmed %}
+                                            <div class="badge badge-success">Fulfilled</div>
+                                        {% elif order.delivered %}
+                                            <div class="badge badge-info">Delivered</div>
+                                        {% elif order.cancelled %}
+                                            <div class="badge badge-danger">Cancelled</div>
+                                        {% else %}
+                                            <div class="badge badge-success">Active</div>
+                                        {% endif %}
                                     </td>
                                     <td class="text-right">
+                                        {% if order.pendingapproval or order.delivered or order.active %}
                                         <div class="dropdown">
-                                            <a class="three-dots-link" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                {% comment %} <i class="fas fa-ellipsis-v"></i> {% endcomment %}
+                                            <a class="three-dots-link" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width:35px; height:35px;">
                                                 <i></i>
                                             </a>
-                                            <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
-                                            <a class="dropdown-item" href="#">Action</a>
-                                            <a class="dropdown-item" href="#">Remove</a>
-                                            <a class="dropdown-item" href="#">Something else here</a>
-                                            </div>
-                                        </div>
-                                    </td>
+                                            <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow" style="">
+                                            
+                                            {% if order.pendingapproval %}
+                                                <a class="dropdown-item"  data-id="{{ order.id }}" data-type="accept">Accept Order</a>
+                                                <a class="dropdown-item"  data-id="{{ order.id }}" data-type="decline">Decline Order</a>
+                                            {% elif order.confirmed %}
+                                                
+                                            {% comment %} {% elif order.delivered %}
+                                                <a class="dropdown-item" type="button" data-toggle="modal" data-target="#myModal" data-id="{{ order.id }}" data-type="fulfill">Mark as fulfilled</a>
+                                                <a class="dropdown-item" type="button" data-toggle="modal" data-target="#myModal" data-id="{{ order.id }}" data-type="cancel">Mark as cancelled</a> {% endcomment %}
+                                            {% elif order.cancelled %}
 
+                                            {% else %}
+                                                <a class="dropdown-item" data-id="{{ order.id }}" data-type="fulfill">Mark as fulfilled</a>
+                                                {% comment %} <a class="dropdown-item" data-id="{{ order.id }}" data-type="deliver">Mark as delivered</a> {% endcomment %}
+                                                <a class="dropdown-item" data-id="{{ order.id }}" data-type="cancel">Mark as cancelled</a>
+                                            {% endif %}
+                                            </div>
+                                            
+                                        </div>
+                                        {% endif %}
+                                        
+                                    </td>
                                     {% endfor %}
                                 </tr>
                             {% empty %}
                                 <tr>
-                                    <th>
-                                    No {% if upcoming %}{% elif pending %}requested{% elif completed %}completed{% else %}cancelled{% endif %} orders to view.
+                                    <th colspan="6">
+                                    No {% if upcoming %}{% elif pending %}requested{% elif completed %}fulfilled{% elif active%}active{% elif delivered %}delivered{% else %}cancelled{% endif %} orders to view.
                                     </th>
                                     
                                 </tr>
                             {% endfor %}
                             </tbody>
                         </table>
+                        {% include 'productadmin/dashboard/orders/partials/pagination.html' with page=orders search=types %}
                         </div>
+                    </div>
                 </div>
             
             </div>
@@ -124,3 +184,105 @@
     </div>
 </div>
 {% endblock %}
+
+{% block calendarscript %}
+<script>
+    $(document).on('click', '.dropdown-item', function(e){
+        var $this = $(this)
+        var order_id = $(this).attr('data-id')
+        var type_id = $(this).attr('data-type')
+        var title = ''
+        var txt = ''
+        if (type_id == 'accept'){
+            title = 'Are you sure you want to accept this request?'
+            txt = 'Payment will be collected from the customer'
+        }
+        else if (type_id == 'decline'){
+            title = 'Are you sure you want to decline this request?'
+            txt = 'You will not be able to change this'
+        }
+        else if (type_id == 'fulfill') {
+            title = 'Are you sure you want to fulfill this order?'
+            txt = 'This means the order is completed.'
+        }
+        else if (type_id == 'cancel'){
+            title = 'Are you sure you want to cancel this order?'
+            txt = 'The amount paid will automatically get refunded to the customer.'
+        }
+        else {
+            return false
+        }
+
+        const swalStyles = Swal.mixin({
+            customClass:{
+                confirmButton: 'btn btn-info',
+                cancelButton: 'btn btn-danger',
+            },
+            buttonsStyling: false
+        });
+        swalStyles.fire({
+            title: title,
+            text: txt,
+            icon: 'warning',
+            showCancelButton: true,
+            closeOnConfirm: false,
+            showLoaderOnConfirm: true,
+            reverseButtons: true,
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    type:'POST',
+                    dataType: 'json',
+                    url: "{% host_url 'ordermodalview' host 'prodadmin' %}",
+                    data: { order : order_id, type : type_id },
+                    headers:{
+                        "X-CSRFToken": csrftoken
+                    },
+                    success: function(data){
+                        Swal.fire({
+                            title: data.title, 
+                            text: data.txt, 
+                            icon: data.type,
+                            customClass:{
+                                confirmButton: 'btn btn-info',
+                                cancelButton: 'btn btn-danger',
+                            },
+                            buttonsStyling: false,
+                        }).then((result)=>{
+                            location.reload();
+                        });
+                    }
+                });
+            } else if (
+                /* Read more about handling dismissals below */
+                result.dismiss === Swal.DismissReason.cancel
+            ) {
+            }
+        });
+    })
+    
+    $( document ).ready(function() {
+        $(document).on('click', '.tableclickme', function(e){
+            var button = $(this)
+            var order = button.attr('data-id') // Extract info from data-* attributes
+            var type = button.attr('data-type')
+            var data = { order : order, type : type }
+            
+            $.ajax({
+                url: "{% host_url 'ordermodalview' host 'prodadmin' %}",
+                type: 'GET',
+                data: data,
+                dataType: 'json',
+                beforeSend: function () {
+                    $("#myModals").modal("show");
+                },
+                success: function (data) {
+                    $('#myModals').find('.modal-title').text(data.title)
+                    $('#myModals .modal-body').html(data.html_form)
+                }
+            });
+        });
+    })
+</script>
+{% endblock  %}
+

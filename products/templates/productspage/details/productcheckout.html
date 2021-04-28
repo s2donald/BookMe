@@ -8,7 +8,7 @@
 {% block companybizname %}{{ company.business_name }}{% endblock companybizname %}
 {% block linkscript %}
 <link rel="stylesheet" type="text/css" id="mce-u0" href="{% static '/tinymce/skins/ui/oxide/skin.min.css' %}">
-<script src="{% static '/static/tinymce/tinymce.min.js' %}"></script>
+<script src="{% static '/tinymce/tinymce.min.js' %}"></script>
 <script src="{% static '/django_tinymce/init_tinymce.js' %}"></script>
 {% endblock  %}
 {% block booking %}
@@ -41,7 +41,7 @@
                                             <h4>{{ question.question }}</h4>
                                         </div>
                                         <div class="row p-2">
-                                            <textarea name="{{ question.id }}" placeholder="{% if question.placeholder %}{{ question.placeholder }}{% endif %}" style="border:1px solid #dadbdd !important; box-shadow: 0 2px 4px rgba(0,0,0,.06); border-radius: 3px;" size="40" class="textarea form-control" {% if question.is_required %}required{% endif %} id="id_question"></textarea>
+                                            <textarea name="{{ question.id }}" placeholder="{% if question.placeholder %}{{ question.placeholder }}{% endif %}" style="border:1px solid #dadbdd !important; box-shadow: 0 2px 4px rgba(0,0,0,.06); border-radius: 3px; height: 200px;" size="40" class="textarea form-control" {% if question.is_required %}required{% endif %} id="id_question"></textarea>
                                         </div>
                                     </div>
                                 {% endfor %}

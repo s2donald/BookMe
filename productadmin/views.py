@@ -348,6 +348,109 @@ class notesUpdate(View):
         return JsonResponse({'good':'success'})
 
 
+class modalGetOrderType(View):
+    def get(self, request):
+        user = request.user
+        company = Company.objects.get(user=user)
+        order_id = request.GET.get('order')
+        type_of_req = request.GET.get('type')
+        print(order_id)
+        print(type_of_req)
+        order = Order.objects.get(pk=str(order_id))
+        html = ''
+        title = ''
+        if company != order.company:
+            return JsonResponse({'html_form':html, 'title':title})
+        if type_of_req == 'detail':
+            for items in order.items.all():
+                name = items.product.name
+            title = 'Order: ' + name
+            html = render_to_string('productadmin/dashboard/orders/partials/view_details.html', {'order':order, 'company':company}, request=request)
+        return JsonResponse({'html_form':html, 'title':title})
+
+    def post(self, request):
+        user = request.user
+        company = Company.objects.get(user=user)
+        order_id = request.POST.get('order')
+        type_of_req = request.POST.get('type')
+        order = Order.objects.get(pk=str(order_id))
+        html = ''
+        title = ''
+        txt = ''
+        if company != order.company:
+            return JsonResponse({'type':'error', 'txt':'There was an error'})
+
+        stripe.api_key = djstripe.settings.STRIPE_SECRET_KEY
+        payment_intent_id = order.paymentintent
+
+        if payment_intent_id is None:
+            return JsonResponse({'type':'error', 'txt':'There was an error, payment does not exist.'})
+        
+        if type_of_req == 'accept':
+            try:
+                stripe.PaymentIntent.capture(
+                    payment_intent_id,
+                    stripe_account=company.stripe_user_id_prod
+                )
+                payintent = stripe.PaymentIntent.retrieve(
+                    payment_intent_id,
+                    stripe_account=company.stripe_user_id_prod
+                )
+            except:
+                return JsonResponse({'type':'error', 'txt':'There was an error, unable to collect the payment.'})
+            if payintent.status == 'succeeded':
+                order.active = True
+                order.paid = True
+                order.pendingapproval = False
+                title = 'The order has been accepted and payment was collected'
+            else:
+                return JsonResponse({'type':'error', 'txt':'There was an error, unable to collect the payment.'})
+        #Decline the order request
+        elif type_of_req == 'decline':
+            if order.paid == True:
+                order.pendingapproval = False
+                order.save()
+                return JsonResponse({'type':'error', 'txt':'There was an error, the payment was already collected.'})
+            try:
+                payintent = stripe.PaymentIntent.cancel(
+                    payment_intent_id,
+                    stripe_account=company.stripe_user_id_prod
+                )
+            except Exception as e:
+                print(e)
+                return JsonResponse({'type':'error', 'txt':'There was an error, please contact shopme support.'})
+            title = 'The order has been declined and payment was cancelled.'
+            txt = 'This action can not be undone.'
+            order.active = False
+            order.paid = False
+            order.pendingapproval = False
+            order.cancelled = True
+        elif type_of_req == 'cancel':
+            try:
+                payintent = stripe.Refund.create(
+                    refund_application_fee=True,
+                    payment_intent=payment_intent_id,
+                    stripe_account=company.stripe_user_id_prod
+                )
+            except Exception as e:
+                print(e)
+                return JsonResponse({'type':'error', 'txt':'There was an error, please contact shopme support.'})
+            order.paid = False
+            order.pendingapproval = False
+            order.cancelled = True
+            order.active = False
+            title = 'The order has been cancelled and payment was refunded.'
+            txt = 'This action can not be undone.'
+        elif type_of_req == 'fulfill':
+            order.paid = True
+            order.pendingapproval = False
+            order.active = False
+            order.completed = True
+            title = 'The order has been marked as completed!'
+        order.save()
+        return JsonResponse({'title':title, 'type':'success', 'txt':txt})
+
+
 @login_required
 def orderView(request):
     user = request.user
@@ -363,20 +466,54 @@ def orderView(request):
             completed = False
             upcoming = False
             cancelled = False
-
+            active = False
+            delivered=False
+            types = ''
+            print(search)
             if search == 'pending':
                 orders = Order.objects.filter(company=company, orderplaced=True,pendingapproval=True, completed=False, cancelled=False).order_by('-created')
                 pending = True
+                types = 'pending'
             elif search == 'completed':
                 orders = Order.objects.filter(company=company, paid=True, orderplaced=True,pendingapproval=False, completed=True, cancelled=False).order_by('-created')
                 completed = True
+                types = 'completed'
             elif search == 'cancelled':
                 orders = Order.objects.filter(company=company, orderplaced=True, cancelled=True).order_by('-created')
                 cancelled = True
+            elif search == 'active':
+                orders = Order.objects.filter(company=company, orderplaced=True, active=True, pendingapproval=False).order_by('-created')
+                active = True
+                types = 'active'
+            elif search == 'delivered':
+                orders = Order.objects.filter(company=company, orderplaced=True, delivered=True).order_by('-created')
+                delivered = True
+                types = 'delivered'
             else:
                 orders = Order.objects.filter(company=company, orderplaced=True).order_by('-created')
                 upcoming = True
-            return render(request, 'productadmin/dashboard/orders/orders_upcoming.html', {'company':company, 'orders':orders, 'pending':pending, 'completed':completed, 'upcoming':upcoming, 'cancelled':cancelled})
+                types = 'all'
+
+            paginator = Paginator(orders, 5)
+            page = request.GET.get('page')
+            try:
+                orders = paginator.page(page)
+            except PageNotAnInteger:
+                orders = paginator.page(1)
+            except EmptyPage:
+                orders = paginator.page(paginator.num_pages)
+            return render(request, 'productadmin/dashboard/orders/orders_upcoming.html', {
+                                                                                            'types':types,
+                                                                                            'page':page,
+                                                                                            'company':company, 
+                                                                                            'orders':orders, 
+                                                                                            'pending':pending, 
+                                                                                            'completed':completed, 
+                                                                                            'upcoming':upcoming, 
+                                                                                            'cancelled':cancelled,
+                                                                                            'active':active,
+                                                                                            'delivered':delivered
+                                                                                        })
         else:
             return redirect(reverse('completeprofile', host='prodadmin'))
     else:
@@ -1028,22 +1165,23 @@ def homepageViews(request):
             twoweek = week - timedelta(days=7)
             threeweek = twoweek - timedelta(days=7)
             fourweek = threeweek - timedelta(days=7)
-            week1 = Bookings.objects.filter(company=company, end__gte=week, end__lte=timezone.now(),is_cancelled_user=False, is_cancelled_company=False, is_cancelled_request=False).aggregate(Sum('price')).get('price__sum',0)
+            week1 = Order.objects.filter(company=company, created__gte=week, created__lte=timezone.now(),paid=True).aggregate(Sum('items__price')).get('items__price__sum',0)
+            print(Order.objects.filter(company=company, created__gte=week, created__lte=timezone.now(),paid=True).aggregate(Sum('items__price')))
             if not week1:
                 week1 = 0
             start1 = (week - timedelta(days=week.weekday())).strftime("%b-%d-%Y")
             
-            week2 = Bookings.objects.filter(company=company, end__gte=twoweek, end__lte=week,is_cancelled_user=False, is_cancelled_company=False, is_cancelled_request=False).aggregate(Sum('price')).get('price__sum',0)
+            week2 = Order.objects.filter(company=company, created__gte=twoweek, created__lte=week,paid=True).aggregate(Sum('items__price')).get('items__price__sum',0)
             if not week2:
                 week2 = 0
             start2 = (twoweek - timedelta(days=twoweek.weekday())).strftime("%b-%d-%Y")
 
-            week3 = Bookings.objects.filter(company=company, end__gte=threeweek, end__lte=twoweek,is_cancelled_user=False, is_cancelled_company=False, is_cancelled_request=False).aggregate(Sum('price')).get('price__sum',0)
+            week3 = Order.objects.filter(company=company, created__gte=threeweek, created__lte=twoweek,paid=True).aggregate(Sum('items__price')).get('items__price__sum',0)
             if not week3:
                 week3 = 0
             start3 = (threeweek - timedelta(days=threeweek.weekday())).strftime("%b-%d-%Y")
 
-            week4 = Bookings.objects.filter(company=company, end__gte=fourweek, end__lte=threeweek,is_cancelled_user=False, is_cancelled_company=False, is_cancelled_request=False).aggregate(Sum('price')).get('price__sum',0)
+            week4 = Order.objects.filter(company=company, created__gte=fourweek, created__lte=threeweek,paid=True).aggregate(Sum('items__price')).get('items__price__sum',0)
             if not week4:
                 week4 = 0
             start4 = (fourweek - timedelta(days=fourweek.weekday())).strftime("%b-%d-%Y")
@@ -1051,74 +1189,74 @@ def homepageViews(request):
             weeklabel = [start4, start3, start2, start1]
 
             month = timezone.localtime(timezone.now() - timedelta(days=30))
-            month1 = Bookings.objects.filter(company=company, end__gte=month, end__lte=timezone.now(),is_cancelled_user=False, is_cancelled_company=False, is_cancelled_request=False).aggregate(Sum('price')).get('price__sum',0)
+            month1 = Order.objects.filter(company=company, created__gte=month, created__lte=timezone.now(),paid=True).aggregate(Sum('items__price')).get('items__price__sum',0)
             if not month1:
                 month1 = 0
             labelM0 = timezone.now().strftime("%b-%Y")
             labelM1 = month.strftime("%b-%Y")
 
             twomonth = month - timedelta(days=30)
-            month2 = Bookings.objects.filter(company=company, end__gte=twomonth, end__lte=month,is_cancelled_user=False, is_cancelled_company=False, is_cancelled_request=False).aggregate(Sum('price')).get('price__sum',0)
+            month2 = Order.objects.filter(company=company, created__gte=twomonth, created__lte=month,paid=True).aggregate(Sum('items__price')).get('items__price__sum',0)
             if not month2:
                 month2 = 0
             labelM2 = twomonth.strftime("%b-%Y")
 
             threemonth = twomonth - timedelta(days=30)
-            month3 = Bookings.objects.filter(company=company, end__gte=threemonth, end__lte=twomonth,is_cancelled_user=False, is_cancelled_company=False, is_cancelled_request=False).aggregate(Sum('price')).get('price__sum',0)
+            month3 = Order.objects.filter(company=company, created__gte=threemonth, created__lte=twomonth,paid=True).aggregate(Sum('items__price')).get('items__price__sum',0)
             if not month3:
                 month3 = 0
             labelM3 = threemonth.strftime("%b-%Y")
 
             fourmonth = threemonth - timedelta(days=30)
-            month4 = Bookings.objects.filter(company=company, end__gte=fourmonth, end__lte=threemonth,is_cancelled_user=False, is_cancelled_company=False, is_cancelled_request=False).aggregate(Sum('price')).get('price__sum',0)
+            month4 = Order.objects.filter(company=company, created__gte=fourmonth, created__lte=threemonth,paid=True).aggregate(Sum('items__price')).get('items__price__sum',0)
             if not month4:
                 month4 = 0
             labelM4 = fourmonth.strftime("%b-%Y")
 
             fivemonth = fourmonth - timedelta(days=30)
-            month5 = Bookings.objects.filter(company=company, end__gte=fivemonth, end__lte=fourmonth,is_cancelled_user=False, is_cancelled_company=False, is_cancelled_request=False).aggregate(Sum('price')).get('price__sum',0)
+            month5 = Order.objects.filter(company=company, created__gte=fivemonth, created__lte=fourmonth,paid=True).aggregate(Sum('items__price')).get('items__price__sum',0)
             if not month5:
                 month5 = 0
             labelM5 = fivemonth.strftime("%b-%Y")
 
             sixmonth = fivemonth - timedelta(days=30)
-            month6 = Bookings.objects.filter(company=company, end__gte=sixmonth, end__lte=fivemonth,is_cancelled_user=False, is_cancelled_company=False, is_cancelled_request=False).aggregate(Sum('price')).get('price__sum',0)
+            month6 = Order.objects.filter(company=company, created__gte=sixmonth, created__lte=fivemonth,paid=True).aggregate(Sum('items__price')).get('items__price__sum',0)
             if not month6:
                 month6 = 0
             labelM6 = sixmonth.strftime("%b-%Y")
 
             sevenmonth = sixmonth - timedelta(days=30)
-            month7 = Bookings.objects.filter(company=company, end__gte=sevenmonth, end__lte=sixmonth,is_cancelled_user=False, is_cancelled_company=False, is_cancelled_request=False).aggregate(Sum('price')).get('price__sum',0)
+            month7 = Order.objects.filter(company=company, created__gte=sevenmonth, created__lte=sixmonth,paid=True).aggregate(Sum('items__price')).get('items__price__sum',0)
             if not month7:
                 month7 = 0
             labelM7 = sevenmonth.strftime("%b-%Y")
 
             eightmonth = sevenmonth - timedelta(days=30)
-            month8 = Bookings.objects.filter(company=company, end__gte=eightmonth, end__lte=sevenmonth,is_cancelled_user=False, is_cancelled_company=False, is_cancelled_request=False).aggregate(Sum('price')).get('price__sum',0)
+            month8 = Order.objects.filter(company=company, created__gte=eightmonth, created__lte=sevenmonth,paid=True).aggregate(Sum('items__price')).get('items__price__sum',0)
             if not month8:
                 month8 = 0
             labelM8 = eightmonth.strftime("%b-%Y")
 
             ninemonth = eightmonth - timedelta(days=30)
-            month9 = Bookings.objects.filter(company=company, end__gte=ninemonth, end__lte=eightmonth,is_cancelled_user=False, is_cancelled_company=False, is_cancelled_request=False).aggregate(Sum('price')).get('price__sum',0)
+            month9 = Order.objects.filter(company=company, created__gte=ninemonth, created__lte=eightmonth,paid=True).aggregate(Sum('items__price')).get('items__price__sum',0)
             if not month9:
                 month9 = 0
             labelM9 = ninemonth.strftime("%b-%Y")
 
             tenmonth = ninemonth - timedelta(days=30)
-            month10 = Bookings.objects.filter(company=company, end__gte=tenmonth, end__lte=ninemonth,is_cancelled_user=False, is_cancelled_company=False, is_cancelled_request=False).aggregate(Sum('price')).get('price__sum',0)
+            month10 = Order.objects.filter(company=company, created__gte=tenmonth, created__lte=ninemonth,paid=True).aggregate(Sum('items__price')).get('items__price__sum',0)
             if not month10:
                 month10 = 0
             labelM10 = tenmonth.strftime("%b-%Y")
 
             elevenmonth = tenmonth - timedelta(days=30)
-            month11 = Bookings.objects.filter(company=company, end__gte=elevenmonth, end__lte=tenmonth,is_cancelled_user=False, is_cancelled_company=False, is_cancelled_request=False).aggregate(Sum('price')).get('price__sum',0)
+            month11 = Order.objects.filter(company=company, created__gte=elevenmonth, created__lte=tenmonth,paid=True).aggregate(Sum('items__price')).get('items__price__sum',0)
             if not month11:
                 month11 = 0
             labelM11 = elevenmonth.strftime("%b-%Y")
 
             twelvemonth = elevenmonth - timedelta(days=30)
-            month12 = Bookings.objects.filter(company=company, end__gte=twelvemonth, end__lte=elevenmonth,is_cancelled_user=False, is_cancelled_company=False, is_cancelled_request=False).aggregate(Sum('price')).get('price__sum',0)
+            month12 = Order.objects.filter(company=company, created__gte=twelvemonth, created__lte=elevenmonth,paid=True).aggregate(Sum('items__price')).get('items__price__sum',0)
             if not month12:
                 month12 = 0
             labelM12 = twelvemonth.strftime("%b-%Y")

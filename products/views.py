@@ -167,6 +167,10 @@ class CartCheckoutView(View):
                 else:
                     order.pendingapproval = False
                 order.company = item['company']
+                order.active = True
+                if product.dispatch != 0:
+                    order.dateshipped = timezone.localtime(timezone.now()) + datetime.timedelta(days=product.dispatch)
+                order.delivered = False
                 order.save()
                 for drop in dropdowns:
                     orditems.dropdown.add(drop)
@@ -251,7 +255,6 @@ class commitPurchase(View):
         order = get_object_or_404(Order, id=order_id)
         stripe.api_key = djstripe.settings.STRIPE_SECRET_KEY
         payment_intent_id = request.session.get('payment_intent_id')
-
         if payment_intent_id:
             is_request = False
             for item in order.items.all():

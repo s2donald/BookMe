@@ -1,0 +1,160 @@
+{% load static %}
+{% load hosts %}
+{% load business_tags %}
+{% load crispy_forms_tags %}
+<div class="container">
+    {% for items in order.items.all %}
+        <h6 class="mt-3">Item Details</h6>
+        <div class="row">
+            <div class="col-sm-6"> <img class="img-fluid" src="{% if items.product.mainimage %}{{ items.product.mainimage.url }}{% else %}{% static 'img/default-product-image.png' %}{% endif %}" style="object-fit: cover; height: 150px; width:150px"></div>
+            <div class="col-sm-6"><h4>{{ items.product.name }}</h4></div>
+        </div>
+        <br>
+        <h6>Order Details</h6>
+        <div class="row">
+            <div class="col-xs-12">
+            </div>
+            <div class="table-responsive" style="overflow-y:hidden !important;">
+                <table class="table align-items-center" style="margin-bottom:100px;">
+                    <thead class="thead-light">
+                        <tr>
+                            <th scope="col" class="sort" data-sort="name">Order Details</th>
+                            <th scope="col" class="sort" data-sort="some"></th>
+                        </tr>
+                    </thead>
+                    <tbody class="orderlist">
+                    
+                        <tr>
+                            
+                            <th scope="row">
+                                <div class="media align-items-center">
+                                    <span class="name mb-0 text-sm">Order ID:</span>
+                                </div>
+                            </th>
+                            <td class="text-right">
+                                {{ order.slug }}
+                            </td>
+                            
+                        </tr>
+
+                        <tr>
+                            
+                            <th scope="row">
+                                <div class="media align-items-center">
+                                    <span class="name mb-0 text-sm">Customer:</span>
+                                </div>
+                            </th>
+                            <td class="text-right">
+                                {{ order.first_name }} {{ order.last_name }}
+                            </td>
+                            
+                        </tr>
+
+                        <tr>
+                            
+                            <th scope="row">
+                                <div class="media align-items-center">
+                                    <span class="name mb-0 text-sm">Customer Info:</span>
+                                </div>
+                            </th>
+                            <td class="text-right">
+                            <ul style="list-style:none;">
+                                <li style="color: rgba(34, 42, 66, 0.7) !important;">{{ order.email }}</li>
+                                <li style="color: rgba(34, 42, 66, 0.7) !important;">{{ order.phone }}</li>
+                            </ul>
+                            </td>
+                            
+                        </tr>
+                        {% if items.answer_orderitems.all.count > 0 %}
+                            {% for answers in items.answer_orderitems.all %}
+                                <tr>
+                            
+                                    <th colspan="2">
+                                        <div class="media align-items-center">
+                                            <span class="name mb-0 text-sm">{{ answers.question.question }}:</span>
+                                        </div>
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <th colspan="2" style="font-weight: 400;">
+                                        {{ answers.description|linebreaks }}
+                                    </th>
+                                    
+                                </tr>
+                            {% endfor %}
+                        {% endif %}
+
+                        <tr>
+                            
+                            <th scope="row">
+                                <div class="media align-items-center">
+                                    <span class="name mb-0 text-sm">Address:</span>
+                                </div>
+                            </th>
+                            <td class="text-right">
+                                {{ order.address }}, {{ order.city }}, {{ order.postal_code }}, {{ order.country }}, {{ order.state }}
+                            </td>
+                            
+                        </tr>
+                    
+                        <tr>
+                            
+                            <th scope="row">
+                                <div class="media align-items-center">
+                                    <span class="name mb-0 text-sm">Date Ordered:</span>
+                                </div>
+                            </th>
+                            <td class="text-right">
+                                {{ order.created|date:"F j, Y" }}
+                            </td>
+                            
+                        </tr>
+                        {% if items.product.dispatch > 0 %}
+                        <tr>
+                            
+                            <th scope="row">
+                                <div class="media align-items-center">
+                                    <span class="name mb-0 text-sm">Order Due:</span>
+                                </div>
+                            </th>
+                            <td class="text-right">
+                                {{ order.dateshipped|date:"F j, Y" }}
+                            </td>
+                            
+                        </tr>
+                        {% endif %}
+                        {% if items.dropdown.all.count > 0 %}
+                            <tr>
+                                
+                                <th scope="row">
+                                    <div class="media align-items-center">
+                                        <span class="name mb-0 text-sm">Add Options:</span>
+                                    </div>
+                                </th>
+                                <td class="text-right">
+                                    {% for dropdown in items.dropdown.all %}{{ dropdown.option }}, {% endfor %}
+                                </td>
+                                
+                            </tr>
+                        {% endif %}
+
+                        <tr>
+                            
+                            <th scope="row">
+                                <div class="media align-items-center">
+                                    <span class="name mb-0 text-sm">Total:</span>
+                                </div>
+                            </th>
+                            <td class="text-right">
+                                ${{ order.get_total_cost }}
+                            </td>
+                            
+                        </tr>
+                    
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    {% endfor %}
+</div>

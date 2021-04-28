@@ -158,14 +158,18 @@ class Order(models.Model):
     city = models.CharField(max_length=100)
     state = models.ForeignKey(Region, blank=True, null=True, on_delete=models.CASCADE, verbose_name='State or Province')
     created = models.DateTimeField(auto_now_add=True)
+    dateshipped = models.DateTimeField(default=timezone.now)
     updated = models.DateTimeField(auto_now=True)
 
     paid = models.BooleanField(default=False)
     orderplaced = models.BooleanField(default=False)
+    active = models.BooleanField(default=False)
+    delivered = models.BooleanField(default=False)
     pendingapproval = models.BooleanField(default=True)
     cancelled = models.BooleanField(default=False)
     completed = models.BooleanField(default=False)
     shipped = models.BooleanField(default=False)
+
 
     shipping_local = models.BooleanField(default=False)
     shipping_international = models.BooleanField(default=False)

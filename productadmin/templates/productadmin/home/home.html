@@ -165,7 +165,7 @@
         barPercentage: 1.6,
         gridLines: {
           drawBorder: false,
-          color: 'rgba(137, 196, 244, 1)',
+          color: 'rgba(137, 196, 244, 0.2)',
           zeroLineColor: "transparent",
         },
         scaleLabel: {
@@ -187,8 +187,8 @@
 
   var gradientStroke = ctx.createLinearGradient(0, 230, 0, 50);
 
-  gradientStroke.addColorStop(1, 'rgba(137, 196, 244, 1)');
-  gradientStroke.addColorStop(0.4, 'rgba(30, 139, 195, 1)');
+  gradientStroke.addColorStop(1, 'rgba(137, 196, 244, 0.2)');
+  gradientStroke.addColorStop(0.4, 'rgba(30, 139, 195, 0.4)');
   gradientStroke.addColorStop(0, 'rgba(119,52,169,0)'); //purple colors
   var config = {
     type: 'line',

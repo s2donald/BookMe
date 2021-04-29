@@ -1,4 +1,4 @@
-{% extends 'bizadmin/index.html' %}
+{% extends 'productadmin/index.html' %}
 {% load static %}
 {% load hosts %}
 {% load crispy_forms_tags %}
@@ -23,27 +23,13 @@
                 </header>
                 <!-- Account page navigation-->
                 <nav class="nav nav-borders">
-                    <a class="nav-link  ml-0" href="{% host_url 'photos' host 'bizadmin'%}">Photo and Gallery</a>
-                    <a class="nav-link activate" href="{% host_url 'amenities' host 'bizadmin'%}">Amenities and Tags</a>
-                    <a class="nav-link" href="{% host_url 'bpagecustomization' host 'bizadmin'%}">Customization</a>
+                    <a class="nav-link ml-0" href="{% host_url 'information' host 'bizadmin'%}">Company Info</a>
+                    <a class="nav-link" href="{% host_url 'photos' host 'prodadmin'%}">Photo and Gallery</a>
+                    <a class="nav-link activate" href="{% host_url 'amenities' host 'prodadmin'%}">Amenities and Tags</a>
+                    <a class="nav-link" href="{% host_url 'bpagecustomization' host 'prodadmin'%}">Customization</a>
                 </nav>
                 <hr class="mt-0 mb-4" />
                 <div class="row">
-                    <div class="col-lg-6 mb-4">
-                        <div class="card h-100 border-left-lg border-left-secondary">
-                            <div class="card-header"><h4>Add The Amenities You Offer</h4> <small>Add some of the amenities you offer to your clients. Type up to 10 amenities in the input section then enter. (Each amenity can be up to 25 characters long)</small> </div>
-                            <div class="card-body">
-                                <!-- Gallary upload button -->
-                                <form method="POST" enctype="multipart/form-data">
-                                    {% csrf_token %}
-                                    <div class="col-12">
-                                        <input id="amenitiestag" type="text" size="20" value="{% for amenity in amenities %}{{ amenity.amenity }},{% endfor %}" class="tagsinput textarea form-control" data-role="tagsinput" data-color="danger">
-                                    </div>
-                                                                    
-                                </form>
-                            </div>
-                        </div>
-                    </div>
                     <div class="col-lg-6 mb-4">
                         <div class="card h-100 border-left-lg border-left-secondary">
                             <div class="card-header"><h4>Add Your Tags</h4> <small>This helps expand your reach so include up to 20 key words related to your business.</small> </div>
@@ -121,57 +107,6 @@
                     $.notify({
                     // options
                     message: 'Tag Removed'
-                    },{
-                        // settings
-                        type: 'success',
-                        delay: 50,
-                    });
-                }
-            });
-        });
-
-        $('#amenitiestag').tagsinput({
-            maxTags: 10,
-            maxChars: 25,
-            confirmKeys: [13, 188],
-        });
-        $('#amenitiestag').on('itemAdded', function(event){
-            var tag = event.item;
-            $.ajax({
-                type:'POST',
-                dataType: 'json',
-                url: "{% host_url 'addamenity' host 'bizadmin' %}",
-                data: JSON.stringify({addedAmenity: tag}),
-                headers:{
-                    "X-CSRFToken": csrftoken
-                },
-                success: function(data){
-                    $.notify({
-                    // options
-                    message: 'Amenity Added'
-                    },{
-                        // settings
-                        type: 'success',
-                        delay: 50,
-                    });
-                }
-            });
-        });
-        $('#amenitiestag').on('itemRemoved', function(event){
-            var tag = event.item;
-            $.ajax({
-                type:'POST',
-                dataType: 'json',
-                url: "{% host_url 'removeamenity' host 'bizadmin' %}",
-                data: JSON.stringify({removedAmenity: tag}),
-                headers:{
-                    "X-CSRFToken": csrftoken
-                },
-                cache: false,
-                success: function(data){
-                    $.notify({
-                    // options
-                    message: 'Amenity Removed'
                     },{
                         // settings
                         type: 'success',

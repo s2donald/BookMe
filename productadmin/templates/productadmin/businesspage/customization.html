@@ -1,4 +1,4 @@
-{% extends 'bizadmin/index.html' %}
+{% extends 'productadmin/index.html' %}
 {% load static %}
 {% load hosts %}
 {% load crispy_forms_tags %}
@@ -48,122 +48,13 @@
                 </header>
                 <!-- Account page navigation-->
                 <nav class="nav nav-borders">
-                    <a class="nav-link  ml-0" href="{% host_url 'photos' host 'bizadmin'%}">Photo and Gallery</a>
-                    <a class="nav-link" href="{% host_url 'amenities' host 'bizadmin'%}">Amenities and Tags</a>
-                    <a class="nav-link activate" href="{% host_url 'bpagecustomization' host 'bizadmin'%}">Customization</a>
+                    <a class="nav-link ml-0" href="{% host_url 'information' host 'bizadmin'%}">Company Info</a>
+                    <a class="nav-link" href="{% host_url 'photos' host 'prodadmin'%}">Photo and Gallery</a>
+                    <a class="nav-link" href="{% host_url 'amenities' host 'prodadmin'%}">Amenities and Tags</a>
+                    <a class="nav-link activate" href="{% host_url 'bpagecustomization' host 'prodadmin'%}">Customization</a>
                 </nav>
                 <hr class="mt-0 mb-4"/>
                 <div class="row">
-                    <div class="col-md-12 mb-4">
-                        <div class="card h-100 border-left-lg border-left-secondary">
-                            <div class="card-header"><h4>Create a Custom Form</h4></div>
-                            <div class="card-body">
-                                <!-- Gallary upload button -->
-                                <div class="row">
-                                    <div class="col-md-8 pt-0-0">
-                                        <h6>Form Fields</h6>
-                                        <div>Add form fields to retrieve specific client information</div>
-                                        <div class="text-center pt-3">
-                                        <button class="btn btn-primary btn-sm addfields">Add Form Field</button>
-                                        <table class="table {% if company.darkmode %}table-dark {% else %}table-white{% endif %} table-hover">
-                                            <thead>
-                                                <tr>
-                                                    <th class="text-center" scope="col">Form Label</th>
-                                                    <th class="text-center" scope="col">Required</th>
-                                                    <th class="text-center" scope="col">Edit</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody id='formfieldtable'>
-                                                {% if company.category.name == 'Automotive Services' %}
-                                                    <tr>
-                                                        <td class="text-center">Vehicle Year</td>
-                                                        <td class="text-center">
-                                                            <div class="form-check">
-                                                                <label class="form-check-label">
-                                                                <input class="form-check-input" data-id="{{ field.id }}" type="checkbox" checked disabled>
-                                                                <span class="form-check-sign"></span>
-                                                                </label>
-                                                            </div>
-                                                        </td>
-                                                        <td class="text-center">
-                                                        
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="text-center">Vehicle Make</td>
-                                                        <td class="text-center">
-                                                            <div class="form-check">
-                                                                <label class="form-check-label">
-                                                                <input class="form-check-input" data-id="{{ field.id }}" type="checkbox" checked disabled>
-                                                                <span class="form-check-sign"></span>
-                                                                </label>
-                                                            </div>
-                                                        </td>
-                                                        <td class="text-center">
-                                                            
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="text-center">Vehicle Model</td>
-                                                        <td class="text-center">
-                                                            <div class="form-check">
-                                                                <label class="form-check-label">
-                                                                <input class="form-check-input" data-id="{{ field.id }}" type="checkbox" checked disabled>
-                                                                <span class="form-check-sign"></span>
-                                                                </label>
-                                                            </div>
-                                                        </td>
-                                                        <td class="text-center">
-
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="text-center">Vehicle Trim</td>
-                                                        <td class="text-center">
-                                                            <div class="form-check">
-                                                                <label class="form-check-label">
-                                                                <input class="form-check-input" data-id="{{ field.id }}" type="checkbox" checked disabled>
-                                                                <span class="form-check-sign"></span>
-                                                                </label>
-                                                            </div>
-                                                        </td>
-                                                        <td class="text-center">
-
-                                                        </td>
-                                                    </tr>
-                                                {% endif %}
-                                                {% for field in company.company_forms.all %}
-                                                    <tr>
-                                                        {% comment %} <td class="text-center"><button class="btn btn-sm btn-info" style="border-radius: 100px!important;"><i class="fas fa-check-circle text-left"></i>  {{ field.label }}</button></td> {% endcomment %}
-                                                        <td class="text-center">{{ field.label }}</td>
-                                                        <td class="text-center">
-                                                            <div class="form-check">
-                                                                <label class="form-check-label">
-                                                                <input class="form-check-input" data-id="{{ field.id }}" type="checkbox" {% if field.is_required == 'y' %}checked{% endif %}>
-                                                                <span class="form-check-sign"></span>
-                                                                </label>
-                                                            </div>
-                                                        </td>
-                                                        <td class="text-center">
-                                                            {% comment %} <button data-id="{{ field.id }}" role="button" class='btn btn-icon btn-sm editformfield'><i class="fas fa-pen"></i></button> {% endcomment %}
-                                                            <button data-id="{{ field.id }}" class='btn btn-icon btn-danger btn-sm deleteformfield' role="button" data-toggle="popover" data-trigger="focus" title="Delete?" data-html='true'><i class="fas fa-trash"></i></button>
-                                                        </td>
-                                                    </tr>
-                                                {% empty %}
-                                                    {% if not company.category.name == 'Automotive Services' %}
-                                                        <td colspan="8" class="text-center">Add form fields to collect specific information from clients</td>
-                                                    {% endif %}
-                                                {% endfor %}
-                                            </tbody>
-                                        </table>
-                                        <br>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                            </div>
-                        </div>
-                    </div>
 
                     <div class="col-md-12 mb-4">
                         <div class="card h-100 border-left-lg border-left-secondary">

@@ -1,4 +1,4 @@
-{% extends 'bizadmin/index.html' %}
+{% extends 'productadmin/index.html' %}
 {% load static %}
 {% load hosts %}
 {% block linescript %}
@@ -25,11 +25,13 @@ $(document).ready(function() {
         'showCaption': false,
         'showPreview': false,
         'showRemove': false,
-        uploadClass: "btn btn-primary",
+        uploadClass: "btn btn-info",
         uploadLabel: "Confirm Upload",
         uploadExtraData:{'csrfmiddlewaretoken': '{{ csrf_token }}'},
         allowedFileTypes: ['image'],
-    });
+    }).on('filebatchuploadcomplete', function(event, data) {
+            location.reload();
+        });
 });
 </script>
 {% endblock java %}
@@ -54,9 +56,8 @@ $(document).ready(function() {
                     </header>
                         <!-- Account page navigation-->
                         <nav class="nav nav-borders">
-                            <a class="nav-link activate ml-0" href="{% host_url 'profile' host 'bizadmin'%}">Profile</a>
-                            <a class="nav-link" href="{% host_url 'staff_payments' host 'bizadmin'%}">Process Payments</a>
-                            <a class="nav-link" href="{% host_url 'bookingSetting' host 'bizadmin' %}">Booking Settings</a>
+                            <a class="nav-link activate ml-0" href="{% host_url 'profile' host 'prodadmin'%}">Profile</a>
+                            <a class="nav-link" href="{% host_url 'staff_payments' host 'prodadmin'%}">Process Payments</a>
                             <a class="nav-link" href="{% host_url 'security' host 'bizadmin'%}">Security</a>
                             <a class="nav-link" href="{% host_url 'notifications' host 'bizadmin'%}">Notifications</a>
                         </nav>
@@ -75,7 +76,7 @@ $(document).ready(function() {
                                         <form action="{% host_url 'profileimg' host 'bizadmin' %}" method="POST" enctype="multipart/form-data" id="formUpload">
                                         {% csrf_token %}
                                             <input type="hidden" name="x" id="id_x"><input type="hidden" name="y" id="id_y"><input type="hidden" name="width" id="id_width"><input type="hidden" name="height" id="id_height">
-                                            <input type="file" id="inputimage" name="imageFile" class="btn btn-primary" accept="image/*" hidden >
+                                            <input type="file" id="inputimage" name="imageFile" class="btn btn-info" accept="image/*" hidden >
                                             {% comment %} <button type="button" id="btnimage" name="imageFile" class="btn btn-primary">Upload new image</button> {% endcomment %}
                                             <div class="file-loading">
                                                 <input id="inputmain" name="imageFile" type="file">
@@ -211,7 +212,7 @@ $(document).ready(function() {
                                     title:'There was an error in your form. We were unable to save the changes.',
                                     icon: 'error',
                                     customClass:{
-                                confirmButton: 'btn btn-primary',
+                                confirmButton: 'btn btn-info',
                                 cancelButton: 'btn btn-danger',
                             },
                         buttonsStyling: false,

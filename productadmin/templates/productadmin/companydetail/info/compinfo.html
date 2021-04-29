@@ -1,10 +1,10 @@
-{% extends 'bizadmin/index.html' %}
+{% extends 'productadmin/index.html' %}
 {% load static %}
 {% load crispy_forms_tags %}
 {% load hosts %}
 {% block linescript %}
 {% endblock linescript %}
-{% block activecompinfo%}active{%endblock%}
+{% block bpageact %}active{%endblock%}
 {% block java %}
 
 <script>
@@ -25,10 +25,12 @@ $(document).ready(function() {
         'showCaption': false,
         'showPreview': false,
         'showRemove': false,
-        uploadClass: "btn btn-primary",
+        uploadClass: "btn btn-info",
         uploadLabel: "Confirm Upload",
         uploadExtraData:{'csrfmiddlewaretoken': '{{ csrf_token }}'},
         allowedFileTypes: ['image'],
+    }).on('filebatchuploadcomplete', function(event, data) {
+        location.reload();
     });
 });
 </script>
@@ -55,13 +57,9 @@ $(document).ready(function() {
                         <!-- Account page navigation-->
                         <nav class="nav nav-borders">
                             <a class="nav-link activate ml-0" href="{% host_url 'information' host 'bizadmin'%}">Company Info</a>
-                            <a class="nav-link" href="{% host_url 'hours' host 'bizadmin'%}">Business Hours</a>
-                            <a class="nav-link" href="{% host_url 'staffmemb' host 'bizadmin'%}">Staff Members</a>
-                            {% comment %} <a class="nav-link" href="{% host_url 'breaks_time' host 'bizadmin'%}">Breaks</a>
-                            <a class="nav-link" href="{% host_url 'timeoff_time' host 'bizadmin'%}">Time Off</a> {% endcomment %}
-                            <a class="nav-link" href="{% host_url 'service_detail' host 'bizadmin' %}">Services</a>
-                            <a class="nav-link" href="{% host_url 'client_list' host 'bizadmin' %}">Clients</a>
-                            {% comment %} <a class="nav-link" href="#">Staff Members</a> {% endcomment %}
+                            <a class="nav-link" href="{% host_url 'photos' host 'prodadmin'%}">Photo and Gallery</a>
+                            <a class="nav-link " href="{% host_url 'amenities' host 'prodadmin'%}">Amenities and Tags</a>
+                            <a class="nav-link" href="{% host_url 'bpagecustomization' host 'prodadmin'%}">Customization</a>
                         </nav>
                         <hr class="mt-0 mb-4" />
                         <div class="row">
@@ -78,10 +76,9 @@ $(document).ready(function() {
                                         <form action="{% host_url 'imageuploads' host 'bizadmin' %}" method="POST" enctype="multipart/form-data" id="formUpload">
                                         {% csrf_token %}
                                             <input type="hidden" name="x" id="id_x"><input type="hidden" name="y" id="id_y"><input type="hidden" name="width" id="id_width"><input type="hidden" name="height" id="id_height">
-                                            <input type="file" id="inputimage" name="imageFile" class="btn btn-primary" accept="image/*" hidden >
-                                            {% comment %} <button type="button" id="btnimage" name="imageFile" class="btn btn-primary">Upload new image</button> {% endcomment %}
+                                            <input type="file" id="inputimage" name="imageFile" accept="image/*" hidden >
                                             <div class="file-loading">
-                                                <input id="inputmain" name="imageFile" type="file">
+                                                <input id="inputmain" class="btn btn-primary" name="imageFile" type="file">
                                             </div> 
                                             
                                         </form>
@@ -95,6 +92,30 @@ $(document).ready(function() {
                                     <div class="card-body">
                                         <form id="updatedform">
                                             {% csrf_token %}
+                                            <select name="updatecompany-category" class=" form-control" hidden title="Category" id="id_updatecompany-category"><option class="bs-title-option" value=""></option>
+                                            <option value="1">Automotive Services</option>
+
+                                            <option value="7">Home Services</option>
+
+                                            <option value="6" selected="">Other</option>
+
+                                            <option value="3">Personal Care</option>
+
+                                            
+
+                                            </select>
+                                            <select name="updatecompany-subcategory" hidden class="form-control selectmultiple" multiple="" data-size="5" data-dropdown-align-right="true" title="Subcategories" required="" id="id_updatecompany-subcategory" tabindex="null">
+                                                <option value="15" selected="">Vehicle Maintanence</option>
+
+                                                <option value="14">Exterior and Interior Detailing</option>
+
+                                                <option value="16">Collision Repair</option>
+
+                                                <option value="17">Wrapping Services</option>
+
+                                                <option value="18">Mobile Vehicle Services</option>
+
+                                            </select>
                                             <!-- Form Row-->
                                             <div class="form-row">
                                                 <!-- Form Group (first name)-->
@@ -109,19 +130,6 @@ $(document).ready(function() {
                                                 <div class="form-group col-md-12">
                                                     <label class="small mb-1" for="businessName">About Section</label>
                                                     {{ updateform.description|as_crispy_field }}
-                                                </div>
-                                            </div>
-                                            <!-- Form Row        -->
-                                            <div class="form-row">
-                                                <!-- Form Group (organization name)-->
-                                                <div class="form-group col-md-6">
-                                                    <label class="small mb-1" for="inputOrgName">Main Category</label>
-                                                    {{ updateform.category|as_crispy_field }}
-                                                </div>
-                                                <!-- Form Group (location)-->
-                                                <div class="form-group col-md-6">
-                                                    <label class="small mb-1" for="inputLocation">Business Categories</label>
-                                                    {{ updateform.subcategory|as_crispy_field }}
                                                 </div>
                                             </div>
                                             <!-- Form Group (email address)-->
@@ -192,7 +200,7 @@ $(document).ready(function() {
                                             </div>
                                             <div class="form-row text-center">
                                                 <label class="small mb-1" style="display:none;" id='error'></label>
-                                                <button class="btn btn-primary justify-content-center" type="button" id="saveform">Save changes</button>
+                                                <button class="btn btn-info justify-content-center" type="button" id="saveform">Save changes</button>
                                             </div>
                                             <!-- Save changes button-->
                                         </form>
@@ -200,50 +208,10 @@ $(document).ready(function() {
                                 </div>
                             </div>
                         </div>
-                        <!-- MODAL TO CROP THE IMAGE -->
-                        <div class="modal fade" id="modalCrop" data-backdrop="static" data-keyboard="false">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                        </button>
-                                        <h4 class="modal-title">Crop the photo</h4>
-                                    </div>
-                                    <div class="modal-body">
-                                        <img src="" id="image" style="max-width: 100%;">
-                                    </div>
-                                    <div class="modal-footer">
-                                        <div class="btn-group pull-left" role="group">
-                                        <button type="button" class="btn btn-default js-zoom-in">
-                                            <span class="fas fa-search-plus"></span>
-                                        </button>
-                                        <button type="button" class="btn btn-default js-zoom-out">
-                                            <span class="fas fa-search-minus"></span>
-                                        </button>
-                                        </div>
-                                        <button type="button" class="btn btn-default" data-dismiss="modal">Nevermind</button>
-                                        <button type="button" class="btn btn-primary js-crop-and-upload">Crop and upload</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        
                         <script>
 
-                        $('#id_updatecompany-category').change(function(){
-            var categoryId = $(this).val();
-            $.ajax({
-                url: '{% host_url "ajax_load_subcategories" host "bizadmin" %}',
-                data: {
-                    'category': categoryId
-                },
-                success: function(data){
-                    $('#id_updatecompany-subcategory').empty()
-                    $('#id_updatecompany-subcategory').append(data)
-                    $('#id_updatecompany-subcategory').selectpicker('refresh')
-                }
-            });
-        });
+                        
 
     function getCookie(name) {
     let cookieValue = null;
@@ -261,8 +229,6 @@ $(document).ready(function() {
         return cookieValue;
     }
 
-    document.getElementById('btnimage').addEventListener('click', openDialog);
-
     function openDialog() {
         document.getElementById('inputimage').click();
     }
@@ -274,36 +240,7 @@ $(document).ready(function() {
     const feedBackEmail = document.querySelector('.invalid_email');
     const submitBtn = document.querySelector('#saveform');
     const error = document.querySelector('#error');
-    businessname.addEventListener('keyup', (e) =>{
-        const businessnameVal = e.target.value;
-        businessname.classList.remove("has-danger");
-        businessname.classList.add("has-success");
-        feedBackName.style.display="none";
-        var csrftoken = getCookie('csrftoken');
-            $.ajax({
-                url: "{% host_url 'updateform' host 'bizadmin' %}",
-                data: JSON.stringify({name: businessnameVal, email:'test'}),
-                type: "POST",
-                dataType: 'json',
-                headers:{
-                    "X-CSRFToken": csrftoken
-                },
-                success: function (data) {
-                    if (data.name_error) {
-                        businessname.classList.remove("has-success");
-                        businessname.classList.add("has-danger");
-                        feedBackName.style.display="block";
-                        feedBackName.innerHTML=`<p style="color:red!important;">${data.name_error}</p>`
-                    }
-                    else {
-                        businessname.classList.remove("has-danger");
-                        feedBackName.style.display="none";
-                    }
-
-                },
-            });
-        
-    });
+    
 
     const feedBackreasubdomain = document.querySelector(".invalid_subdomain")
     const subdomainField = document.querySelector("#id_subdomain");
@@ -339,37 +276,6 @@ $(document).ready(function() {
         
     });
 
-    businessphone.addEventListener('keyup', (e) =>{
-        const businessphoneVal = e.target.value;
-        businessphone.classList.remove("has-danger");
-        businessphone.classList.add("has-success");
-        feedBackEmail.style.display="none";
-        var csrftoken = getCookie('csrftoken');
-            $.ajax({
-                url: "{% host_url 'updateform' host 'bizadmin' %}",
-                data: JSON.stringify({email: businessemailVal, name:'test'}),
-                type: "POST",
-                dataType: 'json',
-                headers:{
-                    "X-CSRFToken": csrftoken
-                },
-                success: function (data) {
-                    if (data.email_error) {
-                        businessphone.classList.remove("has-success");
-                        businessphone.classList.add("has-danger");
-                        feedBackEmail.style.display="block";
-                        feedBackEmail.innerHTML=`<p style="color:red!important;">${data.email_error}</p>`
-                    }
-                    else {
-                        businessphone.classList.remove("has-danger");
-                        feedBackEmail.style.display="none";
-                    }
-
-                },
-            });
-        
-    });
-
     category = document.querySelector('#id_updatecompany-category')
     subcategory = document.querySelector('#id_updatecompany-subcategory')
     
@@ -378,7 +284,7 @@ $(document).ready(function() {
         $.ajax({
             data: $('#updatedform').serialize(),
             type: "post",
-            url: "{% host_url 'saveDetailForm' host 'bizadmin' %}",
+            url: "{% host_url 'saveDetailForm' host 'prodadmin' %}",
             headers:{
                     "X-CSRFToken": csrftoken
                 },
@@ -388,7 +294,7 @@ $(document).ready(function() {
                         title:'There was an error in your form. We were unable to save the changes.',
                         icon: 'error',
                         customClass:{
-                            confirmButton: 'btn btn-primary',
+                            confirmButton: 'btn btn-info',
                             cancelButton: 'btn btn-danger',
                        },
                        buttonsStyling: false,

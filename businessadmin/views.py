@@ -1793,12 +1793,6 @@ class addRequestedViews(View):
             start = booking.start
             payment_intent_id = booking.paymentintent
             if timezone.localtime(start) < timezone.now():
-                if payment_intent_id:
-                    staff = booking.staffmem
-                    stripe.PaymentIntent.cancel(
-                        payment_intent_id,
-                        stripe_account=staff.stripe_user_id
-                    )
                 booking.is_cancelled_request = True
                 booking.save()
                 requested = company.reqclients.all()

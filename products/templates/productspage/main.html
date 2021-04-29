@@ -14,8 +14,8 @@
     <meta name="type" content="website">
     <meta name="site_name" content="BookMe">
     <meta name="theme-color" content="#854fee">
-    <link rel="shortcut icon" type="image/png" href="{% static 'img/favicon/logo/favicon15.png'%}"/>
-    <link rel="apple-touch-icon" href="{% static '/img/favicon/logo/bookme-appicon.png'%}">
+    <link rel="shortcut icon" type="image/png" href="{% static '/img/favicon/logo/shopme/favicon15.png'%}"/>
+    <link rel="apple-touch-icon" href="{% static '/img/favicon/logo/shopme/shopme-appicon.png'%}">
     <meta name="robots" content="noindex, nofollow">
     <meta name="description" content="{{ company.description }}">
     <!-- Bootstrap CSS -->
@@ -44,7 +44,7 @@
                 <div class="headingtext" style="background-color: black;">
                     <div class="container">
                     <div class="row justify-content-between">
-                        <a class="ml-3 mt-2" href="{% host_url 'bizadminmain' host 'bizadmin' %}"><img width="125px" height="18px" src="{% static "/img/favicon/logo/BookMe-whitebrown.svg" %}"></a>
+                        <a class="ml-3 mt-2" href="{% host_url 'bizadminmain' host 'bizadmin' %}"><img height="20px" src="{% static "/img/favicon/logo/shopme/ShopMe-whitebrown.png" %}"></a>
                         <a class="mr-3 mt-2" href="{% host_url 'bizadminmain' host 'bizadmin' %}"><div class="fa fa-shopping-cart text-white d-none" height="18px"></div><div class="cartBadge d-none" id="cartvalue">2</div></a>
                     </div>
                     </div>
@@ -63,7 +63,7 @@
                     {% if company.image %}
                         <img src="{{ company.image.url }}" alt="{{ company.business_name }} Logo" class="avatar-Heading">
                     {% else %}
-                        <img src="{% static "/img/favicon/logo/bookme-appiconios.png" %}" class="avatar-Heading" alt="BookMe Logo">
+                        <img src="{% static "/img/favicon/logo/shopme/shopme-appiconios.png" %}" class="avatar-Heading" alt="BookMe Logo">
                     {% endif %}
                     </a>
                 </div>
@@ -117,7 +117,7 @@
                 {% comment %} <button id="BookMePlugin" data-url="http://hh5l.bookme.com:8000/?integration=website" data-color="EEDD82"></button> {% endcomment %}
                 {% comment %} <script src="{% static "js/addwebsite.js" %}"></script> {% endcomment %}
                 <span>Powered by</span>
-                <a href="{% host_url 'bizadminmain' host 'bizadmin' %}"><img width="72px" src="{% static "/img/favicon/logo/BookMe-blackgrad.svg" %}"></a>
+                <a href="{% host_url 'bizadminmain' host 'bizadmin' %}"><img width="72px" src="{% static "/img/favicon/logo/shopme/ShopMe-blueblack.png" %}"></a>
             </div>
         </div>
     <!-- Optional JavaScript -->

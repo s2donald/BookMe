@@ -166,21 +166,6 @@ def load_services(request):
     services = company.services_offered.all()
     return render(request, 'bizadmin/dashboard/profile/addcompanyhelper/subcat_dropdown_list_options.html', {'subcategories': services})
 
-
-class subdomainCheck(View):
-    def post(self, request):
-        data=json.loads(request.body)
-        subdomain = data['subdomain']
-        company = Company.objects.get(user=request.user)
-        if not subdomain:
-            return JsonResponse({'email_error':'You must choose a subdomain or else a random one will be chosen.','email_valid':True})
-        if (company.slug!=str(subdomain)) and (Company.objects.filter(slug=subdomain).exists()):
-            return JsonResponse({'email_error':'This subdomain already exists! Please try another.','email_valid':True})
-
-        if subdomain != slugify(subdomain):
-            return JsonResponse({'email_error':'Subdomains must only contain lowercase letters, numbers and hyphens.','email_valid':True})
-        return JsonResponse({'email_valid':False})
-
 def signupViews(request):
     context = {}
     if request.method == 'POST':
@@ -269,7 +254,7 @@ def profileViews(request):
                     'email':user.email, 
                     'phone':user.phone}
             personal_form = UpdatePersonalForm(initial=personal_data)
-            return render(request, 'bizadmin/dashboard/account/profile.html',{'company':company, 'image_form':image_form, 'personal_form':personal_form})
+            return render(request, 'productadmin/dashboard/account/profile.html',{'company':company, 'image_form':image_form, 'personal_form':personal_form})
         else:
             return redirect(reverse('completeprofile', host='prodadmin'))
     else:
@@ -305,7 +290,7 @@ def profileSecurityViews(request):
         return redirect(reverse('completeprofile', host='prodadmin'))
     elif not user.is_business:
         loginViews(request)
-    return render(request,'bizadmin/dashboard/account/security.html', {'company':company})
+    return render(request,'productadmin/dashboard/account/security.html', {'company':company})
 
 @login_required()
 def notifViews(request):
@@ -316,7 +301,7 @@ def notifViews(request):
     elif not user.is_business:
         loginViews(request)
     notesForm = AddNotesForm(initial={'notes':company.notes})
-    return render(request,'bizadmin/dashboard/account/notification.html', {'company':company, 'notesForm':notesForm})
+    return render(request,'productadmin/dashboard/account/notification.html', {'company':company, 'notesForm':notesForm})
 
 class updateEmailSetting(View):
     def post(self, request):
@@ -747,24 +732,6 @@ class deleteclientAPI(View):
         return JsonResponse(data)
 
 
-
-#used in the onboarding page
-def deleteserviceViews(request, pk):
-
-    company = Company.objects.get(user=request.user)
-    service = get_object_or_404(Services, pk=pk, business=company)
-    data = dict()
-    if request.method=='POST':
-        service.delete()
-        data['form_is_valid']=True
-        services = Services.objects.filter(business=company)
-        data['html_service_list'] = render_to_string('bizadmin/dashboard/profile/services/partial_service_list.html', {'services':services})
-        data['view'] = 'Your service has been deleted'
-    else:
-        context = {'service':service}
-        data['html_form'] = render_to_string('bizadmin/dashboard/profile/services/partial_service_delete.html', context, request=request)
-    return JsonResponse(data)
-
 #used in the bizadmin page
 class deleteserviceAPI(View):
     def post(self, request, pk):
@@ -776,170 +743,6 @@ class deleteserviceAPI(View):
         data['html_product_list'] = render_to_string('productadmin/companydetail/services/partial/partial_service_list.html', {'services':services, 'company':company})
         # data['html_category_list'] = render_to_string('bizadmin/companydetail/services/partial_category/category_list.html',{'company':company})
         return JsonResponse(data)
-
-class updateclientAPI(View):
-    def get(self, request, pk):
-        company = Company.objects.get(user=request.user)
-        client = get_object_or_404(Clients, pk=pk,  company=company)
-        dat = {'first_name': client.first_name, 'last_name': client.last_name, 'email': client.email,  'phone': client.phone,  'address': client.address,  'province':client.province, 'postal':client.postal, 'city':client.city}
-        data=dict()
-        form = AddClientForm(initial=dat)
-        context = {'form':form, 'client':client,'company':company}
-        data['html_form'] = render_to_string('bizadmin/companydetail/client/partial/partial_client_update.html', context, request=request)
-        return JsonResponse(data)
-
-    def post(self, request, pk):
-        company = Company.objects.get(user=request.user)
-        client = get_object_or_404(Clients, pk=pk, company=company)
-        form = AddClientForm(request.POST)
-        data=dict()
-        if form.is_valid():
-            client.first_name = form.cleaned_data.get('first_name')
-            client.last_name = form.cleaned_data.get('last_name')
-            client.email = form.cleaned_data.get('email')
-            client.phone = form.cleaned_data.get('phone')
-            client.address = form.cleaned_data.get('address')
-            client.province = form.cleaned_data.get('province')
-            client.postal = form.cleaned_data.get('postal')
-            client.city = form.cleaned_data.get('city')
-            client.save()
-            data['form_is_valid'] = True
-            clients = company.clients.all()
-            data['html_service_list'] = render_to_string('bizadmin/companydetail/client/partial/partial_client_list.html', {'clients':clients})
-            data['view'] = 'The clients information has been updated'
-        else:
-            data['form_is_valid'] = False
-        return JsonResponse(data)
-
-
-class saveBusinessHours(View):
-    def post(self, request):
-        sun_from = request.POST['sunOpenHour']
-        sun_to = request.POST['sunCloseHour']
-        sun_closed = not request.POST.get('sunOpen', False)
-        mon_from = request.POST['monOpenHour']
-        mon_to = request.POST['monCloseHour']
-        mon_closed = not request.POST.get('monOpen', False)
-        tues_from = request.POST['tuesOpenHour']
-        tues_to = request.POST['tuesCloseHour']
-        tues_closed = not request.POST.get('tuesOpen', False)
-        wed_from = request.POST['wedOpenHour']
-        wed_to = request.POST['wedCloseHour']
-        wed_closed = not request.POST.get('wedOpen', False)
-        thurs_from = request.POST['thursOpenHour']
-        thurs_to = request.POST['thursCloseHour']
-        thurs_closed = not request.POST.get('thursOpen', False)
-        fri_from = request.POST['friOpenHour']
-        fri_to = request.POST['friCloseHour']
-        fri_closed = not request.POST.get('friOpen', False)
-        sat_from = request.POST['satOpenHour']
-        sat_to = request.POST['satCloseHour']
-        sat_closed = not request.POST.get('satOpen', False)
-        company = Company.objects.get(user=request.user)
-        objs = [
-            OpeningHours.objects.get(company=company, weekday=0),
-            OpeningHours.objects.get(company=company, weekday=1),
-            OpeningHours.objects.get(company=company, weekday=2),
-            OpeningHours.objects.get(company=company, weekday=3),
-            OpeningHours.objects.get(company=company, weekday=4),
-            OpeningHours.objects.get(company=company, weekday=5),
-            OpeningHours.objects.get(company=company, weekday=6),
-        ]
-        objs[0].is_closed = sun_closed
-        objs[1].is_closed = mon_closed
-        objs[2].is_closed = tues_closed
-        objs[3].is_closed = wed_closed
-        objs[4].is_closed = thurs_closed
-        objs[5].is_closed = fri_closed
-        objs[6].is_closed = sat_closed
-
-        objs[0].from_hour = datetime.strptime(sun_from,"%I:%M %p")
-        objs[1].from_hour = datetime.strptime(mon_from,"%I:%M %p")
-        objs[2].from_hour = datetime.strptime(tues_from,"%I:%M %p")
-        objs[3].from_hour = datetime.strptime(wed_from,"%I:%M %p")
-        objs[4].from_hour = datetime.strptime(thurs_from,"%I:%M %p")
-        objs[5].from_hour = datetime.strptime(fri_from,"%I:%M %p")
-        objs[6].from_hour = datetime.strptime(sat_from,"%I:%M %p")
-
-        objs[0].to_hour = datetime.strptime(sun_to,"%I:%M %p")
-        objs[1].to_hour = datetime.strptime(mon_to,"%I:%M %p")
-        objs[2].to_hour = datetime.strptime(tues_to,"%I:%M %p")
-        objs[3].to_hour = datetime.strptime(wed_to,"%I:%M %p")
-        objs[4].to_hour = datetime.strptime(thurs_to,"%I:%M %p")
-        objs[5].to_hour = datetime.strptime(fri_to,"%I:%M %p")
-        objs[6].to_hour = datetime.strptime(sat_to,"%I:%M %p")
-        OpeningHours.objects.bulk_update(objs,['is_closed','from_hour','to_hour'])
-        data = {'good':True}
-        return JsonResponse(data)
-
-#used in the onboarding page
-def updateserviceViews(request, pk):
-    service = get_object_or_404(Services, pk=pk)
-    company = Company.objects.get(user=request.user)
-    if service.request == False:
-        req = 'n'
-    else:
-        req = 'y'
-    dat = {
-            'name': service.name,
-            'company':company, 
-            'description': service.description, 
-            'price_type':service.price_type, 
-            'price':service.price, 
-            'available':service.available, 
-            'duration_hour':service.duration_hour, 
-            'duration_minute':service.duration_minute, 
-            'checkintime':service.checkintime, 
-            'padding':service.padding, 
-            'paddingtime_hour':service.paddingtime_hour, 
-            'paddingtime_minute':service.paddingtime_minute,
-            'is_request':req
-            }
-    data=dict()
-    if request.method=='POST':
-        form = UpdateServiceForm(request.POST)
-        if form.is_valid():
-            
-            service.name = form.cleaned_data.get('name')
-            service.description = form.cleaned_data.get('description')
-            service.price_type = form.cleaned_data.get('price_type')
-            service.price = form.cleaned_data.get('price')
-            service.duration_hour = form.cleaned_data.get('duration_hour')
-            service.duration_minute = form.cleaned_data.get('duration_minute')
-            service.checkintime = form.cleaned_data.get('checkintime')
-            service.padding = form.cleaned_data.get('padding')
-            is_req = form.cleaned_data.get('is_request')
-            if is_req == 'n':
-                requ=False
-            else:
-                requ=True
-            service.request = requ
-            service.paddingtime_hour = form.cleaned_data.get('paddingtime_hour')
-            service.paddingtime_minute = form.cleaned_data.get('paddingtime_minute')
-            service.avail = True
-            company = Company.objects.get(user=request.user)
-            service.save()
-            data['form_is_valid'] = True
-            services = Services.objects.filter(business=company)
-            paginator = Paginator(services, 5)
-            page = request.GET.get('page')
-            try:
-                services = paginator.page(page)
-            except PageNotAnInteger:
-                services = paginator.page(1)
-            except EmptyPage:
-                services = paginator.page(paginator.num_pages)
-            data['html_service_list'] = render_to_string('bizadmin/dashboard/profile/services/partial_service_list.html', {'page':page,'services':services})
-            data['html_service_list_bizadmin'] = render_to_string('bizadmin/companydetail/services/partial/partial_service_list.html', {'page':page,'services':services})
-            data['view'] = 'Your service has been updated'
-        else:
-            data['form_is_valid'] = False
-        return JsonResponse(data)
-    else:
-        form = UpdateServiceForm(initial=dat)
-    context = {'service_form':form,'company':company, 'service':service,}
-    data['html_form'] = render_to_string('bizadmin/dashboard/profile/services/partial_service_update.html', context, request=request)
-    return JsonResponse(data)
 
 #Used in the bizadmin page
 class updateserviceAPI(View):
@@ -1312,10 +1115,6 @@ def headerImageUploads(request):
     if request.POST:
         company = Company.objects.get(user=request.user)
         img = request.FILES.get('imageFile')
-        # x = Decimal(request.POST.get('x'))
-        # y = Decimal(request.POST.get('y'))
-        # w = Decimal(request.POST.get('width'))
-        # h = Decimal(request.POST.get('height'))
         valid_extensions = ['jpg', 'png', 'jpeg']
         extension = img.name.rsplit('.',1)[1].lower()
         if extension not in valid_extensions:
@@ -1386,7 +1185,7 @@ def businessPhotoView(request):
     except EmptyPage:
         photos = paginator.page(paginator.num_pages)
 
-    return render(request,'bizadmin/businesspage/photos.html',{'company':company, 'photos':photos})
+    return render(request,'productadmin/businesspage/photos.html',{'company':company, 'photos':photos})
 
 @login_required
 def businessPageCustomization(request):
@@ -1398,7 +1197,7 @@ def businessPageCustomization(request):
     elif not user.is_business:
         loginViews(request)
     formBuilderForms = formBuilderForm(initial={'company':company})
-    return render(request,'bizadmin/businesspage/customization.html',{'company':company, 'formBuilderForms':formBuilderForms})
+    return render(request,'productadmin/businesspage/customization.html',{'company':company, 'formBuilderForms':formBuilderForms})
 
 
 
@@ -1411,7 +1210,7 @@ def businessAmenitiesView(request):
     elif not user.is_business:
         loginViews(request)
     amenities = Amenities.objects.filter(company=company)
-    return render(request,'bizadmin/businesspage/amenities.html',{'company':company, 'amenities':amenities})
+    return render(request,'productadmin/businesspage/amenities.html',{'company':company, 'amenities':amenities})
 
 @login_required
 def businessBreaksView(request):
@@ -1583,36 +1382,22 @@ def compinfoViews(request):
                     'subcategory':s, 'address':company.address, 'postal':company.postal, 'city':company.city, 'state':company.state,
                     'fb_link':company.fb_link,'twitter_link':company.twitter_link,'instagram_link':company.instagram_link,'website_link':company.website_link,'phone':company.phone}
     updateform = UpdateCompanyForm(initial=initialVal)
-    return render(request, 'bizadmin/companydetail/info/compinfo.html', {'company':company, 'updateform': updateform})
+    return render(request, 'productadmin/companydetail/info/compinfo.html', {'company':company, 'updateform': updateform})
 
 import re
-#This update form updates the company detail info
-class updateCompanyDetail(View):
-    def post(self, request):
-        data = json.loads(request.body)
-        bname = data['name']
-        email = data['email']
-        phone = data['phone']
-        regex= r'^\+?1?\d{9,15}$'
-        result = re.match(regex, phone)
-        if not bname:
-            return JsonResponse({'name_error':'You must include a business name'})
-        if (request.user.email!=str(email)) and (Account.objects.filter(email=email).exists()):
-            return JsonResponse({'email_error':'This email already exists!'})
-        if not result:
-            return JsonResponse({'phone_error':'This is not a valid phone number. Please try again'})
-        return JsonResponse({'good':'we good'})
 
 class saveCompanyDetail(View):
     def post(self, request):
-        category_id = request.POST.get('id_updatecompany-category')
-        form = UpdateCompanyForm(request.POST, initial={'category':category_id})
+        company = Company.objects.get(user=request.user)
+        post_values = request.POST.copy()
+        post_values['category'] = company.category.id
+        post_values['subcategory'] = [1]
+
+        print()
+        form = UpdateCompanyForm(post_values, initial={'category':company.category.id})
         context = {}
         if form.is_valid():
-            company = Company.objects.get(user=request.user)
             company.business_name = form.cleaned_data.get('business_name')
-            company.category = form.cleaned_data.get('category')
-            subcategory = form.cleaned_data.get('subcategory')
             email = form.cleaned_data.get('email')
             subdomain = request.POST.get('subdomain', company.slug)
             if not email==company.email:
@@ -1634,64 +1419,11 @@ class saveCompanyDetail(View):
             company.twitter_link = form.cleaned_data.get('twitter_link')
             company.instagram_link = form.cleaned_data.get('instagram_link')
             company.save()
-            subcat = company.subcategory.all()
-            for s in subcat:
-                company.subcategory.remove(s)
-            for s in subcategory:
-                company.subcategory.add(s)
+            
             return JsonResponse({'good':'We have saved your company information!'})
         else:
+            print(form.errors)
             return JsonResponse({'errors':'Please double check your form. There may be errors.'})
-
-@login_required
-def bookingSettingViews(request):
-    company = get_object_or_404(Company, user=request.user)
-    user=request.user
-    if user.is_business and not user.on_board:
-        return redirect(reverse('completeprofile', host='prodadmin'))
-    elif not user.is_business:
-        loginViews(request)
-    bookingform = BookingSettingForm(
-                    initial= {
-                            'interval':company.interval, 
-                            'cancellation':company.cancellation,
-                            'before_window_day':company.before_window_day,
-                            'before_window_hour':company.before_window_hour,
-                            'before_window_min':company.before_window_min,
-                            'after_window_month':company.after_window_month,
-                            'after_window_day':company.after_window_day,
-                        }
-                    )
-    return render(request, 'bizadmin/dashboard/account/booking.html', {'company':company, 'booking_form':bookingform})
-
-class bookingAPI(View):
-    def post(self, request):
-        bookForm = BookingSettingForm(request.POST)
-        if bookForm.is_valid():
-            company =  get_object_or_404(Company, user=request.user)
-            interval = bookForm.cleaned_data.get('interval')
-            cancellation = bookForm.cleaned_data.get('cancellation')
-            company.before_window_day = bookForm.cleaned_data.get('before_window_day')
-            company.before_window_hour = bookForm.cleaned_data.get('before_window_hour')
-            company.before_window_min = bookForm.cleaned_data.get('before_window_min')
-            company.after_window_month = bookForm.cleaned_data.get('after_window_month')
-            company.after_window_day = bookForm.cleaned_data.get('after_window_day')
-
-            company.interval = interval
-            company.cancellation = cancellation
-            company.save()
-            return JsonResponse({'title':'', 'icon':'success'})
-        else:
-            return JsonResponse({'title':'Unfortunately, there was an error that occured. Please try again.', 'icon':'error'})
-
-class returningAPI(View):
-    def post(self, request):
-        data = json.loads(request.body)
-        returning = data['returning']
-        company = get_object_or_404(Company, user=request.user)
-        company.returning = returning
-        company.save()
-        return JsonResponse({'good':'good'})
 
 
 def servicesDetailView(request):
@@ -1795,27 +1527,6 @@ def reviewListView(request):
         reviews = paginator.page(paginator.num_pages)
     return render(request,'bizadmin/dashboard/reviews/reviews.html', {'page':page,'company':company, 'reviews':reviews})
 
-@login_required
-def requestListViews(request):
-    email = request.user.email
-    user = get_object_or_404(Account, email=email)
-    if not user.is_business:
-        return redirect(reverse('home', host='prodadmin'))
-    if not user.on_board:
-        return redirect(reverse('completeprofile', host='prodadmin'))
-    company = Company.objects.get(user=user)
-    requested = CompanyReq.objects.filter(company=company).order_by('-created_at')
-    paginator = Paginator(requested, 6)
-    page = request.GET.get('page')
-    try:
-        requested = paginator.page(page)
-    except PageNotAnInteger:
-        requested = paginator.page(1)
-    except EmptyPage:
-        requested = paginator.page(paginator.num_pages)
-
-    return render(request, 'bizadmin/dashboard/request/request.html',{'page':page,'company':company, 'requested':requested})
-
 class getBooking(View):
     def get(self, request):
         company = get_object_or_404(Company, user=request.user)
@@ -1835,289 +1546,10 @@ class getBooking(View):
             htmlString = render_to_string('bizadmin/dashboard/schedule/bookingInfo.html',{'user':booking.guest, 'booking':booking, 'extra':extra, 'company':company})
         return JsonResponse({'html_string':htmlString})
 
-class addRequestedViews(View):
-    def post(self, request, pk):
-        req = get_object_or_404(CompanyReq, id=pk)
-        if req.user:
-            user = req.user
-        elif req.guest:
-            user = req.guest
-        stripe.api_key = djstripe.settings.STRIPE_SECRET_KEY
-
-        company = get_object_or_404(Company, user= request.user)
-        if req.is_addusertolist:
-            Clients.objects.create(company=company, user=user, first_name=user.first_name, last_name=user.last_name, email=user.email,phone=user.phone,
-                                    city=user.city,postal=user.postal,province=user.province,address=user.address)
-            addedOnCompanyList.delay(user.id, company.id)
-            req.delete()
-            message = 'You have added ' + user.first_name + ' to your client list.'
-        else:
-            message = 'You have confirmed ' + user.first_name + '\'s appointment request.'
-            booking = req.booking_request
-            service = booking.service
-            start = booking.start
-            payment_intent_id = booking.paymentintent
-            if timezone.localtime(start) < timezone.now():
-                if payment_intent_id:
-                    staff = booking.staffmem
-                    stripe.PaymentIntent.cancel(
-                        payment_intent_id,
-                        stripe_account=staff.stripe_user_id
-                    )
-                booking.is_cancelled_request = True
-                booking.save()
-                requested = company.reqclients.all()
-                paginator = Paginator(requested, 6)
-                page = request.GET.get('page')
-                try:
-                    requested = paginator.page(page)
-                except PageNotAnInteger:
-                    requested = paginator.page(1)
-                except EmptyPage:
-                    requested = paginator.page(paginator.num_pages)
-                html_string = render_to_string('bizadmin/dashboard/request/partial/partial_request.html', {'requested':requested, 'page':page})
-                req.delete()
-                return JsonResponse({'added':'The bookings requested date has already passed. Booking was not confirmed.','html_string':html_string})
-            if payment_intent_id:
-                staff = booking.staffmem
-                stripe.PaymentIntent.capture(
-                    payment_intent_id,
-                    stripe_account=staff.stripe_user_id
-                )
-                payintent = stripe.PaymentIntent.retrieve(
-                    payment_intent_id,
-                    stripe_account=staff.stripe_user_id
-                )
-                pricepaid = (payintent.amount_received) / 100
-                booking.price_paid = pricepaid
-                booking.save()
-            req.delete()
-            confirmedEmail.delay(booking.id)
-            confirmtime = 30
-            if service.checkintime:
-                confirmtime = service.checkintime + 30
-            startTime = timezone.localtime(start - timedelta(minutes=confirmtime))
-            reminderEmail.apply_async(args=[booking.id], eta=startTime, task_id=booking.slug)
-            # Confirm the appointment through texts with the client
-            if company.subscriptionplan >= 1:
-                send_sms_confirmed_client.delay(booking.id)
-                send_sms_reminder_client.apply_async(args=[booking.id], eta=startTime)
-        requested = company.reqclients.all()
-        paginator = Paginator(requested, 6)
-        page = request.GET.get('page')
-        try:
-            requested = paginator.page(page)
-        except PageNotAnInteger:
-            requested = paginator.page(1)
-        except EmptyPage:
-            requested = paginator.page(paginator.num_pages)
-        html_string = render_to_string('bizadmin/dashboard/request/partial/partial_request.html', {'requested':requested, 'page':page})
-
-        return JsonResponse({'added':message,'html_string':html_string})
-
-class deleteRequestedViews(View):
-    def post(self, request, pk):
-        req = get_object_or_404(CompanyReq, id=pk)
-        stripe.api_key = djstripe.settings.STRIPE_SECRET_KEY
-        if request.user.is_authenticated:
-            staff = StaffMember.objects.get(user=request.user)
-            company = staff.company
-        else:
-            return JsonResponse({'error':'error'}, status=403)
-        
-        if req.user:
-            user = req.user
-        elif req.guest:
-            user = req.guest
-        
-        if req.is_addusertolist:
-            req.delete()
-            message='You have rejected ' + user.first_name + '\'s request to join your client list.'
-        else:
-            booking = req.booking_request
-            booking.is_cancelled_request = True
-            payment_intent_id = booking.paymentintent
-            booking.save()
-            declinedRequestEmail.delay(booking.id)
-            if company.subscriptionplan >= 1:
-                send_sms_declined_request_client.delay(booking.id)
-            message='You have rejected ' + user.first_name + '\'s appointment request.'
-            if payment_intent_id:
-                staff = booking.staffmem
-                stripe.PaymentIntent.cancel(
-                    payment_intent_id,
-                    stripe_account=staff.stripe_user_id
-                )
-
-            req.delete()
-
-        company = get_object_or_404(Company, user= request.user)
-        requested = company.reqclients.all()
-        paginator = Paginator(requested, 6)
-        page = request.GET.get('page')
-        try:
-            requested = paginator.page(page)
-        except PageNotAnInteger:
-            requested = paginator.page(1)
-        except EmptyPage:
-            requested = paginator.page(paginator.num_pages)
-        html_string = render_to_string('bizadmin/dashboard/request/partial/partial_request.html', {'requested':requested, 'page':page})
-
-        return JsonResponse({'deleted':message,'html_string':html_string})
 import celery
 from celery import app
-
-class deleteBookingByCompAPI(View):
-    def post(self, request):
-        company = get_object_or_404(Company, user=request.user)
-        booking_id = request.POST.get('booking_id')
-        booking = get_object_or_404(Bookings, id=booking_id)
-        if booking.company != company:
-            return JsonResponse({'error':'error'}, status=403)
-        stripe.api_key = djstripe.settings.STRIPE_SECRET_KEY
-        #Dont delete the object, we instead have it on file and change it to cancelled appt
-        pi = booking.paymentintent
-        amount= 0
-        if pi:
-            staff = booking.staffmem
-            stripe_acct = staff.stripe_user_id
-            
-            payment_intent = stripe.PaymentIntent.retrieve(
-                pi,
-                stripe_account=stripe_acct
-            )
-            recieved = payment_intent.amount_received
-            amount = recieved
-            if(staff.collectnrfpayment):
-                nrf = staff.nrfpayment * 100
-                amount = round(recieved - nrf)
-            if amount > 0:
-                stripe.Refund.create(
-                    amount=amount,
-                    payment_intent=payment_intent,
-                    refund_application_fee=False,
-                    stripe_account=stripe_acct
-                )
-        try:
-            email = booking.user.email
-            # app.control.revoke(task_id=booking.slug, terminate=True)
-            appointmentCancelled.delay(booking.id)
-            
-        except AttributeError:
-            try:
-                email = booking.guest.email
-                # app.control.revoke(task_id=booking.slug, terminate=True)
-                appointmentCancelled.delay(booking.id)
-            except AttributeError:
-                email = ''
-        booking.price_paid = amount/100
-        booking.is_cancelled_company = True
-        booking.save()
-
-        return JsonResponse({'':''})
-
 from django.core.exceptions import ObjectDoesNotExist
-class addBooking(View):
-    def post(self, request):
-        company = Company.objects.get(user=request.user)
-        bform = AddBookingForm(request.POST,initial={'company':company})
-        if bform.is_valid():
-            staff_id = request.POST.get('bookstaff')
-            first_name = bform.cleaned_data.get('first_name')
-            last_name = bform.cleaned_data.get('last_name')
-            email = bform.cleaned_data.get('email')
-            phone = bform.cleaned_data.get('phone')
-            service = bform.cleaned_data.get('service')
-            dur_hour = int(bform.cleaned_data.get('duration_hour'))
-            dur_min = int(bform.cleaned_data.get('duration_minute'))
-            price = bform.cleaned_data.get('price')
-            date = bform.cleaned_data.get('datepick')
-            time = bform.cleaned_data.get('timepick')
-            start = timezone.localtime(timezone.make_aware(datetime.combine(date, time)))
-            end = timezone.localtime(start + timedelta(hours=dur_hour, minutes=dur_min))
-            if not email:
-                email = None
-            if not phone:
-                phone = None
-            try: 
-                guest = company.clients.get(first_name=first_name,last_name=last_name,email=email,phone=phone)
-            except ObjectDoesNotExist:
-                guest = Clients.objects.create(company=company, first_name=first_name,last_name=last_name, phone=phone, email=email)
 
-            try:
-                user = guest.user
-            except ObjectDoesNotExist:
-                user = None
-            staff = StaffMember.objects.get(pk=int(staff_id))
-            booking = Bookings.objects.create(user=user, staffmem=staff, guest=guest,service=service, company=company,start=start, end=end, price=price)
-            booking.save()
-            if email:
-                confirmedEmail.delay(booking.id)
-            confirmtime = 30
-            if service.checkintime:
-                confirmtime = service.checkintime + 30
-            startTime = start - timedelta(minutes=confirmtime)
-            if email:
-                reminderEmail.apply_async(args=[booking.id], eta=startTime, task_id=booking.slug)
-            if company.subscriptionplan >= 1:
-                send_sms_confirmed_client.delay(booking.id)
-                send_sms_reminder_client.apply_async(args=[booking.id], eta=startTime)
-            #Create the booking and then send an email to customer and company
-        else:
-            day = datetime.today().weekday() + 1
-            if day >= 7:
-                day = 0
-            openhour = OpeningHours.objects.get(company=company, weekday=day).from_hour
-            bookings = Bookings.objects.filter(company=company, is_cancelled_user=False, is_cancelled_company=False,is_cancelled_request=False)
-            return render(request, 'bizadmin/dashboard/schedule.html', {'company':company, 'bookings':bookings, 'addbooking':bform, 'errorshow':True})
-        return redirect(reverse('schedule', host='prodadmin'))
-
-def load_duration(request):
-    service_id = request.GET.get('service_id')
-    if service_id:
-        service = Services.objects.get(id=service_id)
-        hour = service.duration_hour
-        mins = service.duration_minute
-        price = service.price
-    else:
-        hour = 1
-        mins = 0
-        price = 0
-    return JsonResponse({'hour':hour,'mins':mins, 'price':price})
-
-def load_client(request):
-    client_id = request.GET.get('client_id')
-    if client_id:
-        client = Clients.objects.get(id=client_id)
-        first_name = client.first_name
-        last_name = client.last_name
-        email = client.email
-        phone = client.phone
-    else:
-        first_name = None
-        last_name = None
-        email = None
-        phone = None
-    return JsonResponse({'first_name':first_name,'last_name':last_name, 'email':email,'phone':phone})
-
-#Load the schedule
-class load_events(View):
-    def get(self, request):
-        start = request.GET.get('start')
-        end = request.GET.get('end')
-        staff_id = int(request.GET.get('staff_id'))
-        staff_member = StaffMember.objects.get(pk=staff_id)
-        company= Company.objects.get(user=request.user)
-        bookings = Bookings.objects.filter(start__gte=start, staffmem=staff_member, end__lte=end, company=company, is_cancelled_user=False, is_cancelled_company=False,is_cancelled_request=False,bookingreq=None).values()
-        for b in bookings:
-            b_id = b['id']
-            booking = Bookings.objects.get(pk=b_id)
-            name = booking.service.name
-            someStr = name + '\nC$' + str(booking.price)
-            b['service_name'] = someStr
-        
-        bookings_list = list(bookings)
-        return JsonResponse(bookings_list, safe=False)
 
 
 class changeDarkMode(View):
@@ -2132,298 +1564,8 @@ class changeDarkMode(View):
         company.save()
         return JsonResponse({'darkmode':company.darkmode})
 
-@login_required
-def integrationsView(request):
-    company = Company.objects.get(user=request.user)
-    user=request.user
-    if user.is_business and not user.on_board:
-        return redirect(reverse('completeprofile', host='prodadmin'))
-    elif not user.is_business:
-        loginViews(request)
-    return render(request, 'bizadmin/dashboard/integrations/integrations.html',{'company':company})
-from icalendar import Calendar, Event
-
-#Below code is not used anywhere, just as an example on how to create an ics file for future purposes
-class createCalendarFile(View):
-    def post(self, request):
-        company = Company.objects.get(user=request.user)
-        cal = Calendar()
-        cal.add('X-WR-CALNAME', request.user.first_name + "'s Appointments with Gibele")
-        cal.add('X-WR-TIMEZONE', request.user.tz)
-        if not company.calendarics:
-            bookings = Bookings.objects.filter(company=company)
-            for booking in bookings:
-                event = Event()
-                event.add('dtstart', booking.start)
-                event.add('dtend', booking.end)
-                event.add('description', booking.service.name)
-                event.add('summary', booking.service.name)
-                cal.add_component(event)
-            f = open('course_schedule.ics', 'wb')
-            f.write(cal.to_ical())
-            f.close()
-            
-            company.calendarics.save('course_schedule', ContentFile(cal.to_ical()), save=False)
-            company.save()
-        else:
-            return JsonResponse({'already':True})
-
-        return JsonResponse({'already':False})
-
-
-class calendarScheduleICS(View):
-    def get(self, request, pk):
-        user = Account.objects.get(pk=pk)
-        company = Company.objects.get(user=user)
-        cal = Calendar()
-        cal.add('X-WR-CALNAME', request.user.first_name + "'s Appointments with Gibele")
-        cal.add('X-WR-TIMEZONE', request.user.tz)
-        bookings = Bookings.objects.filter(company=company, is_cancelled_user=False, is_cancelled_company=False,is_cancelled_request=False)
-        for booking in bookings:
-            if booking.user:
-                cust = booking.user
-            else:
-                cust = booking.guest
-            description = render_to_string('bizadmin/dashboard/schedule/bookinginfo.txt', {'booking':booking,'cust':cust})
-            event = Event()
-            event.add('dtstart', booking.start)
-            event.add('dtend', booking.end)
-            event.add('description', description)
-            event.add('summary', booking.service.name)
-            cal.add_component(event)
-        f = open('course_schedule.ics', 'wb')
-        f.write(cal.to_ical())
-        f = open('course_schedule.ics', 'rb')
-        return HttpResponse(f)
-
-class staffServicesViews(View):
-    def get(self, request):
-        staff_id = request.GET.get('staff_id')
-        types = request.GET.get('type')
-        staff = StaffMember.objects.get(id=int(staff_id))
-        company = staff.company
-        if types == 'services':
-            html = render_to_string('bizadmin/companydetail/staff/partial/partial_staff_services.html', {'staff':staff,'company':company}, request)
-        elif types == 'detail':
-            html = render_to_string('bizadmin/companydetail/staff/partial/partial_detail.html', {'staff':staff,'company':company}, request)
-        elif types == 'breaks':
-            html = render_to_string('bizadmin/companydetail/staff/partial/breaks.html', {'staff':staff,'company':company}, request)
-        elif types == 'hours':
-            html = render_to_string('bizadmin/companydetail/staff/partial/working_hours.html', {'staff':staff,'company':company}, request)
-        elif types == 'timeoff':
-            html = render_to_string('bizadmin/companydetail/staff/partial/timeoff.html', {'staff':staff,'company':company}, request)
-
-        return JsonResponse({'html_content':html})
-
-class addstaffServicesViews(View):
-    def post(self, request):
-        staff_id = request.POST.get('staff_id')
-        serv_id = request.POST.get('serv_id')
-        staff = StaffMember.objects.get(id=int(staff_id))
-        service = Services.objects.get(id=serv_id)
-        staff.services.add(service)
-        text_service_header = 'All services that ' + str(staff.first_name) + ' ' + str(staff.last_name) + ' can provide(' + str(staff.services.count()) + '):'
-        innerbtn = ' <i class="fas fa-check-circle "></i> ' + service.name
-        return JsonResponse({'innerbtn':innerbtn, 'text_service_header':text_service_header})
-
-class removestaffServicesViews(View):
-    def post(self, request):
-        staff_id = request.POST.get('staff_id')
-        serv_id = request.POST.get('serv_id')
-        staff = StaffMember.objects.get(id=int(staff_id))
-        service = Services.objects.get(id=int(serv_id))
-        allstaff = StaffMember.objects.filter(services=service)
-        if allstaff.count() > 1:
-            staff.services.remove(service)
-            text_service_header = 'All services that ' + str(staff.first_name) + ' ' + str(staff.last_name) + ' can provide(' + str(staff.services.count()) + '):'
-            innerbtn = ' <i class="fas fa-plus-circle "></i> ' + service.name
-            message = str(staff.first_name) + ' is not assigned to ' + service.name +' service.'
-            success='success'
-        else:
-            text_service_header = 'All services that ' + str(staff.first_name) + ' ' + str(staff.last_name) + ' can provide(' + str(staff.services.count()) + '):'
-            innerbtn = ' <i class="fas fa-check-circle "></i> ' + service.name
-            message = 'Atleast one staff member needs to be assigned to a service'
-            success='danger'
-
-        return JsonResponse({'innerbtn':innerbtn, 'text_service_header':text_service_header, 'message':message,'success':success})
-
-class addstaffWorkingDaysViews(View):
-    def post(self, request):
-        staff_id = request.POST.get('staff_id')
-        workday = request.POST.get('workday')
-        staff = StaffMember.objects.get(id=int(staff_id))
-        dayoff = staff.staff_hours.get(weekday=workday)
-        dayoff.is_off = False
-        dayoff.save()
-        hideornot = '#workdaystaff' + str(workday)
-        innerbtn = ' <i class="fas fa-check-circle "></i> Working'
-        return JsonResponse({'innerbtn':innerbtn, 'hideornot':hideornot})
-
-class removestaffWorkingDaysViews(View):
-    def post(self, request):
-        staff_id = request.POST.get('staff_id')
-        workday = request.POST.get('workday')
-        staff = StaffMember.objects.get(id=int(staff_id))
-        dayoff = staff.staff_hours.get(weekday=workday)
-        dayoff.is_off = True
-        dayoff.save()
-        hideornot = '#workdaystaff' + str(workday)
-        innerbtn = ' <i class="fas fa-plus-circle "></i> Off'
-        return JsonResponse({'innerbtn':innerbtn, 'hideornot':hideornot})
-
-class savestaffWorkingDaysViews(View):
-    def post(self, request):
-        staff_id = request.POST.get('staff_id')
-        workday = request.POST.get('workday')
-        time = request.POST.get('time')
-        fromto = request.POST.get('fromto')
-        staff = StaffMember.objects.get(id=int(staff_id))
-        hours = staff.staff_hours.get(weekday=workday)
-        savedtime = datetime.strptime(time,"%I:%M %p").time()
-
-        if fromto == 'from':
-            if savedtime > hours.to_hour:
-                innerbtn = 'Start time cannot be after end time'
-                success = 'danger'
-            else:
-                innerbtn = staff.first_name + '\'s hours have changed'
-                success = 'success'
-                hours.from_hour = savedtime
-                hours.save()
-        else:
-            if savedtime < hours.from_hour:
-                innerbtn = 'End time cannot be before start time'
-                success = 'danger'
-            else:
-                innerbtn = staff.first_name + '\'s hours have changed'
-                success = 'success'
-                hours.to_hour = savedtime
-                hours.save()
-        
-        return JsonResponse({'innerbtn':innerbtn, 'success':success})
-
-class addbreakdayViews(View):
-    def post(self, request):
-        staff_id = request.POST.get('staff_id')
-        workday = request.POST.get('workday')
-        staff = StaffMember.objects.get(id=int(staff_id))
-        staff.staff_breaks.create(weekday=workday)
-        html = render_to_string('bizadmin/companydetail/staff/partial/partial/breakday.html', {'staff':staff,'weekday':int(workday)}, request)
-        innerid = '#workdaybreaks' + str(workday)
-        return JsonResponse({'html':html, 'innerid':innerid})
-
-class removebreakdayViews(View):
-    def post(self, request):
-        staff_id = request.POST.get('staff_id')
-        break_id = request.POST.get('break_id')
-        staff = StaffMember.objects.get(id=int(staff_id))
-        weekday = staff.staff_breaks.get(id=int(break_id)).weekday
-        dayoff = staff.staff_breaks.get(id=int(break_id)).delete()
-        html = render_to_string('bizadmin/companydetail/staff/partial/partial/breakday.html', {'staff':staff,'weekday':int(weekday)}, request)
-        innerid = '#workdaybreaks' + str(weekday)
-        return JsonResponse({'html':html, 'innerid':innerid})
-
-class savestaffBreakDaysViews(View):
-    def post(self, request):
-        staff_id = request.POST.get('staff_id')
-        breakid = request.POST.get('break_id')
-        time = request.POST.get('time')
-        fromto = request.POST.get('fromto')
-        staff = StaffMember.objects.get(id=int(staff_id))
-        hours = staff.staff_breaks.get(pk=breakid)
-        savedtime = datetime.strptime(time,"%I:%M %p").time()
-        
-        if fromto == 'from':
-            if savedtime > hours.to_hour:
-                innerbtn = 'Start time cannot be after end time'
-                success = 'danger'
-            else:
-                innerbtn = staff.first_name + '\'s break time has changed'
-                success = 'success'
-                hours.from_hour = savedtime
-                hours.save()
-        else:
-            if savedtime < hours.from_hour:
-                innerbtn = 'End time cannot be before start time'
-                success = 'danger'
-            else:
-                innerbtn = staff.first_name + '\'s break time has changed'
-                success = 'success'
-                hours.to_hour = savedtime
-                hours.save()
-        
-        return JsonResponse({'innerbtn':innerbtn, 'success':success})
-
-class UpdateStaffDetails(View):
-    def post(self, request):
-        staff_id = request.POST.get('staff_id')
-        content = request.POST.get('content')
-        types = request.POST.get('type')
-        staff = StaffMember.objects.get(pk=int(staff_id))
-        success = 'success'
-        staff_comp = staff.company
-        userstaff = StaffMember.objects.get(user=request.user)
-        comp = userstaff.company
-        if not comp.id == staff_comp.id:
-            success = 'error'
-            message = 'You do not have access to this profile. Try again later.'
-            return JsonResponse({'success':success, 'message':message})
-
-        if types == 'first':
-            staff.first_name = content
-            message = 'Staff\'s first name has been updated'
-        elif types == 'last':
-            staff.last_name = content
-            message = 'Staff\'s last name has been updated'
-        elif types == 'email':
-            staff.email = content
-            message = 'Staff\'s email has been updated'
-        elif types == 'ccemail':
-            staff.cc_email = content
-            message = 'Staff notifications will be forwarded to ' + content
-        else:
-            staff.phone = content
-            message = 'Staff\'s phone number has been updated'
-        staff.save()
-
-        return JsonResponse({'success':success, 'message':message})
-
 from django.template.context_processors import csrf
 from crispy_forms.utils import render_crispy_form
-
-class addNewStaffMember(View):
-    def post(self, request):
-        staff = StaffMember.objects.get(user=request.user)
-        company = staff.company
-        form = StaffMemberForms(request.POST, initial={'company':company})
-        if form.is_valid():
-            first = form.cleaned_data['first_name']
-            last = form.cleaned_data['last_name']
-            email = form.cleaned_data['email']
-            phone = form.cleaned_data['phone']
-            services = form.cleaned_data['services']
-            newstaff = StaffMember.objects.create(company=company, first_name=first, last_name=last, phone=phone,
-                                                    email=email, access=0)
-            for s in services:
-                newstaff.services.add(s)
-            newstaff.save()
-            for hour in company.hours.all():
-                weekday=hour.weekday
-                froms=hour.from_hour
-                tos=hour.to_hour
-                dayoff = hour.is_closed
-                staffhours = StaffWorkingHours.objects.create(staff=newstaff, from_hour=froms, to_hour=tos,is_off=dayoff, weekday=weekday)
-                staffhours.save()
-
-            memberid = newstaff.id
-
-            html_details = render_to_string('bizadmin/companydetail/staff/partial/partial_detail.html', {'staff':newstaff,'company':company}, request)
-            html_members = render_to_string('bizadmin/companydetail/staff/partial/partial/staffmember.html', {'memberid':memberid,'company':company}, request)
-            return JsonResponse({'success':True, 'html_details':html_details,'html_members':html_members})
-        ctx = {}
-        ctx.update(csrf(request))
-        form_html = render_crispy_form(form, context=ctx)
-        return JsonResponse({'success': False, 'form_html': form_html})
         
 
 def dbrun(request):
@@ -2439,75 +1581,6 @@ def dbrun(request):
                 booking.save()
             
     return JsonResponse({'':''})
-
-class removestaffCompany(View):
-    def post(self, request):
-        staff_id = request.POST.get('staff_id')
-        staff = StaffMember.objects.get(pk=int(staff_id))
-        user = request.user
-        company=staff.company
-        if staff.user:
-            staffuserid=user.id
-        else:
-            staffuserid=-1
-        if staffuserid == user.id:
-            return JsonResponse({'success':False, 'msg':'You can\'t delete your own staff profile.', 'successor':'danger'}) 
-        elif company.staffmembers.filter(user=user).exists():
-            staff.delete()
-            newstaff = company.staffmembers.get(user=user)
-            memberid=newstaff.id
-            html_details = render_to_string('bizadmin/companydetail/staff/partial/partial_detail.html', {'staff':newstaff,'company':company}, request)
-            html_members = render_to_string('bizadmin/companydetail/staff/partial/partial/staffmember.html', {'memberid':memberid,'company':company}, request)
-            return JsonResponse({'success':True, 'html_details':html_details,'html_members':html_members, 'successor':'success', 'msg':'Staff profile has been removed.'})
-            
-        return JsonResponse({'success':False, 'msg':'There was an unexpected error. Please try again later.', 'successor':'danger'})
-
-
-class addNewFormFieldAPI(View):
-    def post(self, request):
-        user=request.user
-        staff = StaffMember.objects.get(user=request.user)
-        company = staff.company 
-        form = formBuilderForm(request.POST,initial={'company':company})
-        if form.is_valid():
-            label = form.cleaned_data['label']
-            is_required = form.cleaned_data['is_required']
-            services = form.cleaned_data['services']
-            formb = formBuilder.objects.create(company=company, label=label, is_required=is_required)
-            for s in services:
-                formb.services.add(s)
-            html_content = render_to_string('bizadmin/businesspage/partials/formfield.html', {'company':company}, request)
-            return JsonResponse({'is_valid':True, 'html_content':html_content})
-        
-        return JsonResponse({'is_valid':False})
-
-class toggleformrequiredAPI(View):
-    def post(self, request):
-        user=request.user
-        staff = StaffMember.objects.get(user=request.user)
-        company = staff.company
-        form_id = request.POST.get('formid')
-        form = formBuilder.objects.get(pk=int(form_id))
-        if form.is_required == 'y':
-            form.is_required = 'n'
-        else:
-            form.is_required = 'y'
-        form.save()
-        return JsonResponse({'is_valid':True})
-
-
-class editFormFieldAPI(View):
-    def post(self, request):
-        user=request.user
-        staff = StaffMember.objects.get(user=request.user)
-        company = staff.company
-        if staff.access == 2:
-            form_id = request.POST.get('formid')
-            form = formBuilder.objects.get(pk=int(form_id))
-            form.delete()
-
-        html_content = render_to_string('bizadmin/businesspage/partials/formfield.html', {'company':company}, request)
-        return JsonResponse({'is_valid':True, 'html_content':html_content})
 
 class customThemeAPI(View):
     def post(self, request):
@@ -2544,49 +1617,15 @@ class paymentsView(View):
         elif not user.is_business:
             loginViews(request)
         staff = StaffMember.objects.get(user=user)
-        return render(request,'bizadmin/dashboard/account/payments.html', {'company':company, 'staff':staff, 'payment_form':payment_form})
+        try:
+            stripe.api_key = djstripe.settings.STRIPE_SECRET_KEY
+            user_id = company.stripe_user_id_prod
+            account_connected = stripe.Account.retrieve(user_id)
+        except Exception as e:
+            account_connected = False
+        return render(request,'productadmin/dashboard/account/payments.html', {'company':company, 'staff':staff, 'payment_form':payment_form, 'account_connected':account_connected})
 from django.template.context_processors import csrf
 from crispy_forms.utils import render_crispy_form
-class updatePaymentInfoView(View):
-    def post(self, request):
-        company = get_object_or_404(Company, user=request.user)
-        user=request.user
-        staff = StaffMember.objects.get(user=user)
-        payment_form = ServicePaymentCollectForm(request.POST, initial={'nrfpayment':staff.nrfpayment, 'currency':staff.currency})
-        
-        if payment_form.is_valid():
-            collectnrf = request.POST.get('collectnrf')
-            collect = request.POST.get('collectfullpay')
-            nrfpayment = payment_form.cleaned_data.get('nrfpayment')
-            curr = payment_form.cleaned_data.get('currency')
-            if (collectnrf == 'True'):
-                staff.collectnrfpayment = True
-                if(nrfpayment < 1):
-                    print('hexw')
-                    return JsonResponse({'success': 'danger', 'message': 'Refundable payment must be more than a $1.00'})
-                
-            else:
-                staff.collectnrfpayment = False
-            if (collect == 'True'):
-                staff.collectpayment = True
-                if(nrfpayment < 1):
-                    print('hexw')
-                    return JsonResponse({'success': 'danger', 'message': 'Refundable payment must be more than $1.00'})
-            else:
-                staff.collectpayment = False
-            staff.nrfpayment = nrfpayment
-            staff.currency = curr
-            staff.save()
-            return JsonResponse({'success': 'success', 'message': 'Updated payment collection form'})
-        else:
-            err = payment_form.errors.as_json()
-            errdata = json.loads(err)
-            try:
-                message = errdata['nrfpayment'][0]['message']
-            except:
-                message = 'Please recheck the form'
-            return JsonResponse({'success': 'danger', 'message':message})
-
 
 import stripe
 from django.http import HttpResponseRedirect
@@ -2598,9 +1637,9 @@ class StripeAuthorizeView(View):
             return redirect(reverse('completeprofile', host='prodadmin'))
         url = 'https://connect.stripe.com/oauth/authorize'
         if not settings.DEBUG:
-            domainurl = f'https://biz.bookme.to/dashboard/profile/payments/oauth/callback'
+            domainurl = f'https://biz.shopme.to/dashboard/profile/payments/oauth/callback'
         else:
-            domainurl = f'https://biz.gibele.com:8000/dashboard/profile/payments/oauth/callback'
+            domainurl = f'http://biz.shopme.com:8000/dashboard/profile/payments/oauth/callback'
         params = {
             'response_type': 'code',
             'scope': 'read_write',
@@ -2624,14 +1663,21 @@ class StripeAuthorizeCallbackView(View):
             resp = requests.post(url, params=data)
             stripe_user_id = resp.json()['stripe_user_id']
             stripe_access_token = resp.json()['access_token']
-            staff = StaffMember.objects.get(user=request.user)
-            staff.stripe_access_token = stripe_access_token
-            staff.stripe_user_id = stripe_user_id
-            staff.save()
+            company = Company.objects.get(user=request.user)
+            company.stripe_access_token_prod = stripe_access_token
+            company.stripe_user_id_prod = stripe_user_id
+            company.save()
         url = reverse('staff_payments', host='prodadmin')
         response = redirect(url)
         return response
 
+class StripeDeauthorizeView(View):
+    def post(self, request):
+        company = Company.objects.get(user=request.user)
+        company.stripe_access_token_prod = ''
+        company.stripe_user_id_prod = ''
+        company.save()
+        return JsonResponse({'response':''})
 
 @login_required()
 def completeSubscriptionPayment(request):

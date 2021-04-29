@@ -1,4 +1,4 @@
-{% extends 'bizadmin/index.html' %}
+{% extends 'productadmin/index.html' %}
 {% load static %}
 {% load hosts %}
 {% block java %}
@@ -17,13 +17,15 @@
             maxFileCount: 15,
             maxFileSize: 5000,
             browseIcon: '',
-            uploadClass: "btn btn-primary",
+            uploadClass: "btn btn-info",
             uploadLabel: "Confirm Upload",
             browseLabel: 'Add Photos to your gallary',
             'showCaption': false,
             uploadExtraData:{'csrfmiddlewaretoken': '{{ csrf_token }}'},
             allowedFileTypes: ['image'],
 
+        }).on('filebatchuploadcomplete', function(event, data) {
+            location.reload();
         });
 
         $("#inputmain").fileinput({
@@ -42,11 +44,13 @@
             'showCaption': false,
             'showPreview': false,
             'showRemove': false,
-            uploadClass: "btn btn-primary",
+            uploadClass: "btn btn-info",
             uploadLabel: "Confirm Upload",
             uploadExtraData:{'csrfmiddlewaretoken': '{{ csrf_token }}'},
             allowedFileTypes: ['image'],
 
+        }).on('filebatchuploadcomplete', function(event, data) {
+            location.reload();
         });
 
         var $grid = $('.grid').masonry({
@@ -85,9 +89,10 @@
                 </header>
                 <!-- Account page navigation-->
                 <nav class="nav nav-borders">
-                    <a class="nav-link activate ml-0" href="{% host_url 'photos' host 'bizadmin'%}">Photo and Gallery</a>
-                    <a class="nav-link " href="{% host_url 'amenities' host 'bizadmin'%}">Amenities and Tags</a>
-                    <a class="nav-link" href="{% host_url 'bpagecustomization' host 'bizadmin'%}">Customization</a>
+                    <a class="nav-link ml-0" href="{% host_url 'information' host 'bizadmin'%}">Company Info</a>
+                    <a class="nav-link activate" href="{% host_url 'photos' host 'prodadmin'%}">Photo and Gallery</a>
+                    <a class="nav-link " href="{% host_url 'amenities' host 'prodadmin'%}">Amenities and Tags</a>
+                    <a class="nav-link" href="{% host_url 'bpagecustomization' host 'prodadmin'%}">Customization</a>
                 </nav>
                 <hr class="mt-0 mb-4" />
                 <div class="row">
@@ -124,22 +129,14 @@
                                     </div>
                                 </form>
                                 <div class="text-center justify-content-center" id="galphotos">
-                                <div class="grid">
-                                    {% for p in photos %}
-                                        <div class="grid-item containergrid">
-                                            <img class="grid-item-content" src="{{ p.photos.url }}" alt="">
-                                            <button class="mybtns trashcan{{ p.id }} delete"><i class="fas fa-trash"></i></button>
-                                        </div>
-                                    {% endfor %}
-                                </div>
-                                {% comment %} {% for p in photos %}
-                                    <div class="col-sm-12 col-md-6 col-lg-4 mt-2">
-                                        <div class="card hover-animate justify-content-center align-self-center show-image" id="{{ p.id }}">
-                                            <img src="{{ p.photos.url }}" alt="">
-                                            <a class="btn btn-danger d-none trashcan{{ p.id }} delete"><i class="fas fa-trash"></i></a>
-                                        </div>
+                                    <div class="grid">
+                                        {% for p in photos %}
+                                            <div class="grid-item containergrid">
+                                                <img class="grid-item-content" src="{{ p.photos.url }}" alt="">
+                                                <button class="mybtns trashcan{{ p.id }} delete"><i class="fas fa-trash"></i></button>
+                                            </div>
+                                        {% endfor %}
                                     </div>
-                                {% endfor %} {% endcomment %}
                                 </div>
 
                                 <br>

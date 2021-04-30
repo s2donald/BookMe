@@ -362,3 +362,14 @@ def addReviewView(request):
             reviews.save()
             #now send the email to the user
     return JsonResponse({'savedReview':True})
+
+def handler404(request, *args, **argv):
+    response = render('404.html',{})
+    response.status_code = 404
+    return response
+
+
+def handler500(request, *args, **argv):
+    response = render('500.html', {})
+    response.status_code = 500
+    return response

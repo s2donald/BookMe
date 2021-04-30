@@ -1,0 +1,51 @@
+{% load static %}
+{% load hosts %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="author" content="Stephen Donald">
+    <meta name="type" content="website">
+    <meta name="site_name" content="ShopMe">
+    <meta name="theme-color" content="#854fee">
+    <link rel="shortcut icon" type="image/png" href="{% static '/img/favicon/logo/shopme/favicon15.png'%}"/>
+    <link rel="apple-touch-icon" href="{% static '/img/favicon/logo/shopme/ShopMe-appiconios.png'%}">
+    <meta name="robots" content="index, follow">
+    <meta name="description" content="You focus on the services, ShopMe will focus on the managing your schedules. ShopMe is an online scheduling tool which enables businesses in any category to allow their clients to book appointments. Let ShopMe help you maintain a good relationship with your customers while you are busy servicing your clients.">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Arvo:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Baloo+Tamma+2:wght@500&display=swap" rel="stylesheet">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static "css/businesslanding.css" %}">
+    <link rel="stylesheet" href="{% static "css/vendor/morphext.css"%}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.2.3/flatpickr.css">
+    <script src='https://www.google.com/recaptcha/api.js?render=6LeimeAZAAAAAE119rtvZivK4DW9csX6QhEo5Yla'></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.2.3/themes/dark.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <link rel="stylesheet" href="{% static "css/magnific-popup.css"%}">
+    <link rel="stylesheet" href="{% static "css/landingpagev1.css"%}">
+    <title>ShopMe Main</title>
+  </head>
+  <body>
+  <section class="my-10">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-6 my-auto">
+          <h1 class="display-1 text-bolder text-gradient text-danger">Error 404</h1>
+          <h2>Oops. Page not found</h2>
+          <p class="lead text-dark">We suggest you to go to the homepage while we solve this issue.</p>
+          <a type="button" href="{% host_url 'bizadminmain' host 'prodadmin' %}" class="btn bg-gradient-dark mt-4">Go to Homepage</a>
+        </div>
+        <div class="col-lg-6 my-auto position-relative">
+          <img class="w-100 position-relative" src="{% static "img/error-404.png"%}" alt="404-error">
+        </div>
+      </div>
+    </div>
+  </section>
+  </body>
+</html>

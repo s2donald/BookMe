@@ -293,10 +293,11 @@ def profileSecurityViews(request):
     return render(request,'productadmin/dashboard/account/security.html', {'company':company})
 
 import weasyprint
-@staff_member_required
 def admin_order_pdf(request, order_id):
     order = get_object_or_404(Order, id=order_id)
     company = order.company
+    if request.user != 'sdonald@gibele.com':
+        return redirect(reverse('home', host='prodadmin'))
     html = render_to_string('productemail/invoice.html',{'order':order, 'company':company})
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition'] = f'filename=order_{order.id}.pdf'

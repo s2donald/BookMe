@@ -7,7 +7,7 @@ from business.models import Company, SubCategory, OpeningHours, Services, Gallar
 from account.models import Account
 from calendarapp.models import formBuilder, bookingForm
 from account.forms import UpdatePersonalForm
-from account.tasks import bizCreatedEmailSent, consumerCreatedEmailSent
+from products.tasks import bizCreatedEmailSent
 from consumer.models import Bookings, Reviews, extraInformation
 from account.forms import AccountAuthenticationForm
 from django.contrib.auth import authenticate, login, logout
@@ -291,6 +291,18 @@ def profileSecurityViews(request):
     elif not user.is_business:
         loginViews(request)
     return render(request,'productadmin/dashboard/account/security.html', {'company':company})
+
+import weasyprint
+@staff_member_required
+def admin_order_pdf(request, order_id):
+    order = get_object_or_404(Order, id=order_id)
+    company = order.company
+    html = render_to_string('productemail/invoice.html',{'order':order, 'company':company})
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = f'filename=order_{order.id}.pdf'
+    weasyprint.HTML(string=html).write_pdf(response)
+    return response
+
 
 @login_required()
 def notifViews(request):
@@ -954,9 +966,9 @@ def homepageViews(request):
             if company.clients:
                 cdb = 100
             
-            services = Services.objects.filter(business=company)
+            products = ProductModel.objects.filter(business=company)
 
-            for service in services:
+            for product in products:
                 sdb = sdb + 25
                 if sdb >= 100:
                     sdb = 100

@@ -79,7 +79,7 @@ def cancelStripeMonthlySubscription(request):
         sub_id = company.stripe_subscription.id
         
         stripe.api_key = djstripe.settings.STRIPE_SECRET_KEY
-
+        print('hello')
         try:
             stripe.Subscription.modify(
                 sub_id,

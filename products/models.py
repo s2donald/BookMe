@@ -170,6 +170,8 @@ class Order(models.Model):
     completed = models.BooleanField(default=False)
     shipped = models.BooleanField(default=False)
 
+    recieveupdates = models.BooleanField(default=True)
+
 
     shipping_local = models.BooleanField(default=False)
     shipping_international = models.BooleanField(default=False)

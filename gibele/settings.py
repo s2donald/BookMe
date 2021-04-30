@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'address',
     'cities',
     'tinymce',
+    'mailer',
     'account.apps.AccountConfig',
     'business.apps.BusinessConfig',
     'businessadmin.apps.BusinessadminConfig',
@@ -247,6 +248,14 @@ EMAIL_HOST_PASSWORD = 'vEK97wFvxY27jTEhqQY8Qv6L!'
 EMAIL_USE_TLS = False
 EMAIL_USE_SSL = True
 DEFAULT_FROM_EMAIL = 'BookMe.to < noreply@bookme.to >'
+
+EMAIL1_HOST = 'smtp.zoho.com'
+EMAIL1_PORT = 465
+EMAIL1_HOST_USER = 'noreply@shopme.to'
+EMAIL1_HOST_PASSWORD = 'vEK97wFvxY27jTEhqQY8Qv6L!'
+EMAIL1_USE_TLS = False
+EMAIL1_USE_SSL = True
+# DEFAULT_FROM_EMAIL = 'ShopMe.to < noreply@shopme.to >'
 
 
 if not DEBUG:

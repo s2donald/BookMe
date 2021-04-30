@@ -1,0 +1,101 @@
+{% extends 'productemail/base_email.html' %}
+
+{% block emailcontent %}
+                    <table border="0" cellpadding="0" cellspacing="0" width="100%" class="mcnTextBlock" style="min-width:100%;">
+                        <tbody class="mcnTextBlockOuter">
+                            <tr>
+                                <td valign="top" class="mcnTextBlockInner" style="padding-top:9px;">
+                                    <!--[if mso]>
+                                    <table align="left" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;">
+                                    <tr>
+                                    <![endif]-->
+                                    
+                                    <!--[if mso]>
+                                    <td valign="top" width="600" style="width:600px;">
+                                    <![endif]-->
+                                    <table align="left" border="0" cellpadding="0" cellspacing="0" style="max-width:100%; min-width:100%;" width="100%" class="mcnTextContentContainer">
+                                        <tbody><tr>
+                                            
+                                            <td valign="top" class="mcnTextContent" style="padding: 0px 18px 9px; line-height: 150%;">
+                                            
+                                                <h1><span style="font-size:15px">Hello {{ order.first_name }},&nbsp;</span></h1>
+
+                                                <p style="line-height: 150%;"><span style="font-size:14px">Thank you for your purchase and supporting local businesses! Please see the attached document with your order details.</span></p>
+
+                                            </td>
+                                        </tr>
+                                    </tbody></table>
+                                    <!--[if mso]>
+                                    </td>
+                                    <![endif]-->
+                                    
+                                    <!--[if mso]>
+                                    </tr>
+                                    </table>
+                                    <![endif]-->
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+				<!--[if mso]>
+				</td>
+				<![endif]-->
+                
+				<!--[if mso]>
+				</tr>
+				</table>
+				<![endif]-->
+            </td>
+        </tr>
+    </tbody>
+</table><table border="0" cellpadding="0" cellspacing="0" width="100%" class="mcnTextBlock" style="min-width:100%;">
+    {% comment %} <tbody class="mcnTextBlockOuter">
+        <tr>
+            <td valign="top" class="mcnTextBlockInner" style="padding-top:9px;">
+              	<!--[if mso]>
+				<table align="left" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;">
+				<tr>
+				<![endif]-->
+			    
+				<!--[if mso]>
+				<td valign="top" width="600" style="width:600px;">
+				<![endif]-->
+                <table align="left" border="0" cellpadding="0" cellspacing="0" style="max-width:100%; min-width:100%;" width="100%" class="mcnTextContentContainer">
+                    <tbody><tr>
+                        
+                        <td valign="top" class="mcnTextContent" style="padding: 0px 18px 9px; line-height: 150%;">
+                        
+                            <div style="text-align: center;"><span style="font-size:14px">Lets start selling!</span></div>
+
+                        </td>
+                    </tr>
+                </tbody></table>
+				<!--[if mso]>
+				</td>
+				<![endif]-->
+                
+				<!--[if mso]>
+				</tr>
+				</table>
+				<![endif]-->
+            </td>
+        </tr>
+    </tbody> {% endcomment %}
+</table><table border="0" cellpadding="0" cellspacing="0" width="100%" class="mcnButtonBlock" style="min-width:100%;">
+    {% comment %} <tbody class="mcnButtonBlockOuter">
+        <tr>
+            <td style="padding-top:0; padding-right:18px; padding-bottom:18px; padding-left:18px;" valign="top" align="center" class="mcnButtonBlockInner">
+                <table border="0" cellpadding="0" cellspacing="0" class="mcnButtonContentContainer" style="border-collapse: separate !important;border-radius: 13px;background-color: #ffae74;">
+                    <tbody>
+                        <tr>
+                            <td align="center" valign="middle" class="mcnButtonContent" style="font-family: Arial; font-size: 14px; padding: 16px;">
+                                <a class="mcnButton " title="BookMe Admin Console" href="https://biz.shopme.to/login" target="_blank" style="font-weight: bold;letter-spacing: normal;line-height: 100%;text-align: center;text-decoration: none;color: #FFFFFF;">Your Business Admin Console</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+    </tbody> {% endcomment %}
+</table>
+{% endblock %}

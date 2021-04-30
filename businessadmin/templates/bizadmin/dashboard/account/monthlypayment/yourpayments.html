@@ -36,7 +36,7 @@
                                     <p class="font-weight-bold my-0">Credit Card: {{ brand|lower|capfirst}} ....{{last4}}</p>
                                     <a class="btn btn-link cancelsubscription" href="{% host_url 'cancel_subscription_stripe' host 'bizadmin' %}" style="font-size: 20px">Cancel Subscription <i class="fas fa-arrow-right"></i></a>
                                     <div class="col-12">
-                                        
+                                        {% comment %} {{ subscription }} {% endcomment %}
                                     </div>
                                 </div>
                                 {% endfor %}

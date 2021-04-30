@@ -2609,7 +2609,7 @@ def payMonthlyView(request):
         # plan = subscription.items.data.product
     except:
         return render(request,'bizadmin/dashboard/account/monthlypayment/pricing.html', {'company':company, 'staff':staff, 'products':products, 'pk_stripe':pk})
-    return render(request,'bizadmin/dashboard/account/monthlypayment/yourpayments.html', {'company':company, 'staff':staff, 'products':products, 'brand':cardbrand, 'last4':last4})
+    return render(request,'bizadmin/dashboard/account/monthlypayment/yourpayments.html', {'company':company, 'subscription':subscription,'staff':staff, 'products':products, 'brand':cardbrand, 'last4':last4})
 
 class webhook_received(View):
     def post(self, request):

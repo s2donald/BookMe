@@ -14,7 +14,15 @@
             {{ product_form.name|as_crispy_field }}
             <div class="row align-items-center">
                 <div class="col-md-6">
-                {{ product_form.price|as_crispy_field }}
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                        <div class="input-group-text">
+                            <i class="fas fa-dollar-sign"></i>
+                        </div>
+                        </div>
+                        <input type="number" name="price" step="0.01" class="numberinput form-control" required id="id_price">
+                    </div>
+                </div>
                 </div>
                 <div class="col-md-6">
                     <div class="">

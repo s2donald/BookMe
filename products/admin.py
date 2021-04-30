@@ -1,6 +1,7 @@
 from django.contrib import admin
 from .models import Product, GallaryProductImage, MainProductDropDown, ProductDropDown, ProductReviews, Order, OrderItem, ProductCategory, OrderItem, QuestionModels, AnswerModels
-
+from django_hosts.resolvers import reverse
+from django.utils.safestring import mark_safe
 # Register your models here.
 
 class GallaryProductInline(admin.TabularInline):
@@ -45,6 +46,12 @@ class MainProductsDropDownAdmin(admin.ModelAdmin):
 @admin.register(ProductReviews)
 class ProductsAdmin(admin.ModelAdmin):
     list_display = ['reviewer','guest', 'product']
+
+def order_pdf(obj):
+    url = reverse('admin_order_pdf', args=(obj.id,), host='prodadmin')
+    return mark_safe(f'<a href="{url}">PDF</a>')
+
+order_pdf.short_description = 'Invoice'
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):

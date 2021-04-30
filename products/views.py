@@ -22,6 +22,7 @@ from account.tasks import reminderEmail, emailRequestServiceCompany, confirmedEm
 from businessadmin.tasks import requestToBeClient
 from business.forms import VehicleMakeModelForm, AddressForm
 import re
+from .tasks import order_payment_completed
 from gibele import settings
 from django.views.decorators.clickjacking import xframe_options_exempt
 from django.template.loader import render_to_string
@@ -275,11 +276,13 @@ class commitPurchase(View):
                 order.pendingapproval = False
                 order.paymentintent = payment_intent_id
                 order.save()
+                order_payment_completed.delay(order_id)
                 return redirect(reverse('done', host='producturl', host_args=(company.slug,)))
             elif payintent.status == 'requires_capture':
                 order.orderplaced = True
                 order.paymentintent = payment_intent_id
                 order.save()
+                order_payment_completed.delay(order_id)
                 return redirect(reverse('capture', host='producturl', host_args=(company.slug,)))
         return redirect(reverse('cancel', host='producturl', host_args=(company.slug,)))
 

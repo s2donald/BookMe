@@ -56,10 +56,9 @@
                             <div class="col-lg-6">
                                 <!-- Two factor authentication card-->
                                 <div class="card mb-4">
-                                    <div class="card-header"><h4>Text Notifications <p class="badge badge-primary text-white">Premium</p></h4></div>
+                                    <div class="card-header"><h4>Text Notifications</h4></div>
                                     <div class="card-body">
-                                    {% if company.subscriptionplan >= 1 %}
-                                        <p for="" class="small text-muted">Send automatic confirmation and reminder text messages to clients</p>
+                                        <p for="" class="small text-muted">Send automated confirmation and update text messages to clients</p>
                                         <div class="custom-control custom-radio">
                                             <input class="custom-control-input" id="sendtextReminder" type="radio" name="sendreminders" checked />
                                             <label class="custom-control-label" name="radPublic" for="sendtextReminder">Send text confirmation messages</label>
@@ -69,18 +68,6 @@
                                             <label class="custom-control-label text-muted" name="radPrivate"  for="notextReminder">Don't receive text confirmation messages</label>
                                         </div>
                                         <br>
-                                        <p for="" class="small text-muted">Receive text confirmation</p>
-                                        <div class="custom-control custom-radio">
-                                            <input class="custom-control-input" id="textReminder" type="radio" name="textreminders" {% if company.textReminders %}checked{% endif %} disabled />
-                                            <label class="custom-control-label text-muted" name="radPublic" for="textReminder">Receive text confirmation messages</label>
-                                        </div>
-                                        <div class="custom-control custom-radio">
-                                            <input class="custom-control-input" id="notextReminder" type="radio" name="textreminders" {% if not company.textReminders %}checked{% endif %} />
-                                            <label class="custom-control-label" name="radPrivate"  for="notextReminder">Don't receive text confirmation messages</label>
-                                        </div>
-                                    {% else %}
-                                        <p class="small text-muted">Add another level of user experience for your clients by sending out automated text messages when they book an appointment.</p>
-                                    {% endif %}
                                     </div>
                                 </div>
                             </div>
@@ -102,7 +89,7 @@
                                                 <label class="custom-control-label" name="radPrivate"  for="radioHideNotes">Don't display policy information to clients</label>
                                             </div>
                                             {{ notesForm.notes|as_crispy_field }}
-                                            <button class="btn btn-primary" id="notesButton" type="button">Save Notes Setting</button>
+                                            <button class="btn btn-info" id="notesButton" type="button">Save Notes Setting</button>
                                         </form>
                                     </div>
                                 </div>

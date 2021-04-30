@@ -136,38 +136,7 @@
 {% block scripts %}
 <script>
     $(document).ready(function(){
-            
-
-            function displayError(event) {
-            let displayError = document.getElementById('card-element-errors');
-            if (event.error) {
-                if (event.error.message){
-                    displayError.textContent = event.error.message;
-                }
-                else {
-                    displayError.textContent = event.error
-                }
-                
-                document.getElementById("collectpayfirst").disabled = false;
-                document.querySelector("#spinner").classList.add("sr-only");
-                document.querySelector("#button-text").classList.remove("hidden");
-
-            } else {
-                displayError.textContent = '';
-            }
-        }
-        function CommitPurchase(form){
-            // Add your logic to submit to your backend server here.
-            $.ajax({
-                type:'POST',
-                url: "{% host_url 'commitpurchase' host 'producturl' slug=company.slug %}",
-                data: form,
-                success:function(data){
-                    console.log(data)
-                }
-            });
-        }
-        let stripe = Stripe('{{ pk_stripe }}');
+            let stripe = Stripe('{{ pk_stripe }}');
         var elements = stripe.elements();
         var style = {
             base: {
@@ -202,6 +171,37 @@
         card.on('change', function (event) {
             displayError(event);
         });
+
+            function displayError(event) {
+            let displayError = document.getElementById('card-element-errors');
+            if (event.error) {
+                if (event.error.message){
+                    displayError.textContent = event.error.message;
+                }
+                else {
+                    displayError.textContent = event.error
+                }
+                
+                document.getElementById("collectpayfirst").disabled = false;
+                document.querySelector("#spinner").classList.add("sr-only");
+                document.querySelector("#button-text").classList.remove("hidden");
+
+            } else {
+                displayError.textContent = '';
+            }
+        }
+        function CommitPurchase(form){
+            // Add your logic to submit to your backend server here.
+            $.ajax({
+                type:'POST',
+                url: "{% host_url 'commitpurchase' host 'producturl' slug=company.slug %}",
+                data: form,
+                success:function(data){
+                    console.log(data)
+                }
+            });
+        }
+        
         $(document).on('submit', '#paymentform', function(e){
             e.preventDefault();
             changeLoadingState(true);

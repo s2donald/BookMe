@@ -11,7 +11,7 @@ urlpatterns = [
     path('reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
     path('reset/done/', auth_views.PasswordResetCompleteView.as_view(), name='password_reset_complete'),
     path('adminpagefordjangosuuwoop/', admin.site.urls),
-    path('adminpagefordjangosuuwoop/order/<int:order_id>/pdf/', views.admin_order_pdf.name='admin_order_pdf'),
+    path('adminpagefordjangosuuwoop/order/<int:order_id>/pdf/', views.admin_order_pdf, name='admin_order_pdf'),
 
     re_path(r'businesspage/photo/$', views.businessPhotoView, name='photos'),#Changed
     re_path(r'businesspage/amentities/$', views.businessAmenitiesView, name='amenities'),#changed

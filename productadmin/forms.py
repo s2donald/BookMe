@@ -118,6 +118,7 @@ class dropDownOptionsForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['price'].label = ''
+        self.fields['price'].initial = 0
         self.fields['price'].widget.attrs['placeholder'] = 'Additional price of the option. (Enter zero if there is no additional cost)'
 
 

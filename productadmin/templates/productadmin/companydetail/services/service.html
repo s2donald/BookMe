@@ -108,11 +108,9 @@
                                                                                             <div class="col-12">
                                                                                                 <ul style="list-style:none; text-align:left;">
                                                                                                     <li>
-                                                                                                    {% autoescape off %}
                                                                                                         <div id="innerHTMLDescription" class="productdescription showentire mt-3 text-left ml-auto">
-                                                                                                            {{ s.description }}
+                                                                                                            {{ s.description|linebreaks }}
                                                                                                         </div>
-                                                                                                    {% endautoescape %}
                                                                                                     </li>
                                                                                                 </ul>
                                                                                             </div>
@@ -305,9 +303,9 @@
                 <label for="id_price">Price</label>
                 <div class="input-group">
                         <div class="input-group-prepend">
-                        <div class="input-group-text">
-                            <i class="fas fa-dollar-sign"></i>
-                        </div>
+                            <div class="input-group-text">
+                                <i class="fas fa-dollar-sign"></i>
+                            </div>
                         </div>
                         <input type="number" name="price" step="0.01" class="numberinput form-control" required id="id_price">
                     </div>

@@ -14,16 +14,15 @@
             {{ product_form.name|as_crispy_field }}
             <div class="row align-items-center">
                 <div class="col-md-6">
-                <label for="id_price">Price</label>
+                    <label for="id_price">Price</label>
                     <div class="input-group">
                         <div class="input-group-prepend">
-                        <div class="input-group-text">
-                            <i class="fas fa-dollar-sign"></i>
+                            <div class="input-group-text">
+                                <i class="fas fa-dollar-sign"></i>
+                            </div>
                         </div>
-                        </div>
-                        <input type="number" name="price" step="0.01" class="numberinput form-control" required id="id_price">
+                        <input type="number" name="price" step="0.01" value="{{product.price}}" class="numberinput form-control" required id="id_price">
                     </div>
-                </div>
                 </div>
                 <div class="col-md-6">
                     <div class="">
@@ -43,8 +42,10 @@
                         </label>
                     </div>
                 </div>
+                <div class="col-12">
+                {{ product_form.description|as_crispy_field }}
+                </div>
             </div>
-            {{ product_form.description|as_crispy_field }}
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 <button type="submit" class="btn btn-info">Update Your Product</button>

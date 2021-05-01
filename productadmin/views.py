@@ -345,7 +345,7 @@ class notesUpdate(View):
 
         return JsonResponse({'good':'success'})
 
-
+from products.tasks import *
 class modalGetOrderType(View):
     def get(self, request):
         user = request.user
@@ -394,13 +394,17 @@ class modalGetOrderType(View):
                     payment_intent_id,
                     stripe_account=company.stripe_user_id_prod
                 )
-            except:
+
+            except Exception as e:
+                print(e)
                 return JsonResponse({'type':'error', 'txt':'There was an error, unable to collect the payment.'})
             if payintent.status == 'succeeded':
                 order.active = True
                 order.paid = True
                 order.pendingapproval = False
+                order.save()
                 title = 'The order has been accepted and payment was collected'
+                order_request_accepted.delay(order.id)
             else:
                 return JsonResponse({'type':'error', 'txt':'There was an error, unable to collect the payment.'})
         #Decline the order request
@@ -423,6 +427,8 @@ class modalGetOrderType(View):
             order.paid = False
             order.pendingapproval = False
             order.cancelled = True
+            order.save()
+            order_request_cancelled.delay(order.id)
         elif type_of_req == 'cancel':
             try:
                 payintent = stripe.Refund.create(
@@ -439,11 +445,14 @@ class modalGetOrderType(View):
             order.active = False
             title = 'The order has been cancelled and payment was refunded.'
             txt = 'This action can not be undone.'
+            order.save()
+            order_payment_cancelled.delay(order.id)
         elif type_of_req == 'fulfill':
             order.paid = True
             order.pendingapproval = False
             order.active = False
             order.completed = True
+            order_total_completed.delay(order.id)
             title = 'The order has been marked as completed!'
         order.save()
         return JsonResponse({'title':title, 'type':'success', 'txt':txt})
@@ -553,6 +562,7 @@ def save_service_form(request, form, template_name):
             request.session['formsuccess'] = 'Your product has been created!'
             return redirect(reverse('service_detail', host='prodadmin'))
         else:
+            print(form.errors)
             request.session['formerror'] = 'There was an error creating your product. Please ensure all values are entered correctly.'
             data['form_is_valid'] = False
     return redirect(reverse('service_detail', host='prodadmin'))
@@ -1634,6 +1644,8 @@ class paymentsView(View):
             stripe.api_key = djstripe.settings.STRIPE_SECRET_KEY
             user_id = company.stripe_user_id_prod
             account_connected = stripe.Account.retrieve(user_id)
+            if user_id=='':
+                account_connected = False
         except Exception as e:
             account_connected = False
         return render(request,'productadmin/dashboard/account/payments.html', {'company':company, 'staff':staff, 'payment_form':payment_form, 'account_connected':account_connected})

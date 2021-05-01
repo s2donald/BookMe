@@ -55,5 +55,106 @@ def order_payment_completed(order_id):
     mail_sent = EmailMessage(subject, html_message,'ShopMe.to <noreply@shopme.to>', [email], connection=connection)
     mail_sent.content_subtype = 'html'
     mail_sent.attach(f'Order ID: {order.slug}.pdf',out.getvalue(),'application/pdf')
-    
+    mail_sent.send()
+
+#Completed from dashboard
+@task
+def order_total_completed(order_id):
+    order = Order.objects.get(id=order_id)
+    firstname = order.first_name
+    email = order.email
+    company = order.company
+    subject = f'Your ShopMe.to order ' + order.slug + ' has been completed!'
+    prod_name = ''
+    order_dets =f'Your order, ' + str(order.slug) + ', with ' + company.business_name + ' has been completed.'
+    html_message = render_to_string('productadmin/home/emails/orderEmail/baseEmailTemplate.html', {'order':order, 'order_dets':order_dets})
+    plain_message = strip_tags(html_message)
+    connection = get_connection(
+        host=settings.EMAIL1_HOST, 
+        port=settings.EMAIL1_PORT, 
+        username=settings.EMAIL1_HOST_USER, 
+        password=settings.EMAIL1_HOST_PASSWORD, 
+        use_tls=settings.EMAIL1_USE_TLS,
+        use_ssl=settings.EMAIL1_USE_SSL,
+    )
+    mail_sent = EmailMessage(subject, html_message,'ShopMe.to <noreply@shopme.to>', [email], connection=connection)
+    mail_sent.content_subtype = 'html'
+    mail_sent.send()
+
+@task
+def order_payment_cancelled(order_id):
+    order = Order.objects.get(id=order_id)
+    firstname = order.first_name
+    email = order.email
+    company = order.company
+    subject = f'Your ShopMe.to order ' + order.slug + ' has been cancelled'
+    order_dets =f'Your order, ' + str(order.slug) + ', with ' + company.business_name + ' has been cancelled. Payments have been refunded.'
+    html_message = render_to_string('productadmin/home/emails/orderEmail/baseEmailTemplate.html', {'order':order, 'order_dets':order_dets})
+    plain_message = strip_tags(html_message)
+    connection = get_connection(
+        host=settings.EMAIL1_HOST, 
+        port=settings.EMAIL1_PORT, 
+        username=settings.EMAIL1_HOST_USER, 
+        password=settings.EMAIL1_HOST_PASSWORD, 
+        use_tls=settings.EMAIL1_USE_TLS,
+        use_ssl=settings.EMAIL1_USE_SSL,
+    )
+    out = BytesIO()
+    html = render_to_string('productadmin/home/emails/orderEmail/cancelledorderPDF.html',{'order':order,'company':company})
+    weasyprint.HTML(string=html).write_pdf(out)
+    mail_sent = EmailMessage(subject, html_message,'ShopMe.to <noreply@shopme.to>', [email], connection=connection)
+    mail_sent.content_subtype = 'html'
+    mail_sent.attach(f'Order ID: {order.slug}.pdf',out.getvalue(),'application/pdf')
+    mail_sent.send()
+
+@task
+def order_request_accepted(order_id):
+    order = Order.objects.get(id=order_id)
+    firstname = order.first_name
+    email = order.email
+    company = order.company
+    subject = f'Your ShopMe.to order request ' + order.slug + ' has been accepted!'
+    order_dets =f'Your order, ' + str(order.slug) + ', with ' + company.business_name + ' has been accepted.'
+    html_message = render_to_string('productadmin/home/emails/orderEmail/baseEmailTemplate.html', {'order':order, 'order_dets':order_dets})
+    plain_message = strip_tags(html_message)
+    connection = get_connection(
+        host=settings.EMAIL1_HOST, 
+        port=settings.EMAIL1_PORT, 
+        username=settings.EMAIL1_HOST_USER, 
+        password=settings.EMAIL1_HOST_PASSWORD, 
+        use_tls=settings.EMAIL1_USE_TLS,
+        use_ssl=settings.EMAIL1_USE_SSL,
+    )
+    out = BytesIO()
+    html = render_to_string('productadmin/home/emails/orderEmail/acceptedRequest.html',{'order':order,'company':company})
+    weasyprint.HTML(string=html).write_pdf(out)
+    mail_sent = EmailMessage(subject, html_message,'ShopMe.to <noreply@shopme.to>', [email], connection=connection)
+    mail_sent.content_subtype = 'html'
+    mail_sent.attach(f'Order ID: {order.slug}.pdf',out.getvalue(),'application/pdf')
+    mail_sent.send()
+
+@task
+def order_request_cancelled(order_id):
+    order = Order.objects.get(id=order_id)
+    firstname = order.first_name
+    email = order.email
+    company = order.company
+    subject = f'Your ShopMe.to order request ' + order.slug + ' was declined'
+    order_dets =f'Your order, ' + str(order.slug) + ', with ' + company.business_name + ' has been declined. Payments have been refunded.'
+    html_message = render_to_string('productadmin/home/emails/orderEmail/baseEmailTemplate.html', {'order':order, 'order_dets':order_dets})
+    plain_message = strip_tags(html_message)
+    connection = get_connection(
+        host=settings.EMAIL1_HOST, 
+        port=settings.EMAIL1_PORT, 
+        username=settings.EMAIL1_HOST_USER, 
+        password=settings.EMAIL1_HOST_PASSWORD, 
+        use_tls=settings.EMAIL1_USE_TLS,
+        use_ssl=settings.EMAIL1_USE_SSL,
+    )
+    out = BytesIO()
+    html = render_to_string('productadmin/home/emails/orderEmail/deniedRequest.html',{'order':order,'company':company})
+    weasyprint.HTML(string=html).write_pdf(out)
+    mail_sent = EmailMessage(subject, html_message,'ShopMe.to <noreply@shopme.to>', [email], connection=connection)
+    mail_sent.content_subtype = 'html'
+    mail_sent.attach(f'Order ID: {order.slug}.pdf',out.getvalue(),'application/pdf')
     mail_sent.send()

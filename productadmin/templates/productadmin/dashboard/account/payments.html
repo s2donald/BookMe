@@ -6,11 +6,23 @@
 {% block businessadmin %}
 <style>
 .stripe-disconnect {
-    background: #fd5d93;
-    background-image: linear-gradient(to bottom left, #fd5d93, #ec250d, #fd5d93);
+    background: #ec250d;
+    display: inline-block;
+    height: 38px;
+    text-decoration: none;
+    width: 180px;
+    border-radius: 4px;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    -webkit-font-smoothing: antialiased;
 }
 .stripe-disconnect:hover {
     background: #fd5d93 !important;
+    cursor: pointer;
 }
 .stripe-disconnect span {
     color: #ffffff;
@@ -22,6 +34,9 @@
     padding: 11px 0px 0px 24px;
     position: relative;
     text-align: left;
+}
+.stripe-disconnect span::after {
+    background-image: url("{% static 'img/stripewh.svg' %}");
 }
 .stripe-disconnect span::after {
     background-repeat: no-repeat;
@@ -71,7 +86,7 @@
                                         <a href="{% host_url 'stripe_authorize' host 'prodadmin' %}" class="stripe-connect"><span>Connect with</span></a>
                                     {% else %}
                                         <a href="https://dashboard.stripe.com" class="stripe-connect"><span>Dashboard</span></a>
-                                        <a type="button" class="stripe-disconnect stripe-connect my-1"><span>Disconnect</span></a>
+                                        <a class="stripe-disconnect my-1"><span>Disconnect</span></a>
                                     {% endif %}
 
                                 </div>

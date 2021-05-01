@@ -128,7 +128,7 @@
                                         <input id="input-700" name="kartik-input-700[]" type="file" multiple>
                                     </div>
                                 </form>
-                                <div class="text-center justify-content-center" id="galphotos">
+                                {% comment %} <div class="text-center justify-content-center" id="galphotos">
                                     <div class="grid">
                                         {% for p in photos %}
                                             <div class="grid-item containergrid">
@@ -137,7 +137,22 @@
                                             </div>
                                         {% endfor %}
                                     </div>
+
+                                    
+                                    
+                                </div> {% endcomment %}
+                                <div class="row text-center justify-content-center" id="galphotos">
+                            {% for p in company.gallary.all %}
+                            <div class="col-sm-12 col-md-6 col-lg-4 mt-2">
+                                <div class="card justify-content-center align-self-center text-center show-image" id="{{ p.id }}">
+                                <img width="300px" height="100%" class="rounded" src="{{ p.photos.url }}" alt="">
                                 </div>
+                            </div>
+                            {% empty %}
+                                <h6>No images have been uploaded by {{ company.business_name }}</h6>
+                            {% endfor %}
+                        </div>
+                        <br>
 
                                 <br>
                                 {% include 'bizadmin/dashboard/reviews/pagination.html' with page=photos%}

@@ -1,6 +1,7 @@
 {% extends 'productspage/main.html'%}
 {% load static %}
 {% load hosts %}
+{% load prod_tags %}
 {% load business_tags %}
 {% block title %}{{ company.business_name }} - BookMe.to{% endblock %}
 {% block companybizname %}{{ company.business_name }}{% endblock companybizname %}
@@ -201,11 +202,11 @@
                     </div>
 
                     <div class="tab-pane fade" role="tabpanel" id="gallarylist">
-                        <div class="row text-center justify-content-center" id="galphotos">
+                        <div class="row text-left justify-content-left" id="galphotos">
                             {% for p in company.gallary.all %}
                             <div class="col-sm-12 col-md-6 col-lg-4 mt-2">
                                 <div class="card justify-content-center align-self-center show-image" id="{{ p.id }}">
-                                <img width="100%" class="rounded" src="{{ p.photos.url }}" alt="">
+                                <img height="100%" width='300px' class="rounded" src="{{ p.photos.url }}" alt="">
                                 </div>
                             </div>
                             {% empty %}

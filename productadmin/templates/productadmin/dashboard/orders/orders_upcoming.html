@@ -123,7 +123,7 @@
                                     <td class="tableclickme" data-id="{{ order.id }}" data-type="detail">
                                         {% if order.pendingapproval %}
                                             <div class="badge badge-warning">Request</div>
-                                        {% elif order.confirmed %}
+                                        {% elif order.completed %}
                                             <div class="badge badge-success">Fulfilled</div>
                                         {% elif order.delivered %}
                                             <div class="badge badge-info">Delivered</div>
@@ -144,7 +144,7 @@
                                             {% if order.pendingapproval %}
                                                 <a class="dropdown-item"  data-id="{{ order.id }}" data-type="accept">Accept Order</a>
                                                 <a class="dropdown-item"  data-id="{{ order.id }}" data-type="decline">Decline Order</a>
-                                            {% elif order.confirmed %}
+                                            {% elif order.completed %}
                                                 
                                             {% comment %} {% elif order.delivered %}
                                                 <a class="dropdown-item" type="button" data-toggle="modal" data-target="#myModal" data-id="{{ order.id }}" data-type="fulfill">Mark as fulfilled</a>

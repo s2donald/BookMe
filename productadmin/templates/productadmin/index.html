@@ -51,7 +51,7 @@
     {% endblock linkscript %}
     <title>ShopMe Dashboard</title>
   </head>
-  <body class="sidebar-mini {% if not company.darkmode %}white-content{% endif %}">
+  <body class="sidebar-mini white-content">
     <div class="wrapper">
     <div class="sidebar" id="sidebar" data="blue">
       <div class="sidebar-wrapper">
@@ -197,7 +197,7 @@
     </div>
     <div class="main-panel" data-color="blue">
       <!-- Navbar -->
-      <nav class="navbar navbar-expand-lg {% if not company.darkmode %}navbar-transparent{% endif %}">
+      <nav class="navbar navbar-expand-lg navbar-transparent">
         <div class="container-fluid">
           <div class="navbar-wrapper">
             <div class="navbar-minimize d-inline">
@@ -212,11 +212,7 @@
                 <span class="navbar-toggler-bar bar3"></span>
               </button>
             </div>
-            {% if company.darkmode %}
-              <a class="navbar-brand" href="{% host_url 'home' host 'bizadmin' %}"><img class="logo-height" src="{% static 'img/favicon/logo/shopme/ShopMe-bluewhite.png' %}" alt=""></a>
-            {% else %}
               <a class="navbar-brand" href="{% host_url 'home' host 'bizadmin' %}"><img class="logo-height" src="{% static 'img/favicon/logo/shopme/ShopMe-blueblack.png' %}" alt=""></a>
-            {% endif %}
             
           </div>
           <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navigation" aria-expanded="false" aria-label="Toggle navigation">
@@ -241,7 +237,7 @@
                 </ul>
                 
               </li> {% endcomment %}
-              <li class="nav-item px-0">
+              {% comment %} <li class="nav-item px-0">
                 <a href="javascript:void(0)" class="nav-link d-none" id="lightdarkmode">
                   <div class="d-none d-lg-block d-xl-block"></div>
                   <i class="fas fa-lightbulb"></i>
@@ -249,7 +245,7 @@
                     {% if company.darkmode %}Enable Light Mode {% else %}Enable Dark Mode{% endif %}
                   </p>
                 </a>
-              </li>
+              </li> {% endcomment %}
               
               <li class="dropdown nav-item">
                 <a href="{% host_url 'bizadminlogout' host 'bizadmin' %}" class="dropdown-toggle nav-link" data-toggle="dropdown">
@@ -343,45 +339,6 @@
             return cookieValue;
           }
           const csrftoken = getCookie('csrftoken');
-          lightdarkMode = document.querySelector('#lightdarkmode');
-          lightdarkMode.addEventListener('click', function(e){
-            {% if company.darkmode %}
-              $("body").addClass("white-content");
-              $('nav').removeClass('navbar-transparent');
-              var dark = true
-            {% else %}
-              $("body").removeClass("white-content");
-              $('nav').addClass('navbar-transparent');
-              var dark = false
-            {% endif %}
-            
-            $.ajax({
-              url: '{% host_url "changeDarkMode" host "bizadmin" %}',
-              data: JSON.stringify({light:dark}),
-              type: "POST",
-              dataType: 'json',
-              headers:{
-                "X-CSRFToken": csrftoken
-              },
-              success: function(data){
-                if (data.darkmode){
-                  $(".navbar-brand").attr("src","{% static 'img/favicon/logo/shopme/ShopMe-whitegrad.png' %}");
-                  $("body").removeClass("white-content");
-                  $('nav').removeClass('navbar-transparent');
-                  $('table').removeClass('table-white');
-                  $('table').addClass('table-dark');
-                }
-                else {
-                  $("body").addClass("white-content");
-                  $('nav').addClass('navbar-transparent');
-                  $('table').addClass('table-white');
-                  $('table').removeClass('table-dark');
-                }
-              },
-            });
-          });
-          settingMode = document.querySelector('.sidebar .sidebar-wrapper');
-
           
         </script>
         {% block java %}

@@ -114,8 +114,12 @@
 								<td>
 									Order ID: {{ order.slug }}<br />
 									Created: {{ order.created|date:"F j, Y" }}<br />
-                                    {% if items.product.dispatch > 0 %}
-                                    Estimated Due Date: {{ order.dateshipped|date:"F j, Y" }}
+                                    {% if items.product.request %}
+                                        Waiting for approval<br />
+                                    {% else %}
+                                        {% if items.product.dispatch > 0 %}
+                                                Estimated Due Date: {{ order.dateshipped|date:"F j, Y" }}<br />
+                                        {% endif %}
                                     {% endif %}
 								</td>
 							</tr>

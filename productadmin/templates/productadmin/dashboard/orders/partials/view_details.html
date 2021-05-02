@@ -75,15 +75,33 @@
                                         </div>
                                     </th>
                                 </tr>
-                                <tr>
-                                    <th colspan="2" style="font-weight: 400;">
-                                        {{ answers.description|linebreaks }}
-                                    </th>
+                                    {% if answers.question.retrievetype == 0 %}
+                                        <tr>
+                                            <th colspan="2" style="font-weight: 400;">
+                                                {{ answers.description|linebreaks }}
+                                            </th>
+                                        </tr>
+                                    {% else %}
+                                        {% if items.imageattachment_orderitems.all.count > 0 %}
+                                            {% for images in items.imageattachment_orderitems.all %}
+                                                <tr>
+                                                    <th colspan="2" style="font-weight: 400;">
+                                                        {% if images.photos %}
+                                                            <div class="text-center">
+                                                            <a href="{{ images.photos.url}}" data-toggle="lightbox">
+                                                                <img src="{{ images.photos.url }}" alt="" width="200px" height="200px" style="object-fit:cover;">
+                                                            </a>
+                                                            </div>
+                                                            
+                                                        {% endif %}
+                                                    </th>
+                                                </tr>
+                                            {% endfor %}
+                                        {% endif %}
+                                    {% endif %}
                                     
-                                </tr>
                             {% endfor %}
                         {% endif %}
-
                         <tr>
                             
                             <th scope="row">
@@ -158,3 +176,10 @@
 
     {% endfor %}
 </div>
+
+<script>
+    $(document).on('click', '[data-toggle="lightbox"]', function(event) {
+        event.preventDefault();
+        $(this).ekkoLightbox();
+    });
+</script>

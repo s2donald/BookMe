@@ -25,6 +25,27 @@
         $('.productdescription').toggleClass("showentire");
     };
 </script>
+<style>
+.custom-file-control:lang(en)::after {
+  content: "Select file...";
+}
+
+.custom-file-control:lang(en)::before {
+  content: "Click me";
+}
+
+/*when a value is selected, this class removes the content */
+.custom-file-control.selected:lang(en)::after {
+  content: "" !important;
+}
+
+.custom-file {
+  overflow: hidden;
+}
+.custom-file-control {
+  white-space: nowrap;
+}
+</style>
 <section class="py-0">
     <div class="container">
         <div class="row">
@@ -41,7 +62,16 @@
                                             <h4>{{ question.question }}</h4>
                                         </div>
                                         <div class="row p-2">
-                                            <textarea name="{{ question.id }}" placeholder="{% if question.placeholder %}{{ question.placeholder }}{% endif %}" style="border:1px solid #dadbdd !important; box-shadow: 0 2px 4px rgba(0,0,0,.06); border-radius: 3px; height: 200px;" size="40" class="textarea form-control" {% if question.is_required %}required{% endif %} id="id_question"></textarea>
+                                            {% if question.retrievetype == 0 %}
+                                            <textarea name="{{ question.id }}" placeholder="{% if question.placeholder %}{{ question.placeholder }}{% endif %}" style="border:1px solid #dadbdd !important; box-shadow: 0 2px 4px rgba(0,0,0,.06); border-radius: 3px; height: 200px;" size="40" class="textarea form-control" {% if question.is_required %}required{% endif %}></textarea>
+                                            {% else %}
+
+                                                <div class="custom-file">
+                                                        <input type="file" name="{{ question.id }}" accept="image/*" class="custom-file-input">
+                                                        <label class="custom-file-label text-truncate">{{ question.placeholder }}</label>
+                                                </div>
+                                            {% endif %}
+                                            
                                         </div>
                                     </div>
                                 {% endfor %}
@@ -173,6 +203,10 @@
                 blocks: [0, 3, 3, 4],
                 numericOnly: true
             });
+            $('.custom-file-input').on('change',function(){
+                var fileName = $(this)[0].files[0].name
+                $(this).next('.custom-file-label').addClass("selected").html(fileName); 
+            })
 
             
     });

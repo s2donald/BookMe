@@ -127,4 +127,4 @@ class questionProductForm(forms.ModelForm):
     placeholder = forms.CharField(label='Placeholder Text', required=False, widget=forms.TextInput(attrs={'placeholder': 'Enter placeholder text for this form field', 'style':'border:1px solid #dadbdd !important; box-shadow: 0 2px 4px rgba(0,0,0,.06); border-radius: 3px;',}))
     class Meta:
         model = QuestionModels
-        fields = ('question','placeholder',)
+        fields = ('question','placeholder','retrievetype')

@@ -2,8 +2,8 @@
 {% load hosts %}
 {% load crispy_forms_tags %}
 {% block linkscript %}{{ product_form.media }}{% endblock linkscript %}
-<div class="modal-header {% if company.darkmode %}text-white{% endif %}">
-    <h5 class="modal-title {% if company.darkmode %}text-white{% endif %}" id="exampleModalLabel">Update your product - {{ product.name }}</h5>
+<div class="modal-header">
+    <h5 class="modal-title" id="exampleModalLabel">Update your product - {{ product.name }}</h5>
     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
         <span aria-hidden="true">&times;</span>
     </button>
@@ -25,7 +25,7 @@
                     </div>
                 </div>
                 <div class="col-md-6">
-                    <div class="">
+                    <div class="custom-file">
                         <label for="id_mainimage">Main Product Image</label>
                         <div>{{ product_form.mainimage }}</div>
                     </div>

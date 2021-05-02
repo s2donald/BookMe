@@ -23,6 +23,11 @@ currencychoice = (
     ('CA', "CA"),
     ('US', 'US')
 )
+typeofchoice = (
+    (0, "Free text"),
+    (1, 'Image Attachment')
+)
+
 day = (
     (0, 'Ready for delivery right away'),
     (1, '1 Day'),
@@ -60,7 +65,7 @@ from tinymce.models import HTMLField
 
 class Product(models.Model):
     name = models.CharField(max_length=200, db_index=True)
-    description = HTMLField()
+    description = HTMLField(null=True, blank=True)
     business = models.ForeignKey(Company, related_name='products_offered', on_delete=models.CASCADE)
     slug = models.SlugField(max_length=200,db_index=True, unique=True)
     currency = models.CharField(choices=currencychoice, max_length=200,db_index=True,default="CA")
@@ -125,8 +130,7 @@ class QuestionModels(models.Model):
     question = models.CharField(max_length=400, db_index=True)
     placeholder = models.CharField(max_length=400, null=True, blank=True)
     is_required = models.BooleanField(default=False)
-    provide_attachment = models.BooleanField(default=False)
-    attachment_required = models.BooleanField(default=False)
+    retrievetype = models.IntegerField(choices=typeofchoice, default=0)
     product = models.ForeignKey(Product, related_name='product_questions', on_delete=models.CASCADE)
 
 
@@ -205,10 +209,14 @@ class AnswerModels(models.Model):
     description = HTMLField()
     question = models.ForeignKey(QuestionModels, related_name='client_questionresponse', on_delete=models.CASCADE)
     orderitem = models.ForeignKey(OrderItem, on_delete=models.CASCADE, related_name='answer_orderitems')
+    created = models.DateTimeField(auto_now_add=True)
+    class Meta:
+        ordering = ('-created',)
 
-class MultipleImageAttachments(models.Model):
-    answer = models.ForeignKey(AnswerModels, related_name='answer_attachments', on_delete=models.CASCADE)
+class MultipleImageOrderAttachments(models.Model):
+    answer = models.ForeignKey(AnswerModels, related_name='answer_imageattachments', on_delete=models.CASCADE)
     photos = models.ImageField(upload_to='companies/answers/orders/photos', blank=True)
+    orderitem = models.ForeignKey(OrderItem, on_delete=models.CASCADE, related_name='imageattachment_orderitems')
     created = models.DateTimeField(auto_now_add=True)
     class Meta:
         ordering = ('-created',)

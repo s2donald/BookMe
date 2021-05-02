@@ -799,10 +799,15 @@ class updateserviceAPI(View):
             mainimage = form.cleaned_data.get('mainimage')
             dispatch = form.cleaned_data.get('dispatch')
             is_requested = request.POST.get('requestedinput')
+            is_clear = request.POST.get('mainimage-clear')
             if is_requested is not None:
                 is_requested = True
             else:
                 is_requested = False
+            if is_clear is not None:
+                is_clear = True
+            else:
+                is_clear = False
             avail = True
             product.name = name
             product.request = is_requested
@@ -811,6 +816,8 @@ class updateserviceAPI(View):
             product.dispatch = dispatch
             if mainimage:
                 product.mainimage = mainimage
+            if is_clear:
+                product.mainimage = ''
             product.save()
             user = request.user
             data['form_is_valid'] = True
@@ -848,7 +855,8 @@ class addQuestionOption(View):
         if form.is_valid():
             question = form.cleaned_data.get('question')
             placeholder = form.cleaned_data.get('placeholder')
-            QuestionModels.objects.create(question=question, is_required=is_required, product=product, placeholder=placeholder)
+            retrievetype = form.cleaned_data.get('retrievetype')
+            QuestionModels.objects.create(question=question, is_required=is_required, product=product, placeholder=placeholder,retrievetype=retrievetype)
             request.session['formsuccess'] = 'Your question has been attached to ' + product.name + '.'
         else:
             request.session['formerror'] = 'There was an error attaching the question to your product. The question can be a maximum 400 characters.'

@@ -29,7 +29,7 @@ from django.template.loader import render_to_string
 import multiprocessing
 from dateutil.relativedelta import relativedelta
 from django.contrib.postgres.search import TrigramSimilarity
-from products.models import Product, MainProductDropDown, ProductDropDown, Order, OrderItem, QuestionModels, AnswerModels
+from products.models import Product, MainProductDropDown, ProductDropDown, Order, OrderItem, QuestionModels, AnswerModels, MultipleImageOrderAttachments
 from products.cart import ProductCart
 from django_hosts.resolvers import reverse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -177,8 +177,18 @@ class CartCheckoutView(View):
                     orditems.dropdown.add(drop)
                 for additional in product.product_questions.all():
                     q = QuestionModels.objects.get(pk=str(additional.id))
-                    field = request.POST.get(str(additional.id))
-                    AnswerModels.objects.create(orderitem=orditems,question=q,description=field)
+                    description = ''
+                    img = None
+                    if q.retrievetype == 0:
+                        description = request.POST.get(str(additional.id))
+                    else:
+                        img = request.FILES.get(str(additional.id))
+                        print(request.FILES)
+                    answer = AnswerModels.objects.create(orderitem=orditems,question=q,description=description)
+                    if img:
+                        MultipleImageOrderAttachments.objects.create(answer=answer,photos=img,orderitem=orditems)
+                        
+
 
             cart.clear()
             request.session['order_id'] = order.id

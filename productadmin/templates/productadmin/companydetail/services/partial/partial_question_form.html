@@ -2,8 +2,8 @@
 {% load hosts %}
 {% load crispy_forms_tags %}
 {% block linkscript %}{{ product_form.media }}{% endblock linkscript %}
-<div class="modal-header {% if company.darkmode %}text-white{% endif %}">
-    <h5 class="modal-title {% if company.darkmode %}text-white{% endif %}" id="exampleModalLabel">Ask a question</h5>
+<div class="modal-header">
+    <h5 class="modal-title" id="exampleModalLabel">Ask a question</h5>
     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
         <span aria-hidden="true">&times;</span>
     </button>
@@ -30,6 +30,9 @@
             </div>
             <div class="col-12">
                 {{ question_form.placeholder|as_crispy_field }}
+            </div>
+            <div class="col-6">
+                {{ question_form.retrievetype|as_crispy_field }}
             </div>
         </div>
         <div class="modal-footer">

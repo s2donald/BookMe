@@ -130,7 +130,7 @@ class QuestionModels(models.Model):
     question = models.CharField(max_length=400, db_index=True)
     placeholder = models.CharField(max_length=400, null=True, blank=True)
     is_required = models.BooleanField(default=False)
-    retrievetype = models.IntegerField(choices=typeofchoice, default=0)
+    retrievetype = models.IntegerField(choices=typeofchoice, default=0, verbose_name='Get it in a form of:')
     product = models.ForeignKey(Product, related_name='product_questions', on_delete=models.CASCADE)
 
 

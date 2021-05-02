@@ -16,10 +16,10 @@
         <input type="hidden" name="form-MIN_NUM_FORMS" value="0" id="id_form-MIN_NUM_FORMS">
         <input type="hidden" name="form-MAX_NUM_FORMS" value="1000" id="id_form-MAX_NUM_FORMS">
         <div class="row align-items-center">
-            <div class="col-8">
+            <div class="col-12 col-md-8">
                 {{ question_form.question|as_crispy_field }}
             </div>
-            <div class="col-4">
+            <div class="col-12 col-md-4">
                 <div class="form-check">
                     <label class="form-check-label">
                         <input class="form-check-input" name="requiredinput" type="checkbox">
@@ -31,7 +31,7 @@
             <div class="col-12">
                 {{ question_form.placeholder|as_crispy_field }}
             </div>
-            <div class="col-6">
+            <div class="col-12 col-md-6">
                 {{ question_form.retrievetype|as_crispy_field }}
             </div>
         </div>

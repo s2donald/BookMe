@@ -128,7 +128,7 @@
                             <div id="collapseOne" class="collapse show text-center" aria-labelledby="headingOne" data-parent="#accordionExample">
                                 {% autoescape off %}
                                     <div id="innerHTMLDescription" class="productdescription showentire mt-3 text-left">
-                                        {{ product.description }}
+                                        {{ product.description|linebreaks }}
                                     </div>
                                 {% endautoescape %}
                                 <a href="javascript:changeheight()" class="btn btn-outline-grey align-items-center" id="readmore">Read more</a>

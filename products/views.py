@@ -49,19 +49,19 @@ class ProductMain(View):
             products = company.products_offered.all()
         else:
             products = Product.objects.annotate(similarity=TrigramSimilarity('name', Search),).filter(similarity__gt=0.08, business=company).order_by('-similarity')
-        paginator = Paginator(products, 1)
+        paginator = Paginator(products, 12)
         page = request.GET.get('page')
         try:
             products = paginator.page(page)
         except PageNotAnInteger:
             products = paginator.page(1)
         except EmptyPage:
-            if request.is_ajax():
-                return HttpResponse('')
+            # if request.is_ajax():
+            #     return HttpResponse('')
             products = paginator.page(paginator.num_pages)
-        if request.is_ajax():
-            return render(request, 'productspage/details/partial_search/partial_list.html', {'company':company, 'products':products})
-        return render(request, 'productspage/productpage.html',{'user':user,'company':company,'products':products})
+        # if request.is_ajax():
+        #     return render(request, 'productspage/details/partial_search/partial_list.html', {'company':company, 'products':products})
+        return render(request, 'productspage/productpage.html',{'user':user,'company':company,'products':products, 'search':Search})
 
 def product_list(request):
     company = request.viewing_company

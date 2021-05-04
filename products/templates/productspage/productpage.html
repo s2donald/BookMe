@@ -76,6 +76,7 @@
                                 <div class="text-muted">No Products Are Available</div>
                             {% endfor %}
                         </div>
+                        {% include 'productspage/details/pagination/prodpagination.html' with page=products search=search%}
                         
                     </div>
                     <!-- Amenities-->
@@ -249,7 +250,7 @@
                     }
                 });
             }
-        $(document).ready(function() {
+        /*$(document).ready(function() {
             var page = 1;
             var empty_page = false;
             var block_request = false;
@@ -281,9 +282,9 @@
             $(window).on('scroll', onScroll);
 
             function onScroll(){
-                var margin = $(document).height() - $(window).height() - 200;
+                var margin = $(document).height() - $(window).height() - 100;
                 console.log(margin)
-                console.log($(window).scrollTop())
+                
                 console.log()
                 if($(window).scrollTop() > margin && empty_page == false && block_request==false){
                     block_request=true;
@@ -300,11 +301,7 @@
                     
                 }
             }
-
-            $(window).on('scroll', function() {
-                
-            });
-        });
+        });*/
         
     </script>
     <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBaZM_O3d1-xDrecS_fbcbvoT5qDmLmje0&callback=initMap"

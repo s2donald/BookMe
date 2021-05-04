@@ -538,10 +538,6 @@ html, body {
     padding-right: 1.5rem;
 }
 
-a:link{
-    color:#ffae74;
-}
-
 .selectcolor:hover, .selectcolor:focus{
     color: #fff !important;
     background: #ffae74 !important;
@@ -1632,7 +1628,7 @@ li {
     padding: 0.5rem 0.75rem;
     margin-left: -1px;
     line-height: 1.25;
-    color: #9a6ee2;
+    color: #131313;
     background-color: #fff;
     border: 1px solid #dee2e6;
   }

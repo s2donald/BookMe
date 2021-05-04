@@ -44,8 +44,12 @@ class ProductMain(View):
         dateWindowBefore = timezone.localtime(timezone.now()) + datetime.timedelta(days=company.before_window_day,hours=company.before_window_hour,minutes=company.before_window_min)
         dateWindowAfter = timezone.localtime(timezone.now()) + relativedelta(days=company.after_window_day,months=company.after_window_month)
         kanalytics = request.GET.get('k')
-        products = company.products_offered.all()
-        paginator = Paginator(products, 9)
+        Search = request.GET.get('search_query')
+        if Search is None or Search == '':
+            products = company.products_offered.all()
+        else:
+            products = Product.objects.annotate(similarity=TrigramSimilarity('name', Search),).filter(similarity__gt=0.08, business=company).order_by('-similarity')
+        paginator = Paginator(products, 1)
         page = request.GET.get('page')
         try:
             products = paginator.page(page)

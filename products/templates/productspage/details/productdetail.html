@@ -82,14 +82,14 @@
                 <form action="{% host_url 'cart_add_product' product_id=product.id host 'producturl' slug=company.slug %}" method="POST" id="gotocheckout" data-url="{% host_url 'cart_add_product' product_id=product.id host 'producturl' slug=company.slug %}">
                     {% csrf_token %}
                     {% if product.addon_product.all %}
-                    <div class="col-12 m-0 px-0 text-left justify-content-left align-items-center">
-                        <p class="font-weight-bold">Options:</p>
-                        <select autocomplete="off" name="addon_options" id="addon_options" class="addon_select selectpicker" data-size='6' data-live-search='true' data-live-search-placeholder='Select addons' multiple {% if not product.isaddon_multiple %}data-max-options="1"{% endif %} {% if product.isaddon_required %}required{% endif %}>
-                            {% for addon in product.addon_product.all %}
-                                <option value='{{ addon.id }}' id='prodaddon_{{ forloop.counter }}' data-price='{{ addon.price }}'>{{ addon.name|capfirst }} +{{ addon.price }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
+                        <div class="col-12 m-0 px-0 text-left justify-content-left align-items-center">
+                            <p class="font-weight-bold">Options:</p>
+                            <select autocomplete="off" name="addon_options" id="addon_options" class="addon_select selectpicker" data-size='6' data-live-search='true' data-live-search-placeholder='Select addons' multiple {% if not product.isaddon_multiple %}data-max-options="1"{% endif %} {% if product.isaddon_required %}required{% endif %}>
+                                {% for addon in product.addon_product.all %}
+                                    <option value='{{ addon.id }}' id='prodaddon_{{ forloop.counter }}' data-price='{{ addon.price }}'>{{ addon.name|capfirst }} +{{ addon.price }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
                     {% endif %}
                     {% if product.product_maindropdown.all %}
                         {% for dropdown in product.product_maindropdown.all %}
@@ -110,7 +110,8 @@
                     </div>
 
                     <div class="col-12">
-                        <button type="submit" class="btn btn-block btn-outline-primary" data-product="{{ product.id }}"> {% if product.request %}Request Custom Product{% else %}Add to cart{% endif %}</button>
+                        <button type="submit" class="btn btn-block btn-outline-primary" data-product="{{ product.id }}"> {% if product.request %}Let's Make It!{% else %}Add to cart{% endif %}</button>
+                    {% comment %} Lets make it, lets build it,..., Buy Now {% endcomment %}
                     </div>
                 </form>
                 <div class="text-block mt-3 text-left">

@@ -679,7 +679,7 @@ a.licolor:hover, a.licolor:focus {
 
 
 .btn.btn-outline-primary{
-    border-radius: 50px;
+    border-radius: 7px;
     background: var(--gradient-color);
     border: 3px solid #ffae74;
     background-clip: padding-box;
@@ -702,7 +702,7 @@ a.licolor:hover, a.licolor:focus {
     background: var(--gradient-color);
     content:'';
     z-index:-1;
-    border-radius: 50px;
+    border-radius: 7px;
 }
 
 .btn.btn-outline-grey{

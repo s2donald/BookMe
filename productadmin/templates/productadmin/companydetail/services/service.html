@@ -109,7 +109,9 @@
                                                                                                 <ul style="list-style:none; text-align:left;">
                                                                                                     <li>
                                                                                                         <div id="innerHTMLDescription" class="productdescription showentire mt-3 text-left ml-auto">
-                                                                                                            {{ s.description|linebreaks }}
+                                                                                                            {% autoescape off %}
+                                                                                                                {{ s.description|linebreaks }}
+                                                                                                            {% endautoescape %}
                                                                                                         </div>
                                                                                                     </li>
                                                                                                 </ul>
@@ -325,7 +327,7 @@
                     <label class="form-check-label">
                         <input class="form-check-input" name="requestedinput" type="checkbox">
                         <span class="form-check-sign"></span>
-                        Must be approved before accepting payment
+                        Custom Request
                     </label>
                 </div>
             </div>

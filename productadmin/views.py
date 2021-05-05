@@ -962,14 +962,19 @@ def homepageViews(request):
             bpp = 0
             #Client added to the database percentage
             cdb = 0
-            #Services added to the database percentage
+            #Products added to the database percentage
             sdb = 0
             #Tags add to the database
             tpp = 0
+            #Link the stripe payment processing to company
+            spp =0
 
             #Total Basic Account Setup
             if company.tags.all(): 
                 tpp = 100
+
+            if company.stripe_access_token_prod:
+                spp = 100
             
             if company.image:
                 bpp = bpp + 25
@@ -982,8 +987,6 @@ def homepageViews(request):
                     bpp = bpp +50
                 else:
                     bpp =100
-            if company.clients:
-                cdb = 100
             
             products = ProductModel.objects.filter(business=company)
 
@@ -993,14 +996,12 @@ def homepageViews(request):
                     sdb = 100
                     break
             
-            ttpp = int((bpp/4) + (cdb/4)+ (sdb/4) + (tpp/4))
-
+            ttpp = int((bpp/4)+ (sdb/4) + (tpp/4) + (spp/4)) 
             week = timezone.localtime(timezone.now() - timedelta(days=7))
             twoweek = week - timedelta(days=7)
             threeweek = twoweek - timedelta(days=7)
             fourweek = threeweek - timedelta(days=7)
             week1 = Order.objects.filter(company=company, created__gte=week, created__lte=timezone.now(),paid=True).aggregate(Sum('items__price')).get('items__price__sum',0)
-            print(Order.objects.filter(company=company, created__gte=week, created__lte=timezone.now(),paid=True).aggregate(Sum('items__price')))
             if not week1:
                 week1 = 0
             start1 = (week - timedelta(days=week.weekday())).strftime("%b-%d-%Y")

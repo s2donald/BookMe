@@ -182,12 +182,14 @@
                             </tr>
                             <table>
                                 {% for answers in items.answer_orderitems.all %}
+                                    {% if answers.question.retrievetype == 0 %}
                                     <tr>
                                         <td>
                                             <b>{{ answers.question.question }}</b><br />
                                             {{ answers.description|linebreaks }}<br />
                                         </td>
                                     </tr>
+                                    {% endif %}
                                 {% endfor %}
                             </table>
                         </td>

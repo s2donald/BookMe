@@ -57,6 +57,30 @@ def order_payment_completed(order_id):
     mail_sent.attach(f'Order ID: {order.slug}.pdf',out.getvalue(),'application/pdf')
     mail_sent.send()
 
+    email = company.user.email
+    new_request = False
+    for items in order.items.all():
+        if items.product.request:
+            new_request = True
+    if not new_request:
+        subject = f'New Order!'
+        message = f'You have recieved a new order. Check it out in the ShopMe dashboard'
+    else:
+        subject = f'New Order Request!'
+        message = f'You have recieved a new order request. Please accept or decline the order within 7 business days.'
+    html_message = render_to_string('productemail/vendorConfirm.html', {'company':company, 'message':message})
+    plain_message = strip_tags(html_message)
+    connection = get_connection(
+        host=settings.EMAIL1_HOST, 
+        port=settings.EMAIL1_PORT, 
+        username=settings.EMAIL1_HOST_USER, 
+        password=settings.EMAIL1_HOST_PASSWORD, 
+        use_tls=settings.EMAIL1_USE_TLS,
+        use_ssl=settings.EMAIL1_USE_SSL,
+    )
+    mail_sent = send_mail(subject, plain_message,'ShopMe.to <noreply@shopme.to>', [email], html_message=html_message, fail_silently=False, connection=connection)
+    return mail_sent
+
 #Completed from dashboard
 @task
 def order_total_completed(order_id):

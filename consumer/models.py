@@ -50,6 +50,63 @@ minute_choices = (
     (50, '50 Minutes'),
     (55, '55 Minutes')
  )
+hours_choices = (
+    (0,'0 Hours'),
+    (1, '1 Hour'),
+    (2, '2 Hours'),
+    (3, '3 Hours'),
+    (4, '4 Hours'),
+    (5, '5 Hours'),
+    (6, '6 Hours'),
+    (7, '7 Hours'),
+    (8, '8 Hours'),
+    (9, '9 Hours'),
+    (10, '10 Hours'),
+    (11, '11 Hours'),
+    (12, '12 Hours'),
+    (13, '13 Hours'),
+    (14, '14 Hours'),
+    (15, '15 Hours'),
+    (16, '16 Hours'),
+    (17, '17 Hours'),
+    (18, '18 Hours'),
+    (19, '19 Hours'),
+    (20, '20 Hours'),
+    (21, '21 Hours'),
+    (22, '22 Hours'),
+    (23, '23 Hours')
+ )
+
+minute_choices = (
+    (0, '0 Minutes'),
+    (5, '5 Minutes'),
+    (10, '10 Minutes'),
+    (15, '15 Minutes'),
+    (20, '20 Minutes'),
+    (25, '25 Minutes'),
+    (30, '30 Minutes'),
+    (35, '35 Minutes'),
+    (40, '40 Minutes'),
+    (45, '45 Minutes'),
+    (50, '50 Minutes'),
+    (55, '55 Minutes')
+ )
+class AddOnServices(models.Model):
+    name = models.CharField(verbose_name='name', max_length=60)
+    duration_hour = models.IntegerField(choices=hours_choices,default=0)
+    duration_minute = models.IntegerField(choices=minute_choices,default=30)
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+    services = models.ManyToManyField(Services, related_name='addon_offered', blank=True)
+    company = models.ForeignKey(Company, related_name='addons_offered', on_delete=models.CASCADE)
+    class Meta:
+        ordering = ('-name',)
+        verbose_name = 'Add On Service'
+        verbose_name_plural = 'Add On Services'
+
+    def __str__(self):
+        if self.name==None:
+            return 'No Name'
+        return self.name
 
 class Bookings(models.Model):
     #The user's information name who booked
@@ -58,6 +115,7 @@ class Bookings(models.Model):
     slug = models.SlugField(max_length=200, db_index=True, blank=True, unique=True)
     #The service booked (also contains the dcompany the service is with)
     service = models.ForeignKey(Services, on_delete=models.CASCADE, null=True, related_name='bookings', related_query_name="bookings")
+    addon_service = models.ManyToManyField(AddOnServices, blank=True, related_name='addon_bookings')
     #The company which is offering this service
     company = models.ForeignKey(Company, on_delete=models.CASCADE, null=True, related_name='company_bookings', related_query_name='company_bookings')
     #Staff member booked
@@ -91,7 +149,7 @@ class Bookings(models.Model):
     def __str__(self):
         if self.service.name==None:
             return 'No Name'
-        return self.service.name
+        return self.service.name + ' ' + company.business_name 
 
     def clean(self):
         super().clean()
@@ -131,6 +189,7 @@ class Reviews(models.Model):
 
 def get_booking_folder(instance, filename):
     return "booking/extrainfo/".format(instance.booking.id, filename)
+
 
 class extraInformation(models.Model):
     booking = models.OneToOneField(Bookings, on_delete=models.CASCADE, related_name='more_info')

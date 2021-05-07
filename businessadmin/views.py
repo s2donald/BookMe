@@ -8,7 +8,7 @@ from account.models import Account
 from calendarapp.models import formBuilder, bookingForm
 from account.forms import UpdatePersonalForm
 from account.tasks import bizCreatedEmailSent, consumerCreatedEmailSent
-from consumer.models import Bookings, Reviews, extraInformation
+from consumer.models import Bookings, Reviews, extraInformation, AddOnServices
 from account.forms import AccountAuthenticationForm
 from django.contrib.auth import authenticate, login, logout
 from django_hosts.resolvers import reverse
@@ -305,6 +305,11 @@ def load_subcat(request):
     return render(request, 'bizadmin/dashboard/profile/addcompanyhelper/subcat_dropdown_list_options.html', {'subcategories': subcategories})
 
 def load_services(request):
+    company = Company.objects.get(user=request.user)
+    services = company.services_offered.all()
+    return render(request, 'bizadmin/dashboard/profile/addcompanyhelper/subcat_dropdown_list_options.html', {'subcategories': services})
+
+def load_addonservices(request):
     company = Company.objects.get(user=request.user)
     services = company.services_offered.all()
     return render(request, 'bizadmin/dashboard/profile/addcompanyhelper/subcat_dropdown_list_options.html', {'subcategories': services})
@@ -1064,6 +1069,56 @@ class updateserviceAPI(View):
         data['html_service_list'] = render_to_string('bizadmin/companydetail/services/partial/partial_service_list.html', {'page':page,'services':services, 'company':company})
         data['html_category_list'] = render_to_string('bizadmin/companydetail/services/partial_category/category_list.html',{'company':company})
         return JsonResponse(data)
+from calendarapp.forms import AddOnServiceForm
+class updateaddonserviceAPI(View):
+    def get(self, request, pk):
+        service = get_object_or_404(AddOnServices, pk=pk)
+        company = Company.objects.get(user=request.user)
+        dat = {
+                'name': service.name,
+                'price':service.price,
+                'duration_hour':service.duration_hour, 
+                'duration_minute':service.duration_minute, 
+                'company':company.id,
+                'services':service.services.all(),
+            }
+        data=dict()
+        form = AddOnServiceForm(initial=dat)
+        servcategory_form = AddServiceCategoryForm(initial={'company':company})
+        context = {'service_form':form,'serv_form':servcategory_form,'service':service,'company':company}
+        data['html_form'] = render_to_string('bizadmin/companydetail/services/partial/partial_addon_update.html', context, request=request)
+        return JsonResponse(data)
+
+    def post(self, request, pk):
+        service = get_object_or_404(AddOnServices, pk=pk)
+        company = Company.objects.get(user=request.user)
+        s = [x.id for x in service.services.all()]
+        form = AddOnServiceForm(request.POST, initial={'company':company.id, 'services':s})
+        servicess = request.POST.get('services')
+        data=dict()
+        if form.is_valid():
+            service.name = form.cleaned_data.get('name')
+            service.price = form.cleaned_data.get('price')
+            service.duration_hour = form.cleaned_data.get('duration_hour')
+            service.duration_minute = form.cleaned_data.get('duration_minute')
+            
+            for serv in service.services.all():
+                serv = Services.objects.get(id=serv.id)
+                service.services.remove(serv)
+            for serv_id in servicess:
+                print(serv_id)
+                # serv = get_object_or_404(Services, pk=serv_id)
+                # service.services.add(serv)
+            print(request.POST)
+            service.save()
+            data['html_service_list'] = render_to_string('bizadmin/companydetail/services/partial/partial_service_list.html', {'services':services})
+            data['view'] = 'Your service has been updated'
+        else:
+            data['form_is_valid'] = False
+            print(form.errors)
+            print(request.POST)
+            data['view'] = 'Please try again'
+        return JsonResponse(data)
 
 
 
@@ -1677,6 +1732,36 @@ def servicesDetailView(request):
     category_form = AddServiceToCategory(initial={'company':company})
 
     return render(request,'bizadmin/companydetail/services/service.html', {'page':page,'company':company, 'services':services, 'service_form':service_form, 'category_form':category_form,'servcategory_form':servcategory_form})
+
+def addonservicesDetailView(request):
+    if not request.user.is_authenticated:
+        context={}
+        user_form = BusinessRegistrationForm()
+        biz_name = BusinessName()
+        context['business_registration_form'] = user_form
+        return render(request, 'account/bussignup.html', {'user_form':user_form,'biz_name':biz_name})
+        
+    email = request.user.email
+    user = get_object_or_404(Account, email=email)
+    if not user.on_board:
+        return redirect(reverse('completeprofile', host='bizadmin'))
+
+    company = Company.objects.get(user=user)
+    services = AddOnServices.objects.filter(company=company)
+    paginator = Paginator(services, 5)
+    page = request.GET.get('page')
+    try:
+        services = paginator.page(page)
+    except PageNotAnInteger:
+        services = paginator.page(1)
+    except EmptyPage:
+        services = paginator.page(paginator.num_pages)
+    service_form = AddServiceForm()
+    servcategory_form = AddServiceCategoryForm(initial={'company':company})
+    category_form = AddServiceToCategory(initial={'company':company})
+
+    return render(request,'bizadmin/companydetail/services/addon_service.html', {'page':page,'company':company, 'services':services, 'service_form':service_form, 'category_form':category_form,'servcategory_form':servcategory_form})
+
 
 from itertools import chain
 

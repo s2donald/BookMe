@@ -55,6 +55,7 @@ urlpatterns = [
     re_path(r'post/removestaffCompany/', views.removestaffCompany.as_view(), name='removestaffromcompany'),
     re_path(r'post/addbreakday/', views.addbreakdayViews.as_view(), name='addbreakday'),
     re_path(r'post/removebreakday/', views.removebreakdayViews.as_view(), name='removebreakday'),
+    # re_path(r'detail/addonservice/$', views.addonservicesDetailView, name='addonservice_detail'),
 
 
     re_path(r'detail/clients/$', views.clientListView, name='client_list'),
@@ -77,6 +78,7 @@ urlpatterns = [
     re_path(r'creatingcate/$', views.createcategoryAPI.as_view(), name='createservicecate'),
     re_path(r'deletes/(?P<pk>\d+)/$', views.deleteserviceAPI.as_view(), name='deleteservice'),
     re_path(r'updates/(?P<pk>\d+)/$', views.updateserviceAPI.as_view(), name='updateservice'),
+    re_path(r'updateaddons/(?P<pk>\d+)/$', views.updateaddonserviceAPI.as_view(), name='updateaddonservice'),
 
     re_path(r'creatingclient/$', views.createclientAPI.as_view(), name='createclient'),
     re_path(r'deleteclient/(?P<pk>\d+)$', views.deleteclientAPI.as_view(), name='deleteclient'),
@@ -87,6 +89,7 @@ urlpatterns = [
 
     re_path(r'path/loadsubcategories/$', views.load_subcat, name='ajax_load_subcategories'),
     re_path(r'path/loadservices/$', views.load_services, name='ajax_load_services'),
+    re_path(r'path/loadaddonservices/$', views.load_addonservices, name='ajax_load_addonservices'),
     re_path(r'ajax/hourmindur/$', views.load_duration, name='ajax_load_duration'),
     re_path(r'ajax/client/$', views.load_client, name='ajax_load_client'),
     re_path(r'ajax/loadevents/$', views.load_events.as_view(), name='ajax_load_events'),

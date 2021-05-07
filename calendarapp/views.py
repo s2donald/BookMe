@@ -3,7 +3,7 @@ from account.models import Account
 from account.forms import ConsumerRegistrationForm
 from business.models import Company, Services, OpeningHours, Clients, CompanyReq, Gallary, Category, SubCategory, Amenities
 from businessadmin.models import StaffWorkingHours, StaffMember, Breaks
-from consumer.models import Bookings, extraInformation, Reviews
+from consumer.models import Bookings, extraInformation, Reviews, AddOnServices
 from .models import bookingForm
 from django.db.models import Count
 from django.http import JsonResponse
@@ -352,6 +352,7 @@ class staffofferingservice(View):
         company = request.viewing_company
         service_id = request.GET.get('service_id')
         request.session['service_id'] = service_id
+        request.session['addon_list'] = []
         service = Services.objects.get(pk=service_id)
         staff = company.staffmembers.filter(services=service)
         user=request.user
@@ -370,10 +371,26 @@ class staffofferingservice(View):
             else:
                 html = render_to_string('bookingpage/multiplestaff/bookingpage/partials/confirmationside/bookingRequest.html', {'company':company, 'service':service}, request)
                 return JsonResponse({'html_content':html, 'returning':True})
-        if user.is_authenticated:
-            html = render_to_string('bookingpage/multiplestaff/bookingpage/partials/services_offered_staff.html', {'company':company,'staff':staff, 'service':service}, request)
+        if service.addon_offered.all().count() > 0:
+            html = render_to_string('bookingpage/multiplestaff/bookingpage/partials/addons_offered_services.html', {'company':company,'staff':staff, 'service':service}, request)
         else:
             html = render_to_string('bookingpage/multiplestaff/bookingpage/partials/services_offered_staff.html', {'company':company,'staff':staff, 'service':service}, request)
+        return JsonResponse({'html_content':html})
+
+class addtheAddonsAPI(View):
+    def post(self, request):
+        # handle login or create account
+        pass
+    @xframe_options_exempt
+    def get(self, request):
+        company = request.viewing_company
+        service_id = request.session['service_id']
+        service = Services.objects.get(pk=service_id)
+        addonlist = request.GET.get('cats')
+        request.session['addon_list'] = addonlist
+        staff = company.staffmembers.filter(services=service)
+        user=request.user
+        html = render_to_string('bookingpage/multiplestaff/bookingpage/partials/services_offered_staff.html', {'company':company,'staff':staff, 'service':service}, request)
         return JsonResponse({'html_content':html})
 
 class bookingTimesView(View):
@@ -383,7 +400,6 @@ class bookingTimesView(View):
         company = request.viewing_company
         staff_id = request.GET.get('staff_id')
         request.session['staff_id'] = staff_id
-        print(service_id)
         service = Services.objects.get(pk=service_id)
         staff = company.staffmembers.filter(services=service)
         staffmem = StaffMember.objects.get(pk=staff_id)
@@ -392,7 +408,7 @@ class bookingTimesView(View):
         info = render_to_string('bookingpage/multiplestaff/bookingpage/partials/staff/staff_information.html', {'staff':staffmem}, request)
         return JsonResponse({'html_content':html, 'hours_content':hours, 'info_content':info, 'service_id':service_id})
 
-
+import ast
 class bookingCalendarRender(View):
     def get(self, request):
         company = request.viewing_company
@@ -404,6 +420,18 @@ class bookingCalendarRender(View):
         weekday = int(request.GET.get('weekday'))
         staff = StaffMember.objects.get(pk=staff_id)
         staff_hours = staff.staff_hours.get(weekday=weekday)
+        addonServices = request.session['addon_list']
+        addon_hour = 0
+        addon_minute = 0
+        if addonServices == []:
+            mylist = []
+        else:
+            x = ast.literal_eval(addonServices)
+            mylist = AddOnServices.objects.filter(pk__in=x)
+        for aos in mylist:
+            addon_hour += aos.duration_hour
+            addon_minute += aos.duration_minute
+
 
         #We need to add the service time and validate whether the service can be fit in the timeslot
         b_open = staff_hours.from_hour
@@ -411,8 +439,8 @@ class bookingCalendarRender(View):
         # print(b_open.hour)
         naive = datetime.datetime(year, month, day, b_open.hour, b_open.minute)
         interval= company.interval
-        duration_hour = Services.objects.get(pk=s_id).duration_hour
-        duration_minute = Services.objects.get(pk=s_id).duration_minute
+        duration_hour = Services.objects.get(pk=s_id).duration_hour + addon_hour
+        duration_minute = Services.objects.get(pk=s_id).duration_minute + addon_minute
         duration=datetime.timedelta(hours=duration_hour, minutes=duration_minute)
         is_auth = request.user.is_authenticated
 
@@ -461,10 +489,29 @@ class confirmationMessageRender(View):
         request.session['year'] = year
         request.session['day'] = day
         date = datetime.datetime(year, month, day)
+        addonServices = request.session['addon_list']
+        addon_hour = 0
+        addon_minute = 0
+        addon_price = float(0.00)
+        if addonServices == []:
+            mylist = []
+        else:
+            x = ast.literal_eval(addonServices)
+            mylist = AddOnServices.objects.filter(pk__in=x)
+
+        for aos in mylist:
+            addon_price += float(aos.price)
+            addon_hour += aos.duration_hour
+            addon_minute += aos.duration_minute
 
         staff = StaffMember.objects.get(pk=staff_id)
         service = Services.objects.get(pk=s_id)
-        servprice = service.price
+
+        service_duration_hour = service.duration_hour + addon_hour
+        service_duration_minute = service.duration_minute + addon_minute + (service_duration_hour * 60)
+        service_duration_hour = 0
+
+        servprice = float(service.price) + addon_price
         if servprice == 0.00:
             collectpayment = False
             paymentduelater = float(servprice)
@@ -486,7 +533,7 @@ class confirmationMessageRender(View):
             collectpayment = False
             paymentduelater = float(servprice)
             thepayment = 0
-        html_content = render_to_string('bookingpage/multiplestaff/bookingpage/partials/confirmation.html', {'company':company,'staff':staff,'service':service, 'date':date, 'time':time, 'month':month, 'year':year, 'day':day, 'collectpayment':collectpayment, 'thepayment':thepayment,'paymentduelater': paymentduelater}, request)
+        html_content = render_to_string('bookingpage/multiplestaff/bookingpage/partials/confirmation.html', {'company':company,'staff':staff,'service':service, 'service_duration_hour':service_duration_hour, 'service_duration_minute':service_duration_minute ,'date':date, 'time':time, 'month':month, 'year':year, 'day':day, 'collectpayment':collectpayment, 'thepayment':thepayment,'paymentduelater': paymentduelater}, request)
         conf_content = render_to_string('bookingpage/multiplestaff/bookingpage/partials/confirmationside/confirmationside.html', {'company':company,'service':service, 'staff':staff }, request)
         return JsonResponse({'html_content':html_content, 'conf_content':conf_content, 'collectpayment':collectpayment})
 
@@ -523,9 +570,27 @@ class confirmationMessageRender(View):
             label = newformfield.label
             bookinglist.append([fieldname, label])
         request.session['formlist'] = bookinglist
+        addonServices = request.session['addon_list']
+        addon_hour = 0
+        addon_minute = 0
+        addon_price = float(0.00)
+        if addonServices == []:
+            mylist = []
+        else:
+            x = ast.literal_eval(addonServices)
+            mylist = AddOnServices.objects.filter(pk__in=x)
+
+        for aos in mylist:
+            addon_price += float(aos.price)
+            addon_hour += aos.duration_hour
+            addon_minute += aos.duration_minute
+
+        service_duration_hour = service.duration_hour + addon_hour
+        service_duration_minute = service.duration_minute + addon_minute + (service_duration_hour * 60)
+        service_duration_hour = 0
         
         if not user.is_authenticated:
-            servprc = service.price
+            servprc = float(service.price) + addon_price
             if servprc == 0.00:
                 collectpayment = False
                 paymentduelater = float(servprc)
@@ -550,15 +615,15 @@ class confirmationMessageRender(View):
             # render out the login and user form retrieval
             personal_form = GuestPersonalForm(initial={'phone_code':"CA"})
             html_content = render_to_string('bookingpage/multiplestaff/bookingpage/partials/login/guest.html', 
-                {'company':company,'staff':staff,'service':service, 'date':date, 'time':time, 'month':month, 'year':year, 'day':day, 'personal_form':personal_form, 
-                    'collectpayment':collectpayment, 'paymentduelater':paymentduelater, 'thepayment':thepayment
+                {'company':company,'staff':staff,'service':service, 'service_duration_hour':service_duration_hour,'service_duration_minute':service_duration_minute, 'date':date, 'time':time, 'month':month, 'year':year, 'day':day, 'personal_form':personal_form, 
+                    'collectpayment':collectpayment, 'paymentduelater':paymentduelater, 'thepayment':thepayment, 'mylist':mylist
                 }, request)
             return JsonResponse({'html_content':html_content, 'notauthenticated':True, 'collectpayment':collectpayment})
         
-        price = service.price
+        price = float(service.price) + addon_price
         
         start = datetime.datetime.combine(startdate, starttime)
-        end = start + datetime.timedelta(hours=service.duration_hour,minutes=service.duration_minute)
+        end = start + datetime.timedelta(hours=service.duration_hour+addon_hour,minutes=service.duration_minute+addon_minute)
         start = timezone.localtime(timezone.make_aware(start))
         end = timezone.localtime(timezone.make_aware(end))
         
@@ -603,6 +668,9 @@ class confirmationMessageRender(View):
                 company.clients.add(guest)
                 company.save()
             booking = Bookings.objects.create(user=user,guest=guest,service=service, staffmem=staff, company=company,start=start, end=end, price=price, paymentintent=payment_intent_id)
+
+            for aos in mylist:
+                booking.addon_service.add(aos)
             booking.save()
 
             if company.category.name == 'Automotive Services':
@@ -628,12 +696,13 @@ class confirmationMessageRender(View):
                 deleteCompanyReqAuto.apply_async(args=[reqc.id], eta=delettime, task_id=booking.slug)
                 #Send request sent and recieved to customer and client respectively
                 #Text
-                payintent = stripe.PaymentIntent.retrieve(
-                    payment_intent_id,
-                    stripe_account=staff.stripe_user_id
-                )
-                pricepaid = (payintent.amount_capturable) / 100
-                booking.price_paid = pricepaid
+                if payment_intent_id:
+                    payintent = stripe.PaymentIntent.retrieve(
+                        payment_intent_id,
+                        stripe_account=staff.stripe_user_id
+                    )
+                    pricepaid = (payintent.amount_capturable) / 100
+                    booking.price_paid = pricepaid
                 booking.save()
                 #Email
                 emailRequestServiceClient.delay(booking.id)
@@ -738,6 +807,24 @@ class guestNewFormRender(View):
         date = datetime.date(year, month, day)
         personal_form = GuestPersonalForm(initial={'phone_code':"CA"})
         servpmnt = service.price
+        addonServices = request.session['addon_list']
+        addon_hour = 0
+        addon_minute = 0
+        addon_price = float(0.00)
+        if addonServices == []:
+            mylist = []
+        else:
+            x = ast.literal_eval(addonServices)
+            mylist = AddOnServices.objects.filter(pk__in=x)
+
+        for aos in mylist:
+            addon_price += float(aos.price)
+            addon_hour += aos.duration_hour
+            addon_minute += aos.duration_minute
+
+        service_duration_hour = service.duration_hour + addon_hour
+        service_duration_minute = service.duration_minute + addon_minute + (service_duration_hour * 60)
+        service_duration_hour = 0
         if servpmt == 0.00:
             collectpayment = False
             paymentduelater = float(servpmnt)
@@ -759,7 +846,7 @@ class guestNewFormRender(View):
             collectpayment = False
             paymentduelater = float(servpmnt)
             thepayment = 0
-        html_content = render_to_string('bookingpage/multiplestaff/bookingpage/partials/login/guest.html', {'company':company,'staff':staff,'service':service, 'date':date, 'time':time, 'month':month, 'year':year, 'day':day, 'personal_form':personal_form,'collectpayment':collectpayment, 'paymentduelater':paymentduelater, 'thepayment':thepayment }, request)
+        html_content = render_to_string('bookingpage/multiplestaff/bookingpage/partials/login/guest.html', {'company':company,'staff':staff,'service':service,'service_duration_hour':service_duration_hour,'service_duration_minute':service_duration_minute, 'date':date, 'time':time, 'month':month, 'year':year, 'day':day, 'personal_form':personal_form,'collectpayment':collectpayment, 'paymentduelater':paymentduelater, 'thepayment':thepayment }, request)
         return JsonResponse({'html_content':html_content, 'notauthenticated':True, 'collectpayment': collectpayment})
 
 class guestFormRender(View):
@@ -796,11 +883,25 @@ class guestFormRender(View):
             form_html = render_crispy_form(personal_form, context=ctx)
             return JsonResponse({'form_is_invalid':True,'form_errors':error, 'form_html': form_html})
         else:
-            price = service.price
+            addonServices = request.session['addon_list']
+            addon_hour = 0
+            addon_minute = 0
+            addon_price = float(0.00)
+            if addonServices == []:
+                mylist = []
+            else:
+                x = ast.literal_eval(addonServices)
+                mylist = AddOnServices.objects.filter(pk__in=x)
+
+            for aos in mylist:
+                addon_price += float(aos.price)
+                addon_hour += aos.duration_hour
+                addon_minute += aos.duration_minute
+            price = float(service.price) + addon_price
             startdate = datetime.datetime(year,month,day)
             starttime = datetime.datetime.strptime(time,'%I:%M %p').time()
             start = datetime.datetime.combine(startdate, starttime)
-            end = start + datetime.timedelta(hours=service.duration_hour,minutes=service.duration_minute)
+            end = start + datetime.timedelta(hours=service.duration_hour+addon_hour,minutes=service.duration_minute+addon_minute)
             start = timezone.localtime(timezone.make_aware(start))
             end = timezone.localtime(timezone.make_aware(end))
             if company.returning:
@@ -819,6 +920,8 @@ class guestFormRender(View):
                     company.save()
 
                 booking = Bookings.objects.create(guest=guest,service=service, company=company,staffmem=staff, start=start, end=end, price=price, paymentintent=payment_intent_id)
+                for aos in mylist:
+                    booking.addon_service.add(aos)
                 booking.save()
 
                 if company.category.name == 'Automotive Services':
@@ -842,13 +945,13 @@ class guestFormRender(View):
                     
                     deleteCompanyReqAuto.apply_async(args=[reqc.id], eta=delettime, task_id=booking.slug)
                     #Send request sent and recieved to customer and client respectively
-                    
-                    payintent = stripe.PaymentIntent.retrieve(
-                        payment_intent_id,
-                        stripe_account=staff.stripe_user_id
-                    )
-                    pricepaid = (payintent.amount_capturable) / 100
-                    booking.price_paid = pricepaid
+                    if payment_intent_id:
+                        payintent = stripe.PaymentIntent.retrieve(
+                            payment_intent_id,
+                            stripe_account=staff.stripe_user_id
+                        )
+                        pricepaid = (payintent.amount_capturable) / 100
+                        booking.price_paid = pricepaid
                     booking.save()
                     emailRequestServiceClient.delay(booking.id)
                     emailRequestServiceCompany.delay(booking.id)
@@ -950,12 +1053,25 @@ class renderLoginPage(View):
                 login(request, user)
             else:
                 return JsonResponse({'notvalid':True})
+        addonServices = request.session['addon_list']
+        addon_hour = 0
+        addon_minute = 0
+        addon_price = float(0.00)
+        if addonServices == []:
+            mylist = []
+        else:
+            x = ast.literal_eval(addonServices)
+            mylist = AddOnServices.objects.filter(pk__in=x)
 
-        price = service.price
+        for aos in mylist:
+            addon_price += float(aos.price)
+            addon_hour += aos.duration_hour
+            addon_minute += aos.duration_minute
+        price = float(service.price) + addon_price
         startdate = datetime.datetime(year,month,day)
         starttime = datetime.datetime.strptime(time,'%I:%M %p').time()
         start = datetime.datetime.combine(startdate, starttime)
-        end = start + datetime.timedelta(hours=service.duration_hour,minutes=service.duration_minute)
+        end = start + datetime.timedelta(hours=service.duration_hour+addon_hour,minutes=service.duration_minute+addon_minute)
         start = timezone.localtime(timezone.make_aware(start))
         end = timezone.localtime(timezone.make_aware(end))
         
@@ -1002,6 +1118,8 @@ class renderLoginPage(View):
                 company.clients.add(guest)
                 company.save()
             booking = Bookings.objects.create(user=user,guest=guest,service=service, staffmem=staff, company=company,start=start, end=end, price=price, paymentintent=payment_intent_id)
+            for aos in mylist:
+                booking.addon_service.add(aos)
             booking.save()
             if company.category.name == 'Automotive Services':
                 bookinform1 = bookingForm.objects.create(booking=booking, label='Vehicle Year', text=vehyear.replace('%20',' '))
@@ -1026,13 +1144,13 @@ class renderLoginPage(View):
                 delettime = timezone.localtime(timezone.now() + datetime.timedelta(days=6))
                 
                 deleteCompanyReqAuto.apply_async(args=[reqc.id], eta=delettime, task_id=booking.slug)
-                
-                payintent = stripe.PaymentIntent.retrieve(
-                    payment_intent_id,
-                    stripe_account=staff.stripe_user_id
-                )
-                pricepaid = (payintent.amount_capturable) / 100
-                booking.price_paid = pricepaid
+                if payment_intent_id:
+                    payintent = stripe.PaymentIntent.retrieve(
+                        payment_intent_id,
+                        stripe_account=staff.stripe_user_id
+                    )
+                    pricepaid = (payintent.amount_capturable) / 100
+                    booking.price_paid = pricepaid
                 booking.save()
                 emailRequestServiceClient.delay(booking.id)
                 emailRequestServiceCompany.delay(booking.id)
@@ -1151,7 +1269,21 @@ class PaymentProcessingBooking(View):
             payment_method=payment_method,
             stripe_account=staff.stripe_user_id,
         )
-        prc = service.price
+        addonServices = request.session['addon_list']
+        addon_hour = 0
+        addon_minute = 0
+        addon_price = float(0.00)
+        if addonServices == []:
+            mylist = []
+        else:
+            x = ast.literal_eval(addonServices)
+            mylist = AddOnServices.objects.filter(pk__in=x)
+
+        for aos in mylist:
+            addon_price += float(aos.price)
+            addon_hour += aos.duration_hour
+            addon_minute += aos.duration_minute
+        prc = float(service.price) + addon_price
         if staff.collectpayment and staff.stripe_user_id:
             price = (float(prc) * 100)
             applicationfee = (float(prc) * 1) + 5

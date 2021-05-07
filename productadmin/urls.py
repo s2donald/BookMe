@@ -55,7 +55,8 @@ urlpatterns = [
     re_path(r'addquestion/(?P<pk>\d+)/$', views.addQuestionOption.as_view(), name='addquestionprod'),#Added
     re_path(r'removedropdown/(?P<pk>\d+)/$', views.removeDropDownOption.as_view(), name='removedropdown'),#added
     re_path(r'removequestion/(?P<pk>\d+)/$', views.removeQuestionOption.as_view(), name='removequestion'),#added
-
+    re_path(r'onboarding/check/subdomain/$', views.subdomainCheck.as_view(), name='subdomain'),
+    
     re_path(r'creatingclient/$', views.createclientAPI.as_view(), name='createclient'),
     re_path(r'deleteclient/(?P<pk>\d+)$', views.deleteclientAPI.as_view(), name='deleteclient'),
 

@@ -46,7 +46,7 @@
                     </div>
                 </div>
                 <div class="col-6"><label for="">Option<span class="asteriskField">*</span></label></div>
-                <div class="col-6"><label for="">Price<span class="asteriskField">*</span></label></div>
+                <div class="col-6"><label for="">Additional Price<span class="asteriskField">*</span></label></div>
             </div>
             {% for option in option_form %}
             <div class="dropdownform row">
@@ -74,18 +74,18 @@
     </form>
 </div>
 <script>
-    let birdForm = document.querySelectorAll(".dropdownform")
-    let container = document.querySelector("#form-container")
-    let addButton = document.querySelector("#add_more")
-    let totalForms = document.querySelector("#id_form-TOTAL_FORMS")
+    var birdForm = document.querySelectorAll(".dropdownform")
+    var container = document.querySelector("#form-container")
+    var addButton = document.querySelector("#add_more")
+    var totalForms = document.querySelector("#id_form-TOTAL_FORMS")
 
-    let formNum = birdForm.length-1
+    var formNum = birdForm.length-1
     addButton.addEventListener('click', addForm)
 
     function addForm(e){
         e.preventDefault()
-        let newForm = birdForm[0].cloneNode(true)
-        let formRegex = RegExp(`form-(\\d){1}-`,'g')
+        var newForm = birdForm[0].cloneNode(true)
+        var formRegex = RegExp(`form-(\\d){1}-`,'g')
         formNum++
         newForm.innerHTML = newForm.innerHTML.replace(formRegex, `form-${formNum}-`)
         container.insertBefore(newForm, addButton)

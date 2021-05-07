@@ -227,11 +227,9 @@
             text: txt,
             icon: 'warning',
             showCancelButton: true,
-            closeOnConfirm: false,
             showLoaderOnConfirm: true,
             reverseButtons: true,
-        }).then((result) => {
-            if (result.isConfirmed) {
+            preConfirm: (response) => {
                 $.ajax({
                     type:'POST',
                     dataType: 'json',
@@ -241,19 +239,24 @@
                         "X-CSRFToken": csrftoken
                     },
                     success: function(data){
-                        Swal.fire({
-                            title: data.title, 
-                            text: data.txt, 
-                            icon: data.type,
-                            customClass:{
-                                confirmButton: 'btn btn-info',
-                                cancelButton: 'btn btn-danger',
-                            },
-                            buttonsStyling: false,
-                        }).then((result)=>{
-                            location.reload();
-                        });
+                        return data.title
                     }
+                });
+            },
+        }).then((result) => {
+            console.log(result.value.response)
+            if (result.isConfirmed) {
+                Swal.fire({
+                    title: 'Action Completed', 
+                    text: '', 
+                    icon: 'success',
+                    customClass:{
+                        confirmButton: 'btn btn-info',
+                        cancelButton: 'btn btn-danger',
+                    },
+                    buttonsStyling: false,
+                }).then((result)=>{
+                    location.reload();
                 });
             } else if (
                 /* Read more about handling dismissals below */

@@ -9,7 +9,7 @@
         </div>
     </div>
 </div>
-<div class="text-block pt-3 pb-0">
+{% comment %} <div class="text-block pt-3 pb-0">
     <table class="w-100">
     <tbody>
         <tr>
@@ -17,10 +17,10 @@
         <th class="font-weight-normal py-2">{% if prctype == 'free' %}Free Service{% elif prctype == 'dont' %}Contact {{ company.business_name}} for pricing {% elif prctype == 'variable' %}Prices Varies From {% elif prctype == 'fixed' %}Fixed Price of {% else %}Prices start from {% endif %}</th>
         <td class="text-right py-2">{% if prctype == 'free' %}{% elif prctype == 'dont' %}{% elif prctype == 'variable' %}${{ prc }}{% elif prctype == 'fixed' %}${{ prc }}{% else %}${{ prc }}{% endif %}</td>
         </tr>
-        {% comment %} <tr>
+        <tr>
         <th class="font-weight-normal pt-2 pb-3">Service fee</th>
         <td class="text-right pt-2 pb-3">$67.48</td>
-        </tr> {% endcomment %}
+        </tr>
     </tbody>
     <tfoot>
         <tr class="border-top">
@@ -30,4 +30,4 @@
         </tr>
     </tfoot>
     </table>
-</div>
+</div> {% endcomment %}

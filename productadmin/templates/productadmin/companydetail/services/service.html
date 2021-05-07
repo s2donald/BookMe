@@ -10,6 +10,16 @@
 {% endblock linescripe %}
 {% block activeprod %}active{%endblock%}
 {% block businessadmin %}
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script>
+  $( function() {
+      {% comment %} {% for s in company.products_offered.all %}
+        $( "#imagereq{{s.id}}" ).sortable();
+        $( "#imagereq{{s.id}}" ).disableSelection();
+      {% endfor %} {% endcomment %}
+    
+  } );
+  </script>
                     <!-- Main page content-->
                     <div class="content">
                         <div class="row">
@@ -135,9 +145,9 @@
                                                                                         <div id="collapseReq{{s.id}}" class="collapse show text-center" aria-labelledby="headingOne" data-parent="#accordionExample">
                                                                                             <div class="row">
                                                                                                 <div class="col-12">
-                                                                                                    <ul style="list-style:none; text-align:left;" id="dropdownslist">
+                                                                                                    <ul style="list-style:none; text-align:left;" id="dropdownslist{{s.id}}">
                                                                                                         {% for maindropdown in s.product_maindropdown.all %}
-                                                                                                        <li style="position:relative;">
+                                                                                                        <li style="position:relative; background: white !important;">
                                                                                                             <div class="additional-options">
                                                                                                                 <div class="row d-flex">
                                                                                                                     <span class="dropdown-loop-label">Dropdown</span>
@@ -153,8 +163,10 @@
                                                                                                             </div>
                                                                                                         </li>
                                                                                                         {% endfor %}
+                                                                                                    </ul>
+                                                                                                    <ul style="list-style:none; text-align:left;" id="imagereq{{s.id}}">
                                                                                                         {% for questions in s.product_questions.all %}
-                                                                                                        <li style="position:relative;">
+                                                                                                        <li style="position:relative; background: white !important;">
                                                                                                             <div class="additional-options">
                                                                                                                 <div class="row d-flex">
                                                                                                                     <span class="dropdown-loop-label">Question - {{ questions.get_retrievetype_display }}</span>
@@ -167,7 +179,6 @@
                                                                                                         </li>
 
                                                                                                         {% endfor %}
-
                                                                                                     </ul>
                                                                                                 </div>
                                                                                             </div>
@@ -738,6 +749,10 @@
                         $("#modal-update .modal-content").html(data.html_form);
                     }
                 });
+            });
+
+            $("#modal-update").on("hidden.bs.modal", function(){
+                $("#modal-update .modal-content").html("");
             });
 
             $(document).on('click', '.categorydelete', function(){

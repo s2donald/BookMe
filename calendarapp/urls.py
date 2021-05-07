@@ -19,6 +19,7 @@ urlpatterns = [
     re_path(r'^checkIfClient/$', views.checkIfClientView.as_view(), name='checkIfClient'),
     re_path(r'^createAcct/$', views.createAccountView.as_view(), name='createAccount'),
     re_path(r'loginareturningcustomer/', views.loginReturningCustomer.as_view(), name='loginbookmereturning'),
+    re_path(r'renderafteraddons/', views.addtheAddonsAPI.as_view(), name='selectaddons'),
     re_path(r'^renderstaffservice/', views.staffofferingservice.as_view(), name='staffofferingservice'),
     re_path(r'^renderbookingtimes/$', views.bookingTimesView.as_view(), name='getbookingtime'),
     re_path(r'^bookingbutton/$', views.bookingCalendarRender.as_view(), name='getbookingbuttons'),

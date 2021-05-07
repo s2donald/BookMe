@@ -121,7 +121,10 @@
                                         <div class="row p-0 justify-content-between text-left align-self-center">
                                             <div class="col-8 p-0">
                                             <p class="mb-1">{{ s.name }}</p>
-                                            <a data-id="{{ s.id }}" data-url="{% host_url 'staffofferingservice' host 'bookingurl' slug=company.slug%}" class="btn btn-outline-primary getserviceid">Book Now</a>
+                                            <a data-id="{{ s.id }}" data-url="{% host_url 'staffofferingservice' host 'bookingurl' slug=company.slug%}" class="btn btn-outline-primary getserviceid">
+                                                <div class="spinner-border sr-only spinner" role="status"><span class="sr-only">Loading...</span></div>
+                                                <span class="button-text">Book Now</span>
+                                            </a>
                                             </div>
                                             <div class="col-4 p-0 text-right">
                                             <strong class="text-header m-1">{% if not hour == 0 %}{{ hour }}h{% endif %} {% if not min == 0 and not hour == 0 %}&amp;{% endif %} {% if not min == 0 %}{{ min }} min{% endif %}</strong>
@@ -153,7 +156,10 @@
                                             <div class="row p-0 justify-content-between text-left align-self-center">
                                                 <div class="col-8 p-0">
                                                 <p class="mb-1">{{ s.name }}</p>
-                                                <a data-id="{{ s.id }}" class="btn btn-outline-primary getserviceid">Book Now</a>
+                                                <a data-id="{{ s.id }}" class="btn btn-outline-primary getserviceid">
+                                                <div class="spinner-border sr-only spinner" role="status"><span class="sr-only">Loading...</span></div>
+                                                <span class="button-text">Book Now</span>
+                                                </a>
                                                 </div>
                                                 <div class="col-4 p-0 text-right">
                                                 <strong class="text-header m-1">{% if not hour == 0 %}{{ hour }}h{% endif %} {% if not min == 0 and not hour == 0 %}&amp;{% endif %} {% if not min == 0 %}{{ min }} min{% endif %}</strong>
@@ -499,6 +505,8 @@
         $(document).on('click', '.getserviceid',function(){
             var $this = $(this)
             var service_id =  $this.attr('data-id')
+            $this[0].innerHTML = '<div class="spinner-border spinner" role="status"><span class="sr-only">Loading...</span></div>'
+            
             $.ajax({
                 type:'GET',
                 url: "{% host_url 'staffofferingservice' host 'bookingurl' slug=company.slug %}",
@@ -507,13 +515,14 @@
                 },
                 success:function(data){
                     $('body, html, #contentsarg').scrollTop(0, "fast");
+                    $this[0].innerHTML = 'Book Now'
                     if (data.returning){
                         $("#getCode").html(data.html_content);
                         $("#getCodeModal").modal('show');
                     }
                     else {
                         var  removeheading = document.querySelector('.heading');
-                        removeheading.innerHTML = ''
+                        {% comment %} removeheadings.innerHTML = '' {% endcomment %}
                         var el = document.querySelector('#contentsarg');
                         el.innerHTML = data.html_content
                     }
@@ -628,9 +637,7 @@
 
         function selectedDateFunction(selected, service_id, staff_id) {
             var el = document.querySelector('.bookingbutton');
-            $('#bm').show()
-            animation.playSegments([15,40], true);
-            el.classList.add("d-none")
+            el.innerHTML = '<div class="spinner-border spinner" role="status"><span class="sr-only">Loading...</span></div>'
             const weekday = selected.getDay()
             const month = selected.getMonth();
             const day = selected.getDate();
@@ -643,22 +650,42 @@
                     'service_id': service_id, 'staff_id': staff_id, 'weekday':weekday, 'month':month, 'day':day, 'year':year
                 },
                 success:function(data){
-                    setTimeout(function(){ 
-                        animation.stop()
-                        $('#bm').hide()
-                        el.innerHTML = data.html_content
-                        el.classList.remove("d-none")
-                    }, 500);
-                    
-
+                    el.innerHTML = data.html_content
                 }
 
             })
         }
 
+        $(document).on('click', '.grabAllAddons', function(){
+            var $this = $(this)
+            $this[0].innerHTML = '<div class="spinner-border spinner" role="status"><span class="sr-only">Loading...</span></div>'
+            var cats = $('.immer').map(function() {
+                if (this.checked){
+                    return $(this).data('addons');
+                }
+                else {
+                    return
+                }
+            }).get();
+
+            $.ajax({
+                type:'GET',
+                url: "{% host_url 'selectaddons' host 'bookingurl' slug=company.slug %}",
+                data: {
+                    'cats':JSON.stringify(cats)
+                },
+                success:function(data){
+                    $this[0].innerHTML = 'Continue'
+                    var el = document.querySelector('#contentsarg');
+                    el.innerHTML = data.html_content
+                }
+            });
+        })
+
         $(document).on('click', '.hovermeclick',function(){
             var $this = $(this)
             var staff_id =  $this.attr('data-staff')
+            {% comment %} document.querySelector('#innload').innerHTML = '<div class="spinner-border spinner" role="status"><span class="sr-only">Loading...</span></div>' {% endcomment %}
             $.ajax({
                 type:'GET',
                 url: "{% host_url 'getbookingtime' host 'bookingurl' slug=company.slug %}",
@@ -666,6 +693,7 @@
                     'staff_id':staff_id
                 },
                 success:function(data){
+                    {% comment %} document.querySelector('#innload').innerHTML = '' {% endcomment %}
                     var el = document.querySelector('#contentsarg');
                     el.innerHTML = data.html_content
                     
@@ -715,8 +743,7 @@
 
         $(document).on('click', '.bookingtimebutton',function(){
             var $this = $(this)
-            $('#bm').show()
-            animation.playSegments([15,40], true);
+            $this[0].innerHTML = '<div class="spinner-border spinner" role="status"><span class="sr-only">Loading...</span></div>'
             var month = $this.attr('data-month')
             var year = $this.attr('data-year')
             var day = $this.attr('data-day')
@@ -729,26 +756,22 @@
                 },
                 success:function(data){
                     
-                    setTimeout(function(){ 
-                        animation.stop()
-                        $('#bm').hide()
-                        deleteCookie('cq-settings')
-                        var el = document.querySelector('#contentsarg');
-                        el.innerHTML = data.html_content
-                        var hours = document.querySelector('#bizhours');
-                        hours.innerHTML = data.conf_content
-                        {% if company.category.name == 'Automotive Services' %}
-                            carQueryFunctionInit();
-                        {% endif %}
-                        mycollectpayment = data.collectpayment
-                        if (mycollectpayment){
-                            // Stripe injects an iframe into the DOM
-                            card.mount("#card-element");
-                            card.on('change', function (event) {
-                                displayError(event);
-                            });
-                        }
-                    }, 500);
+                    deleteCookie('cq-settings')
+                    var el = document.querySelector('#contentsarg');
+                    el.innerHTML = data.html_content
+                    var hours = document.querySelector('#bizhours');
+                    hours.innerHTML = data.conf_content
+                    {% if company.category.name == 'Automotive Services' %}
+                        carQueryFunctionInit();
+                    {% endif %}
+                    mycollectpayment = data.collectpayment
+                    if (mycollectpayment){
+                        // Stripe injects an iframe into the DOM
+                        card.mount("#card-element");
+                        card.on('change', function (event) {
+                            displayError(event);
+                        });
+                    }
                     
                     
                 }
@@ -1104,9 +1127,9 @@ function handleRequiresPaymentMethod({
                 createPaymentMethod({ card }, form, someform, 'fconfirmform');
             }
             else {
-                $('#sd').show()
-                sdanimation.playSegments([15,40], true);
+                $this[0].innerHTML = '<div class="spinner-border spinner" role="status"><span class="sr-only">Loading...</span></div>'
                 AuthenticatedFormAndBook(form, someform)
+                
             }
             
         });

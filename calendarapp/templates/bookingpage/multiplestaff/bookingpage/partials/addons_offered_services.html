@@ -8,7 +8,7 @@
             </svg></a>
             
             </div>
-            <h4> Select Staff</h4>
+            <h4> Select Add Ons</h4>
         </div>
         <button class="text-muted btn btn-sm btn-link" data-toggle="modal" data-target="#notesModal">{% if company.shownotes %}Policy{% endif %}</button>
     </div>
@@ -23,24 +23,30 @@
     <div class="status-info information">
         <h6>{{ service.name }}</h6>
     </div>
-    <ul class="ulnopadd">
-        {% for s in staff %}
-            <li class="hovermeclick" data-staff="{{ s.id }}">
-                <div class="text-center row">
-                    <div class="col-12">
-                        <img class="avatar avatar-xl p-2" src="{% if s.image %}{{ s.image.url }}{% else %}https://epicattorneymarketing.com/wp-content/uploads/2016/07/Headshot-Placeholder-1.png{% endif %} " alt="{{ s.first_name }} {{ s.last_name }}">
-                    </div>
+    <hr class="ulnopadd">
+    <ul>
+        {% for addons in service.addon_offered.all %}
+            <li class="selectAddonService" data-staff="{{ addons.id }}">
+                <div class="text-left row">
                     <div class="col-12 p-0">
-                        {{ s.first_name }} {{ s.last_name }}
-                    </div>
-                    <div class="col-12" id="innload">
 
+                        <div class="form-check">
+                            <label class="form-check-label">
+                                <input class="form-check-input immer" name="requestedinput" data-addons="{{ addons.id }}" type="checkbox">
+                                <span class="form-check-sign"></span>
+                                {{ addons.name }} - {% if addons.price == 0.00 %}Free{% else %}${{ addons.price }}{% endif %} (+{% if not addons.duration_hour == 0 %}{{ addons.duration_hour }}h{% endif %}{% if not addons.duration_minute == 0 and not addons.duration_hour == 0 %}&amp;{% endif %} {% if not addons.duration_minute == 0 %}{{ addons.duration_minute }}min{% endif %})
+                            </label>
+                            <p class="text-muted">(Optional)</p>
+                        </div>
+                        
                     </div>
                 </div>
             </li>
-            <hr>
-        {% empty %}
-            <li>Unfortunately, no service providers offer this service anymore.</li>
+            <hr class="ulnopadd">
         {% endfor %}
     </ul>
+    <div class="text-center">
+        <div class="btn btn-outline-primary grabAllAddons">Continue</div>
+    </div>
+
 </div>

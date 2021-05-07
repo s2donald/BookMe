@@ -4,7 +4,7 @@ from . import views
 app_name = 'products'
 urlpatterns = [
     path('cancel/', views.payment_cancel, name='cancel'),
-    path('actionrequired/', views.requires_capture, name='capture'),
+    path('processed/', views.requires_capture, name='capture'),
     path('completed/', views.payment_done, name='done'),
     path('load/states/', views.loadStates, name='loadstate'),
     path('complete/', views.commitPurchase.as_view(), name='commitpurchase'),

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Bookings, Reviews, extraInformation
+from .models import Bookings, Reviews, extraInformation, AddOnServices
 from business.models import Services
 from businessadmin.forms import AddBookingForm
 from calendarapp.models import bookingForm
@@ -9,6 +9,10 @@ from django import forms
 @admin.register(Reviews)
 class ReviewAdmin(admin.ModelAdmin):
     list_display = ['reviewer','company','review', 'star', 'created']
+
+@admin.register(AddOnServices)
+class AddOnServicesAdmin(admin.ModelAdmin):
+    list_display = ['name','company']
 
 class extraInformationInline(admin.TabularInline):
     model = extraInformation

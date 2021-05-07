@@ -170,15 +170,10 @@ $(document).ready(function() {
                                                     <div class="input-group justify-content-center mb-3" id="id_subdomain">
                                                         <input type="text" class="form-control" id="subdomain" name="subdomain" placeholder="Enter a Subdomain, must only contain letters, numbers and hyphens. No spaces are allowed." aria-label="Users's subdomain" aria-describedby="basic-addon2" value="{{ company.slug }}">
                                                         <div class="input-group-append">
-                                                            <span class="input-group-text" id="basic-addon2">.bookme.to</span>
+                                                            <span class="input-group-text" id="basic-addon2">.shopme.to</span>
                                                         </div>
-                                                        <div class="invalid_subdomain m-0 p-0" style="display:none; color:red!important;"></div>
                                                     </div>
-                                                </div>
-                                                <div class="form-group col-md-6">
-                                                    <label for="">Business Website Link</label>
-                                                    {{ updateform.website_link|as_crispy_field }}
-                                                    <div class="invalid_web m-0 p-0" style="display:none; color:red!important;"></div>
+                                                    <div class="invalid_subdomain m-0 p-0" style="display:inline; color:red!important;"></div>
                                                 </div>
                                             </div>
                                             <div class="form-row">
@@ -252,7 +247,7 @@ $(document).ready(function() {
         feedBackreasubdomain.style.display="none";
         var csrftoken = getCookie('csrftoken');
             $.ajax({
-                url: "{% host_url 'subdomain' host 'bizadmin' %}",
+                url: "{% host_url 'subdomain' host 'prodadmin' %}",
                 data: JSON.stringify({subdomain: subdomainVal}),
                 type: "POST",
                 dataType: 'json',

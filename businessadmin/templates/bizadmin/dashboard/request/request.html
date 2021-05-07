@@ -78,6 +78,10 @@
                                                                                     {% with service=booking.service %}
                                                                                         <li class="mb-1"><strong>Booking ID:</strong> {{ booking.slug }}</li>
                                                                                         <li class="mb-1"><strong>Service:</strong> {{ service.name }}</li>
+                                                                                        {% if booking.addon_service.all.count > 0 %}
+                                                                                        <li class="mb-1"><strong>Addon Services:</strong></li>
+                                                                                        {% for addon in booking.addon_service.all %}{{ addon.name }}, {% endfor %}
+                                                                                        {% endif %}
                                                                                         <li class="mb-1"><strong>Staff:</strong> {{ booking.staffmem }}</li>
                                                                                         <li class="mb-1"><strong>Cost:</strong> ${{ booking.price }}</li>
                                                                                         <li class="mb-1">{{ req.booking_request.all }}<strong>Date:</strong> {{ booking.start|date:"D, M d, Y" }}</li>
@@ -167,9 +171,7 @@
             $(document).on('click', '.accept', function () {
                 var $this = $(this)
                 var urldata = $this.attr("data-url")
-                document.querySelector("#spinneraccept").classList.remove("sr-only");
-                document.querySelector("#btn-text-accept").classList.add("hidden");
-
+                $this[0].innerHTML = '<div class="spinner-border spinner" role="status"><span class="sr-only">Loading...</span></div>'
                 $.ajax({
                     url: urldata,
                     type: 'post',
@@ -196,8 +198,7 @@
             $(document).on('click', '.decline', function () {
                 var $this = $(this)
                 var urldata = $this.attr("data-url")
-                document.querySelector("#spinnerdecline").classList.remove("sr-only");
-                document.querySelector("#btn-text-decline").classList.add("hidden");
+                $this[0].innerHTML = '<div class="spinner-border spinner" role="status"><span class="sr-only">Loading...</span></div>'
                 $.ajax({
                     url: urldata,
                     type: 'post',

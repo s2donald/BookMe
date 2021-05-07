@@ -1417,15 +1417,26 @@ def compinfoViews(request):
     return render(request, 'productadmin/companydetail/info/compinfo.html', {'company':company, 'updateform': updateform})
 
 import re
+class subdomainCheck(View):
+    def post(self, request):
+        data=json.loads(request.body)
+        subdomain = data['subdomain']
+        company = Company.objects.get(user=request.user)
+        if not subdomain:
+            return JsonResponse({'email_error':'You must choose a subdomain or else a random one will be chosen.','email_valid':True})
+        if (company.slug!=str(subdomain)) and (Company.objects.filter(slug=subdomain).exists()):
+            return JsonResponse({'email_error':'This subdomain already exists! Please try another.','email_valid':True})
 
+        if subdomain != slugify(subdomain):
+            return JsonResponse({'email_error':'Subdomains must only contain lowercase letters, numbers and hyphens.','email_valid':True})
+        return JsonResponse({'email_valid':False})
+        
 class saveCompanyDetail(View):
     def post(self, request):
         company = Company.objects.get(user=request.user)
         post_values = request.POST.copy()
         post_values['category'] = company.category.id
         post_values['subcategory'] = [1]
-
-        print()
         form = UpdateCompanyForm(post_values, initial={'category':company.category.id})
         context = {}
         if form.is_valid():

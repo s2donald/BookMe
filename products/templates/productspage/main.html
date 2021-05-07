@@ -61,9 +61,9 @@
                 <div class="avatarHeading">
                     <a href="{% host_url 'bookingurls' host 'bookingurl' slug=company.slug %}">
                     {% if company.image %}
-                        <img src="{{ company.image.url }}" alt="{{ company.business_name }} Logo" class="avatar-Heading">
+                        <img src="{{ company.image.url }}" alt="{{ company.business_name }} Logo" class="avatar-Heading" alt="{{ company.business_name }} Logo">
                     {% else %}
-                        <img src="{% static "/img/favicon/logo/shopme/shopme-appiconios.png" %}" class="avatar-Heading" alt="BookMe Logo">
+                        <img src="{% static "img/favicon/logo/shopme/ShopMe-appiconios.png" %}" class="avatar-Heading" alt="ShopMe Logo">
                     {% endif %}
                     </a>
                 </div>

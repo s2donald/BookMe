@@ -124,14 +124,14 @@
                                     </div>
                                 </form>
                                 <div class="text-center justify-content-center" id="galphotos">
-                                <div class="grid">
+                                {% comment %} <div class="grid"> {% endcomment %}
                                     {% for p in photos %}
                                         <div class="grid-item containergrid">
                                             <img class="grid-item-content" src="{{ p.photos.url }}" alt="">
                                             <button class="mybtns trashcan{{ p.id }} delete"><i class="fas fa-trash"></i></button>
                                         </div>
                                     {% endfor %}
-                                </div>
+                                {% comment %} </div> {% endcomment %}
                                 {% comment %} {% for p in photos %}
                                     <div class="col-sm-12 col-md-6 col-lg-4 mt-2">
                                         <div class="card hover-animate justify-content-center align-self-center show-image" id="{{ p.id }}">

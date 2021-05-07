@@ -18,6 +18,13 @@
                     <li class="mb-1"><strong>Vehicle Year:</strong> {{ extra.car_year }}</li> {% endcomment %}
                 <br>
             {% endif %}
+            {% if booking.addon_service.all.count > 0 %}
+                <li><strong>Selected Addon Services:</strong></li>
+                {% for addon in booking.addon_service.all %}
+                    <li>{{ addon.name }}</li>
+                {% endfor %}
+                <br>
+            {% endif %}
             <li class="mb-1"><strong>Booking ID:</strong> {{ booking.slug }}</li>
             <li class="mb-1"><strong>Service:</strong> {{ service.name }}</li>
             <li class="mb-1"><strong>Price:</strong> ${{ booking.price }}</li>

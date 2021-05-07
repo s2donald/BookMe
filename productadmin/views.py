@@ -1430,13 +1430,13 @@ class subdomainCheck(View):
         if subdomain != slugify(subdomain):
             return JsonResponse({'email_error':'Subdomains must only contain lowercase letters, numbers and hyphens.','email_valid':True})
         return JsonResponse({'email_valid':False})
-        
+
 class saveCompanyDetail(View):
     def post(self, request):
         company = Company.objects.get(user=request.user)
         post_values = request.POST.copy()
         post_values['category'] = company.category.id
-        post_values['subcategory'] = [1]
+        post_values['subcategory'] = [13]
         form = UpdateCompanyForm(post_values, initial={'category':company.category.id})
         context = {}
         if form.is_valid():
@@ -1456,7 +1456,6 @@ class saveCompanyDetail(View):
             company.postal = form.cleaned_data.get('postal')
             company.city = form.cleaned_data.get('city')
             company.province = form.cleaned_data.get('province')
-            company.website_link = form.cleaned_data.get('website_link')
             fb = form.cleaned_data.get('fb_link')
             company.fb_link =fb
             company.twitter_link = form.cleaned_data.get('twitter_link')

@@ -93,19 +93,19 @@ $(document).ready(function() {
                                         <form id="updatedform">
                                             {% csrf_token %}
                                             <select name="updatecompany-category" class=" form-control" hidden title="Category" id="id_updatecompany-category"><option class="bs-title-option" value=""></option>
-                                            <option value="1">Automotive Services</option>
+                                            <option value="1" selected="">Automotive Services</option>
 
                                             <option value="7">Home Services</option>
 
-                                            <option value="6" selected="">Other</option>
+                                            <option value="3" selected="">Other</option>
 
-                                            <option value="3">Personal Care</option>
+                                            <option value="4">Personal Care</option>
 
                                             
 
                                             </select>
                                             <select name="updatecompany-subcategory" hidden class="form-control selectmultiple" multiple="" data-size="5" data-dropdown-align-right="true" title="Subcategories" required="" id="id_updatecompany-subcategory" tabindex="null">
-                                                <option value="15" selected="">Vehicle Maintanence</option>
+                                                <option value="13" selected="">Vehicle Maintanence</option>
 
                                                 <option value="14">Exterior and Interior Detailing</option>
 

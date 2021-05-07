@@ -41,21 +41,25 @@
         {% endblock slideshow %} {% endcomment %}
         {% block header %}
             <div class="heading">
-                <div class="headingtext" style="background-color: black;">
+                {% comment %} <div class="headingtext" style="background-color: black;">
                     <div class="container">
                     <div class="row justify-content-between py-2">
                         <a class="ml-3 mt-2" href="{% host_url 'bizadminmain' host 'bizadmin' %}"><img height="20px" src="{% static "/img/favicon/logo/shopme/ShopMe-whitebrown.png" %}"></a>
                         <a class="mr-3 mt-2" href="{% host_url 'bizadminmain' host 'bizadmin' %}"><div class="fa fa-shopping-cart text-white d-none" height="18px"></div><div class="cartBadge d-none" id="cartvalue">2</div></a>
                     </div>
                     </div>
-                </div>
-                <div>
-                    <div class="imgcontainer_header bg-light d-flex">
-                        {% if company.backgroundimage %}
+                </div> {% endcomment %}
+                <div class="imgcontainer_header bg-light d-flex" >
+                    <a class="ml-3 mt-0" href="{% host_url 'bizadminmain' host 'bizadmin' %}"><img src="{% static "/img/favicon/logo/shopme/ShopMe-whitebrown.png" %}" style="height:20px; position:relative; top:20px; left: 10px;"></a>
+                    
+                    <div style="height: 150px;">
+                        
+                        {% comment %} {% if company.backgroundimage %}
                             <img class="coverimgstyle" src="{{ company.backgroundimage.url }}" alt="">
                         {% else %}
                             <div class="bg-light coverimgstyle"></div>
-                        {% endif %}
+                        {% endif %} {% endcomment %}
+                        {% comment %} <div class="bg-light coverimgstyle"></div> {% endcomment %}
                     </div>
                 </div>
                 <div class="avatarHeading">

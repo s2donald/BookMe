@@ -32,14 +32,26 @@
                             {% comment %} <a class="nav-link" href="{% host_url 'breaks_time' host 'bizadmin'%}">Breaks</a>
                             <a class="nav-link" href="{% host_url 'timeoff_time' host 'bizadmin'%}">Time Off</a> {% endcomment %}
                             <a class="nav-link" href="{% host_url 'service_detail' host 'bizadmin' %}">Services</a>
-                            <a class="nav-link activate" href="{% host_url 'service_detail' host 'bizadmin' %}">Add On Services</a>
+                            <a class="nav-link activate" href="{% host_url 'addonservice_detail' host 'bizadmin' %}">Add On Services</a>
                             <a class="nav-link" href="{% host_url 'client_list' host 'bizadmin' %}">Clients</a>
                             {% comment %} <a class="nav-link" href="#">Staff Members</a> {% endcomment %}
                         </nav>
                         <hr class="mt-0 mb-4" />
                         <div class="row">
-                            <div class="col-md-4" id="service-t">
-                                {% for addon in company.addons_offered.all %}
+                            <div class="col-md-12" id="service-t">
+                                <div class="card shadow my-1" style="border-radius: 8px !important;">
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <h4 class="card-header p-2">All Addon Services</h4>
+                                        </div>
+                                        <div class="col-6 text-right">
+                                            <div class="card-header p-2">
+                                                    <button class="btn btn-primary btn-sm mb-3 justify-content-center addnewservice" type="button" data-toggle="modal" data-target="#modal-service">Add Addon Services <i class="fas fa-plus"></i></button>
+                                            </div>
+                                        </div>
+                                    </div>       
+                                </div>
+                                {% for addon in services %}
                                     <div class="card shadow">
                                         <div class="row">
                                             <div class="col-12">
@@ -48,7 +60,8 @@
                                                     {% with hour=addon.duration_hour min=addon.duration_minute %}                          
                                                     <div class="row p-2 justify-content-between text-left align-self-center">
                                                         <div class="col-8 p-0">
-                                                        <p class="mb-1">{{ addon.name }}</p>
+                                                        <h4 class="mb-1">{{ addon.name }}</h4>
+                                                        <p>Services Attached: <br> {% for s in addon.services.all %}{{s.name}}<br> {% empty %}No Services Attached{% endfor %}</p>
                                                         </div>
                                                         <div class="col-4 p-1 text-right">
                                                         <div class="row">
@@ -60,7 +73,7 @@
                                                         </div>
                                                         <div class="col-12">
                                                         <button type="button" class="updateaddon btn btn-sm" data-toggle="modal" data-target="#modal-update" data-url="{% host_url 'updateaddonservice' addon.id host 'bizadmin' %}"><i class="fas fa-pencil-alt"></i></button>
-                                                        <button class="btn btn-danger btn-sm trashcan" data-url="{% host_url 'deleteservice' addon.id host 'bizadmin' %}"><i class="fas fa-trash"></i></button>
+                                                        <button class="btn btn-danger btn-sm trashcan" data-url="{% host_url 'deleteaddonservice' addon.id host 'bizadmin' %}"><i class="fas fa-trash"></i></button>
                                                         </div>
                                                         </div>
                                                         </div>
@@ -111,53 +124,36 @@
 <div class="modal fade" id="modal-service" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content card">
-      <div class="modal-header">
-        <h5 class="modal-title {% if company.darkmode %}text-white{% endif %} font-weight-bold d-flex justify-content-center pr-1 page-header-title" id="exampleModalLabel">Add your services</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-      <form method="POST" id="createserv">
+      <form method="POST" id="addAddonService">
         {% csrf_token %}
-        {{ service_form.name|as_crispy_field }}
-        {{ service_form.description|as_crispy_field }}
-        {% if company.service_category.all %}
-            {{ category_form.category|as_crispy_field }}
-        {% endif %}
-        <div class="form-row">
-            <div class="form-group col mb-0">
-                        {{ service_form.price_type|as_crispy_field }}
-                    </div>
-                    <div class="form-group col mb-0">
-                        {{ service_form.price|as_crispy_field }}
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group col mb-0">
-                        {{ service_form.duration_hour|as_crispy_field }}
-                    </div>
-                    <div class="form-group col mb-0"> 
-                        {{ service_form.duration_minute|as_crispy_field }}
-                    </div>
-                </div>
-                <a class="licolor" href="#simpleCollapse" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="simpleCollapse">Advanced Options</a>
-                <div class="collapse" id="simpleCollapse">
-                    {{ service_form.checkintime|as_crispy_field }}
-                    <div id="padd">
-                        {{ service_form.padding|as_crispy_field }}
-                    </div>
-                    <div id="show-padding" class="form-row">
-                        <div class="form-group col mb-0"> 
-                            {{ service_form.paddingtime_hour|as_crispy_field }}
-                        </div>
-                        <div class="form-group col mb-0"> 
-                            {{ service_form.paddingtime_minute|as_crispy_field }}
-                        </div>
-                    </div>
-                </div>
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+            </button>
+            <h4 class="modal-title {% if company.darkmode %}text-white{% endif %}">Add on service</h4>
         </div>
-      </form>
+        <div class="modal-body">
+            {{ service_form.name|as_crispy_field }}
+            <div class="form-row">
+                <div class="form-group col mb-0">
+                    {{ service_form.price|as_crispy_field }}
+                </div>
+            </div>
+            {{ service_form.services|as_crispy_field }}
+            <div class="form-row">
+                <div class="form-group col mb-0">
+                    {{ service_form.duration_hour|as_crispy_field }}
+                </div>
+                <div class="form-group col mb-0"> 
+                    {{ service_form.duration_minute|as_crispy_field }}
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Add Addon Service</button>
+        </div>
+    </form>
     </div>
   </div>
 </div>
@@ -166,7 +162,6 @@
 {% block java %}
     <script>
         $( document ).ready(function() {
-
             function getCookie(name) {
             let cookieValue = null;
             if (document.cookie && document.cookie !== '') {
@@ -199,7 +194,7 @@
                     var $this = $(this)
                     var urldata = $this.attr('data-url');
                     swalStyles.fire({
-                        title: 'Are you sure you want to delete the service?',
+                        title: 'Are you sure you want to delete the addon service?',
                         text: 'You will not be able to change this',
                         icon: 'warning',
                         showCancelButton: true,
@@ -212,21 +207,19 @@
                                 url: urldata,
                                 cache: false,
                                 success: function(data){
-                                    var htmlcontent = data.html_service_list
-                                    var el = document.querySelector('#service-t');
-                                    el.innerHTML = htmlcontent
-                                    var htmlcontents = data.html_category_list
-                                    var catel = document.querySelector('#categorylisttab');
-                                    catel.innerHTML = htmlcontents
                                     Swal.fire({
-                                        title: '{{ s.name }} Service Deleted!', 
-                                        text: 'Your service has been deleted.', 
+                                        title: 'Add On Service has been deleted!', 
+                                        text: '', 
                                         icon: 'success',
                                         customClass:{
                                             confirmButton: 'btn btn-primary',
                                             cancelButton: 'btn btn-danger',
                                         },
                                         buttonsStyling: false,
+                                    }).then((result) => {
+                                        if (result.isConfirmed){
+                                            location.reload();
+                                        }
                                     });
                                 }
                             });
@@ -242,75 +235,45 @@
                         }
                     });
                 });
-            
-            $(document).on('click', '.addnewservice', function(e){
-                var btn = $(this);
-                $.ajax({
-                    url: btn.attr("data-url"),
-                    type: 'get',
-                    dataType: 'json',
-                    beforeSend: function () {
-                        $("#modal-service").modal("show");
-                    },
-                    success: function (data) {
-                        $("#modal-service .modal-body").html(data.html_form);
-                    }
-                });
-            })
 
-            $('#createserv').submit(function(e){
+            $('#addAddonService').submit(function(e){
                 e.preventDefault();
                 {% comment %} btn.attr("data-category") {% endcomment %}
                 $.ajax({
                     type:'POST',
-                    url: "{% host_url 'createservice' host 'bizadmin' %}",
-                    data: $('#createserv').serialize(),
+                    url: "{% host_url 'createaddonservice' host 'bizadmin' %}",
+                    data: $('#addAddonService').serialize(),
                     headers:{
                         "X-CSRFToken": csrftoken
                     },
                     success:function(data){
-                        $('#modal-service').modal('hide');
-                        var htmlcontent = data.html_service_list
-                        var el = document.querySelector('#service-t');
-                        el.innerHTML = htmlcontent
-                        var htmlcontents = data.html_category_list
-                        var catel = document.querySelector('#categorylisttab');
-                        catel.innerHTML = htmlcontents
-                        $.notify({
-                            // options
-                            message: data.view
-                        },{
-                            // settings
-                            type: data.icon
-                        });
-                    }
-                });
-            });
-
-            $('#createcate').submit(function(e){
-                e.preventDefault();
-                $.ajax({
-                    type:'POST',
-                    url: "{% host_url 'createservicecate' host 'bizadmin' %}",
-                    data: $('#createcate').serialize(),
-                    headers:{
-                        "X-CSRFToken": csrftoken
-                    },
-                    success:function(data){
-                        $('#modal-addcategory').modal('hide');
-                        var htmlcontent = data.html_service_list
-                        var el = document.querySelector('#service-t');
-                        el.innerHTML = htmlcontent
-                        var htmlcontent = data.html_category_list
-                        var catel = document.querySelector('#categorylisttab');
-                        catel.innerHTML = htmlcontent
-                        $.notify({
-                            // options
-                            message: data.view
-                        },{
-                            // settings
-                            type: data.icon
-                        });
+                        if (data.good){
+                            $('#modal-service').modal('hide');
+                            Swal.fire({
+                                title: 'Add On Service has been added!', 
+                                text: '', 
+                                icon: 'success',
+                                customClass:{
+                                    confirmButton: 'btn btn-primary',
+                                    cancelButton: 'btn btn-danger',
+                                },
+                                buttonsStyling: false,
+                            }).then((result) => {
+                                if (result.isConfirmed){
+                                    location.reload();
+                                }
+                            });
+                        }
+                        else {
+                            $.notify({
+                                // options
+                                message: 'There was an error with your form. Please try again'
+                            },{
+                                // settings
+                                type: 'danger'
+                            });
+                        }
+                        
                     }
                 });
             });
@@ -338,16 +301,6 @@
                     $('.collapse').collapse('hide')
                 }
                 
-            });
-            $(window).on('shown.bs.modal', function() { 
-                $.ajax({
-                    url: '{% host_url "ajax_load_services" host "bizadmin" %}',
-                    success: function(data){
-                        $('#id_services').empty()
-                        $('#id_services').append(data)
-                        $('#id_services').selectpicker('refresh')
-                    }
-                });
             });
         });
     </script>

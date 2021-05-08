@@ -102,10 +102,12 @@ class AddOnServiceForm(forms.Form):
     duration_hour = forms.ChoiceField(label='Duration Hour',choices=hours_choices, widget=forms.Select(attrs={'class':' form-control', 'data-size':'5'}))
     duration_minute = forms.ChoiceField(label='Duration Minute',choices=minute_choices,initial= '30', widget=forms.Select(attrs={'class':' form-control', 'data-size':'5'}))
     price = forms.DecimalField(label='Price ($)',max_digits=10, required=True, widget=forms.TextInput(attrs={'type':'number'}))
-
+    services = forms.ModelMultipleChoiceField(queryset=Services.objects.none(),required=False,label='Select The Services This Addon Attaches To:', widget=forms.SelectMultiple(attrs={'class':'selectcolor selectpicker show-tick form-control','title':'Service','data-size':'6', 'multiple':'', 'data-live-search':"true"}))
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         try:
-            self.fields['services'].queryset = Services.objects.filter(company=self.initial['company'].id)
+            self.fields['services'].queryset = Services.objects.filter(business__id=self.initial['company'])
+            self.fields['services'].initial = Services.objects.filter(id__in=self.initial['services'])
         except AttributeError:
+            print('error')
             pass

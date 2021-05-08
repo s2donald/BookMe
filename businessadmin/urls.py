@@ -55,7 +55,7 @@ urlpatterns = [
     re_path(r'post/removestaffCompany/', views.removestaffCompany.as_view(), name='removestaffromcompany'),
     re_path(r'post/addbreakday/', views.addbreakdayViews.as_view(), name='addbreakday'),
     re_path(r'post/removebreakday/', views.removebreakdayViews.as_view(), name='removebreakday'),
-    # re_path(r'detail/addonservice/$', views.addonservicesDetailView, name='addonservice_detail'),
+    re_path(r'detail/addonservice/$', views.addonservicesDetailView, name='addonservice_detail'),
 
 
     re_path(r'detail/clients/$', views.clientListView, name='client_list'),
@@ -74,9 +74,12 @@ urlpatterns = [
     re_path(r'deletecategory/(?P<pk>\d+)/$', views.deleteCategoryAPI.as_view(), name='category_delete_view'),
 
     re_path(r'creatings/$', views.createserviceAPI.as_view(), name='createservice'),
+    re_path(r'creatingaddons/$', views.createAddonDetailView.as_view(), name='createaddonservice'),
+
     re_path(r'creatingserv/(?P<pk>\d+)/$', views.createserviceAPII.as_view(), name='createservices'),
     re_path(r'creatingcate/$', views.createcategoryAPI.as_view(), name='createservicecate'),
     re_path(r'deletes/(?P<pk>\d+)/$', views.deleteserviceAPI.as_view(), name='deleteservice'),
+    re_path(r'deletesaddon/(?P<pk>\d+)/$', views.deleteaddonserviceAPI.as_view(), name='deleteaddonservice'),
     re_path(r'updates/(?P<pk>\d+)/$', views.updateserviceAPI.as_view(), name='updateservice'),
     re_path(r'updateaddons/(?P<pk>\d+)/$', views.updateaddonserviceAPI.as_view(), name='updateaddonservice'),
 

@@ -19,6 +19,12 @@
     <div class="status-info information">
         <h6>{{ service.name }}</h6>
         <p>with {% if staff.user %}{{ staff.user.first_name }}{% else %}{{ staff.first_name }}{% endif %}</p>
+        {% if addon_lst %}<p>
+        <strong>Addon Services: </strong>
+        {% for addon in addon_lst %}
+        {{ addon.name }}, 
+        {% endfor %}
+        </p>{% endif %}
     </div>
     <div class="row mb-3 mx-auto">
         <div class="col-5 ml-auto mr-1 d-flex align-items-center mb-3 mb-md-0 bg-light rounded text-white">

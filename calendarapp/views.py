@@ -533,7 +533,7 @@ class confirmationMessageRender(View):
             collectpayment = False
             paymentduelater = float(servprice)
             thepayment = 0
-        html_content = render_to_string('bookingpage/multiplestaff/bookingpage/partials/confirmation.html', {'company':company,'staff':staff,'service':service, 'service_duration_hour':service_duration_hour, 'service_duration_minute':service_duration_minute ,'date':date, 'time':time, 'month':month, 'year':year, 'day':day, 'collectpayment':collectpayment, 'thepayment':thepayment,'paymentduelater': paymentduelater}, request)
+        html_content = render_to_string('bookingpage/multiplestaff/bookingpage/partials/confirmation.html', {'addon_lst':mylist,'company':company,'staff':staff,'service':service, 'service_duration_hour':service_duration_hour, 'service_duration_minute':service_duration_minute ,'date':date, 'time':time, 'month':month, 'year':year, 'day':day, 'collectpayment':collectpayment, 'thepayment':thepayment,'paymentduelater': paymentduelater}, request)
         conf_content = render_to_string('bookingpage/multiplestaff/bookingpage/partials/confirmationside/confirmationside.html', {'company':company,'service':service, 'staff':staff }, request)
         return JsonResponse({'html_content':html_content, 'conf_content':conf_content, 'collectpayment':collectpayment})
 
@@ -615,7 +615,7 @@ class confirmationMessageRender(View):
             # render out the login and user form retrieval
             personal_form = GuestPersonalForm(initial={'phone_code':"CA"})
             html_content = render_to_string('bookingpage/multiplestaff/bookingpage/partials/login/guest.html', 
-                {'company':company,'staff':staff,'service':service, 'service_duration_hour':service_duration_hour,'service_duration_minute':service_duration_minute, 'date':date, 'time':time, 'month':month, 'year':year, 'day':day, 'personal_form':personal_form, 
+                {'addon_lst':mylist,'company':company,'staff':staff,'service':service, 'service_duration_hour':service_duration_hour,'service_duration_minute':service_duration_minute, 'date':date, 'time':time, 'month':month, 'year':year, 'day':day, 'personal_form':personal_form, 
                     'collectpayment':collectpayment, 'paymentduelater':paymentduelater, 'thepayment':thepayment, 'mylist':mylist
                 }, request)
             return JsonResponse({'html_content':html_content, 'notauthenticated':True, 'collectpayment':collectpayment})

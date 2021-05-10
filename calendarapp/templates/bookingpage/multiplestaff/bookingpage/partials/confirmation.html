@@ -21,6 +21,13 @@
 <div class="status-info information">
     <h6>{{ service.name }}</h6>
     <p>with {% if staff.user %}{{ staff.user.first_name }}{% else %}{{ staff.first_name }}{% endif %}</p>
+    {% if addon_lst %}<p>
+    <strong>Addon Services: </strong>
+    {% for addon in addon_lst %}
+    {{ addon.name }}, 
+    {% endfor %}
+    </p>{% endif %}
+    
     {% if collectpayment %}
         <p><strong>Total Due Now:</strong> ${{ thepayment|floatformat:2 }}</p>
         <p><strong>Due at the time of appointment:</strong> ${{ paymentduelater|floatformat:2 }}</p>

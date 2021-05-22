@@ -1,0 +1,195 @@
+{% extends 'productadmin/index.html' %}
+{% load static %}
+{% load countries %}
+{% load hosts %}
+{% load business_tags %}
+{% load crispy_forms_tags %}
+{% block linkscript %}
+    <link rel="stylesheet" href="{% static "css/calendarmain.css"%}">
+    <script src="{% static "js/calendarmain.js" %}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ekko-lightbox/5.3.0/ekko-lightbox.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ekko-lightbox/5.3.0/ekko-lightbox.min.js" integrity="sha512-Y2IiVZeaBwXG1wSV7f13plqlmFOx8MdjuHyYFVoYzhyRr3nH/NMDjTBSswijzADdNzMyWNetbLMfOpIPl6Cv9g==" crossorigin="anonymous"></script>
+{% endblock linkscript %}
+{% block activeship%}active{%endblock%}
+{% block businessadmin %}
+        <!-- Main page content-->
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModal" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">View Details</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="myModals" tabindex="-1" role="dialog" aria-labelledby="myModal" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">View Details</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="content">
+    <div class="row">
+        <div class="col-12">
+            <header class="page-header page-header-compact page-header-light">
+                <div class="container-fluid">
+                    <div class="page-header-content">
+                        <div class="row align-items-center justify-content-between pt-3">
+                            <div class="col-12">
+                                <h1 class="page-header-title">
+                                    Shipping
+                                </h1>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+            </header>
+            <hr class="mt-0 mb-4">
+        </div>
+        
+        {% comment %} <div class="col-md-4 mt-3">
+            <div class="" style="border-radius:5px;">
+                <div class="card-body">
+                    <div class="col-12">
+                        <h4>Shipping origin</h4>
+                        Used to calculate shipping rates at checkout.
+                    </div>
+                </div>
+            
+            </div>
+        </div>
+
+        <div class="col-md-8 mt-3">
+            <div class="card" style="border-radius:5px;">
+                <div class="row justify-content-between p-2">
+                    <div class="card-header">
+                    <h4>Shipping from</h4>
+                    </div>
+                    
+                    <button class="btn btn-link btn-info">Change shipping origin</button>
+                </div>
+                <div class="card-body">
+                    <div class="col-12">
+                        
+                    </div>
+                </div>
+            
+            </div>
+        </div> 
+        <div class="col-12"><hr class="mt-0 mb-4"></div>
+        {% endcomment %}
+
+
+
+        <div class="col-md-4 mt-3">
+            <div class="" style="border-radius:5px;">
+                <div class="card-body">
+                    <div class="col-12">
+                        <h4>Shipping Rates</h4>
+                        <p>Add shipping zones to define the regions which you are able to ship products.</p>
+                        <p>Create shipping rates to define how much customers pay for shipping in those regions.</p>
+                    </div>
+                </div>
+            
+            </div>
+        </div>
+
+        <div class="col-md-8 mt-3">
+            <div class="card" style="border-radius:5px;">
+                <div class="row justify-content-between p-2">
+                    <div class="card-header">
+                    <h4>Shipping Zones</h4>
+                    </div>
+                    
+                    <a type="button" href="{% host_url 'addshipping' host 'prodadmin' %}" class="btn btn-link btn-info">Add shipping zone</a>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-12 m-1">
+                            {% for zones in company.shipping_zones_avail.all %}
+                                <div class="p-3 m-1" style="border: 1px solid #dadbdd;">
+                                    <div class="row justify-content-between align-items-center p-2">
+                                        <div class="d-flex">
+                                            <span style="color:black">
+                                            <div>
+                                                {% with countries=zones.country  %}
+                                                    <h4>
+                                                    {% with len=countries|length  %}
+                                                        {% if len < 3 %}
+                                                            {% for c in countries %}
+                                                                <img class="country-select-flag" id="flag_id_country" src="{{ c.flag }}">
+                                                            {% endfor %}
+                                                        {% else %}
+                                                            <img class="country-select-flag" id="flag_id_country" style="width:16px; height:16px" src="{% static 'img/icons/world.png' %}"> 
+                                                        {% endif %}
+                                                    {% endwith %}
+                                                    
+                                                        {{ zones.name }}
+                                                    </h4>
+                                                    <p class="text-muted text-truncate" style="max-width:200px;">
+                                                        {% for country in countries %}
+                                                            {{ country }}, 
+                                                        {% endfor %}
+                                                    </p>
+                                                {% endwith %}
+                                            </div>
+                                            
+                                            </span>
+                                        </div>
+                                        <div class="btn btn-link btn-info">Edit</div>
+                                    </div>
+                                    {% with pricebasedzones=zones.pricebased_rate.all %}
+                                        {% for pbz in pricebasedzones %}
+                                            <div class="row d-flex">
+                                                <div class="col-12">
+                                                    <p class=""><b>{{ pbz.name }}: </b>{% if pbz.rate == 0.00 %}Free{% else %}${{ pbz.rate }}{% endif %}</p>
+                                                    <p class="my-0"> <b>Applies to products: </b> 
+                                                        {% if not pbz.upper_price %}
+                                                            ${{ pbz.lower_price }} and up
+                                                        {% else %}
+                                                            ${{ pbz.lower_price }} - ${{ pbz.upper_price }}
+                                                        {% endif %}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+                                    {% endwith %}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            
+            </div>
+        </div>
+
+        <div class="col-12"><hr class="mt-0 mb-4"></div>
+
+    </div>
+</div>
+{% endblock %}

@@ -19,6 +19,10 @@ urlpatterns = [
     re_path(r'api/addcustomize/theme/$', views.customThemeAPI.as_view(), name='toggletheme'),
 
     re_path(r'dashboard/orders/$', views.orderView, name='orders'),
+    re_path(r'dashboard/shipping/$', views.shippingView, name='shipping'),
+    re_path(r'dashboard/shipping/add_shipping/$', views.addshippingView, name='addshipping'),
+    re_path(r'api/dashboard/shipping/get_country_list/$', views.getCountriesListAPI.as_view(), name='getCountriesList'),
+    re_path(r'api/dashboard/shipping/create_shipping/$', views.createshippingZoneViewAPI.as_view(), name='createshippingzone'),
     re_path(r'api/grabthemodalorder/$', views.modalGetOrderType.as_view(), name='ordermodalview'),
 
     re_path(r'dashboard/profile/security/$',views.profileSecurityViews, name='security'),#Changed
@@ -52,7 +56,8 @@ urlpatterns = [
     re_path(r'deletes/(?P<pk>\d+)/$', views.deleteserviceAPI.as_view(), name='deleteproduct'),#Updated
     re_path(r'updates/(?P<pk>\d+)/$', views.updateserviceAPI.as_view(), name='updateproduct'),#Updated
     re_path(r'adddropdown/(?P<pk>\d+)/$', views.addDropdownOption.as_view(), name='adddropdownprod'),#Added
-    re_path(r'addquestion/(?P<pk>\d+)/$', views.addQuestionOption.as_view(), name='addquestionprod'),#Added
+    re_path(r'addquestion/(?P<pk>\d+)/$', views.addQuestionOption.as_view(), name='addquestionprod'),#Added 
+    re_path(r'addgallaryproductpic/(?P<pk>\d+)/$', views.addProductGallaryPic.as_view(), name='addproductgallaryphotos'),
     re_path(r'removedropdown/(?P<pk>\d+)/$', views.removeDropDownOption.as_view(), name='removedropdown'),#added
     re_path(r'removequestion/(?P<pk>\d+)/$', views.removeQuestionOption.as_view(), name='removequestion'),#added
     re_path(r'onboarding/check/subdomain/$', views.subdomainCheck.as_view(), name='subdomain'),

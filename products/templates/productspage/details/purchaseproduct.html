@@ -108,7 +108,7 @@
                             <p class="mb-1 text-muted">Subtotal:</p>
                             <p class=" mb-1 text-muted">${{ item.price }}</p>
                         </div>
-                        <div class="d-flex justify-content-between align-items-center mt-0">
+                        {% comment %} <div class="d-flex justify-content-between align-items-center mt-0">
                             <p class="mb-1 text-muted">Shipping</p>
                             {% if item.shipping %}
                                 <h5>$<span style="font-weight:500">{{ item.shipping }}</span></h5>
@@ -116,7 +116,7 @@
                                 <p class="mb-1 text-muted">Pick up</p>
                             {% endif %}
                             
-                        </div>
+                        </div> {% endcomment %}
                         <hr class="mt-0">
                         <div class="d-flex justify-content-between align-items-center mb-3">
                             <p style="font-weight:600">Total</p>

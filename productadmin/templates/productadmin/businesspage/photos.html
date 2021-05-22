@@ -52,17 +52,6 @@
         }).on('filebatchuploadcomplete', function(event, data) {
             location.reload();
         });
-
-        var $grid = $('.grid').masonry({
-            columnWidth: 250,
-            itemSelector: '.grid-item',
-            isFitWidth: true
-        });
-
-        $grid.on( 'click', '.grid-item-content', function( event ) {
-            $( event.currentTarget ).parent('.grid-item').toggleClass('is-expanded');
-            $grid.masonry();
-        });
     });
 
                             
@@ -141,11 +130,13 @@
                                     
                                     
                                 </div> {% endcomment %}
-                                <div class="row text-center justify-content-center" id="galphotos">
+                                <div class="row text-center justify-content-center card-columns" id="galphotos" style="display:inline-block !important;">
                             {% for p in company.gallary.all %}
-                            <div class="col-sm-12 col-md-6 col-lg-4 mt-2">
+                            <div class="col-sm-12 mt-2">
+                            
                                 <div class="card justify-content-center align-self-center text-center show-image" id="{{ p.id }}">
                                 <img width="300px" height="100%" class="rounded" src="{{ p.photos.url }}" alt="">
+                                <a class="btn btn-danger d-none trashcan{{ p.id }} delete text-white"><i class="fas fa-trash"></i></a>
                                 </div>
                             </div>
                             {% empty %}
@@ -239,7 +230,8 @@
                             photo = document.querySelector("#galphotos");
                             {% for p in photos %}
                                 $('#{{ p.id }}').hover(function(){
-                                    $('.trashcan{{ p.id }}').toggleClass('d-none') 
+                                    $('.trashcan{{ p.id }}').toggleClass('d-none')
+                                    $('.trashcan{{ p.id }}').toggleClass('d-block') 
                                 });
 
                                 $('.trashcan{{ p.id }}').click(function(){

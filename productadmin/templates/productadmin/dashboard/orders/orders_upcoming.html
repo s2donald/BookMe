@@ -189,6 +189,12 @@
 
 {% block calendarscript %}
 <script>
+    $(document).on('click', '[data-toggle="lightbox"]', function(event) {
+        event.preventDefault();
+        $(this).ekkoLightbox();
+    });
+</script>
+<script>
     $(document).on('click', '.dropdown-item', function(e){
         var $this = $(this)
         var order_id = $(this).attr('data-id')

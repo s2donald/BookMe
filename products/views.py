@@ -231,7 +231,7 @@ class PaymentProcessingProducts(View):
         )
         total = order.get_total_cost()
         price = (float(total) * 100)
-        applicationfee = (float(total) * 3) + 10
+        applicationfee = (float(total) * 3)
         try:
             payment_intent = stripe.PaymentIntent.create(
                 payment_method_types=['card'],

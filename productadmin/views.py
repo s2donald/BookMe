@@ -352,8 +352,6 @@ class modalGetOrderType(View):
         company = Company.objects.get(user=user)
         order_id = request.GET.get('order')
         type_of_req = request.GET.get('type')
-        print(order_id)
-        print(type_of_req)
         order = Order.objects.get(pk=str(order_id))
         html = ''
         title = ''
@@ -476,7 +474,6 @@ def orderView(request):
             active = False
             delivered=False
             types = ''
-            print(search)
             if search == 'pending':
                 orders = Order.objects.filter(company=company, orderplaced=True,pendingapproval=True, completed=False, cancelled=False).order_by('-created')
                 pending = True
@@ -525,6 +522,75 @@ def orderView(request):
             return redirect(reverse('completeprofile', host='prodadmin'))
     else:
         loginViews(request)
+
+from .forms import ShippingZoneForm
+@login_required
+def shippingView(request):
+    user = request.user
+    if user.is_authenticated and user.is_business:
+        if user.on_board:
+            company = Company.objects.get(user=user)
+            return render(request, 'productadmin/dashboard/shipping/shipping.html', {
+                                                                                        'company':company
+                                                                                    })
+        else:
+            return redirect(reverse('completeprofile', host='prodadmin'))
+    else:
+        loginViews(request)
+
+from .models import CompanyShippingZone
+
+@login_required
+def addshippingView(request):
+    user = request.user
+    if user.is_authenticated and user.is_business:
+        if user.on_board:
+            company = Company.objects.get(user=user)
+            # zone = CompanyShippingZone.objects.create(company=company, name='')
+            form = ShippingZoneForm()
+            return render(request, 'productadmin/dashboard/shipping/shipping_zone/addshippingzone.html', {
+                                                                                        'company':company,
+                                                                                        'form':form
+                                                                                    })
+        else:
+            return redirect(reverse('completeprofile', host='prodadmin'))
+    else:
+        loginViews(request)
+
+class createshippingZoneViewAPI(View):
+    def post(self,request):
+        company = Company.objects.get(user=request.user)
+        form = ShippingZoneForm(request.POST)
+        if form.is_valid():
+            countries = form.cleaned_data['country']
+            countries = request.POST.getlist('countryinput')
+            allcountry = False
+            for c in countries:
+                if c == 'all':
+                    allcountry = True
+                    break
+            if allcountry:
+                print('hello')
+            return redirect(reverse('shipping', host='prodadmin'))
+        else:
+            return render(request, 'productadmin/dashboard/shipping/shipping_zone/addshippingzone.html', {
+                                                                                        'company':company,
+                                                                                        'form':form
+                                                                                    })
+from django_countries import countries
+class getCountriesListAPI(View):
+    def get(self,request):
+        company = Company.objects.get(user=request.user)
+        countries = request.GET.getlist('data[]')
+        allcountry = False
+        for c in countries:
+            if c == 'all':
+                countries = ['all']
+                break
+            else:
+                break
+        html_response = render_to_string('productadmin/dashboard/shipping/partial/countries.html', {'countriess':countries, 'company':company})
+        return JsonResponse({'html_content':html_response})
 
 def fileUploadView(request):
     if request.POST:
@@ -862,6 +928,17 @@ class addQuestionOption(View):
             request.session['formerror'] = 'There was an error attaching the question to your product. The question can be a maximum 400 characters.'
             return redirect(reverse('service_detail', host='prodadmin'))
         return redirect(reverse('service_detail', host='prodadmin'))
+
+class addProductGallaryPic(View):
+    def get(self, request, pk):
+        product = get_object_or_404(ProductModel, pk=pk)
+        company = Company.objects.get(user=request.user)
+        form = dropDownForm()
+        form2 = formset_factory(dropDownOptionsForm, extra=2)
+        data=dict()
+        context = {'placeholder_form':form, 'option_form':form2,'product':product,'company':company}
+        data['html_form'] = render_to_string('productadmin/companydetail/services/partial/partial_dropdown_form.html', context, request=request)
+        return JsonResponse(data)
 
 class addDropdownOption(View):
     def get(self, request, pk):
@@ -1515,7 +1592,7 @@ def servicesDetailView(request):
             del request.session['formsuccess']
     except:
         errormsg = None
-    return render(request,'productadmin/companydetail/services/service.html', {'errors':errors,'errormsg':msg,'success':success,'company':company, 'products':products, 'product_form':product_form, 'category_form':category_form,'servcategory_form':servcategory_form})
+    return render(request,'productadmin/companydetail/services/products.html', {'errors':errors,'errormsg':msg,'success':success,'company':company, 'products':products, 'product_form':product_form, 'category_form':category_form,'servcategory_form':servcategory_form})
 
 from itertools import chain
 

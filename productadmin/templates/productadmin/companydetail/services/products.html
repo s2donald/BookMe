@@ -87,54 +87,47 @@
                                             </div>       
                                         </div>
                                           <div class="allmyprods">
+                                            <div class="container-fluid">
+                                                <div class="row">
                                                     {% for s in company.products_offered.all %}
-                                                        <div class="card shadow" style="border-radius: 8px !important;">
-                                                            <div class="row">
-                                                                <div class="col-12">
+                                                            <div class="col-sm-12 col-md-6 col-lg-4 col-12">
+                                                                <div class="card shadow" style="border-radius: 8px !important;">
                                                                     {% comment %} <div class="card-header">{{ s.name }}</div> {% endcomment %}
-                                                                    <div class="card-body">                      
-                                                                        <div class="row p-2 justify-content-between text-left align-self-center">
-                                                                            <div class="col-12">
-                                                                              <h3 class="mb-1">{{ s.name }} - ${{ s.price }}</h3>
-                                                                                {% if s.mainimage %}
-                                                                                    <img src="{{ s.mainimage.url }}" width="150px" height="150px" class="rounded" style="object-fit: cover;">
-                                                                                {% endif %}
-                                                                                
+                                                                    <div class="card-body">
+                                                                        <div class="text-center pb-2">
+                                                                        {% if s.mainimage %}
+                                                                            <img src="{{ s.mainimage.url }}" class="mainproductimages" alt="{{ company.business_name }} Image" style="width: auto;height: 200px;object-fit: cover;">
+                                                                        {% else %}
+                                                                            <img src="{% static 'img/default-product-image.png' %}" class="mainproductimages" alt="" style="width: 300px;height: 200px;object-fit: cover;">
+                                                                        {% endif %}
+                                                                        </div>
+                                                                        <div class="row px-3 justify-content-between">
+                                                                            <div>
+                                                                                <h3 class="heading-text-caption text-truncate" style="max-width:175px;">
+                                                                                    {{ s.name }}{% if s.request %}<div class="justify-content-right"><span class="badge badge-success">Customizable</span></div>{% endif %}    
+                                                                                </h3>
+                                                                                <h5>{{ s.currency }} ${{ s.price }}</h5>
                                                                             </div>
-                                                                            <div class="col-md-8 pl-0 mt-2 order-3 order-md-2">
-                                                                            
-                                                                                
-                                                                                <div class="accordion" id="accordionExample">
-                                                                                    <div class="card">
-                                                                                        <div class="card-header py-0">
-                                                                                            <h2 class="mb-0" id="headingOne">
-                                                                                                <button class="btn btn-link text-left d-flex justify-content-between my-0 descr" type="button" data-toggle="collapse" data-target="#collapseFun{{s.id}}" aria-expanded="false" aria-controls="collapseFun{{s.id}}">
-                                                                                                    Product Description
-                                                                                                    <i class="fas fa-chevron-down text-line rotatemenow"></i>
-                                                                                                </button>
-                                                                                            </h2>
-                                                                                        </div>
-                                                                                        <div id="collapseFun{{s.id}}" class="collapse text-center" aria-labelledby="headingOne" data-parent="#accordionExample">
-                                                                                            <div class="col-12">
-                                                                                                <ul style="list-style:none; text-align:left;">
-                                                                                                    <li>
-                                                                                                        <div id="innerHTMLDescription" class="productdescription showentire mt-3 text-left ml-auto">
-                                                                                                            {% autoescape off %}
-                                                                                                                {{ s.description|linebreaks }}
-                                                                                                            {% endautoescape %}
-                                                                                                        </div>
-                                                                                                    </li>
-                                                                                                </ul>
-                                                                                            </div>
-                                                                                        </div>
+                                                                            <div class="text-right">
+                                                                                <div class="dropdown justify-content-right">
+                                                                                    <a class="three-dots-link" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width:35px; height:35px;">
+                                                                                        <i></i>
+                                                                                    </a>
+                                                                                    <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow" style="">
+                                                                                        <a type="button" class="dropdown-item addquestion" title="Add extra add ons and options to products" data-toggle="modal" data-target="#modal-update" data-url="{% host_url 'adddropdownprod' s.id host 'prodadmin' %}">Add Dropdown Options</a>
+                                                                                        <a type="button" class="dropdown-item addquestion"  title="Ask additional questions before a product order is placed" data-toggle="modal" data-target="#modal-update" data-url="{% host_url 'addquestionprod' s.id host 'prodadmin' %}">Attach a Question</a>
+                                                                                        {% comment %} <a type="button" class="dropdown-item addquestion"  title="Attach multiple pictures to your product" data-toggle="modal" data-target="#modal-update" data-url="{% host_url 'addproductgallaryphotos' s.id host 'prodadmin' %}">Attach More Photos</a> {% endcomment %}
+                                                                                        <a type="button" class="dropdown-item updatebtn" data-toggle="modal" data-target="#modal-update" data-url="{% host_url 'updateproduct' s.id host 'prodadmin' %}">Edit Product</a>
+                                                                                        <a type="button" class="dropdown-item trashcan" data-url="{% host_url 'deleteproduct' s.id host 'prodadmin' %}">Delete Product</a>
                                                                                     </div>
-
-
+                                                                                    
                                                                                 </div>
-                                                                                {% if s.product_maindropdown.all.count > 0 or s.product_questions.all.count > 0 %}
+                                                                            </div>
+                                                                        </div>
+                                                                        {% if s.product_maindropdown.all.count > 0 or s.product_questions.all.count > 0 %}
                                                                                 <div class="accordion" id="accordionExample">
                                                                                     <div class="card">
-                                                                                        <div class="card-header py-0">
+                                                                                        <div class="card-header p-0">
                                                                                             <h2 class="mb-0" id="headingOne">
                                                                                                 <button class="btn btn-link text-left d-flex justify-content-between my-0 descr" type="button" data-toggle="collapse" data-target="#collapseReq{{s.id}}" aria-expanded="true" aria-controls="collapseReq{{s.id}}">
                                                                                                     Additional Requirements
@@ -142,10 +135,10 @@
                                                                                                 </button>
                                                                                             </h2>
                                                                                         </div>
-                                                                                        <div id="collapseReq{{s.id}}" class="collapse show text-center" aria-labelledby="headingOne" data-parent="#accordionExample">
+                                                                                        <div id="collapseReq{{s.id}}" class="collapse text-center" aria-labelledby="headingOne" data-parent="#accordionExample">
                                                                                             <div class="row">
                                                                                                 <div class="col-12">
-                                                                                                    <ul style="list-style:none; text-align:left;" id="dropdownslist{{s.id}}">
+                                                                                                    <ul class="px-0" style="list-style:none; text-align:left;" id="dropdownslist{{s.id}}">
                                                                                                         {% for maindropdown in s.product_maindropdown.all %}
                                                                                                         <li style="position:relative; background: white !important;">
                                                                                                             <div class="additional-options">
@@ -164,7 +157,7 @@
                                                                                                         </li>
                                                                                                         {% endfor %}
                                                                                                     </ul>
-                                                                                                    <ul style="list-style:none; text-align:left;" id="imagereq{{s.id}}">
+                                                                                                    <ul class="px-0" style="list-style:none; text-align:left;" id="imagereq{{s.id}}">
                                                                                                         {% for questions in s.product_questions.all %}
                                                                                                         <li style="position:relative; background: white !important;">
                                                                                                             <div class="additional-options">
@@ -189,33 +182,17 @@
                                                                                 </div>
 
                                                                                 {% endif %}
-
-                                                                                <div class="text-block">
-                                                                                    <button class="btns btn-outline-info m-1 addquestion" title="Add extra add ons and options to products" data-toggle="modal" data-target="#modal-update" data-url="{% host_url 'adddropdownprod' s.id host 'prodadmin' %}">+ Add Dropdown Options</button>
-                                                                                    <button class="btns btn-outline-info m-1 addquestion" title="Ask additional questions before a product order is placed" data-toggle="modal" data-target="#modal-update" data-url="{% host_url 'addquestionprod' s.id host 'prodadmin' %}">+ Attach a Question</button>
-                                                                                    <button class="btns btn-outline-info m-1 addquestion" title="Attach multiple pictures to your product" data-toggle="modal" data-target="#modal-update" data-url="{% host_url 'addproductgallaryphotos' s.id host 'prodadmin' %}">+ Attach More Photos</button>
-                                                                                </div>
-                                                                              
-                                                                            </div>
-                                                                            <div class="col-md-4 col-12 p-1 order-sm-2 text-md-right text-left">
-                                                                                <div class="row">
-                                                                                    <div class="col-6 col-md-12">
-                                                                                        <button type="button" class="updatebtn btn btn-sm" data-toggle="modal" data-target="#modal-update" data-url="{% host_url 'updateproduct' s.id host 'prodadmin' %}"><i class="fas fa-pencil-alt"></i> Edit Product</button>
-                                                                                        <button class="btn btn-danger btn-sm trashcan" data-url="{% host_url 'deleteproduct' s.id host 'prodadmin' %}"><i class="fas fa-trash"></i> Delete Product</button>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
                                                                     </div>
                                                                     
                                                                 </div>
                                                             </div>
-                                                        </div>
                                                     {% empty %}
                                                         <div class="card shadow" style="border-radius: 8px !important;">
                                                             <div class="card-header">No Products Added</div>
                                                         </div>
                                                     {% endfor %}
+                                                    </div>
+                                                    </div>
                                                 </div>
                                                     {% comment %} <div class="card pt-2">
                                                         {% include 'bizadmin/dashboard/reviews/pagination.html' with page=services%}

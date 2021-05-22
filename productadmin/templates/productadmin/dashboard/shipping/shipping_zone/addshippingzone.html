@@ -1,0 +1,248 @@
+{% extends 'productadmin/index.html' %}
+{% load static %}
+{% load countries %}
+{% load hosts %}
+{% load business_tags %}
+{% load crispy_forms_tags %}
+{% block linkscript %}
+    <link rel="stylesheet" href="{% static "css/calendarmain.css"%}">
+    <script src="{% static "js/calendarmain.js" %}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ekko-lightbox/5.3.0/ekko-lightbox.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ekko-lightbox/5.3.0/ekko-lightbox.min.js" integrity="sha512-Y2IiVZeaBwXG1wSV7f13plqlmFOx8MdjuHyYFVoYzhyRr3nH/NMDjTBSswijzADdNzMyWNetbLMfOpIPl6Cv9g==" crossorigin="anonymous"></script>
+{% endblock linkscript %}
+{% block activeship%}active{%endblock%}
+{% block businessadmin %}
+        <!-- Main page content-->
+
+
+<div class="content">
+    <form method="POST" action="{% host_url 'createshippingzone' host 'prodadmin' %}">
+    {% csrf_token %}
+    <div class="row">
+        <div class="col-12">
+            <header class="page-header page-header-compact page-header-light">
+                <div class="container-fluid">
+                    <div class="page-header-content">
+                        <div class="row align-items-center justify-content-between pt-3">
+                            <div class="col-12">
+                                <h1 class="page-header-title">
+                                    Add Shipping Zone
+                                </h1>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+            </header>
+            <hr class="mt-0 mb-4">
+        </div>
+        
+        {% comment %} <div class="col-md-4 mt-3">
+            <div class="" style="border-radius:5px;">
+                <div class="card-body">
+                    <div class="col-12">
+                        <h4>Shipping origin</h4>
+                        Used to calculate shipping rates at checkout.
+                    </div>
+                </div>
+            
+            </div>
+        </div>
+
+        <div class="col-md-8 mt-3">
+            <div class="card" style="border-radius:5px;">
+                <div class="row justify-content-between p-2">
+                    <div class="card-header">
+                    <h4>Shipping from</h4>
+                    </div>
+                    
+                    <button class="btn btn-link btn-info">Change shipping origin</button>
+                </div>
+                <div class="card-body">
+                    <div class="col-12">
+                        
+                    </div>
+                </div>
+            
+            </div>
+        </div> 
+        <div class="col-12"><hr class="mt-0 mb-4"></div>
+        {% endcomment %}
+        
+        <div class="col-md-7 mt-3">
+            <div class="card" style="border-radius:5px;">
+                <div class="container-fluid">
+                    <div class="row justify-content-between p-2">
+                        <div class="card-header">
+                            <h4>Zone Name</h4>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 m-1 px-3">
+                            {{ form.name|as_crispy_field }}
+                        </div>
+                        <p class="text-muted px-3">Customers won't see this</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-7 mt-3">
+            <div class="card" style="border-radius:5px;">
+                <div class="container-fluid">
+                    <div class="row justify-content-between p-2">
+                        <div class="card-header">
+                            <h4>Countries</h4>
+                        </div>
+                        <button type="button" data-toggle="modal" data-target="#myModals" class="btn btn-link btn-info">Add countries</a>
+
+                    </div>
+                    <div class="row p-3">
+                        <div class="modal fade" id="myModals" tabindex="-1" role="dialog" aria-labelledby="myModal" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">View Details</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                <input type="text" id="myInput" class="textinput textInput form-control" onkeyup="myFunction()" placeholder="Search for countries..">
+                                    <ul id="myUL" style="width:100%; padding:0px; list-style:none;">
+                                        <div class="col-12 m-1 px-3" style="height: 300px; max-height: 300px; overflow-y: scroll; background: rgba(146, 146, 146, 0.01);">
+
+                                            <div class="form-check my-0 purplehov">
+                                                    
+                                                <li class="align-items-center">
+                                                    <hr style="margin:0;">
+                                                    <label class="form-check-label purplehov" style="height: 50px; width: 100%;">
+                                                        <input class="form-check-input immer" name="countryinput" value="all" type="checkbox">
+                                                        <span class="form-check-sign"></span>
+                                                        <img src="{% static 'img/icons/world.png' %}" style="border-radius: 0px; width:14px; height:14px" alt=""> 
+                                                        All Countries
+                                                    </label>
+                                                    <a hidden href="#">All Countries</a>    
+                                                </li>
+                                            </div>
+                                            
+                                            {% for s in form.country.field.widget.choices %}
+                                                <div class="form-check my-0 purplehov">
+                                                        
+                                                        <li class=" align-items-center">
+                                                            <hr style="margin:0;">
+                                                            <label class="form-check-label purplehov" style="height: 50px; width: 100%;">
+                                                                <input class="form-check-input immer" name="countryinput" value="{{ s.code }}" type="checkbox">
+                                                                <span class="form-check-sign"></span>
+                                                                {% with '/flags/'|add:s.code|lower|add:'.gif' as image_static %}
+                                                                    <img src="{% static image_static %}" style="border-radius: 0px;" alt=""> 
+                                                                    {{ s.name }}
+                                                                {% endwith %}
+                                                            </label>
+                                                            <a hidden href="#">{{ s.name }}</a>    
+                                                        </li>
+                                                </div>
+                                                
+                                            {% endfor %}
+                                            
+                                        </div>
+                                    </ul>
+                                <p class="text-muted px-3">The selected countries will be included in this shipping zone.</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" id="removeallcountry" data-dismiss="modal">Cancel</button>
+                                    <button type="button" class="btn btn-info" id="addcountry" data-dismiss="modal">Done</button>
+                                </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12" id="country-list">
+                        <div class="col-12"><p class="text-muted">Add or remove countries and regions in this shipping zone.<p></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-7 mt-3">
+            <div class="card" style="border-radius:5px;">
+                <div class="container-fluid">
+                    <div class="row justify-content-between p-2">
+                        <div class="card-header">
+                            <h4>Price based rates</h4>
+                        </div>
+                        <button type="button" class="btn btn-link btn-info">Add rate</a>
+
+                    </div>
+                    <div class="row">
+                        {% comment %} <div class="col-12 m-1 px-3">
+                            {{ form.name|as_crispy_field }}
+                        </div> {% endcomment %}
+                        <p class="text-muted px-3">Add countries to that will be included in this shipping zone.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-7 mt-3">
+            <div class="container-fluid">
+                <div class="form-group row">
+                    <div class="col-sm-6">
+                        <a href="{% host_url 'shipping' host 'prodadmin' %}" class="btn btn-link btn-danger">Cancel</a>
+                    </div>
+                    <div class="col-sm-6">
+                        <button type="submit" class="btn btn-info">Add New Zone</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12"><hr class="mt-0 mb-4"></div>
+
+    </div>
+    </form>
+</div>
+<script>
+    function myFunction() {
+    // Declare variables
+    var input, filter, ul, li, a, i, txtValue;
+    input = document.getElementById('myInput');
+    filter = input.value.toUpperCase();
+    ul = document.getElementById("myUL");
+    li = ul.getElementsByTagName('li');
+
+    // Loop through all list items, and hide those who don't match the search query
+    for (i = 0; i < li.length; i++) {
+        a = li[i].getElementsByTagName("a")[0];
+        txtValue = a.textContent || a.innerText;
+        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+        li[i].style.display = "";
+        } else {
+        li[i].style.display = "none";
+        }
+    }
+    }
+
+    $( document ).ready(function() {
+        $(document).on('click', '#addcountry', function(e){
+            var data = $('.immer:checkbox:checked').map(function(){
+                return $(this).val();
+            }).get();
+            $.ajax({
+                url: "{% host_url 'getCountriesList' host 'prodadmin' %}",
+                type: 'GET',
+                data: {'data':data},
+                dataType: 'json',
+                success: function (data) {
+                    document.getElementById("country-list").innerHTML = data.html_content
+                }
+            });
+        });
+        $(document).on('click', '#removeallcountry', function(e){
+            $('.immer').prop("checked",false)
+            document.getElementById("country-list").innerHTML = '<div class="col-12"><p class="text-muted">Add or remove countries and regions in this shipping zone.<p></div>'
+        });
+    })
+</script>
+{% endblock %}

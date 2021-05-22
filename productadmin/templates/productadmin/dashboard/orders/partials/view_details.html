@@ -150,7 +150,11 @@
                                     </div>
                                 </th>
                                 <td class="text-right">
-                                    {% for dropdown in items.dropdown.all %}{{ dropdown.option }}, {% endfor %}
+                                    {% for dropdown in items.dropdown.all %}
+                                        <ul style="list-style:none; color: rgba(34, 42, 66, 0.7) !important;">
+                                            <li style="color: rgba(34, 42, 66, 0.7) !important;">{{ dropdown.dropdown.placeholder }}: {{ dropdown.option }}</li>
+                                        </ul>
+                                    {% endfor %}
                                 </td>
                                 
                             </tr>
@@ -176,10 +180,3 @@
 
     {% endfor %}
 </div>
-
-<script>
-    $(document).on('click', '[data-toggle="lightbox"]', function(event) {
-        event.preventDefault();
-        $(this).ekkoLightbox();
-    });
-</script>

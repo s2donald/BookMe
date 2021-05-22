@@ -269,7 +269,7 @@ class Company(models.Model):
     slug = models.SlugField(max_length=200, db_index=True, blank=True, unique=True)
     notes = models.TextField(max_length=250, blank=True, null=True)
     returning = models.BooleanField(default=False)
-    background = models.CharField(max_length=200, default='primary', choices=backgroundstyle)
+    background = models.CharField(max_length=200, default='carbon', choices=backgroundstyle)
     cancellation = models.IntegerField(choices=cancellationtime, default=0)
     interval = models.IntegerField(choices=INTERVAL, default=30)
     backgroundimage = models.ImageField(upload_to=get_user_backgroundimage_folder,blank=True)

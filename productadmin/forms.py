@@ -5,7 +5,10 @@ from django import forms
 from django.core.validators import RegexValidator
 from tinymce.widgets import TinyMCE
 from django.conf import settings
-
+from django_countries.widgets import CountrySelectWidget
+from .models import CompanyShippingZone, PriceBasedShippingRate
+from cities.models import City, Region
+from django.contrib.admin.widgets import FilteredSelectMultiple
 states = (
     ("AL", "Alabama"),
     ("AK", "Alaska"),
@@ -128,3 +131,18 @@ class questionProductForm(forms.ModelForm):
     class Meta:
         model = QuestionModels
         fields = ('question','placeholder','retrievetype')
+
+class ShippingZoneForm(forms.ModelForm):
+    class Meta:
+        model = CompanyShippingZone
+        fields = ('__all__')
+        widgets = {'country': FilteredSelectMultiple('Countries', is_stacked=True),
+                    'name':forms.TextInput(attrs={'placeholder': 'Eg. North America, Canada'})
+                }
+    def __init__(self, *args, **kwargs):
+        super(ShippingZoneForm, self).__init__(*args, **kwargs)
+        self.fields['city'].queryset = City.objects.filter(country__code="CA")
+        self.fields['state'].queryset = Region.objects.filter(country__code="CA")
+    def clean_company(self):
+        company = self.cleaned_data['company']
+        return company

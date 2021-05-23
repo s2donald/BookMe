@@ -9,6 +9,7 @@ from django_countries.widgets import CountrySelectWidget
 from .models import CompanyShippingZone, PriceBasedShippingRate
 from cities.models import City, Region
 from django.contrib.admin.widgets import FilteredSelectMultiple
+from django.core.exceptions import ValidationError
 states = (
     ("AL", "Alabama"),
     ("AK", "Alaska"),
@@ -146,3 +147,18 @@ class ShippingZoneForm(forms.ModelForm):
     def clean_company(self):
         company = self.cleaned_data['company']
         return company
+
+class PriceBasedShippingRateForm(forms.ModelForm):
+    class Meta:
+        model = PriceBasedShippingRate
+        fields = ('__all__')
+        widgets = {'names':forms.TextInput(attrs={'placeholder': 'Eg. Standard Shipping'}),
+                    'upper_price':forms.NumberInput(attrs={'placeholder': 'No limit', 'step':"0.01"}),
+                }
+        def clean(self):
+            lower_price = self.cleaned_data['lower_price']
+            upper_price = self.cleaned_data['upper_price']
+            print(lower_price)
+            if upper_price < lower_price:
+                raise ValidationError('Please make sure the maximum order price is greater than the minimum order price.')
+            return self.cleaned_data

@@ -75,7 +75,10 @@ def time_slots(interval, duration, hours, company, staff_breaks, staff):
             time=serviceend
         if count == 0:
             for breaks in staff_breaks:
-                if((time.time()<=breaks.from_hour<serviceend.time()) or (time.time()<breaks.to_hour<serviceend.time())):
+                if (( breaks.from_hour <= time.time()) and ( breaks.to_hour >= serviceend.time())):
+                    count=1
+                    time = time.replace(hour=breaks.to_hour.hour, minute=breaks.to_hour.minute)
+                if((time.time()<=breaks.from_hour<serviceend.time()) or (time.time()<breaks.to_hour<=serviceend.time())):
                     count=1
                     time = time.replace(hour=breaks.to_hour.hour, minute=breaks.to_hour.minute)
         if count == 0:

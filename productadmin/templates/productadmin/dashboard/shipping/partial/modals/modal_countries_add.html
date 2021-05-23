@@ -1,0 +1,58 @@
+{% load static %}
+{% load countries %}
+
+<div class="modal fade" id="myModals" tabindex="-1" role="dialog" aria-labelledby="myModal" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Add Country</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <input type="text" id="myInput" class="textinput textInput form-control" onkeyup="myFunction()" placeholder="Search for countries..">
+            <ul id="myUL" style="width:100%; padding:0px; list-style:none;">
+                <div class="col-12 m-1 px-3" style="height: 300px; max-height: 300px; overflow-y: scroll; background: rgba(146, 146, 146, 0.01);">
+
+                    <div class="form-check my-0 purplehov">
+                            
+                        <li class="align-items-center" style="height: 50px; width: 100%; line-height:50px;">
+                            <label class="form-check-label" style="height: 50px; width: 100%;">
+                                <input class="form-check-input immer" name="countryinput" value="all" type="checkbox">
+                                <span class="form-check-sign"></span>
+                                <img src="{% static 'img/icons/world.png' %}" style="border-radius: 0px; width:14px; height:14px" alt=""> 
+                                All Countries
+                            </label>
+                            <a hidden href="#">All Countries</a>    
+                        </li>
+                    </div>
+                    
+                    {% for s in form.country.field.widget.choices %}
+                        <div class="form-check my-0 purplehov">
+                                <li class=" align-items-center" style="height: 50px; width: 100%; line-height:50px;">
+                                    <label class="form-check-label" style="height: 50px; width: 100%;">
+                                        <input class="form-check-input immer" name="countryinput" value="{{ s.code }}" type="checkbox">
+                                        <span class="form-check-sign"></span>
+                                        {% with '/flags/'|add:s.code|lower|add:'.gif' as image_static %}
+                                            <img src="{% static image_static %}" style="border-radius: 0px;" alt=""> 
+                                            {{ s.name }}
+                                        {% endwith %}
+                                    </label>
+                                    <a hidden href="#">{{ s.name }}</a>    
+                                </li>
+                        </div>
+                        
+                    {% endfor %}
+                    
+                </div>
+            </ul>
+        <p class="text-muted px-3">The selected countries will be included in this shipping zone.</p>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" id="removeallcountry" data-dismiss="modal">Cancel</button>
+            <button type="button" class="btn btn-info" id="addcountry" data-dismiss="modal">Done</button>
+        </div>
+        </div>
+    </div>
+</div>

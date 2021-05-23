@@ -11,5 +11,4 @@ class ShippingZoneAdmin(admin.ModelAdmin):
 
 @admin.register(PriceBasedShippingRate)
 class PriceBasedShippingAdmin(admin.ModelAdmin):
-    list_display = ['name','company', 'rate']
-    
+    list_display = ['names','company', 'rate']

@@ -6,14 +6,6 @@
 {% block header %}
   <header class="header-2">
             <div class="page-header relative" style="height: 100px; background: #141727; background-image: linear-gradient(310deg,#141727,#3a416f);">
-            <div class="container">
-                <div class="logo-image d-inline">
-                <a href="{% host_url 'bizadminmain' host 'prodadmin' %}">
-                    <img src="{% static "img/favicon/logo/shopme/ShopMe-whitebrown.png" %}" style="position: absolute;top: 2.75rem;left: 1rem;width: 8.625rem; z-index:9;">
-                </a>
-            </div>
-                
-            </div>
             {% comment %} <div class="position-absolute w-50 z-index-1 bottom-0">
                 <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 40" preserveAspectRatio="none" shape-rendering="auto">
                 <defs>
@@ -131,73 +123,28 @@
           </div> {% endcomment %}
           <div class="col-lg-5 mx-auto p-md-0 mb-lg-auto mb-4 z-index-2">
             <div class="card">
-              <div class="card-header text-center pt-5 pb-3">
-                <h6 class="text-dark opacity-8 text mb-0 mt-2">Forever</h6>
-                <h1 class="font-weight-bolder">
-                  <small></small>Free
-                </h1>
+              <div class="card-header text-left pt-5 pb-1">
+                <h3 class="font-weight-bolder">
+                  <small></small>Payment Processing Fees
+                </h3>
+                <h6 class="text-dark opacity-8 text mb-0">2.9% + 30¢ on each sale made</h6>
               </div>
-              <div class="card-body mx-auto pt-0">
-                <div class="justify-content-left d-flex px-2 py-1">
-                  <div>
-                    <i class="fas fa-check text-dark opacity-6 text-sm" aria-hidden="true"></i>
-                  </div>
-                  <div class="ps-2">
-                    <span class="text-sm">Your own online store</span>
-                  </div>
-                </div>
-                <div class="justify-content-left d-flex px-2 py-1">
-                  <div>
-                    <i class="fas fa-check text-dark opacity-6 text-sm" aria-hidden="true"></i>
-                  </div>
-                  <div class="ps-2">
-                    <span class="text-sm">Send text message updates</span>
-                  </div>
-                </div>
-                <div class="justify-content-left d-flex px-2 py-1">
-                  <div>
-                    <i class="fas fa-check text-dark opacity-6 text-sm" aria-hidden="true"></i>
-                  </div>
-                  <div class="ps-2">
-                    <span class="text-sm">Accept online payments</span>
-                  </div>
-                </div>
-                <div class="justify-content-left d-flex px-2 py-1">
-                  <div>
-                    <i class="fas fa-check text-dark opacity-6 text-sm" aria-hidden="true"></i>
-                  </div>
-                  <div class="ps-2">
-                    <span class="text-sm">Stripe processing fee (2.9% +30c)</span>
-                  </div>
-                </div>
-                <div class="justify-content-left d-flex px-2 py-1">
-                  <div>
-                    <i class="fas fa-check text-dark opacity-6 text-sm" aria-hidden="true"></i>
-                  </div>
-                  <div class="ps-2">
-                    <span class="text-sm">Platform processing fee (3% + 10c)</span>
-                  </div>
-                </div>
-                <div class="justify-content-left d-flex px-2 py-1">
-                  <div>
-                    <i class="fas fa-check text-dark opacity-6 text-sm" aria-hidden="true"></i>
-                  </div>
-                  <div class="ps-2">
-                    <span class="text-sm">Above-average analytics (shopping page visits, purchase conversion rates, etc)</span>
-                  </div>
-                </div>
-                <div class="justify-content-left d-flex px-2 py-1">
-                  <div>
-                    <i class="fas fa-check text-dark opacity-6 text-sm" aria-hidden="true"></i>
-                  </div>
-                  <div class="ps-2">
-                    <span class="text-sm">Create discount codes(Coming Soon)</span>
-                  </div>
-                </div>
+              <div class="card-footer">
+                <p>The payment processing fee is what <a class="btn btn-gradient-primary p-0 m-0 btn-link" href="https://stripe.com/en-ca/pricing">Stripe</a> charges to process payments through them.</p>
               </div>
-              <div class="card-footer pt-0">
-                <a href="{% host_url 'bizadminsignup' host 'prodadmin' %}" class="btn btn-icon bg-gradient-info d-block mb-0 icon-move-right">Get Started
-                </a>
+            </div>
+          </div>
+          <div class="col-lg-5 mx-auto p-md-0 mb-lg-auto mb-4 z-index-2">
+            <div class="card">
+              <div class="card-header text-left pt-5 pb-1">
+                <h3 class="font-weight-bolder">
+                  <small></small>Platform Fees
+                </h3>
+                <h6 class="text-dark opacity-8 text mb-0">3% on each sale made</h6>
+              </div>
+              <div class="card-footer">
+                <p>Volume and value based processing fees will be offered in the future.</p>
+                {% comment %} <b>NOTE: Beta users</b> {% endcomment %}
               </div>
             </div>
           </div>
@@ -281,186 +228,108 @@
             </div>
           </div> {% endcomment %}
         </div>
-        <div class="row">
-          <div class="col-md-12">
-            <p class="text-center mt-5 text-dark">
-              <i class="fa fa-lock" aria-hidden="true"></i> Secured Payments by <b> Stripe </b> with:
-              <br><br>
-              <i class="fa fa-cc-paypal fa-2x" aria-hidden="true"></i> <i class="fa fa-cc-visa fa-2x" aria-hidden="true"></i> <i class="fa fa-cc-mastercard fa-2x" aria-hidden="true"></i> <i class="fa fa-cc-amex fa-2x" aria-hidden="true"></i>
-            </p>
-          </div>
-        </div>
       </div>
     </div>
   </section>
 
-
-{% comment %} <section class="pricing-comp-section">
-<div class="container">
-  <div class="row pt-6">
-    <div class="col-md-6 pricing-comp-table">
-      <h2 class="hero-heading text-black">Plan comparison</h2>
-    </div>
-    <div class="col-md-6 pricing-comp-table">
-      <div class="row text-center">
-        <div class="col-4 text-center">
-          <h3 class="hero-heading pricing-comp-planitem text-center mt-6">Basic</h3>
-          <a class="btn btn-info" href="{% host_url 'bizadminsignup' host 'prodadmin' %}">Get Started</a>
-        </div>
-        <div class="col-4">
-          <h3 class="hero-heading pricing-comp-planitem text-center">Pro</h3>
-          <a class="btn btn-secondary" href="{% host_url 'bizadminsignup' host 'prodadmin' %}">5 Day Free Trial</a>
-        </div>
-        <div class="col-4">
-          <h3 class="hero-heading pricing-comp-planitem text-center d-none d-sm-block">Premium</h3>
-          <h3 class="hero-heading pricing-comp-planitem text-center d-block d-sm-none">Prem</h3>
-          <a class="btn btn-secondary" href="{% host_url 'bizadminsignup' host 'prodadmin' %}">5 Day Free Trial</a>
+  <section class="py-sm-4" id="pricing-soft-ui">
+    <div class="bg-gradient-success position-relative m-3 border-radius-xl">
+      <div class="container pb-lg-8 pb-7 pt-5 postion-relative z-index-2 position-relative">
+        <div class="row">
+          <div class="col-md-7 mx-auto text-center">
+            <h3 class="text-white">All Plans Include</h3>
+            {% comment %} <p class="text-white">Get access to all of our premium offerings and priority support.</p> {% endcomment %}
+          </div>
         </div>
       </div>
     </div>
-    <div class="col-12 p-6 m-6" style="margin-top:40px;">
-      <h4 class="pricing-comp-table-header hero-heading">Booking</h4>
-      <div class="row pricing-comp-table-row">
-        <div class="col-md-6"><p class="hero-heading text-muted">Staff Members Included</p></div>
-        <div class="col-md-6">
-          <div class="row hero-heading">
-            <div class="col-4 text-center text-muted">
-              1 Staff Member
+    <div class="mt-lg-n8 mt-n6">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-3 mx-auto p-md-1 mb-lg-auto mb-4 z-index-2">
+            <div class="card">
+              <div class="card-header text-center pt-5 pb-3">
+                {% comment %} <h6 class="text-dark opacity-8 text mb-0 mt-2">Forever</h6> {% endcomment %}
+                <span class="badge bg-gradient-primary mb-2">Free online store</span>
+              </div>
+              <div class="card-body mx-auto pt-0 px-2">
+                <div class="justify-content-left d-flex px-2 py-1">
+                  {% comment %} <div>
+                    <i class="fas fa-check text-dark opacity-6 text-sm" aria-hidden="true"></i>
+                  </div> {% endcomment %}
+                  <div class="">
+                    <span class="text-sm text-muted text-left">List as many products on your website. For free.</span>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div class="col-4 text-center">
-              <p class="text-left text-muted">2 Staff Members included,</p>
-              <p class="text-left text-muted">$10 for additional users for the first 8 staffers; 10+ is no additional cost</p>
+          </div>
+          <div class="col-lg-3 mx-auto p-md-1 mb-lg-auto mb-4 z-index-2">
+            <div class="card">
+              <div class="card-header text-center pt-5 pb-3">
+                {% comment %} <h6 class="text-dark opacity-8 text mb-0 mt-2">Forever</h6> {% endcomment %}
+                <span class="badge bg-gradient-primary mb-2">Accept online payments</span>
+              </div>
+              <div class="card-body mx-auto pt-0 px-2">
+                <div class="justify-content-left d-flex px-2 py-1">
+                  {% comment %} <div>
+                    <i class="fas fa-check text-dark opacity-6 text-sm" aria-hidden="true"></i>
+                  </div> {% endcomment %}
+                  <div class="">
+                    <span class="text-sm text-muted text-left">Collect and deposit payments into your bank account.</span>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div class="col-4 text-center text-muted">
-              Unlimited
+          </div>
+          <div class="col-lg-3 mx-auto p-md-1 mb-lg-auto mb-4 z-index-2">
+            <div class="card">
+              <div class="card-header text-center pt-5 pb-3">
+                {% comment %} <h6 class="text-dark opacity-8 text mb-0 mt-2">Forever</h6> {% endcomment %}
+                <span class="badge bg-gradient-primary mb-2">Send Notifications</span>
+              </div>
+              <div class="card-body mx-auto pt-0 px-2">
+                <div class="justify-content-left d-flex px-2 py-1">
+                  {% comment %} <div>
+                    <i class="fas fa-check text-dark opacity-6 text-sm" aria-hidden="true"></i>
+                  </div> {% endcomment %}
+                  <div class="">
+                    <span class="text-sm text-muted text-left">Send emails to customers at each order fullfillment stage.</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-3 mx-auto p-md-1 mb-lg-auto mb-4 z-index-2">
+            <div class="card">
+              <div class="card-header text-center pt-5 pb-3">
+                {% comment %} <h6 class="text-dark opacity-8 text mb-0 mt-2">Forever</h6> {% endcomment %}
+                <span class="badge bg-gradient-primary mb-2">Basic Analytics</span>
+              </div>
+              <div class="card-body mx-auto pt-0 px-2">
+                <div class="justify-content-left d-flex px-2 py-1">
+                  {% comment %} <div>
+                    <i class="fas fa-check text-dark opacity-6 text-sm" aria-hidden="true"></i>
+                  </div> {% endcomment %}
+                  <div class="">
+                    <span class="text-sm text-muted text-left">View number of sales and total earnings made from your site.</span>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
-      <hr>
-      <div class="row pricing-comp-table-row">
-        <div class="col-md-6"><p class="hero-heading text-muted">Unlimited Appointments</p></div>
-        <div class="col-md-6">
-          <div class="row hero-heading">
-            <div class="col-4 text-center text-muted">
-              <i class="fas fa-check"></i>
-            </div>
-            <div class="col-4 text-center text-muted">
-              <i class="fas fa-check"></i>
-            </div>
-            <div class="col-4 text-center text-muted">
-              <i class="fas fa-check"></i>
-            </div>
+      <div class="row">
+          <div class="col-md-12">
+            <h3 class="text-center mt-5 text-dark">
+              Lets Get Started
+              <a href="{% host_url 'bizadminsignup' host 'prodadmin' %}" class="btn btn-icon bg-gradient-info mb-0 icon-move-right">Get Started
+                </a>
+            </h3>
           </div>
         </div>
-      </div>
-      <hr>
-      <div class="row pricing-comp-table-row">
-        <div class="col-md-6"><p class="hero-heading text-muted">Email Reminders</p></div>
-        <div class="col-md-6">
-          <div class="row hero-heading">
-            <div class="col-4 text-center text-muted">
-              Includes 200
-            </div>
-            <div class="col-4 text-center text-muted">
-              Unlimited
-            </div>
-            <div class="col-4 text-center text-muted">
-              Unlimited
-            </div>
-          </div>
-        </div>
-      </div>
-      <hr>
-      <div class="row pricing-comp-table-row">
-        <div class="col-md-6"><p class="hero-heading text-muted">Text Reminders</p></div>
-        <div class="col-md-6">
-          <div class="row hero-heading">
-            <div class="col-4 text-center text-muted">
-              <i class="fas fa-times"></i>
-            </div>
-            <div class="col-4 text-center text-muted">
-              1000 per staffer
-            </div>
-            <div class="col-4 text-center text-muted">
-              Unlimited
-            </div>
-          </div>
-        </div>
-      </div>
-      <hr>
-      <div class="row pricing-comp-table-row">
-        <div class="col-md-6"><p class="hero-heading text-muted">Website Integration</p></div>
-        <div class="col-md-6">
-          <div class="row hero-heading">
-            <div class="col-4 text-center text-muted">
-              <i class="fas fa-check"></i>
-            </div>
-            <div class="col-4 text-center text-muted">
-              <i class="fas fa-check"></i>
-            </div>
-            <div class="col-4 text-center text-muted">
-              <i class="fas fa-check"></i>
-            </div>
-          </div>
-        </div>
-      </div>
-      <hr>
-      <div class="row pricing-comp-table-row">
-        <div class="col-md-6"><p class="hero-heading text-muted">Google Calendar and Outlook Integration</p></div>
-        <div class="col-md-6">
-          <div class="row hero-heading">
-            <div class="col-4 text-center text-muted">
-              <i class="fas fa-check"></i>
-            </div>
-            <div class="col-4 text-center text-muted">
-              <i class="fas fa-check"></i>
-            </div>
-            <div class="col-4 text-center text-muted">
-              <i class="fas fa-check"></i>
-            </div>
-          </div>
-        </div>
-      </div>
-      <hr>
-      <div class="row pricing-comp-table-row">
-        <div class="col-md-6"><p class="hero-heading text-muted">Custom link and themes for your booking page</p></div>
-        <div class="col-md-6">
-          <div class="row hero-heading">
-            <div class="col-4 text-center">
-              <i class="fas fa-check text-muted"></i>
-            </div>
-            <div class="col-4 text-center">
-              <i class="fas fa-check text-muted"></i>
-            </div>
-            <div class="col-4 text-center">
-              <i class="fas fa-check text-muted"></i>
-            </div>
-          </div>
-        </div>
-      </div>
-      <hr>
-      <div class="row pricing-comp-table-row">
-        <div class="col-md-6"><p class="hero-heading text-muted">Accept payments</p></div>
-        <div class="col-md-6">
-          <div class="row hero-heading">
-            <div class="col-4 text-center text-muted">
-              Coming soon with Square
-            </div>
-            <div class="col-4 text-center text-muted">
-              Included with Stripe
-            </div>
-            <div class="col-4 text-center text-muted">
-              Included with Stripe
-            </div>
-          </div>
-        </div>
-      </div>
-      <hr>
-      <h4 class="pricing-comp-table-header hero-heading">Marketing</h4>
     </div>
-  </div>
-</div>
-</section> {% endcomment %}
+  </section>
 
 {% endblock  %}

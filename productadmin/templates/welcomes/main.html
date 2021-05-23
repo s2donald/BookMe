@@ -20,7 +20,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Arvo:wght@700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Baloo+Tamma+2:wght@500&display=swap" rel="stylesheet">
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    {% comment %} <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous"> {% endcomment %}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
     <link rel="stylesheet" href="{% static "css/businesslanding.css" %}">
     <link rel="stylesheet" href="{% static "css/vendor/morphext.css"%}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.2.3/flatpickr.css">
@@ -40,78 +41,18 @@
     <title>ShopMe Main</title>
   </head>
   <body>
-    <nav>
-    <div id="menuToggle">
-        <input id="isAgeSelected" type="checkbox" />
-
-        <!-- Hamburger Icon -->
-            <span></span>
-            <span></span>
-            <span></span>
-
-            <ul id="menu">
-                <li class="nav-item {% block 'index_features' %}{% endblock %}">
-                    <a class="nav-link d-md-inline-block text-white" href="{% host_url 'bizadminmain' host 'prodadmin' %}">Features</a>
-                </li>
-                <li class="nav-item {% block 'index_pricing' %}{% endblock %}">
-                    <a class="nav-link d-md-inline-block text-white" href="{% host_url 'pricingBusiness' host 'prodadmin' %}">Pricing</a>
-                </li>
-                <li class="nav-item {% block 'index_faq' %}{% endblock %}">
-                    <a class="nav-link d-md-inline-block text-white" href="{% host_url 'faqbusiness' host 'prodadmin' %}">FAQ</a>
-                </li>
-            {% if user.is_business %}
-                    <li class="nav-item">
-                        <a class="btn btn-outline-light text-white" href="{% host_url 'completeprofile' host 'prodadmin' %}">Go to your business page</a>
-                    </li>
-                    <li class="nav-item pt-1">
-                        <a class="nav-link d-md-inline-block text-white" href="{% host_url 'bizadminlogout' host 'prodadmin' %}">Log Out</a>
-                    </li>
-            {% elif user.is_consumer %}
-                    <li class="nav-item pb-1">
-                        <a class="btn btn-outline-light btn-sm text-white" href="{% host_url 'newbizcreate' host 'prodadmin' %}">Create a business page</a>
-                    </li>
-                    <li class="nav-item pt-1">
-                        <a class="nav-link d-md-inline-block text-white" href="{% host_url 'bizadminlogout' host 'prodadmin' %}">Log Out</a>
-                    </li>
-            {% else %}
-
-                    <li class="nav-item {% block 'index_login' %}{% endblock %}">
-                        <a class="nav-link d-md-inline-block text-white" href="{% host_url 'bizadminlogin' host 'prodadmin' %}">Log In</a>
-                    </li>
-                    <li class="nav-item {% block 'index_signup' %}{% endblock %}">
-                        <a class="nav-link d-md-inline-block text-white" href="{% host_url 'bizadminsignup' host 'prodadmin' %}">Sign Up</a>
-                    </li>
-            {% endif %}
-
-                </ul>
-    </div>
-    </nav>
-        <!-- Header -->
-        {% comment %} <header id="header" class="header-shopme mb-6" width="100%">
-            <svg class="header-bg" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" viewBox="0 0 1720.053 1080"><defs><style>.cls-1{fill:url(#linear-gradient);}</style><linearGradient id="linear-gradient" x1="190.62" y1="-190.62" x2="1472.363" y2="1091.123" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#41abc7"/><stop offset="0.156" stop-color="#4fb8d2"/><stop offset="0.415" stop-color="#65dff1"/><stop offset="0.742" stop-color="#5ffbf1"/><stop offset="1" stop-color="#6dd5ed"/></linearGradient></defs><title>header-background</title><path class="cls-1" d="M1455.1,1080L72.853,1000.374A73.067,73.067,0,0,1,0,927.521V0H1720.053l-2.3,12.065-189.8,995.082C1520,1050.667,1495.165,1080,1455.1,1080Z"/></svg>
-            <svg class="header-bg" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" viewBox="0 0 1300 300"><defs><style>.cls-1{fill:url(#linear-gradient);}</style><linearGradient id="linear-gradient" x1="190.62" y1="-190.62" x2="1472.363" y2="1091.123" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#41abc7"/><stop offset="0.156" stop-color="#4fb8d2"/><stop offset="0.415" stop-color="#65dff1"/><stop offset="0.742" stop-color="#5ffbf1"/><stop offset="1" stop-color="#6dd5ed"/></linearGradient></defs><title>Background</title>
-            <path class="cls-1" fill="#0099ff" fill-opacity="1" d="M0,288L48,261.3C96,235,192,181,288,170.7C384,160,480,192,576,186.7C672,181,768,139,864,128C960,117,1056,139,1152,128C1248,117,1344,75,1392,53.3L1440,32L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z"></path>
-            {% block custompath %}
-            {% endblock %}
-            </svg>
-            <!-- Image Logo -->
-            <div class="logo-image d-inline">
-                <a href="{% host_url 'bizadminmain' host 'prodadmin' %}">
-                    <img src="{% static "img/favicon/logo/BookMe-whitebrown.svg" %}">
-                </a>
-            </div>
-            {% block buttontxt %}
-            {% endblock  %}
-            {% block header %}
-            {% endblock header %}
-        </header> {% endcomment %}
+        {% include 'welcomes/navbar.html' %}
         {% block header %}{% endblock header %}
 
             <script type="text/javascript" src="https://kit.fontawesome.com/a07c5b9658.js" crossorigin="anonymous"></script>
             {% comment %} <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script> {% endcomment %}
             <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-            <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
-            <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+            {% comment %} <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script> {% endcomment %}
+            <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.min.js" integrity="sha384-Atwg2Pkwv9vp0ygtn1JAojH0nYbwNJLPhwyoVbhoPwBhjQPR5VtM2+xf0Uwh9KtT" crossorigin="anonymous"></script>
+
+            {% comment %} <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+            <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script> {% endcomment %}
             <script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.2.3/flatpickr.js"></script>
             <script src="{% static 'js/vendor/morphext.min.js' %}"></script>
             <script src="{% static 'js/landingpage.js' %}"></script>

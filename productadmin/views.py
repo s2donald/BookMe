@@ -523,7 +523,7 @@ def orderView(request):
     else:
         loginViews(request)
 
-from .forms import ShippingZoneForm
+from .forms import ShippingZoneForm, PriceBasedShippingRateForm
 @login_required
 def shippingView(request):
     user = request.user
@@ -538,7 +538,7 @@ def shippingView(request):
     else:
         loginViews(request)
 
-from .models import CompanyShippingZone
+from .models import CompanyShippingZone, PriceBasedShippingRate
 
 @login_required
 def addshippingView(request):
@@ -548,35 +548,79 @@ def addshippingView(request):
             company = Company.objects.get(user=user)
             # zone = CompanyShippingZone.objects.create(company=company, name='')
             form = ShippingZoneForm()
+            pricebasedform = PriceBasedShippingRateForm()
             return render(request, 'productadmin/dashboard/shipping/shipping_zone/addshippingzone.html', {
                                                                                         'company':company,
-                                                                                        'form':form
+                                                                                        'form':form,
+                                                                                        'pricebasedform':pricebasedform
                                                                                     })
         else:
             return redirect(reverse('completeprofile', host='prodadmin'))
     else:
         loginViews(request)
-
+from django_countries import countries as countriesfields
 class createshippingZoneViewAPI(View):
     def post(self,request):
         company = Company.objects.get(user=request.user)
         form = ShippingZoneForm(request.POST)
         if form.is_valid():
-            countries = form.cleaned_data['country']
+            name = form.cleaned_data.get('name')
             countries = request.POST.getlist('countryinput')
+            pricebased = request.POST.getlist('pricebasedid')
             allcountry = False
+            zone = CompanyShippingZone.objects.create(name=name, company=company)
             for c in countries:
                 if c == 'all':
                     allcountry = True
                     break
+                else:
+                    break
             if allcountry:
-                print('hello')
+                zone.country = list(countriesfields)
+            else:
+                zone.country = countries
+            for c in pricebased:
+                zone.pricebased_rate.add(PriceBasedShippingRate.objects.get(pk=c))
+            zone.save()
             return redirect(reverse('shipping', host='prodadmin'))
         else:
             return render(request, 'productadmin/dashboard/shipping/shipping_zone/addshippingzone.html', {
                                                                                         'company':company,
                                                                                         'form':form
                                                                                     })
+
+class createPBRShippingViewAPI(View):
+    def post(self,request):
+        company = Company.objects.get(user=request.user)
+        form = PriceBasedShippingRateForm(request.POST)
+        error = False
+        html_content = ''
+        if form.is_valid():
+            upper_price = form.cleaned_data.get('upper_price')
+            lower_price = form.cleaned_data.get('lower_price')
+            name = form.cleaned_data.get('names')
+            rate = form.cleaned_data.get('rate')
+            ids = None
+            if PriceBasedShippingRate.objects.filter(names=name,company=company).exists():
+                error = 'This rate name has already been used. Please try a different rate name.'
+            elif upper_price is None:
+                ids = PriceBasedShippingRate.objects.create(names=name,rate=rate,upper_price=upper_price,lower_price=lower_price,company=company)
+            elif upper_price < lower_price:
+                error = 'Please make sure the minimum order price is less than the maximum order price.'
+            else:
+                ids = PriceBasedShippingRate.objects.create(names=name,rate=rate,upper_price=upper_price,lower_price=lower_price,company=company)
+            html_content = render_to_string('productadmin/dashboard/shipping/partial/pricebased_rate.html', {'my_id':ids.id, 'company':company})
+        else:
+            error = 'There was an error, please double check the values'
+            for err in form.errors:
+                if err == 'lower_price':
+                    error = 'Please ensure the minimum order price is greater or equal than $0.00'
+                elif err == 'upper_price':
+                    error = 'Please ensure the maximum order price is greater or equal than $0.01'
+                else:
+                    error = 'Please ensure the rate amount is greater or equal to $0.00'
+        return JsonResponse({'error':error, 'html_content':html_content})
+
 from django_countries import countries
 class getCountriesListAPI(View):
     def get(self,request):

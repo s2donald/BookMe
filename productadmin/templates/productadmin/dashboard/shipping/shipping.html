@@ -132,7 +132,7 @@
                     <div class="row">
                         <div class="col-12 m-1">
                             {% for zones in company.shipping_zones_avail.all %}
-                                <div class="p-3 m-1" style="border: 1px solid #dadbdd;">
+                                <div class="p-3 my-3" style="border: 1px solid #dadbdd;">
                                     <div class="row justify-content-between align-items-center p-2">
                                         <div class="d-flex">
                                             <span style="color:black">
@@ -142,7 +142,9 @@
                                                     {% with len=countries|length  %}
                                                         {% if len < 3 %}
                                                             {% for c in countries %}
-                                                                <img class="country-select-flag" id="flag_id_country" src="{{ c.flag }}">
+                                                                {% with '/flags/'|add:c.code|lower|add:'.gif' as image_static %}
+                                                                    <img class="country-select-flag" style="border-radius:0px" id="flag_id_country" src="{% static image_static %}">
+                                                                {% endwith %}
                                                             {% endfor %}
                                                         {% else %}
                                                             <img class="country-select-flag" id="flag_id_country" style="width:16px; height:16px" src="{% static 'img/icons/world.png' %}"> 
@@ -161,13 +163,13 @@
                                             
                                             </span>
                                         </div>
-                                        <div class="btn btn-link btn-info">Edit</div>
+                                        <div class="btn btn-link btn-info">Edit Zone</div>
                                     </div>
                                     {% with pricebasedzones=zones.pricebased_rate.all %}
                                         {% for pbz in pricebasedzones %}
-                                            <div class="row d-flex">
-                                                <div class="col-12">
-                                                    <p class=""><b>{{ pbz.name }}: </b>{% if pbz.rate == 0.00 %}Free{% else %}${{ pbz.rate }}{% endif %}</p>
+                                            <div class="row justify-content-between align-items-center p-2" style="border-top: 1px solid #dadbdd;">
+                                                <div class="">
+                                                    <p class="my-0"><b>{{ pbz.names }}: </b>{% if pbz.rate == 0.00 %}Free{% else %}${{ pbz.rate }}{% endif %}</p>
                                                     <p class="my-0"> <b>Applies to products: </b> 
                                                         {% if not pbz.upper_price %}
                                                             ${{ pbz.lower_price }} and up
@@ -176,10 +178,13 @@
                                                         {% endif %}
                                                     </p>
                                                 </div>
+                                                <div><button class="btn btn-link btn-info">Edit Shipping Rate</button></div>
                                             </div>
                                         {% endfor %}
                                     {% endwith %}
                                 </div>
+                            {% empty %}
+                                <p>Create shipping zones to define the regions you are able to ship products.</p>
                             {% endfor %}
                         </div>
                     </div>

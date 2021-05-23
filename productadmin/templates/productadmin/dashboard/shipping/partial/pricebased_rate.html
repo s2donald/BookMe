@@ -1,0 +1,29 @@
+<ul id="myUL" style="width:100%; padding:0px; list-style:none;">
+    <div class="col-12 m-1 px-3" style="height: 300px; max-height: 300px; overflow-y: scroll; background: rgba(146, 146, 146, 0.01);">
+        {% for pbz in company.shipping_pricebased.all %}
+            <div class="form-check my-0 purplehov">
+                    <li class=" align-items-center" style="height: 75px; width: 100%; line-height: 75px; border-top: 1px solid #dadbdd;">
+                        <label class="form-check-label" style="height: 75px; width: 100%;">
+                            <input class="form-check-input pricebasedlistid" name="pricebasedid" value="{{ pbz.id }}" type="checkbox" {% if pbz.id == my_id %}checked{% endif %}>
+                            <span class="form-check-sign"></span>
+                            <div class="row d-flex">
+                                <div class="col-12">
+                                    <p class="my-0"><b>{{ pbz.names }}: </b>{% if pbz.rate == 0.00 %}Free{% else %}${{ pbz.rate }}{% endif %} Shipping</p>
+                                    <p class="my-0"> <b>Applies to products: </b> 
+                                        {% if not pbz.upper_price %}
+                                            ${{ pbz.lower_price }} and up
+                                        {% else %}
+                                            ${{ pbz.lower_price }} - ${{ pbz.upper_price }}
+                                        {% endif %}
+                                    </p>
+                                </div>
+                            </div>
+                        </label>
+                        <a hidden href="#">{{ s.name }}</a>    
+                    </li>
+            </div>
+        {% empty %}
+            <div class="col-12"><p class="text-muted">Add shipping rates based on the price of a customer's order.<p></div>
+        {% endfor %}
+    </div>
+</ul>

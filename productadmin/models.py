@@ -15,11 +15,11 @@ shiptype = (
     ('fixed', "Fixed"),
 )
 class PriceBasedShippingRate(models.Model):
-    name=models.CharField(max_length=200, blank=True,null=True)
-    company = models.ForeignKey(Company,  related_name='shipping_pricebased', on_delete=models.CASCADE, blank=True, null=True)
+    names=models.CharField(verbose_name='', max_length=200)
+    company = models.ForeignKey(Company, related_name='shipping_pricebased', on_delete=models.CASCADE, blank=True, null=True)
     lower_price = models.DecimalField(verbose_name='Minimum Order Price', decimal_places=2, default=Decimal('0.00'), max_digits=12, validators=[MinValueValidator(Decimal('0.00'))])
     upper_price = models.DecimalField(verbose_name='Maximum Order Price', decimal_places=2, max_digits=12, blank=True, null=True, validators=[MinValueValidator(Decimal('0.01'))])
-    rate = models.DecimalField(verbose_name='Fixed Rate', decimal_places=2, max_digits=12, default=Decimal('0.00'), validators=[MinValueValidator(Decimal('0.00'))])
+    rate = models.DecimalField(verbose_name='Rate Amount', decimal_places=2, max_digits=12, default=Decimal('0.00'), validators=[MinValueValidator(Decimal('0.00'))])
     # def clean(self):
     #     cleaned_data = super().clean()
     #     st = cleaned_data['lower_price']
@@ -28,12 +28,12 @@ class PriceBasedShippingRate(models.Model):
     #          raise forms.ValidationError('The minumum order price can not be larger than the maximum order price.')
     #     return cleaned_data
     def __str__(self):
-        return f'{self.name} - {self.company.business_name}'
+        return f'{self.names} - {self.company.business_name}'
     class Meta:
         ordering = ('company',)
-        unique_together=(('company', 'name'),)
-        verbose_name = 'Shipping Zone'
-        verbose_name_plural = 'Shipping Zone'
+        unique_together = ['company','names']
+        verbose_name = 'Price Based Shipping Rate'
+        verbose_name_plural = 'Price Based Shipping Rates'
 
 class CompanyShippingZone(models.Model):
     company = models.ForeignKey(Company, related_name='shipping_zones_avail', on_delete=models.CASCADE, blank=True, null=True)

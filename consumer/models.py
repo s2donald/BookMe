@@ -149,7 +149,7 @@ class Bookings(models.Model):
     def __str__(self):
         if self.service.name==None:
             return 'No Name'
-        return self.service.name + ' ' + company.business_name 
+        return self.service.name + ' ' + self.company.business_name 
 
     def clean(self):
         super().clean()

@@ -51,7 +51,7 @@
                 </div> {% endcomment %}
                 <div class="imgcontainer_header bg-light d-flex" >
                     <div class="container">
-                    <a class="ml-3 mt-0" href="{% host_url 'bizadminmain' host 'bizadmin' %}"><img src="{% static "/img/favicon/logo/shopme/ShopMe-whitebrown.png" %}" style="height:20px; position:relative; top:20px; left: 10px;"></a>
+                    <a class="ml-3 mt-0" href="{% host_url 'bizadminmain' host 'bizadmin' %}"><img src="{% if company.background == 'lightblue' %}{% static "/img/favicon/logo/shopme/ShopMe-blueblack.png" %}{% else %}{% static "/img/favicon/logo/shopme/ShopMe-whitebrown.png" %}{% endif %}" style="height:20px; position:relative; top:20px; left: 10px;"></a>
                     
                     <div style="height: 150px;">
                         

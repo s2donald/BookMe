@@ -75,53 +75,98 @@
 
             {% block businesscontent %}
             {% endblock %}
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/tilt.js/1.2.1/tilt.jquery.min.js"></script>
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <div class="footer bg-black">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="footer-col first">
-                        <h6>About ShopMe</h6>
-                        <p class="p-small">'ShopMe will help you build your shop while you create your art.'</p><p class="p-small"> ShopMe is an online platform which enables businesses that sell tailored arts and products to easily start up their own website. ShopMe was built to help you make more sales with your client base.</p>
-                    </div> <!-- end of footer-col -->
-                    <div class="footer-col second">
-                        <h6>The Company</h6>
-                        <ul class="list-unstyled li-space-lg p-small">
-                            <li>Legal: <a href="{% host_url 'business:terms' host 'www'%}">Terms & Conditions</a>, <a href="{% host_url 'business:privacy' host 'www'%}">Privacy Policy</a></li>
-                            {% comment %} <li>Useful: <a href="#">Colorpicker</a>, <a href="#">Icon Library</a>, <a href="#">Illustrations</a></li> {% endcomment %}
-                            <li>Product: <a href="{% host_url 'bizadminmain' host 'bizadmin'%}">For Appointment Based Businesses</a>{% comment %} , <a href="{% host_url 'business:homepage' host 'www'%}">For Consumers</a>{% endcomment %}</li>
-                            <li>         <a href="{% host_url 'bizadminmain' host 'prodadmin'%}">For Businesses That Sell Products</a>{% comment %} , <a href="{% host_url 'business:homepage' host 'www'%}">For Consumers</a>{% endcomment %}</li>
-                        </ul>
-                    </div> <!-- end of footer-col -->
-                    <div class="footer-col third">
-                        <span class="fa-stack">
-                            <a href="https://www.facebook.com/getbookmeto/" target="_blank">
-                                <i class="fas fa-circle fa-stack-2x"></i>
-                                <i class="fab fa-facebook-f fa-stack-1x"></i>
-                            </a>
-                        </span>
-                        <span class="fa-stack">
-                            <a href="https://www.instagram.com/bookme.to/?hl=en" target="_blank">
-                                <i class="fas fa-circle fa-stack-2x"></i>
-                                <i class="fab fa-instagram fa-stack-1x"></i>
-                            </a>
-                        </span>
-                        <p class="p-small">We would love to hear from you <a href="mailto:support@shopme.to"><strong>support@shopme.to</strong></a></p>
-                    </div> <!-- end of footer-col -->
-                </div> <!-- end of col -->
-            </div> <!-- end of row -->
-        </div> <!-- end of container -->
-    </div> <!-- end of footer -->  
-
-    <div class="copyright bg-black">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12">
-                    <p class="p-small">©2021 Gibele Inc, All rights reserved.</a></p>
-                </div> <!-- end of col -->
-            </div> <!-- enf of row -->
-        </div> <!-- end of container -->
-    </div> <!-- end of copyright --> 
+    <footer class="footer pt-5 mt-5">
+    <hr class="horizontal dark mb-5">
+    <div class="container">
+      <div class=" row">
+        <div class="col-md-3 mb-4 ms-auto">
+          <div>
+            <h6 class="text-gradient text-primary font-weight-bolder">ShopMe by Gibele Systems Inc</h6>
+          </div>
+          <div>
+            <h6 class="mt-3 mb-2 opacity-8">Socials</h6>
+            <ul class="d-flex flex-row ms-n3 nav">
+              <li class="nav-item">
+                <a class="nav-link pe-1" href="https://www.facebook.com/getbookmeto/" target="_blank">
+                  <i class="fab fa-facebook text-lg opacity-8" aria-hidden="true"></i>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link pe-1" href="https://www.instagram.com/bookme.to/?hl=en" target="_blank">
+                  <i class="fab fa-instagram text-lg opacity-8" aria-hidden="true"></i>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-md-2 col-sm-6 col-6 mb-4">
+          <div>
+            <h6 class="text-gradient text-primary text-sm">Company</h6>
+            <ul class="flex-column ms-n3 nav">
+              <li class="nav-item">
+                <a class="nav-link" href="https://www.facebook.com/getbookmeto/" target="_blank">
+                  About Us
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="https://biz.bookme.to" target="_blank">
+                  BookMe Product
+                </a>
+              </li>
+              {% comment %} <li class="nav-item">
+                <a class="nav-link" href="https://www.creative-tim.com/blog" target="_blank">
+                  Blog
+                </a>
+              </li> {% endcomment %}
+            </ul>
+          </div>
+        </div>
+        <div class="col-md-2 col-sm-6 col-6 mb-4">
+          <div>
+            <h6 class="text-gradient text-primary text-sm">Help &amp; Support</h6>
+            <ul class="flex-column ms-n3 nav">
+              <li class="nav-item">
+                <a href="mailto:support@shopme.to" class="nav-link">Contact Us</a>
+              </li>
+              <li class="nav-item">
+                <a href="mailto:support@shopme.to" class="nav-link" target="_blank">
+                  Custom Development Requests
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-md-2 col-sm-6 col-6 mb-4 me-auto">
+          <div>
+            <h6 class="text-gradient text-primary text-sm">Legal</h6>
+            <ul class="flex-column ms-n3 nav">
+              <li class="nav-item">
+                <a class="nav-link" href="{% host_url 'terms_shopme' host 'prodadmin'%}" target="_blank">
+                  Terms &amp; Conditions
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% host_url 'privacy_shopme' host 'prodadmin'%}" target="_blank">
+                  Privacy Policy
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-12">
+          <div class="text-center">
+            <p class="my-4 text-sm">
+              All rights reserved. Copyright © <script>
+                document.write(new Date().getFullYear())
+              </script> ShopMe by <a target="_blank">Gibele Systems Inc</a>.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
   </body>
 </html>

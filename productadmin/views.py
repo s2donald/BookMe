@@ -38,6 +38,14 @@ def businessadmin(request):
     user = request.user
     return render(request, 'welcomes/welcome.html', {'user':user, 'none':'d-none'})
 
+def termsViews(request):
+    user = request.user
+    return render(request, 'welcomes/terms/terms.html', {'user':user, 'none':'d-none'})
+
+def privacyViews(request):
+    user = request.user
+    return render(request, 'welcomes/terms/privacy.html', {'user':user, 'none':'d-none'})
+
 def pricingViews(request):
     user = request.user
     return render(request, 'welcomes/pricing.html', {'user':user,'none':'d-none'})
@@ -605,11 +613,13 @@ class createPBRShippingViewAPI(View):
                 error = 'This rate name has already been used. Please try a different rate name.'
             elif upper_price is None:
                 ids = PriceBasedShippingRate.objects.create(names=name,rate=rate,upper_price=upper_price,lower_price=lower_price,company=company)
+                ids = ids.id
             elif upper_price < lower_price:
                 error = 'Please make sure the minimum order price is less than the maximum order price.'
             else:
                 ids = PriceBasedShippingRate.objects.create(names=name,rate=rate,upper_price=upper_price,lower_price=lower_price,company=company)
-            html_content = render_to_string('productadmin/dashboard/shipping/partial/pricebased_rate.html', {'my_id':ids.id, 'company':company})
+                ids = ids.id
+            html_content = render_to_string('productadmin/dashboard/shipping/partial/pricebased_rate.html', {'my_id':ids, 'company':company})
         else:
             error = 'There was an error, please double check the values'
             for err in form.errors:
@@ -1753,15 +1763,25 @@ class customThemeAPI(View):
         if staff.access == 2:
             bg = '.' + company.background + 'background'
             background = request.POST.get('background')
-            
+            message=''
             if background == 'primary':
                 company.background = 'primary'
+                newbg = '.primarybackground'
+                message = 'The primary theme has been applied to your ecommerce page.'
             elif background == 'carbon':
                 company.background = 'carbon'
+                newbg = '.carbonbackground'
+                message = 'The carbon theme has been applied to your ecommerce page.'
+            elif background == 'lightblue':
+                company.background = 'lightblue'
+                newbg = '.lightbluebackground'
+                message = 'The light blue theme has been applied to your ecommerce page.'
             else:
                 company.background = 'hexagon'
+                newbg = '.hexagonbackground'
+                message = 'The hexagon theme has been applied to your ecommerce page.'
             company.save()
-        return JsonResponse({'oldbackground':bg})
+        return JsonResponse({'oldbackground':bg, 'newbackground':newbg, 'message':message})
 
 class integrationZoomSignUp(View):
     def get(self, request):

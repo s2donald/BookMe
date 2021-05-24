@@ -103,6 +103,8 @@ urlpatterns = [
     path("cancel", stripe_views.cancelStripeMonthlySubscription, name="cancel_subscription_stripe"),
 
     re_path(r'^updatedpass/$', views.updatePassword.as_view(), name='updatepassword'),
+    re_path(r'^terms/$', views.termsViews, name='terms_shopme'),
+    re_path(r'^privacy/$', views.privacyViews, name='privacy_shopme'),
     re_path(r'^pricing/$', views.pricingViews, name='pricingBusiness'),
     re_path(r'^$', views.businessadmin, name='bizadminmain'),
 

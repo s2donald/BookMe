@@ -62,13 +62,15 @@
                             <div class="card-body">
                                 <h6>Click the theme to apply to your booking page</h6>
                                 <ul class="bgcollection">
-                                    <li class="themecircle primarybackground {% if company.background == 'primary' %}applied{% endif %}">
+                                    <li data-backgroundcolor="primary" class="themecircle primarybackground changebackground {% if company.background == 'primary' %}applied{% endif %}">
                                     </li>
                                     
-                                    <li class="themecircle carbonbackground {% if company.background == 'carbon' %}applied{% endif %}">
+                                    <li data-backgroundcolor="carbon" class="themecircle carbonbackground changebackground {% if company.background == 'carbon' %}applied{% endif %}">
                                     </li>
                                     
-                                    <li class="themecircle hexagonbackground {% if company.background == 'hexagon' %}applied{% endif %}">
+                                    <li data-backgroundcolor="hexagon" class="themecircle hexagonbackground changebackground {% if company.background == 'hexagon' %}applied{% endif %}">
+                                    </li>
+                                    <li data-backgroundcolor="lightblue" class="themecircle lightbluebackground changebackground {% if company.background == 'lightblue' %}applied{% endif %}">
                                     </li>
                                     {% comment %} <li class="themecircle hexagonbackground {% if company.background == 'hexagon' %}applied{% endif %}">
                                         <input type="color" class="themecircle" id="html5colorpicker" onchange="clickColor(0, -1, -1, 5)" value="#ff0000" style="width:85%;">
@@ -103,75 +105,24 @@
             $('#modal-addformfield').modal('show')
         });
 
-        $(document).on('click','.primarybackground', function(e){
+        $(document).on('click','.changebackground', function(e){
             var csrf_token = getCookie('cookie')
+            var cbcolor = $(this).attr('data-backgroundcolor')
             $.ajax({
                 type:'POST',
-                url: "{% host_url 'toggletheme' host 'bizadmin' %}",
-                data: {'background':'primary'},
+                url: "{% host_url 'toggletheme' host 'prodadmin' %}",
+                data: {'background':cbcolor},
                 headers:{
                     "X-CSRFToken": csrftoken
                 },
                 success:function(data){
                     var el = document.querySelector(data.oldbackground)
                     el.classList.remove("applied")
-                    var els = document.querySelector('.primarybackground')
+                    var els = document.querySelector(data.newbackground)
                     els.classList.add("applied")
                     $.notify({
                         // options
-                        message: 'Primary theme has been applied to your booking page'
-                    },{
-                        // settings
-                        type: 'success',
-                        delay: 50,
-                    });
-                }
-            })
-        });
-
-        $(document).on('click','.carbonbackground', function(e){
-            var csrf_token = getCookie('cookie')
-            $.ajax({
-                type:'POST',
-                url: "{% host_url 'toggletheme' host 'bizadmin' %}",
-                data: {'background':'carbon'},
-                headers:{
-                    "X-CSRFToken": csrftoken
-                },
-                success:function(data){
-                    var el = document.querySelector(data.oldbackground)
-                    el.classList.remove("applied")
-                    var els = document.querySelector('.carbonbackground')
-                    els.classList.add("applied")
-                    $.notify({
-                        // options
-                        message: 'Carbon theme has been applied to your booking page'
-                    },{
-                        // settings
-                        type: 'success',
-                        delay: 50,
-                    });
-                }
-            })
-        });
-
-        $(document).on('click','.hexagonbackground', function(e){
-            var csrf_token = getCookie('cookie')
-            $.ajax({
-                type:'POST',
-                url: "{% host_url 'toggletheme' host 'bizadmin' %}",
-                data: {'background':'hexagon'},
-                headers:{
-                    "X-CSRFToken": csrftoken
-                },
-                success:function(data){
-                    var el = document.querySelector(data.oldbackground)
-                    el.classList.remove("applied")
-                    var els = document.querySelector('.hexagonbackground')
-                    els.classList.add("applied")
-                    $.notify({
-                        // options
-                        message: 'Hexagon theme has been applied to your booking page'
+                        message: data.message
                     },{
                         // settings
                         type: 'success',

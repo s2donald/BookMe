@@ -22,7 +22,17 @@
                     {% endwith %}
                     
                 </div>
-                    <button type="button" class="btn btn-link btn-info"></button>
+                <div class="dropdown">
+                    <a class="three-dots-link" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width:35px; height:35px;">
+                        <i></i>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow" style="">
+                    
+                        <a class="dropdown-item" type="button" data-type="pbr_edit">Edit</a>
+                        <a class="dropdown-item text-danger" type="button" data-id="{{ pbz.id }}" data-type="pbr_delete">Remove</a>
+                    </div>
+                    
+                </div>
             </div>
         </div>
     {% endif %}

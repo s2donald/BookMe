@@ -7,15 +7,30 @@
                             <input class="form-check-input pricebasedlistid" name="pricebasedid" value="{{ pbz.id }}" type="checkbox" {% if pbz.id == my_id %}checked{% endif %}>
                             <span class="form-check-sign"></span>
                             <div class="row d-flex">
-                                <div class="col-12">
-                                    <p class="my-0"><b>{{ pbz.names }}: </b>{% if pbz.rate == 0.00 %}Free{% else %}${{ pbz.rate }}{% endif %} Shipping</p>
-                                    <p class="my-0"> <b>Applies to products: </b> 
-                                        {% if not pbz.upper_price %}
-                                            ${{ pbz.lower_price }} and up
-                                        {% else %}
-                                            ${{ pbz.lower_price }} - ${{ pbz.upper_price }}
-                                        {% endif %}
-                                    </p>
+                                <div class="col-12 d-flex justify-content-between">
+                                    <div>
+                                        <p class="my-0"><b>{{ pbz.names }}: </b>{% if pbz.rate == 0.00 %}Free{% else %}${{ pbz.rate }}{% endif %} Shipping</p>
+                                        <p class="my-0"> <b>Applies to products: </b> 
+                                            {% if not pbz.upper_price %}
+                                                ${{ pbz.lower_price }} and up
+                                            {% else %}
+                                                ${{ pbz.lower_price }} - ${{ pbz.upper_price }}
+                                            {% endif %}
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <div class="dropdown">
+                                            <a class="three-dots-link" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width:35px; height:35px;">
+                                                <i></i>
+                                            </a>
+                                            <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow" style="">
+                                            
+                                                <a class="dropdown-item" type="button" data-id="{{ pbz.id }}" data-type="pbr_edit">Edit</a>
+                                                <a class="dropdown-item text-danger" type="button" data-id="{{ pbz.id }}" data-type="pbr_delete">Delete</a>
+                                            </div>
+                                            
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </label>

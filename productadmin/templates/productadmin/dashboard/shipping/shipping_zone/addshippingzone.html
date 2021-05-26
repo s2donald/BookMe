@@ -127,10 +127,11 @@
                                         <div class="form-check my-0 purplehov">
                                                 <li class=" align-items-center" style="height: 75px; width: 100%; line-height: 75px; border-top: 1px solid #dadbdd;">
                                                     <label class="form-check-label" style="height: 75px; width: 100%;">
-                                                        <input class="form-check-input pricebasedlistid" name="pricebasedid" value="{{ pbz.id }}" type="checkbox">
+                                                        <input class="form-check-input pricebasedlistid" name="pricebasedid" value="{{ pbz.id }}" type="checkbox" {% if pbz.id == my_id %}checked{% endif %}>
                                                         <span class="form-check-sign"></span>
                                                         <div class="row d-flex">
-                                                            <div class="col-12">
+                                                            <div class="col-12 d-flex justify-content-between">
+                                                                <div>
                                                                 <p class="my-0"><b>{{ pbz.names }}: </b>{% if pbz.rate == 0.00 %}Free{% else %}${{ pbz.rate }}{% endif %} Shipping</p>
                                                                 <p class="my-0"> <b>Applies to products: </b> 
                                                                     {% if not pbz.upper_price %}
@@ -139,6 +140,20 @@
                                                                         ${{ pbz.lower_price }} - ${{ pbz.upper_price }}
                                                                     {% endif %}
                                                                 </p>
+                                                                </div>
+                                                                <div>
+                                                                    <div class="dropdown">
+                                                                        <a class="three-dots-link" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width:35px; height:35px;">
+                                                                            <i></i>
+                                                                        </a>
+                                                                        <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow" style="">
+                                                                        
+                                                                            <a class="dropdown-item" type="button" data-id="{{ pbz.id }}" data-type="pbr_edit">Edit</a>
+                                                                            <a class="dropdown-item text-danger" type="button" data-id="{{ pbz.id }}" data-type="pbr_delete">Delete</a>
+                                                                        </div>
+                                                                        
+                                                                    </div>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </label>
@@ -245,6 +260,18 @@
                         $('#myPriceBasedForm').modal('hide')
                         document.getElementById("pbrshipping-list").innerHTML = data.html_content
                     }
+                }
+            });
+        });
+        $(document).on('click', '.editcountry', function(e){
+            var data = $(this).attr('data-countrycode')
+            $.ajax({
+                url: "{% host_url 'getRegionList' host 'prodadmin' %}",
+                type: 'GET',
+                data: {'region':data},
+                dataType: 'json',
+                success: function (data) {
+                    console.log('hello')
                 }
             });
         });

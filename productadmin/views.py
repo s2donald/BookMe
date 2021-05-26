@@ -76,9 +76,10 @@ def createNewBusiness(request):
             email = user_form.cleaned_data.get('email')
             phone = user_form.cleaned_data.get('phone')
             bname = user_form.cleaned_data.get('business_name')
-            company = Company.objects.create(user=user,business_name=bname,email=email,phone=phone,
+            company = Company.objects.create(user=user,business_type='product',category=Category.objects.get(slug='other'),business_name=bname,email=email,phone=phone,
                                                 description='',address='',postal='',
                                                 state='',city='',status='draft')
+            company.subcategory.add(SubCategory.objects.get(slug='other-services'))
             company.save()
             biz_hours = OpeningHours.objects.bulk_create([
                 OpeningHours(company=company, weekday=0,is_closed=True),
@@ -173,7 +174,7 @@ def load_services(request):
     company = Company.objects.get(user=request.user)
     services = company.services_offered.all()
     return render(request, 'bizadmin/dashboard/profile/addcompanyhelper/subcat_dropdown_list_options.html', {'subcategories': services})
-
+from business.models import Category, SubCategory
 def signupViews(request):
     context = {}
     if request.method == 'POST':
@@ -187,9 +188,10 @@ def signupViews(request):
             bname = biz_name.cleaned_data.get('business_name')
             account = authenticate(email=email, password=raw_pass)
             login(request, account)
-            company = Company.objects.create(user=account,business_name=bname,email=email,phone=phone,
+            company = Company.objects.create(user=account,business_type='product',category=Category.objects.get(slug='other'),business_name=bname,email=email,phone=phone,
                                                 description='',address='',postal='',
                                                 state='',city='',status='draft')
+            company.subcategory.add(SubCategory.objects.get(slug='other-services'))
             company.save()
             first = user_form.cleaned_data.get('first_name')
             last = user_form.cleaned_data.get('last_name')
@@ -644,6 +646,15 @@ class getCountriesListAPI(View):
             else:
                 break
         html_response = render_to_string('productadmin/dashboard/shipping/partial/countries.html', {'countriess':countries, 'company':company})
+        return JsonResponse({'html_content':html_response})
+
+from cities.models import City, Region
+class getRegionListAPI(View):
+    def get(self,request):
+        company = Company.objects.get(user=request.user)
+        region = request.GET.get('region')
+        region = Region.objects.filter(country__code=region)
+        html_response = render_to_string('productadmin/dashboard/shipping/partial/regions.html', {'regions':region, 'company':company})
         return JsonResponse({'html_content':html_response})
 
 def fileUploadView(request):

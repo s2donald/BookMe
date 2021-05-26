@@ -22,6 +22,7 @@ urlpatterns = [
     re_path(r'dashboard/shipping/$', views.shippingView, name='shipping'),
     re_path(r'dashboard/shipping/add_shipping/$', views.addshippingView, name='addshipping'),
     re_path(r'api/dashboard/shipping/get_country_list/$', views.getCountriesListAPI.as_view(), name='getCountriesList'),
+    re_path(r'api/dashboard/shipping/get_region_list/$', views.getRegionListAPI.as_view(), name='getRegionList'),
     re_path(r'api/dashboard/shipping/create_shipping/$', views.createshippingZoneViewAPI.as_view(), name='createshippingzone'),
     re_path(r'api/dashboard/shipping/create_pricebasedrateshipping/$', views.createPBRShippingViewAPI.as_view(), name='ratebasedprice_create'),
     re_path(r'api/grabthemodalorder/$', views.modalGetOrderType.as_view(), name='ordermodalview'),

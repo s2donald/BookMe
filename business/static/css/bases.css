@@ -792,6 +792,10 @@ a.licolor:hover, a.licolor:focus {
   background: linear-gradient(90deg, #d6e8f9 0%, #d6e8f9 100%);
   background-color: #d6e8f9;
 }
+.mainpage[data-background="green"] .bg-light, .bg-light {
+  background: linear-gradient(90deg, #1ab339 0%, #1ab339 100%);
+  background-color: #1ab339;
+}
 .mainpage[data-background="blue"] .bg-light, .bg-light {
   background: linear-gradient(90deg, #10559A 0%, #10559A 100%);
   background-color: #10559A;

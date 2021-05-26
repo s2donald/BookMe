@@ -230,7 +230,8 @@ backgroundstyle = (
     ('primary', 'primary'),
     ('carbon', 'carbon'),
     ('hexagon', 'hexagon'),
-    ('lightblue', 'lightblue')
+    ('lightblue', 'lightblue'),
+    ('green', 'green'),
 )
 
 def get_user_backgroundimage_folder(instance, filename):

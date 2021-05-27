@@ -792,6 +792,10 @@ a.licolor:hover, a.licolor:focus {
   background: linear-gradient(90deg, #d6e8f9 0%, #d6e8f9 100%);
   background-color: #d6e8f9;
 }
+.mainpage[data-background="nicepurple"] .bg-light, .bg-light {
+  background: linear-gradient(90deg, #B976DF 0%, #B976DF 100%);
+  background-color: #B976DF;
+}
 .mainpage[data-background="green"] .bg-light, .bg-light {
   background: linear-gradient(90deg, #1ab339 0%, #1ab339 100%);
   background-color: #1ab339;
@@ -843,15 +847,28 @@ a.licolor:hover, a.licolor:focus {
 /* active*/
 .mainpage[data-background="primary"] .nav-pills .nav-link.active, .nav-pills .nav-link.active {
   background: linear-gradient(90deg, #ff5f6d 0%, #ff5f6d 100%) !important;
+  background-color: #ff5f6d;
   color: white !important;
 }
 .mainpage[data-background="lightblue"] .nav-pills .nav-link.active, .nav-pills .nav-link.active {
   background: linear-gradient(90deg, #d6e8f9 0%, #d6e8f9 100%) !important;
+  background-color: #d6e8f9;
   color: #131313 !important;
+}
+.mainpage[data-background="nicepurple"] .nav-pills .nav-link.active, .nav-pills .nav-link.active {
+  background: linear-gradient(90deg, #b976df 0%, #b976df 100%) !important;
+  background-color: #b976df;
+  color: white !important;
+}
+.mainpage[data-background="green"] .nav-pills .nav-link.active, .nav-pills .nav-link.active {
+  background: linear-gradient(90deg, #1ab339 0%, #1ab339 100%) !important;
+  background-color: #1ab339;
+  color: white !important;
 }
 
 .mainpage[data-background="blue"] .nav-pills .nav-link.active, .nav-pills .nav-link.active {
   background: linear-gradient(90deg, #10559A 0%, #10559A 100%) !important;
+  background-color: #10559A;
   color: white !important;
 }
 .mainpage[data-background="cello"] .nav-pills .nav-link.active, .nav-pills .nav-link.active {

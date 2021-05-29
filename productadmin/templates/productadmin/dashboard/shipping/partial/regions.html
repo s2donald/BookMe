@@ -1,7 +1,31 @@
-{% load countries %}
-{% load static %}
-{% for region in regions %}
-    
-    
-{% endfor %}
+<input type="text" id="myInput" class="textinput textInput form-control" onkeyup="myFunction()" placeholder="Search for regions..">
+<input class="form-check-input immers" name="ctrinput" hidden value="{{ country_code }}" type="text">
+<ul id="myUL" style="width:100%; padding:0px; list-style:none;">
+    <div class="col-12 m-1 px-3" style="height: 300px; max-height: 300px; overflow-y: scroll; background: rgba(146, 146, 146, 0.01);">
+        <div class="form-check my-0 purplehov">
+            <li class="align-items-center" style="height: 50px; width: 100%; line-height:50px;">
+                <label class="form-check-label" style="height: 50px; width: 100%;">
+                    <input class="form-check-input immers" name="regioninput" value="all" type="checkbox">
+                    <span class="form-check-sign"></span>
+                    All Regions
+                </label>
+                <a hidden href="#">All Regions</a>    
+            </li>
+        </div>
+        {% for region in regions %}
+            <div class="form-check my-0 purplehov">
+                    <li class=" align-items-center" style="height: 50px; width: 100%; line-height:50px;">
+                        <label class="form-check-label" style="height: 50px; width: 100%;">
+                            <input class="form-check-input immers" name="regioninput" value="{{ region.id }}" type="checkbox">
+                            <span class="form-check-sign"></span>
+                            {{ region.name }}
+                        </label>
+                        <a hidden href="#">{{ region.name }}</a>    
+                    </li>
+            </div>
+            
+        {% endfor %}
+    </div>
+</ul>
+<p class="text-muted px-3">The selected regions will be included in this shipping zone.</p>
 <hr>

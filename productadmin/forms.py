@@ -143,7 +143,7 @@ class ShippingZoneForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(ShippingZoneForm, self).__init__(*args, **kwargs)
         self.fields['city'].queryset = City.objects.filter(country__code="CA")
-        self.fields['state'].queryset = Region.objects.filter(country__code="CA")
+        self.fields['state'].queryset = Region.objects.filter(country__code="US")
     def clean_company(self):
         company = self.cleaned_data['company']
         return company

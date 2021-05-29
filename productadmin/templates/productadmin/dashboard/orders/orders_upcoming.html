@@ -195,12 +195,17 @@
     });
 </script>
 <script>
+
+    var titleresp = ''
+    var txtresp = ''
+    var typesresp = ''
     $(document).on('click', '.dropdown-item', function(e){
         var $this = $(this)
         var order_id = $(this).attr('data-id')
         var type_id = $(this).attr('data-type')
         var title = ''
         var txt = ''
+        var types = ''
         if (type_id == 'accept'){
             title = 'Are you sure you want to accept this request?'
             txt = 'Payment will be collected from the customer'
@@ -245,31 +250,28 @@
                         "X-CSRFToken": csrftoken
                     },
                     success: function(data){
+                        titleresp = data.title
+                        txtresp = data.txt
+                        typesresp = data.type
                         return data.title
                     }
+                }).then((result) => {
+                    console.log(result)
+                    Swal.fire({
+                        title: result.title, 
+                        text: result.txt, 
+                        icon: result.type,
+                        customClass:{
+                            confirmButton: 'btn btn-info',
+                            cancelButton: 'btn btn-danger',
+                        },
+                        buttonsStyling: false,
+                    }).then((result)=>{
+                        location.reload();
+                    });
                 });
             },
-        }).then((result) => {
-            console.log(result.value.response)
-            if (result.isConfirmed) {
-                Swal.fire({
-                    title: 'Action Completed', 
-                    text: '', 
-                    icon: 'success',
-                    customClass:{
-                        confirmButton: 'btn btn-info',
-                        cancelButton: 'btn btn-danger',
-                    },
-                    buttonsStyling: false,
-                }).then((result)=>{
-                    location.reload();
-                });
-            } else if (
-                /* Read more about handling dismissals below */
-                result.dismiss === Swal.DismissReason.cancel
-            ) {
-            }
-        });
+        })
     })
     
     $( document ).ready(function() {

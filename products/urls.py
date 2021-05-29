@@ -9,6 +9,7 @@ urlpatterns = [
     path('load/states/', views.loadStates, name='loadstate'),
     path('complete/', views.commitPurchase.as_view(), name='commitpurchase'),
     path('paymentprocessing/', views.PaymentProcessingProducts.as_view(), name='newpaymentprocessing'),
+    path('shipping/',views.ShippingView.as_view(), name='cart_shippingcalc'),
     path('checkout/',views.CartCheckoutView.as_view(), name='cart_checkout'),
     path('cartaddproduct/<int:product_id>/', views.cart_add, name='cart_add_product'),
     path('retrievefilteredsearchproduct/', views.SearchFilter.as_view(), name='productsearch'),

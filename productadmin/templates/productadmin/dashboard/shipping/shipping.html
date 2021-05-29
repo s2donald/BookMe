@@ -126,7 +126,7 @@
                     <h4>Shipping Zones</h4>
                     </div>
                     
-                    <a type="button" href="{% host_url 'addshipping' host 'prodadmin' %}" class="btn btn-link btn-info">Add shipping zone</a>
+                    <a type="button" href="{% host_url 'addshipping' host 'prodadmin' %}" class="btn btn-info mx-3">Add shipping zone</a>
                 </div>
                 <div class="card-body">
                     <div class="row">
@@ -163,7 +163,7 @@
                                             
                                             </span>
                                         </div>
-                                        <div class="btn btn-link btn-info">Edit Zone</div>
+                                        <div class="btn btn-link btn-danger">Delete Zone</div>
                                     </div>
                                     {% with pricebasedzones=zones.pricebased_rate.all %}
                                         {% for pbz in pricebasedzones %}

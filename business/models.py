@@ -232,7 +232,10 @@ backgroundstyle = (
     ('hexagon', 'hexagon'),
     ('lightblue', 'lightblue'),
     ('green', 'green'),
-    ('nicepurple', 'nicepurple')
+    ('nicepurple', 'nicepurple'),
+    ('redhexagon', 'redhexagon'),
+    ('hideouteverlasting', 'hideouteverlasting'),
+    ('autumncalming', 'autumncalming'),
 )
 
 def get_user_backgroundimage_folder(instance, filename):

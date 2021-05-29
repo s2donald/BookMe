@@ -20,7 +20,7 @@
                                     <a class="btn-solid-lg" href="{% host_url 'newbizcreate' host 'bizadmin' %}">Create a business page</a>
                         {% else %}
                                 <a class="btn-solid-lg" href="{% host_url 'bizadminlogin' host 'bizadmin' %}"><i class="fab fa-start"></i>Sign into BookMe</a>
-                                <a class="btn-solid-lg" href="{% host_url 'bizadminsignup' host 'bizadmin' %}"><i class="fab fa-start"></i>Get started for free</a>
+                                {% comment %} <a class="btn-solid-lg" href="{% host_url 'bizadminsignup' host 'bizadmin' %}"><i class="fab fa-start"></i>Get started for free</a> {% endcomment %}
                         {% endif %}
                     </div>
                     </div> <!-- end of text-container -->

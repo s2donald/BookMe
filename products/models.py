@@ -191,6 +191,7 @@ class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='items')
     company = models.ForeignKey(Company, related_name='order_items_company', on_delete=models.CASCADE, blank=True, null=True)
     product = models.ForeignKey(Product, related_name='order_items', on_delete=models.CASCADE)
+    product_name = models.CharField(max_length=50, null=True, blank=True)
     dropdown = models.ManyToManyField(ProductDropDown, related_name='order_addon_extra', blank=True)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     quantity = models.PositiveIntegerField(default=1)

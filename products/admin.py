@@ -19,6 +19,12 @@ class ProductDropDownInline(admin.TabularInline):
 class OrderItemInline(admin.TabularInline):
     model = OrderItem
     extra = 0
+    def formfield_for_manytomany(self, db_field, request, **kwargs):
+        if db_field.name == "dropdown":
+            company_id = request.resolver_match.kwargs['object_id']
+            order = Order.objects.get(id=company_id)
+            kwargs["queryset"] = ProductDropDown.objects.filter(dropdown__product__business=order.company)
+        return super().formfield_for_manytomany(db_field, request, **kwargs)
 
 @admin.register(ProductCategory)
 class ProductCategoryAdmin(admin.ModelAdmin):

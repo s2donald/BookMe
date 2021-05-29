@@ -117,7 +117,7 @@
                                 <td></td>
                                 <td></td>
                                 <td>
-                                    <h3>JMJ Flowers Inc</h3>
+                                    <h3>Donald Services</h3>
                                 </td>
 
 								
@@ -131,16 +131,16 @@
 						<table>
 							<tr>
 								<td colspan="4">
-									JMJ Flowers Inc<br />
-									5210 Finch Ave. E, Unit #3<br />
-									Toronto, Ontario M1S 4Z6
+									Donald Services<br />
+									437-779-3282<br />
+									Toronto, Ontario M1C 4W7
 								</td>
                                 <td></td>
                                 <td></td>
                                 <td style="text-align: right;">
 									Order ID: {{ order.slug }}<br />
 									Created: {{ order.created|date:"F j, Y" }}<br />
-                                    
+                                    Order Quote
 								</td>
 
 								{% comment %} <td>
@@ -154,13 +154,13 @@
 				</tr>
 
                 <tr class="heading">
-                    <td colspan="7">Outdoor Plant Maintenance Quote</td>
+                    <td colspan="7">Adding Grass Quote</td>
                 </tr>
 
 				<tr class="heading">
-					<td colspan="4">Items</td>
-                    <td>Unit Price</td>
-                    <td>QTY</td>
+					<td colspan="6">Service</td>
+                    {% comment %} <td>Unit Price</td>
+                    <td>QTY</td> {% endcomment %}
 					<td>Price</td>
 				</tr>
                 {% comment %} {% if items.dropdown.all.count > 0 %}
@@ -172,45 +172,11 @@
                     {% endfor %}
                 {% endif %} {% endcomment %}
                 <tr class="item">
-                    <td colspan="6">Old Tree Removal On The 1<sup>st</sup> Box</td>
-                    <td style="text-align: right;">$200.00</td>
+                    <td colspan="6">Removal and disposal of old grass with new grass replacement</td>
+                    <td style="text-align: right;">$3500.00</td>
                 </tr>
 
-                <tr class="item">
-                    <td colspan="4">1 Vigoro Rose Christmas Tree (1<sup>st</sup> Box)</td>
-                    <td>$90.00</td>
-                    <td style="text-align: center;">1</td>
-                    <td style="text-align: right;">$90.00</td>
-                </tr>
-
-                <tr class="item">
-                    <td colspan="4">10" Eugenia Spiral Christmas Tree (2<sup>nd</sup> Box)</td>
-                    <td>$150.00</td>
-                    <td style="text-align: center;">2</td>
-                    <td style="text-align: right;">$300.00</td>
-                </tr>
-
-                <tr class="item">
-                    <td colspan="4">Emerald &amp; Gold Winter Creeper (5 Creepers For 1<sup>st</sup> Box and 2 For 2<sup>nd</sup> Box)</td>
-                    <td>$45.00</td>
-                    <td style="text-align: center;">7</td>
-                    <td style="text-align: right;">$315.00</td>
-                </tr>
-
-                <tr class="item">
-                    <td colspan="4">Mini Roses (7 in 1<sup>st</sup> Box and 12 for 2<sup>nd</sup> Box)</td>
-                    <td>$7.00</td>
-                    <td style="text-align: center;">19</td>
-                    <td style="text-align: right;">$133.00</td>
-                </tr>
-                <tr class="item">
-                    <td colspan="4">Scott's Nature Scrapes Mulch</td>
-                    <td>$8.00</td>
-                    <td style="text-align: center;">15</td>
-                    <td style="text-align: right;">$120.00</td>
-                </tr>
-
-                <tr class="heading">
+                {% comment %} <tr class="heading">
 					<td colspan="6">Service</td>
 					<td>Price</td>
 				</tr>
@@ -218,8 +184,8 @@
                 <tr class="item">
                     <td colspan="6">Labor</td>
                     <td style="text-align: right;">$400.00</td>
-                </tr>
-                <tr class="total">
+                </tr> {% endcomment %}
+                {% comment %} <tr class="total">
 					<td colspan="5"></td>
                     <td>Labor:</td>
                     <td style="text-align: right;">$400.00</td>
@@ -228,23 +194,13 @@
 					<td colspan="5"></td>
                     <td>Items:</td>
                     <td style="text-align: right;">$1158.00</td>
-				</tr>
+				</tr> {% endcomment %}
 
 				<tr class="total">
 					<td colspan="2"></td>
-                    <td style="text-align: right;" colspan="4">Total (Exc. Monthly Maintenance):</td>
-                    <td style="text-align: right;">$1558.00</td>
+                    <td style="text-align: right;" colspan="4">Total (Grass &amp; Labor):</td>
+                    <td style="text-align: right;">$3500.00</td>
 				</tr>
-                <tr class="heading">
-					<td colspan="5">Recurring Service</td>
-                    <td>Term</td>
-					<td>Price</td>
-				</tr>
-                <tr class="item">
-                    <td colspan="5">Monthly Maintenance</td>
-                    <td>Monthly</td>
-                    <td style="text-align: right;">$250.00</td>
-                </tr>
                 {% comment %} <tr class="total">
 					<td></td>
                     {% if items.product.request %}

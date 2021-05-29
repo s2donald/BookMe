@@ -33,6 +33,7 @@ from django.conf import settings
 import requests
 import djstripe
 from .forms import dropDownForm, dropDownOptionsForm
+from .regions import RegionCountrySession
 # Create your views here.
 def businessadmin(request):
     user = request.user
@@ -356,6 +357,65 @@ class notesUpdate(View):
         return JsonResponse({'good':'success'})
 
 from products.tasks import *
+class modalGetPBRType(View):
+    def get(self, request):
+        user = request.user
+        company = Company.objects.get(user=user)
+        pbr_id = request.GET.get('pbr_id')
+        pricebasedshipping = PriceBasedShippingRate.objects.get(pk=pbr_id)
+        html = ''
+        title = ''
+        if company != pricebasedshipping.company:
+            return JsonResponse({'html_form':html, 'title':title})
+        pricebasedform = PriceBasedShippingRateForm(initial={'names':pricebasedshipping.names})
+        html = render_to_string('productadmin/dashboard/shipping/partial/modals/modal_pricebasedrate_edit.html', {'form':pricebasedform,'pricebasedshipping':pricebasedshipping, 'company':company}, request=request)
+        return JsonResponse({'html_form':html, 'title':'Update price based rate'})
+    def post(self, request):
+        user = request.user
+        company = Company.objects.get(user=user)
+        ids = request.POST.get('my_id')
+        pricebasedshipping = PriceBasedShippingRate.objects.get(pk=ids)
+        if company != pricebasedshipping.company:
+            return JsonResponse({'error':'There was an error. Please try again later.'})
+        form = PriceBasedShippingRateForm(request.POST)
+        html_content = ''
+        error = False
+        if form.is_valid():
+            upper_price = form.cleaned_data.get('upper_price')
+            lower_price = form.cleaned_data.get('lower_price')
+            name = form.cleaned_data.get('names')
+            rate = form.cleaned_data.get('rate')
+            if PriceBasedShippingRate.objects.filter(names=name,company=company).exclude(id=ids).exists():
+                error = 'This rate name has already been used. Please try a different rate name.'
+            elif upper_price is None:
+                pricebasedshipping.names = name
+                pricebasedshipping.rate = rate
+                pricebasedshipping.upper_price = upper_price
+                pricebasedshipping.lower_price = lower_price
+                pricebasedshipping.save()
+            elif upper_price < lower_price:
+                error = 'Please make sure the minimum order price is less than the maximum order price.'
+            else:
+                pricebasedshipping.names = name
+                pricebasedshipping.rate = rate
+                pricebasedshipping.upper_price = upper_price
+                pricebasedshipping.lower_price = lower_price
+                pricebasedshipping.save()
+            html_content = render_to_string('productadmin/dashboard/shipping/partial/pricebased_rate.html', {'my_id':ids, 'company':company})
+        else:
+            error = 'There was an error, please double check the values'
+            for err in form.errors:
+                if err == 'lower_price':
+                    error = 'Please ensure the minimum order price is greater or equal than $0.00'
+                elif err == 'upper_price':
+                    error = 'Please ensure the maximum order price is greater or equal than $0.01'
+                else:
+                    error = 'Please ensure the rate amount is greater or equal to $0.00'
+        return JsonResponse({'html_content':html_content, 'title':'Update price based rate', 'error':error})
+    def delete(self, request):
+        print('hello')
+        return
+
 class modalGetOrderType(View):
     def get(self, request):
         user = request.user
@@ -390,7 +450,7 @@ class modalGetOrderType(View):
         payment_intent_id = order.paymentintent
 
         if payment_intent_id is None:
-            return JsonResponse({'type':'error', 'txt':'There was an error, payment does not exist.'})
+            return JsonResponse({'title':'There was an error','type':'error', 'txt':'There was an error, payment does not exist.'})
         
         if type_of_req == 'accept':
             try:
@@ -404,8 +464,13 @@ class modalGetOrderType(View):
                 )
 
             except Exception as e:
-                print(e)
-                return JsonResponse({'type':'error', 'txt':'There was an error, unable to collect the payment.'})
+                order.active = False
+                order.paid = False
+                order.pendingapproval = False
+                order.cancelled = True
+                order.save()
+                order_request_cancelled.delay(order.id)
+                return JsonResponse({'title':'There was an error','type':'error', 'txt':'There was an error, unable to collect the payment.'})
             if payintent.status == 'succeeded':
                 order.active = True
                 order.paid = True
@@ -414,21 +479,26 @@ class modalGetOrderType(View):
                 title = 'The order has been accepted and payment was collected'
                 order_request_accepted.delay(order.id)
             else:
-                return JsonResponse({'type':'error', 'txt':'There was an error, unable to collect the payment.'})
+                return JsonResponse({'title':'There was an error','type':'error', 'txt':'There was an error, unable to collect the payment.'})
         #Decline the order request
         elif type_of_req == 'decline':
             if order.paid == True:
                 order.pendingapproval = False
                 order.save()
-                return JsonResponse({'type':'error', 'txt':'There was an error, the payment was already collected.'})
+                return JsonResponse({'title':'There was an error','type':'error', 'txt':'There was an error, the payment was already collected.'})
             try:
                 payintent = stripe.PaymentIntent.cancel(
                     payment_intent_id,
                     stripe_account=company.stripe_user_id_prod
                 )
             except Exception as e:
-                print(e)
-                return JsonResponse({'type':'error', 'txt':'There was an error, please contact shopme support.'})
+                order.active = False
+                order.paid = False
+                order.pendingapproval = False
+                order.cancelled = True
+                order.save()
+                order_request_cancelled.delay(order.id)
+                return JsonResponse({'title':'There was an error','type':'error', 'txt':'There was an error, this payment has already been declined.'})
             title = 'The order has been declined and payment was cancelled.'
             txt = 'This action can not be undone.'
             order.active = False
@@ -445,8 +515,13 @@ class modalGetOrderType(View):
                     stripe_account=company.stripe_user_id_prod
                 )
             except Exception as e:
-                print(e)
-                return JsonResponse({'type':'error', 'txt':'There was an error, please contact shopme support.'})
+                order.active = False
+                order.paid = False
+                order.pendingapproval = False
+                order.cancelled = True
+                order.save()
+                order_request_cancelled.delay(order.id)
+                return JsonResponse({'title':'There was an error','type':'error', 'txt':'There was an error, processing this refund.'})
             order.paid = False
             order.pendingapproval = False
             order.cancelled = True
@@ -559,6 +634,8 @@ def addshippingView(request):
             # zone = CompanyShippingZone.objects.create(company=company, name='')
             form = ShippingZoneForm()
             pricebasedform = PriceBasedShippingRateForm()
+            regions = RegionCountrySession(request)
+            regions.clear()
             return render(request, 'productadmin/dashboard/shipping/shipping_zone/addshippingzone.html', {
                                                                                         'company':company,
                                                                                         'form':form,
@@ -579,6 +656,16 @@ class createshippingZoneViewAPI(View):
             pricebased = request.POST.getlist('pricebasedid')
             allcountry = False
             zone = CompanyShippingZone.objects.create(name=name, company=company)
+            regions = RegionCountrySession(request)
+            for r in regions:
+                for ids in r['region_list']:
+                    if ids == 'all':
+                        country_code = r['country']
+                        for reg in Region.objects.filter(country__code=country_code):
+                            zone.state.add(reg)
+                        break
+                    else:
+                        zone.state.add(Region.objects.get(pk=ids))
             for c in countries:
                 if c == 'all':
                     allcountry = True
@@ -592,6 +679,7 @@ class createshippingZoneViewAPI(View):
             for c in pricebased:
                 zone.pricebased_rate.add(PriceBasedShippingRate.objects.get(pk=c))
             zone.save()
+            regions.clear()
             return redirect(reverse('shipping', host='prodadmin'))
         else:
             return render(request, 'productadmin/dashboard/shipping/shipping_zone/addshippingzone.html', {
@@ -634,6 +722,7 @@ class createPBRShippingViewAPI(View):
         return JsonResponse({'error':error, 'html_content':html_content})
 
 from django_countries import countries
+
 class getCountriesListAPI(View):
     def get(self,request):
         company = Company.objects.get(user=request.user)
@@ -652,10 +741,20 @@ from cities.models import City, Region
 class getRegionListAPI(View):
     def get(self,request):
         company = Company.objects.get(user=request.user)
-        region = request.GET.get('region')
-        region = Region.objects.filter(country__code=region)
-        html_response = render_to_string('productadmin/dashboard/shipping/partial/regions.html', {'regions':region, 'company':company})
+        country_code = request.GET.get('region')
+        region = Region.objects.filter(country__code=country_code)
+        html_response = render_to_string('productadmin/dashboard/shipping/partial/regions.html', {'regions':region,'country_code':country_code, 'company':company})
         return JsonResponse({'html_content':html_response})
+    def post(self, request):
+        company = Company.objects.get(user=request.user)
+        country_code = request.POST.get('ctrinput')
+        regions = RegionCountrySession(request)
+        regions_list = request.POST.getlist('regioninput')
+        # print(regions_list)
+        # request.session['country_code'] = country_code
+        # request.session['country_code']['regioninput'] = regions_list
+        regions.add(country_code, regions_list)
+        return JsonResponse({'':''})
 
 def fileUploadView(request):
     if request.POST:

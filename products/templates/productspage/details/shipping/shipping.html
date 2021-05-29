@@ -1,0 +1,141 @@
+{% extends 'productspage/main.html'%}
+{% load countries %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% load hosts %}
+{% load business_tags %}
+{% block title %}{{ company.business_name }} - ShopMe.to{% endblock %}
+{% block companybizname %}{{ company.business_name }}{% endblock companybizname %}
+{% block linkscript %}
+<link rel="stylesheet" type="text/css" id="mce-u0" href="{% static '/tinymce/skins/ui/oxide/skin.min.css' %}">
+<script src="{% static '/tinymce/tinymce.min.js' %}"></script>
+<script src="{% static '/django_tinymce/init_tinymce.js' %}"></script>
+{% endblock  %}
+{% block booking %}
+<script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+<script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
+<script>
+    function changeheight() {
+        var readmore = $('#readmore');
+        if (readmore.text() == 'Read more') {
+            readmore.text("Read less");
+        } else {
+            readmore.text("Read more");
+        }
+        $('.productdescription').toggleClass("showentire");
+    };
+</script>
+<style>
+.custom-file-control:lang(en)::after {
+  content: "Select file...";
+}
+
+.custom-file-control:lang(en)::before {
+  content: "Click me";
+}
+
+/*when a value is selected, this class removes the content */
+.custom-file-control.selected:lang(en)::after {
+  content: "" !important;
+}
+
+.custom-file {
+  overflow: hidden;
+}
+.custom-file-control {
+  white-space: nowrap;
+}
+</style>
+<section class="py-0">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-7 p-0 p-md-3 order-2 order-md-1">
+                <div class="col-12 p-0 text-left">
+
+                    <form method="post" action="{% host_url 'cart_checkout' host 'producturl' slug=company.slug %}" class="justify-content-center pt-1" id="paymentform" enctype="multipart/form-data">
+                        {% csrf_token %}
+                            {% for z in zones %}
+                                <ul class="ks-cboxtags p-0 m-0">
+                                
+                                {% for shippingrates in z.pricebased_rate.all %}
+                                    <li>
+                                        <input type="radio" id="checkbox{{shippingrates.id}}" name="shippingbox" value="{{ shippingrates.id }}">
+                                        <label for="checkbox{{shippingrates.id}}">  {{shippingrates.names}} - ${{shippingrates.rate}}</label>
+                                    </li>
+                                    
+                                {% endfor %}
+                                </ul>
+                            {% endfor %}
+                            <button data-sitekey="6LeimeAZAAAAAE119rtvZivK4DW9csX6QhEo5Yla" data-callback='onSubmit' data-action='submit' class="btn btn-outline-primary px-3 my-3 mx-1" id="collectpayfirst" type="submit">
+                                <div class="spinner-border sr-only" id="spinner" role="status">
+                                    <span class="sr-only">Loading...</span>
+                                </div>
+                                <span id="button-text">Continue to Payment Method</span>
+                            </button>
+                        
+                    
+                    </form>
+                </div>
+            </div>
+            <div class="col-md-5 order-1 order-md-2">
+                {% for item in order.items.all %}
+                    {% with product=item.product %}
+                        <div class="d-flex align-items-center pb-2">
+                            <div class="">
+                                {% if product.mainimage %}
+                                    <img class="rounded" style="object-fit: cover; width:90px; height:90px;" src="{{ product.mainimage.url }}" alt="{{ company.business_name }} Image">
+                                {% else %}
+                                    <img class="rounded" style="object-fit: cover; width:90px; height:90px;" src="{% static 'img/default-product-image.png' %}" alt="Stock Image">
+                                {% endif %}
+                                
+                            </div>
+                            <div class="ml-3 w-100 text-left">
+                                <p class="m-0">{{product.name}}</p>
+                                <div class="d-flex">
+                                    <span style="font-weight:600;">${{ product.price }}</span>
+                                </div>
+                                <div class="d-flex flex-wrap"></div>
+                            </div>
+                        </div>
+                        {% for addon in item.addon.all %}
+                            <div class="d-flex justify-content-between align-items-center mt-0 py-0">
+                                <p class="mb-1 text-muted">{{ addon.name }}:</p>
+                                <p class=" mb-1 text-muted">${{ addon.price }}</p>
+                            </div>
+                        {% endfor %}
+                        {% for dropdownoptions in item.dropdown.all %}
+                            <div class="d-flex justify-content-between align-items-center mt-0 py-0">
+                                <p class="mb-1 text-muted">{{ dropdownoptions.option }}:</p>
+                                <p class=" mb-1 text-muted">${{ dropdownoptions.price }}</p>
+                            </div>
+                        {% endfor %}
+                        <hr class="mt-0">
+                        <div class="d-flex justify-content-between align-items-center mt-0 py-0">
+                            <p class="mb-1 text-muted">Subtotal:</p>
+                            <p class=" mb-1 text-muted">${{ item.price }}</p>
+                        </div>
+                        {% comment %} <div class="d-flex justify-content-between align-items-center mt-0">
+                            <p class="mb-1 text-muted">Shipping</p>
+                            {% if item.shipping %}
+                                <h5>$<span style="font-weight:500">{{ item.shipping }}</span></h5>
+                            {% else %}
+                                <p class="mb-1 text-muted">Pick up</p>
+                            {% endif %}
+                            
+                        </div> {% endcomment %}
+                        <hr class="mt-0">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <p style="font-weight:600">Total</p>
+                            <h5>$<span style="font-weight:600">{{ item.price }}</span></h5>
+                        </div>
+                        <div class="text-block text-left">
+                            <p class="text-muted">In the event your order gets cancelled or unapproved, you will be refunded in full.</p>
+                            {% if product.request %}<p class="text-muted">Depending on the request of your order, vendors may reach out for additional payment.</p>{% endif %}
+                        </div>
+                    {% endwith %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -26,6 +26,7 @@ urlpatterns = [
     re_path(r'api/dashboard/shipping/create_shipping/$', views.createshippingZoneViewAPI.as_view(), name='createshippingzone'),
     re_path(r'api/dashboard/shipping/create_pricebasedrateshipping/$', views.createPBRShippingViewAPI.as_view(), name='ratebasedprice_create'),
     re_path(r'api/grabthemodalorder/$', views.modalGetOrderType.as_view(), name='ordermodalview'),
+    re_path(r'api/grabthemodalpbr/$', views.modalGetPBRType.as_view(), name='pbrshippingeditmodalview'),
 
     re_path(r'dashboard/profile/security/$',views.profileSecurityViews, name='security'),#Changed
     re_path(r'dashboard/profile/notifs/$', views.notifViews, name='notifications'),

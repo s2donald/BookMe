@@ -187,18 +187,30 @@ class CartCheckoutView(View):
                         description = request.POST.get(str(additional.id))
                     else:
                         img = request.FILES.get(str(additional.id))
-                        print(request.FILES)
                     answer = AnswerModels.objects.create(orderitem=orditems,question=q,description=description)
                     if img:
                         MultipleImageOrderAttachments.objects.create(answer=answer,photos=img,orderitem=orditems)
-                        
-
-
             cart.clear()
             request.session['order_id'] = order.id
             return redirect(reverse('newpaymentprocessing', host='producturl', host_args=(company.slug,)))
+            # return redirect(reverse('cart_shippingcalc', host='producturl', host_args=(company.slug,)))
         else:
             return render(request, 'productspage/details/productcheckout.html',{'form':form,'user':user,'company':company, 'cart':cart, 'pk_stripe':pk})
+
+from productadmin.models import CompanyShippingZone
+class ShippingView(View):
+    def get(self, request):
+        order_id = request.session.get('order_id')
+        order = get_object_or_404(Order, id=order_id)
+        company = request.viewing_company
+        total_cost = order.get_total_cost()
+        customer_country = order.country
+        customer_state = order.state
+        print(customer_country.code)
+        print(customer_state)
+        zones = CompanyShippingZone.objects.filter(state=customer_state, company=company)
+        print(zones)
+        return render(request, 'productspage/details/shipping/shipping.html',{'order':order, 'company':company, 'zones':zones})
 
 class PaymentProcessingProducts(View):
     def get(self, request):

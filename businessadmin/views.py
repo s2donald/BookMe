@@ -331,6 +331,7 @@ class subdomainCheck(View):
 
 def signupViews(request):
     context = {}
+    return redirect(reverse('home', host='prodadmin'))
     if request.method == 'POST':
         user_form = BusinessRegistrationForm(request.POST)
         biz_name = BusinessName(request.POST)

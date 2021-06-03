@@ -54,6 +54,20 @@ STAFF_ACCESS = [
     (2, ("Admin Access"))
 ]
 
+max_appointment = [
+    (0, ("No Limit")),
+    (1, ("1 Appointment Per Day")),
+    (2, ("2 Appointments Per Day")),
+    (3, ("3 Appointments Per Day")),
+    (4, ("4 Appointments Per Day")),
+    (5, ("5 Appointments Per Day")),
+    (6, ("6 Appointments Per Day")),
+    (7, ("7 Appointments Per Day")),
+    (8, ("8 Appointments Per Day")),
+    (9, ("9 Appointments Per Day")),
+    (10, ("10 Appointments Per Day")),
+]
+
 def calendar_staff_folder(instance, filename):
     return "company/other/staff_{0}/calendar/{1}/".format(instance.company.id,"calendar.ics")
 
@@ -85,7 +99,7 @@ class StaffMember(models.Model):
     collectnrfpayment = models.BooleanField(default=False)
     currency = models.CharField(default='CAD',max_length=200,choices=CURR)
     nrfpayment = models.DecimalField(default=0.00, max_digits=7,decimal_places=2)
-
+    appointment_num = models.IntegerField(choices=max_appointment, default=0)
     class Meta:
         ordering = ('user',)
         verbose_name = 'Staff Member'

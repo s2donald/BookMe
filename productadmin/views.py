@@ -1381,7 +1381,8 @@ def profileImageUpload(request):
     return JsonResponse({'error':'success', 'append':True})
 
 
-
+# import cv2
+# import pytesseract
 #For the gallery and photos main photo
 @login_required
 def headerImageUploads(request):
@@ -1394,6 +1395,8 @@ def headerImageUploads(request):
             return JsonResponse({'success':'success'})
         if img:
             image = Image.open(img)
+            # text = pytesseract.image_to_string(image)
+            # print(text)
             image.filename = img.name
             minimumsize = min(image.size)
             width, height = image.size

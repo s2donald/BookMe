@@ -27,7 +27,7 @@ SECRET_KEY = 'b3+j2=q*i#mg^c!2ndq#00y5bobz6*xq&v#7^^7&+$73_#e=8e'
 GOOGLE_RECAPTCHA_SECRET_KEY = '6LcBkeEZAAAAAAKGHUafGtEV-xiuIWofHGQwSx0j' #your reCAPTCHA secret key 
 GOOGLE_API_KEY="AIzaSyBaZM_O3d1-xDrecS_fbcbvoT5qDmLmje0"
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 TIME_INPUT_FORMATS = ['%I:%M %p',]
 

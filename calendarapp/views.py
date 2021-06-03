@@ -59,6 +59,11 @@ from django.db.models import Q
 def time_slots(interval, duration, hours, company, staff_breaks, staff):
     availableDay = []
     time = hours[0]
+    max_appointment = staff.appointment_num
+    if max_appointment > 0:
+        if staff.staff_bookings.filter(start__date=time.date()).count() >= max_appointment:
+            return availableDay
+
     while time < hours[1]:
         count = 0
         serviceend = time + duration

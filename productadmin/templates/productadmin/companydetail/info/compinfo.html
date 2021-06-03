@@ -56,7 +56,7 @@ $(document).ready(function() {
                         </header>
                         <!-- Account page navigation-->
                         <nav class="nav nav-borders">
-                            <a class="nav-link activate ml-0" href="{% host_url 'information' host 'bizadmin'%}">Company Info</a>
+                            <a class="nav-link activate ml-0" href="{% host_url 'information' host 'prodadmin'%}">Company Info</a>
                             <a class="nav-link" href="{% host_url 'photos' host 'prodadmin'%}">Photo and Gallery</a>
                             <a class="nav-link " href="{% host_url 'amenities' host 'prodadmin'%}">Amenities and Tags</a>
                             <a class="nav-link" href="{% host_url 'bpagecustomization' host 'prodadmin'%}">Customization</a>
@@ -66,7 +66,7 @@ $(document).ready(function() {
                             <div class="col-xl-4">
                                 <!-- Profile picture card-->
                                 <div class="card">
-                                    <div class="card-header"><h4>Main Company Header Photo</h4></div>
+                                    <div class="card-header"><h4>Company Logo</h4></div>
                                     <div class="card-body text-center">
                                         <!-- Profile picture image-->
                                         <img class="img-account-profile mb-2" width="300px" src="{% if company.image %}{{ company.image.url }}{% else %}{% static 'img/Headshot-Placeholder.png' %}{% endif %}" alt="{{ company.business_name }} Main Image" />
@@ -74,7 +74,7 @@ $(document).ready(function() {
                                         <div class="small font-italic text-muted mb-4">JPG or PNG no larger than 5 MB</div>
                                         <!-- Profile picture upload button -->
                                         <form action="{% host_url 'imageuploads' host 'bizadmin' %}" method="POST" enctype="multipart/form-data" id="formUpload">
-                                        {% csrf_token %}
+                                            {% csrf_token %}
                                             <input type="hidden" name="x" id="id_x"><input type="hidden" name="y" id="id_y"><input type="hidden" name="width" id="id_width"><input type="hidden" name="height" id="id_height">
                                             <input type="file" id="inputimage" name="imageFile" accept="image/*" hidden >
                                             <div class="file-loading">

@@ -200,9 +200,9 @@
                 if (isSelected){
                     var spanprc = document.querySelector('#totalprc')
                     var innerprc = parseFloat(spanprc.innerText) + parseFloat(price)
-                    spanprc.innerText = innerprc.toFixed(2);
+                    spanprc.innerHTML = Number(innerprc).toFixed(2);
                     {% if not product.isaddon_multiple %}
-                        spanprc.innerText = parseFloat(spanprc.innerText) - prevprc
+                        spanprc.innerHTML = Number(parseFloat(spanprc.innerText) - prevprc).toFixed(2)
                         prevprc = price
                     {% endif %}
                     
@@ -210,7 +210,7 @@
                 else {
                     var spanprc = document.querySelector('#totalprc')
                     var innerprc = parseFloat(spanprc.innerText) - parseFloat(price)
-                    spanprc.innerText = innerprc.toFixed(2);
+                    spanprc.innerHTML = Number(innerprc).toFixed(2);
                     {% if not product.isaddon_multiple %}
                         prevprc = 0
                     {% endif %}
@@ -226,9 +226,9 @@
                 if (isSelected){
                     var spanprc = document.querySelector('#totalprc')
                     var innerprc = parseFloat(spanprc.innerText) + parseFloat(price)
-                    spanprc.innerText = innerprc.toFixed(2);
+                    spanprc.innerHTML = Number(innerprc).toFixed(2);
                     {% if not dropdowns.is_multiple %}
-                        spanprc.innerText = parseFloat(spanprc.innerText) - prevprc{{dropdowns.id}}
+                        spanprc.innerText = Number(parseFloat(spanprc.innerText) - prevprc{{dropdowns.id}}).toFixed(2)
                         prevprc{{dropdowns.id}} = price
                     {% endif %}
                     
@@ -236,7 +236,7 @@
                 else {
                     var spanprc = document.querySelector('#totalprc')
                     var innerprc = parseFloat(spanprc.innerText) - parseFloat(price)
-                    spanprc.innerText = innerprc.toFixed(2);
+                    spanprc.innerHTML = Number(innerprc).toFixed(2);
                     {% if not dropdowns.is_multiple %}
                         prevprc{{dropdowns.id}} = 0
                     {% endif %}

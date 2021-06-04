@@ -1060,7 +1060,7 @@ class updateserviceAPI(View):
             data['form_is_valid'] = False
             return redirect(reverse('service_detail', host='prodadmin'))
 
-from django.forms import formset_factory
+from django.forms import formset_factory, modelformset_factory
 class addQuestionOption(View):
     def get(self, request, pk):
         product = get_object_or_404(ProductModel, pk=pk)
@@ -1152,14 +1152,64 @@ class addDropdownOption(View):
 
 class updateDropDownOption(View):
     def get(self, request, pk):
-        product = get_object_or_404(ProductModel, pk=pk)
         company = Company.objects.get(user=request.user)
-        form = dropDownForm()
-        form2 = formset_factory(dropDownOptionsForm, extra=2)
+        dropdownoption = get_object_or_404(MainProductDropDown, pk=pk)
+        form = dropDownForm(instance=dropdownoption)
+        prodobject = dropdownoption.main_dropdown.all()
+        myform = dropDownOptionsForm()
+        product = dropdownoption.product
+        if product.business != company:
+            return redirect(reverse('service_detail', host='prodadmin'))
+        # print(myform)
+        DropDownOptionFormSet = modelformset_factory(ProductDropDown,form=dropDownOptionsForm, extra=0)
+        form2 = DropDownOptionFormSet(queryset=prodobject)
+        # formset = DropDownOptionFormSet()
         data=dict()
-        context = {'placeholder_form':form, 'option_form':form2,'product':product,'company':company}
-        data['html_form'] = render_to_string('productadmin/companydetail/services/partial/partial_dropdown_form.html', context, request=request)
+        context = {'placeholder_form':form, 'option_form':form2,'product':dropdownoption,'company':company, 'total_form_count':dropdownoption.main_dropdown.count()}
+        data['html_form'] = render_to_string('productadmin/companydetail/services/partial/update_dropdown_form.html', context, request=request)
         return JsonResponse(data)
+    def post(self, request, pk):
+        dropdownoption = get_object_or_404(MainProductDropDown, pk=pk)
+        company = Company.objects.get(user=request.user)
+        product = dropdownoption.product
+        if product.business != company:
+            return redirect(reverse('service_detail', host='prodadmin'))
+        form = dropDownForm(request.POST)
+        DropDownOptionFormSet = formset_factory(dropDownOptionsForm, extra=0)
+        formset = DropDownOptionFormSet(request.POST)
+        is_required = request.POST.get('requiredinput')
+        is_multiple = request.POST.get('multiplechoices')
+        if is_required is not None:
+            is_required = True
+        else:
+            is_required = False
+
+        if is_multiple is not None:
+            is_multiple = True
+        else:
+            is_multiple = False
+        if formset.is_valid() and form.is_valid():
+            dropdownname = form.cleaned_data.get('placeholder')
+            dropdownoption.placeholder = dropdownname
+            dropdownoption.is_required = is_required
+            dropdownoption.is_multiple = is_multiple
+            dropdownoption.product = product
+            dropdownoption.save()
+            mpdd = dropdownoption
+            for suboptions in mpdd.main_dropdown.all():
+                suboptions.delete()
+            for forms in formset:
+                option = forms.cleaned_data.get('option')
+                price = forms.cleaned_data.get('price')
+                if price is None:
+                    price = 0.00
+                if option is not None:
+                    ProductDropDown.objects.create(option=option, price=price, dropdown=mpdd)
+            request.session['formsuccess'] = 'The dropdown option has been updated.'
+        else:
+            request.session['formerror'] = 'There was an error updating the dropdown option to your product. Please ensure all values are entered correctly.'
+            return redirect(reverse('service_detail', host='prodadmin'))
+        return redirect(reverse('service_detail', host='prodadmin'))
 
 class removeDropDownOption(View):
     def post(self, request, pk):

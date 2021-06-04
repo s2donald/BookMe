@@ -150,8 +150,8 @@
                                                                                                             </div>
                                                                                                             {% comment %} <button tabindex="0" data-staff="{{ staff.id }}" data-weekday="{{ day.weekday }}" class="popover fit-popover fit-popover-bottom fit-popover-clickable popover-actions" role="button" data-toggle="popover" data-trigger="focus" title="Edit?" data-html='true' data-sanitize='false' style="z-index:1 !important;" data-content="Are you sure you want to delete? <button class='btn btn-sm btn-danger removebreak' data-breakid='{{ breakday.id }}' data-staff='{{ staff.id }}' >Delete</button><button class='btn btn-sm '>Edit</button>">
                                                                                                             <span class="fit-popover-content" ><div class="three-dots-link"><i></i></div></span>
-                                                                                                            </button> <li class="option editdrop" id="{{maindropdown.id}}"><span>Edit</span></li>{% endcomment %}
-                                                                                                            <div class="fit-popover fit-popover-bottom fit-popover-clickable popover-actions" title="" tabindex="0" data-toggle="popover" data-html='true' data-trigger='focus' data-placement="right" data-dropid="{{ maindropdown.id }}" data-content='<ul class="dropdown-list"><li class="option removedrop" id="{{maindropdown.id}}"><span>Remove</span></li></ul>'>
+                                                                                                            </button> <li class="option editdrop" id="{{maindropdown.id}}"><span>Edit</span></li> {% endcomment %}
+                                                                                                            <div class="fit-popover fit-popover-bottom fit-popover-clickable popover-actions" title="" tabindex="0" data-toggle="popover" data-html='true' data-trigger='focus' data-placement="right" data-dropid="{{ maindropdown.id }}" data-content='<ul class="dropdown-list"><li class="option editdrop" id="{{maindropdown.id}}"><span>Edit</span></li><li class="option removedrop text-danger" id="{{maindropdown.id}}"><span>Remove</span></li></ul>'>
                                                                                                             <span class="fit-popover-content"><div class="three-dots-link"><i></i></div></span>
                                                                                                             </div>
                                                                                                         </li>
@@ -257,6 +257,30 @@
     <div class="modal-content card">
       <div class="modal-header">
         <h5 class="modal-title {% if company.darkmode %}text-white{% endif %}" id="exampleModalLabel">Make some changes to this product</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form method="GET" class="">
+            
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-info">Save changes</button>
+        </div>
+
+        </form>
+      </div>
+      
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modal-new" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content card">
+      <div class="modal-header">
+        <h5 class="modal-title {% if company.darkmode %}text-white{% endif %}" id="exampleModalLabel">Update product</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -496,7 +520,18 @@
                 $('[data-toggle="popover"]').popover() 
             });
             $(document).on('click', '.editdrop', function(e){
-                console.log($(this).attr('id'))
+                var editdropid = $(this).attr('id')
+                $.ajax({
+                    url: "{% host_url 'updatedropdownprod' pk=0 host 'prodadmin' %}".replace('/0/', '/'+editdropid+'/'),
+                    type: 'get',
+                    dataType: 'json',
+                    beforeSend: function () {
+                        $("#modal-new").modal("show");
+                    },
+                    success: function (data) {
+                        $("#modal-new .modal-body").html(data.html_form);
+                    }
+                });
             });
             $(document).on('click', '.removedrop', function(e){
                 var removedropid = $(this).attr('id')

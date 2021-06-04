@@ -1198,12 +1198,15 @@ class updateDropDownOption(View):
             mpdd = dropdownoption
             for suboptions in mpdd.main_dropdown.all():
                 suboptions.delete()
+            counter = 1
             for forms in formset:
                 option = forms.cleaned_data.get('option')
                 price = forms.cleaned_data.get('price')
+                removeornot = request.POST.get('form-' + str(counter) +'-remove')
+                counter= counter+1
                 if price is None:
                     price = 0.00
-                if option is not None:
+                if option is not None and removeornot is None:
                     ProductDropDown.objects.create(option=option, price=price, dropdown=mpdd)
             request.session['formsuccess'] = 'The dropdown option has been updated.'
         else:

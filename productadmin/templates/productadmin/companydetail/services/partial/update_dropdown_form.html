@@ -8,10 +8,10 @@
         <input type="hidden" name="form-MIN_NUM_FORMS" value="0" id="id_form-MIN_NUM_FORMS">
         <input type="hidden" name="form-MAX_NUM_FORMS" value="1000" id="id_form-MAX_NUM_FORMS">
         <div class="row align-items-center">
-            <div class="col-8">
+            <div class="col-md-8">
                 {{ placeholder_form.placeholder|as_crispy_field }}
             </div>
-            <div class="col-4">
+            <div class="col-md-4">
                 <div class="form-check">
                     <label class="form-check-label">
                         <input class="form-check-input" {% if product.is_required %}checked{% endif %} name="requiredinput" type="checkbox">
@@ -25,10 +25,10 @@
         <br>
         <div class="">
             <div class="row align-items-center">
-                <div class="col-8">
+                <div class="col-md-8">
                     <h5 class="modal-title {% if company.darkmode %}text-white{% endif %}" id="exampleModalLabel">Choices</h5>
                 </div>
-                <div class="col-4">
+                <div class="col-md-4">
                     <div class="form-check">
                         <label class="form-check-label">
                             <input class="form-check-input" {% if product.is_multiple %}checked{% endif %} name="multiplechoices" type="checkbox">
@@ -41,20 +41,30 @@
                 <div class="col-6"><label for="">Additional Price<span class="asteriskField">*</span></label></div>
             </div>
             {% for option in option_form %}
-            <div class="dropdownforms row">
-                <div class="col-6">
+            <div class="dropdownforms">
+            <hr>
+            <div class="row">
+                <div class="col-6 my-auto">
                     {{ option.option|as_crispy_field }}
                 </div>
                 <div class="col-6">
                     <div class="input-group">
                         <div class="input-group-prepend">
-                        <div class="input-group-text">
-                            <i class="fas fa-dollar-sign"></i>
-                        </div>
+                            <div class="input-group-text">
+                                <i class="fas fa-dollar-sign"></i>
+                            </div>
                         </div>
                         <input type="number" name="{{ option.price.html_name }}" step="0.01" placeholder="Additional price of the option. (Enter zero if there is no additional cost)" class="numberinput form-control" id="{{option.price.auto_id}}" value='{{ option.price.value|default_if_none:"0.00" }}'>
                     </div>
+                    <div class="form-check">
+                        <label class="form-check-label">
+                            <input class="form-check-input" name="form-{{forloop.counter}}-remove" type="checkbox">
+                            <span class="form-check-sign"></span>
+                            Remove Option
+                        </label>
+                    </div>
                 </div>
+            </div>
             </div>
             {% endfor %}
         </div>

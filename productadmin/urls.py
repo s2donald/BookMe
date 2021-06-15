@@ -15,6 +15,8 @@ urlpatterns = [
 
     re_path(r'businesspage/photo/$', views.businessPhotoView, name='photos'),#Changed
     re_path(r'businesspage/amentities/$', views.businessAmenitiesView, name='amenities'),#changed
+    re_path(r'businesspage/promotions/$', views.businessPromotionsView, name='promotions'),
+    re_path(r'api/businesspage/promotions/add/$', views.AddDiscountCode.as_view(), name='promotionsadd'),
     re_path(r'businesspage/customization/$', views.businessPageCustomization, name='bpagecustomization'),#changed
     re_path(r'api/addcustomize/theme/$', views.customThemeAPI.as_view(), name='toggletheme'),
 
@@ -26,6 +28,7 @@ urlpatterns = [
     re_path(r'api/dashboard/shipping/create_shipping/$', views.createshippingZoneViewAPI.as_view(), name='createshippingzone'),
     re_path(r'api/dashboard/shipping/create_pricebasedrateshipping/$', views.createPBRShippingViewAPI.as_view(), name='ratebasedprice_create'),
     re_path(r'api/grabthemodalorder/$', views.modalGetOrderType.as_view(), name='ordermodalview'),
+    re_path(r'api/grabthepromocodeupdate/$', views.modalPromoCodeUpdate.as_view(), name='promotionmodalview'),
     re_path(r'api/grabthemodalpbr/$', views.modalGetPBRType.as_view(), name='pbrshippingeditmodalview'),
 
     re_path(r'dashboard/profile/security/$',views.profileSecurityViews, name='security'),#Changed
@@ -75,7 +78,9 @@ urlpatterns = [
     re_path(r'path/loadsubcategories/$', views.load_subcat, name='ajax_load_subcategories'),
     re_path(r'path/loadservices/$', views.load_services, name='ajax_load_services'),
     
-    re_path(r'onboarding/$', views.completeViews, name='completeprofile'),
+    re_path(r'onboarding/$', views.completeViews, name='completefullprofile'),
+    re_path(r'onboarding/$', views.WaitListViews, name='completeprofile'),
+    re_path(r'onboarding/confirmed/$', views.ShowWaitListViews, name='completeprofilewaitlist'),
     re_path(r'^companyformsave/$', views.saveCompanyDetail.as_view(), name='saveDetailForm'),
     re_path(r'^accountFormSave/$', views.personDetailSave.as_view(), name='accountCheck'),
     re_path(r'home/$', views.homepageViews, name='home'),#Changed
@@ -89,7 +94,7 @@ urlpatterns = [
     re_path(r'file-upload/$', views.fileUploadView, name='upload'),
 
     re_path(r'createbusiness/$', views.createNewBusiness, name='newbizcreate'),
-    re_path(r'signup/$', views.signupViews, name='bizadminsignup'),
+    re_path(r'signup/$', views.WaitListViews, name='bizadminsignup'),
     re_path(r'logout/$', views.LogoutView, name='bizadminlogout'),
     re_path(r'login/$', views.loginViews, name='bizadminlogin'),
 
@@ -105,6 +110,7 @@ urlpatterns = [
     path("complete", views.completeSubscriptionPayment, name="complete_subscription_stripe"),
     path("cancel", stripe_views.cancelStripeMonthlySubscription, name="cancel_subscription_stripe"),
 
+    re_path(r'^blog/$', views.blogMainViews.as_view(), name='blogShopMe'),
     re_path(r'^updatedpass/$', views.updatePassword.as_view(), name='updatepassword'),
     re_path(r'^terms/$', views.termsViews, name='terms_shopme'),
     re_path(r'^privacy/$', views.privacyViews, name='privacy_shopme'),

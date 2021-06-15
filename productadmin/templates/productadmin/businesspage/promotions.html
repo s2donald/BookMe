@@ -1,0 +1,204 @@
+{% extends 'productadmin/index.html' %}
+{% load static %}
+{% load hosts %}
+{% load crispy_forms_tags %}
+{% block bpageact%}active{%endblock%}
+{% block businessadmin %}
+<!-- Main page content-->
+<div class="modal fade" id="myModals" tabindex="-1" role="dialog" aria-labelledby="myModal" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Update Discount Code</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      </div>
+      
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="addCode" tabindex="-1" role="dialog" aria-labelledby="addCode" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabels">Add Discount Code</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      <form method="POST" action="{% host_url 'promotionsadd' host 'prodadmin' %}">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-info">Update</button>
+        </div>
+        </form>
+      </div>
+      
+    </div>
+  </div>
+</div>
+    <div class="content">
+        <div class="row">
+            <div class="col-md-12 ml-auto mr-auto">
+                <header class="page-header page-header-compact page-header-light mb-2">
+                    <div class="container-fluid">
+                        <div class="page-header-content">
+                            <div class="row align-items-center justify-content-between pt-3">
+                                <div class="col-auto">
+                                    <h1 class="page-header-title">
+                                        Business Page - Promotions (Discount Codes)
+                                    </h1>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </header>
+                <!-- Account page navigation-->
+                <nav class="nav nav-borders">
+                    <a class="nav-link ml-0" href="{% host_url 'information' host 'bizadmin'%}">Discounts</a>
+                    <a class="nav-link" href="{% host_url 'photos' host 'prodadmin'%}">Photo and Gallery</a>
+                    <a class="nav-link" href="{% host_url 'amenities' host 'prodadmin'%}">Amenities and Tags</a>
+                    <a class="nav-link activate" href="{% host_url 'promotions' host 'prodadmin'%}">Promotions</a>
+                    <a class="nav-link" href="{% host_url 'bpagecustomization' host 'prodadmin'%}">Customization</a>
+                </nav>
+                <hr class="mt-0 mb-4" />
+                <div class="row">
+                    <div class="col-lg-8 col-md-6 mb-md-0 mb-4">
+                    <a class="btn btn-info text-white" type="button" data-toggle="modal" data-target="#addCode">Add Discount Code</a>
+                        <div class="card">
+                            <div class="card-header pb-0">
+                            <div class="row">
+                                <div class="col-lg-6 col-7">
+                                    <h6>Promotions</h6>
+                                </div>
+                            </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="col-12">
+                                <div class="table-responsive" style="overflow-y:hidden !important;">
+                                    <table class="table align-items-center table-hover" style="margin-bottom:100px;">
+                                        <thead class="thead-light">
+                                            <tr>
+                                                <th scope="col" class="sort" data-sort="name">Discount Code</th>
+                                                <th scope="col" class="sort" data-sort="budget">Valid From</th>
+                                                <th scope="col" class="sort" data-sort="status">Valid To</th>
+                                                <th scope="col">Discount</th>
+                                                {% comment %} <th scope="col" class="sort" data-sort="completion">Active</th> {% endcomment %}
+                                            </tr>
+                                        </thead>
+                                        <tbody class="orderlist">
+                                        {% for coup in coupon %}
+                                            <tr>
+                                                <th scope="row" class="tableclickme" data-id="{{ coup.id }}" data-type="detail">
+                                                    {{ coup.code }}
+                                                </th>
+                                                <td class="tableclickme" data-id="{{ coup.id }}">
+                                                    {{ coup.valid_from|date:"D, d M, Y g:i A" }}
+                                                </td>
+                                                <td class="tableclickme" data-id="{{ coup.id }}">
+                                                    {{ coup.valid_to|date:"D, d M, Y g:i A" }}
+                                                </td>
+                                                <td class="tableclickme" data-id="{{ coup.id }}">
+                                                    {{ coup.discount }}% off
+                                                </td>
+                                                {% comment %} <td class="tableclickme" data-id="{{ coup.id }}">
+                                                    {% if coup.active %}
+                                                        <div class="badge badge-success">Active</div>
+                                                    {% elif coup.active %}
+                                                        <div class="badge badge-error">Error</div>
+                                                    {% endif %}
+                                                </td> {% endcomment %}
+                                            </tr>
+                                        {% empty %}
+                                            <tr>
+                                                <th colspan="6">
+                                                 No discount codes added.
+                                                </th>
+                                                
+                                            </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                    {% include 'productadmin/dashboard/orders/partials/pagination.html' with page=coupon %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+            return cookieValue;
+        }
+        $('#id_valid_to').datetimepicker({
+    format: "MM/DD/YYYY",
+    icons: {
+        time: "fas fa-clock",
+        date: "fas fa-calendar",
+        up: "fa fa-chevron-up",
+        down: "fa fa-chevron-down",
+        previous: 'tim-icons icon-minimal-left',
+        next: 'tim-icons icon-minimal-right',
+        today: 'fa fa-screenshot',
+        clear: 'fa fa-trash',
+        close: 'fa fa-remove'
+    }
+});
+$('#id_valid_from').datetimepicker({
+    format: "MM/DD/YYYY",
+    icons: {
+        time: "fas fa-clock",
+        date: "fas fa-calendar",
+        up: "fa fa-chevron-up",
+        down: "fa fa-chevron-down",
+        previous: 'tim-icons icon-minimal-left',
+        next: 'tim-icons icon-minimal-right',
+        today: 'fa fa-screenshot',
+        clear: 'fa fa-trash',
+        close: 'fa fa-remove'
+    }
+});
+        $( document ).ready(function() {
+            $(document).on('click', '.tableclickme', function(e){
+                var button = $(this)
+                var coupon = button.attr('data-id') // Extract info from data-* attributes
+                var data = { coupon : coupon }
+                
+                $.ajax({
+                    url: "{% host_url 'promotionmodalview' host 'prodadmin' %}",
+                    type: 'GET',
+                    data: data,
+                    dataType: 'json',
+                    beforeSend: function () {
+                        $("#myModals").modal("show");
+                    },
+                    success: function (data) {
+                        $('#myModals').find('.modal-title').text(data.title)
+                        $('#myModals .modal-body').html(data.html_form)
+                    }
+                });
+            });
+        })
+    </script>
+{% endblock %}

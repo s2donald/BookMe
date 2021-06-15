@@ -29,7 +29,7 @@ from django.template.loader import render_to_string
 import multiprocessing
 from dateutil.relativedelta import relativedelta
 from django.contrib.postgres.search import TrigramSimilarity
-from products.models import Product, MainProductDropDown, ProductDropDown, Order, OrderItem, QuestionModels, AnswerModels, MultipleImageOrderAttachments
+from products.models import Coupon, Product, MainProductDropDown, ProductDropDown, Order, OrderItem, QuestionModels, AnswerModels, MultipleImageOrderAttachments
 from products.cart import ProductCart
 from django_hosts.resolvers import reverse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -78,6 +78,45 @@ def product_list(request):
         products = paginator.page(paginator.num_pages)
     if request.is_ajax():
         return render(request, 'productspage/details/partial_search/partialproductsearch.html', {'company':company, 'products':products})
+
+class add_coupon_code(View):
+    def post(self, request):
+        company = request.viewing_company
+        coupon = str(request.POST.get('coupon-input'))
+        now = timezone.now()
+        cart = ProductCart(request)
+        try:
+            coupons = Coupon.objects.get(company=company,code__iexact=coupon, valid_from__lte=now, valid_to__gte=now, active=True)
+            request.session['coupon_id'] = coupons.id
+            if request.session.get('order_id'):
+                order_id = request.session.get('order_id')
+                order = get_object_or_404(Order, id=order_id)
+                order.discount = coupons.discount
+                order.coupon = coupons
+                order.save()
+                html=render_to_string('productspage/details/summary/partial_total_summary_byorder.html', {'company':company, 'order':order}, request)
+            else:
+                cart.coupon_id = coupons.id
+                html =render_to_string('productspage/details/summary/partial_total_summary.html', {'company':company, 'cart':cart}, request)
+            error = False
+        except Coupon.DoesNotExist:
+            try:
+                del request.session['coupon_id']
+            except:
+                pass
+            request.session['coupon_id'] = None
+            if request.session.get('order_id'):
+                order_id = request.session.get('order_id')
+                order = get_object_or_404(Order, id=order_id)
+                order.discount = 0
+                order.coupon = None
+                order.save()
+                html=render_to_string('productspage/details/summary/partial_total_summary_byorder.html', {'company':company, 'order':order}, request)
+            else:
+                html =render_to_string('productspage/details/summary/partial_total_summary.html', {'company':company, 'cart':cart}, request)
+            error = 'This discount code is invalid.'
+        return JsonResponse({'html_string':html, 'error':error})
+
 
 class ProductDetails(View):
     def get(self, request, slug):
@@ -135,6 +174,8 @@ class CartCheckoutView(View):
         user = request.user
         company = request.viewing_company
         cart = ProductCart(request)
+        cart.coupon_id = None
+        cart.discount = 0
         if len(cart)==0:
             return redirect(reverse('productmain', host='producturl', host_args=(company.slug,)))
         for item in cart:
@@ -143,7 +184,7 @@ class CartCheckoutView(View):
                 return redirect(reverse('productmain', host='producturl', host_args=(company.slug,)))
         pk = settings.STRIPE_PUBLISHABLE_KEY
         form = OrderCreateForm()
-
+        
         return render(request, 'productspage/details/productcheckout.html',{'form':form,'user':user,'company':company, 'cart':cart, 'pk_stripe':pk})
 
     def post(self, request):
@@ -157,6 +198,9 @@ class CartCheckoutView(View):
             order = form.save(commit=False)
             order.company = company
             total = cart.get_total_price()
+            if cart.coupon:
+                order.coupon = cart.coupon
+                order.discount = cart.coupon.discount
             order.save()
             for item in cart:
                 dropdowns=item['dropdownoptions']
@@ -190,8 +234,14 @@ class CartCheckoutView(View):
                     answer = AnswerModels.objects.create(orderitem=orditems,question=q,description=description)
                     if img:
                         MultipleImageOrderAttachments.objects.create(answer=answer,photos=img,orderitem=orditems)
-            cart.clear()
             request.session['order_id'] = order.id
+            request.session['totaldue'] = render_to_string('productspage/details/summary/sidesummary.html', {'company':company, 'cart':cart, 'request':product.request}, request)
+            if cart.coupon:
+                try:
+                    del request.session['coupon_id']
+                except:
+                    pass
+            cart.clear()
             return redirect(reverse('newpaymentprocessing', host='producturl', host_args=(company.slug,)))
             # return redirect(reverse('cart_shippingcalc', host='producturl', host_args=(company.slug,)))
         else:
@@ -206,15 +256,15 @@ class ShippingView(View):
         total_cost = order.get_total_cost()
         customer_country = order.country
         customer_state = order.state
-        print(customer_country.code)
-        print(customer_state)
         zones = CompanyShippingZone.objects.filter(state=customer_state, company=company)
-        print(zones)
         return render(request, 'productspage/details/shipping/shipping.html',{'order':order, 'company':company, 'zones':zones})
 
 class PaymentProcessingProducts(View):
     def get(self, request):
         order_id = request.session.get('order_id')
+        totalstring = request.session.get('totaldue')
+        # cart = ProductCart(request)
+        
         order = get_object_or_404(Order, id=order_id)
         company = request.viewing_company
         total_cost = order.get_total_cost()
@@ -225,7 +275,7 @@ class PaymentProcessingProducts(View):
                 return redirect(reverse('productmain', host='producturl', host_args=(company.slug,)))
         if company.stripe_access_token_prod is None or company.stripe_user_id_prod is None:
             enabled = False
-        return render(request, 'productspage/details/purchaseproduct.html',{'order':order, 'pk_stripe':pk, 'company':company, 'enabled':enabled})
+        return render(request, 'productspage/details/purchaseproduct.html',{'order':order, 'pk_stripe':pk, 'company':company, 'enabled':enabled, 'total':totalstring})
     def post(self, request):
         data = json.loads(request.body)
         order_id = request.session.get('order_id')
@@ -243,7 +293,13 @@ class PaymentProcessingProducts(View):
         )
         total = order.get_total_cost()
         price = (float(total) * 100)
-        applicationfee = (float(total) * 3)
+        if company.user.rates == 1:
+            multiplier = 1
+        elif company.user.rates == 2:
+            multiplier = 1.5
+        else:
+            multiplier = 3
+        applicationfee = (float(total) * float(multiplier)) + 10
         try:
             payment_intent = stripe.PaymentIntent.create(
                 payment_method_types=['card'],
@@ -316,13 +372,37 @@ def payment_done(request):
     company = request.viewing_company
     order_id = request.session.get('order_id')
     order = get_object_or_404(Order, id=order_id)
+    try:
+        del request.session['order_id']
+    except:
+        pass
+    try:
+        del request.session['coupon_id']
+    except:
+        pass
     return render(request, 'productspage/details/puchase_complete.html', {'company':company, 'order':order})
 
 def requires_capture(request):
     company = request.viewing_company
     order_id = request.session.get('order_id')
     order = get_object_or_404(Order, id=order_id)
+    try:
+        del request.session['order_id']
+    except:
+        pass
+    try:
+        del request.session['coupon_id']
+    except:
+        pass
     return render(request, 'productspage/details/requires_capture.html', {'company':company, 'order':order})
 
 def payment_cancel(request):
+    try:
+        del request.session['order_id']
+    except:
+        pass
+    try:
+        del request.session['coupon_id']
+    except:
+        pass
     return render(request, 'productspage/details/puchase_canceled.html')

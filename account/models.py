@@ -8,6 +8,11 @@ import pytz
 ALL_TIMEZONES = sorted((item, item) for item in pytz.common_timezones)
 # from business.models import Company
 # Create your models here.
+rates = (
+    (1, 1),
+    (2, 2),
+    (3, 3),
+)
 il8nl = ["AF", "AX", "AL", "DZ", "AS", "AD", "AO", "AI", "AQ", "AG", "AR",
 "AM", "AW", "AU", "AT", "AZ", "BS", "BH", "BD", "BB", "BY", "BE",
 "BZ", "BJ", "BM", "BT", "BO", "BQ", "BA", "BW", "BV", "BR", "IO",
@@ -73,12 +78,12 @@ class Account(AbstractBaseUser):
     avatar = models.ImageField(upload_to='users/profilepic/', blank=True)
     # tz = TimeZoneField(default='America/Toronto')
     tz = models.CharField(choices=ALL_TIMEZONES, max_length=64, default="America/Toronto")
-
+    rates = models.IntegerField(choices=rates, default=1)
     is_business= models.BooleanField(default=False)
     on_board= models.BooleanField(default=False)
     is_consumer= models.BooleanField(default=True)
     is_guest=models.BooleanField(default=False)
-
+    off_waitlist=models.BooleanField(default=True)
     date_joined = models.DateTimeField(verbose_name='date joined', auto_now_add=True)
     last_login = models.DateTimeField(verbose_name='last login', auto_now=True)
     is_admin = models.BooleanField(default=False)
@@ -109,4 +114,18 @@ class Account(AbstractBaseUser):
 
     def has_module_perms(self, app_label):
         return True
+
+class WaitListCustomers(models.Model):
+    email = models.EmailField(verbose_name='Email', max_length=60, unique=True)
+    first_name = models.CharField(verbose_name="First Name", max_length=30, unique=False,null=True, blank=True)
+    last_name = models.CharField(verbose_name="Last Name", max_length=30, unique=False, null=True, blank=True)
+    phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$', message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
+    phone = models.CharField("Phone Number",validators=[phone_regex], max_length=17, null=True, blank=True)
+    phone_code = models.CharField(max_length=2, verbose_name='Phone Code',choices=il8nlist, default="CA", null=True, blank=True)
+
+    class Meta:
+        ordering = ('first_name',)
+        unique_together=(('email','first_name'),)
+        verbose_name = 'Waitlist User'
+        verbose_name_plural = 'Waitlist Users'
 

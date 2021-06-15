@@ -1,5 +1,5 @@
 from django import forms
-from .models import Order
+from .models import Order, Coupon
 from django_countries.widgets import CountrySelectWidget
 PRODUCT_QUANTITY_CHOICES = [(i, str(i)) for i in range(1, 21)]
 from cities.models import City, Region
@@ -31,3 +31,8 @@ class OrderCreateForm(forms.ModelForm):
                 self.fields['state'].queryset = Region.objects.filter(country__code=country_code)
             except (ValueError, TypeError):
                 pass
+
+class CouponForm(forms.ModelForm):
+    class Meta:
+        model = Coupon
+        fields = ['code', 'valid_from', 'valid_to', 'discount']

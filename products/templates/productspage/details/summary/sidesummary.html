@@ -1,0 +1,110 @@
+{% load countries %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% load hosts %}
+{% load business_tags %}
+
+<div class="col-md-5 order-1 order-md-2">
+    {% for item in cart %}
+        {% with product=item.product %}
+            <div class="d-flex align-items-center pb-2">
+                <div class="">
+                    <img class="rounded" style="object-fit: cover; width:90px; height:90px;" src="{% if product.mainimage %}{{ product.mainimage.url }}{% else %}{% static 'img/default-product-image.png' %}{% endif %}" alt="">
+                </div>
+                <div class="ml-3 w-100 text-left">
+                    <p class="m-0">{{product.name}}</p>
+                    <div class="d-flex">
+                        <span style="font-weight:600;">${{ product.price }}</span>
+                    </div>
+                    <div class="d-flex flex-wrap"></div>
+                </div>
+            </div>
+            <form class="py-1 d-flex justify-content-between align-items-center" method="POST" id="input-discountcoupon">
+                {% csrf_token %}
+                <div class="pb-0 d-flex flex-column position-relative" style="flex: 1 1 0%;">
+                    <input type="text" id="coupon-input" name="coupon-input" placeholder="Discount code" class="form-control p-2 discount-input" value="" style="opacity: 1;">
+                </div>
+                <button class="rounded btn btn-dark p-2 px-3" id="coupon-addition" {% if cart.coupon %}disabled{% endif %}>
+                    {% if cart.coupon %}Applied{% else %}Apply{% endif %}
+                </button>
+            </form>
+            <p id='successtxt' style="color:green;"></p>
+            <p id='errortxt' style="color:red;"></p>
+            {% for addon in item.addons.all %}
+                <div class="d-flex justify-content-between align-items-center mt-0 py-0">
+                    <p class="mb-1 text-muted">{{ addon.name }}:</p>
+                    <p class=" mb-1 text-muted">${{ addon.price }}</p>
+                </div>
+            {% endfor %}
+            {% for dropdownoptions in item.dropdownoptions.all %}
+                <div class="d-flex justify-content-between align-items-center mt-0 py-0">
+                    <p class="mb-1 text-muted">{{ dropdownoptions.option }}:</p>
+                    <p class=" mb-1 text-muted">${{ dropdownoptions.price }}</p>
+                </div>
+            {% endfor %}
+            <hr class="mt-0">
+            <div class="d-flex justify-content-between align-items-center mt-0 py-0">
+                <p class="mb-1 text-muted">Subtotal:</p>
+                <p class=" mb-1 text-muted">${{ item.total_price }}</p>
+            </div>
+            {% comment %} <div class="d-flex justify-content-between align-items-center mt-0">
+                <p class="mb-1 text-muted">Shipping</p>
+                {% if item.shipping %}
+                    <h5>$<span style="font-weight:500">{{ item.shipping }}</span></h5>
+                {% else %}
+                    <p class="mb-1 text-muted">Pick up</p>
+                {% endif %}
+                
+            </div> {% endcomment %}
+            
+            
+        {% endwith %}
+    {% endfor %}
+    <div id="summary">
+        {% if cart.coupon %}
+            <div class="d-flex justify-content-between align-items-center mt-0 py-0" id="textdiscounts">
+                <p class="mb-1 text-muted txtamntdiscount">"{{ cart.coupon.code }}" ({{ cart.coupon.discount }}% off)</p>
+                <p class="text-danger mb-1 text-muted amountdiscount" style="color:red !important;">- ${{ cart.get_discount|floatformat:2 }}</p>
+            </div>
+        {% endif %}
+        <hr class="mt-0">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <p style="font-weight:600">Total Due Now</p>
+            <h5>$<span style="font-weight:600" id="my_total_after_discount">{{ cart.get_total_price_after_discount|floatformat:2 }}</span></h5>
+        </div>
+    
+    </div>
+    <div class="text-block text-left">
+        <p class="text-muted">In the event your order gets cancelled or unapproved, you will be refunded in full.</p>
+        {% if request %}<p class="text-muted">Depending on the request of your order, vendors may reach out for additional payment.</p>{% endif %}
+    </div>
+    
+</div>
+<script>
+    $('#input-discountcoupon').submit(function(e) {
+        e.preventDefault();
+        var btn = document.querySelector('#coupon-addition');
+        btn.innerHTML = '<div class="spinner-border text-light" role="status"><span class="sr-only">Loading...</span></div>'
+        $.ajax({
+            url: "{% host_url 'addcoupon' host 'producturl' slug=company.slug %}",
+            type: 'post',
+            data: $('#input-discountcoupon').serialize(),
+            success: function(data){
+                var el = document.querySelector('#summary');
+                el.innerHTML = data.html_string
+                if (data.error){
+                    var els = document.querySelector('#errortxt');
+                    els.innerHTML = data.error
+                    btn.innerHTML = 'Apply'
+                }
+                else {
+                    var els = document.querySelector('#errortxt');
+                    els.innerHTML = ''
+                    btn.innerHTML = 'Applied'
+                    btn.disabled = true
+                }
+                
+            },
+        });
+    })
+</script>

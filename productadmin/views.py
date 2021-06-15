@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django import forms
 from businessadmin.models import StaffMember, Breaks, StaffWorkingHours
 from business.models import Company, SubCategory, OpeningHours, Services, Gallary, Amenities, Clients, CompanyReq, ServiceCategories
-from account.models import Account
+from account.models import Account, WaitListCustomers
 from calendarapp.models import formBuilder, bookingForm
 from account.forms import UpdatePersonalForm
 from products.tasks import bizCreatedEmailSent
@@ -16,7 +16,7 @@ from django.http import JsonResponse
 import json
 from django.http.response import HttpResponse
 from business.forms import AddServiceForm, UpdateServiceForm, BookingSettingForm
-from .forms import AddCompanyForm, AddProductForm, questionProductForm
+from .forms import AddCompanyForm, AddProductForm, questionProductForm, AddCompanySlugForm
 from django.forms import inlineformset_factory
 from products.models import Product as ProductModel
 from products.models import MainProductDropDown, ProductDropDown, QuestionModels, Order, OrderItem
@@ -51,6 +51,11 @@ def pricingViews(request):
     user = request.user
     return render(request, 'welcomes/pricing.html', {'user':user,'none':'d-none'})
 
+class blogMainViews(View):
+    def get(self, request):
+        user = request.user
+        return render(request, 'welcomes/blog.html', {'user':user,'none':'d-none'})
+
 def faqBusinessViews(request):
     user = request.user
     return render(request, 'welcomes/faq.html', {'user':user,'none':'d-none'})
@@ -59,7 +64,7 @@ def createNewStaff(company_id, user_id, first_name, last_name, phone, email, slu
     company = Company.objects.get(pk=company_id)
     if user_id:
         acct = Account.objects.get(user_id)
-    return 'helo'
+    return 'hello'
     
 
 def createNewBusiness(request):
@@ -77,6 +82,7 @@ def createNewBusiness(request):
             email = user_form.cleaned_data.get('email')
             phone = user_form.cleaned_data.get('phone')
             bname = user_form.cleaned_data.get('business_name')
+            referred = user_form.cleaned_data.get('referred')
             company = Company.objects.create(user=user,business_type='product',category=Category.objects.get(slug='other'),business_name=bname,email=email,phone=phone,
                                                 description='',address='',postal='',
                                                 state='',city='',status='draft')
@@ -100,8 +106,31 @@ def createNewBusiness(request):
     if user.on_board:
         return redirect(reverse('home', host='prodadmin'))
     
-    
     return render(request, 'accountprod/createbusiness.html', {'user':user, 'none':'d-none', 'user_form':user_form})
+
+from account.forms import WaitListForm
+def WaitListViews(request):
+    user = request.user
+    if user.is_authenticated:
+        return redirect(reverse('home', host='prodadmin'))
+    form = WaitListForm()
+    if request.method == 'POST':
+        form = WaitListForm(request.POST)
+
+        if form.is_valid():
+            email = form.cleaned_data.get('email')
+            phone = form.cleaned_data.get('phone')
+            first = form.cleaned_data.get('first_name')
+            last = form.cleaned_data.get('last_name')
+            user = WaitListCustomers.objects.create(first_name=first, last_name=last, phone=phone, email=email)
+            return redirect(reverse('completeprofilewaitlist', host='prodadmin'))
+
+    return render(request, 'accountprod/waitlist.html', {'form':form, 'user':user})
+
+def ShowWaitListViews(request):
+    user = request.user
+    return render(request, 'accountprod/onthelist.html', {'user':user})
+
 @login_required
 def completeViews(request):
     if not request.user.is_authenticated:
@@ -175,6 +204,7 @@ def load_services(request):
     company = Company.objects.get(user=request.user)
     services = company.services_offered.all()
     return render(request, 'bizadmin/dashboard/profile/addcompanyhelper/subcat_dropdown_list_options.html', {'subcategories': services})
+    
 from business.models import Category, SubCategory
 def signupViews(request):
     context = {}
@@ -415,6 +445,64 @@ class modalGetPBRType(View):
     def delete(self, request):
         print('hello')
         return
+class AddDiscountCode(View):
+    def post(self, request):
+        user = request.user
+        company = Company.objects.get(user=user)
+        form = CouponForm(request.POST)
+        if form.is_valid():
+            code = form.cleaned_data.get('code')
+            from_date = form.cleaned_data.get('valid_from')
+            to_date = form.cleaned_data.get('valid_to')
+            discount = form.cleaned_data.get('discount')
+            if not Coupon.objects.filter(code__iexact=code, company=company).exists():
+                Coupon.objects.create(code=code, discount=discount, company=company,valid_from=from_date,valid_to=to_date, active=True)
+            error = False
+            html = ''
+        else:
+            html = render_to_string('productadmin/businesspage/partials/promo_form.html', {'coupon':coupon, 'company':company, 'valid_from':coupon.valid_from, 'valid_to':coupon.valid_to, 'form':form}, request=request)
+            error = True
+            coupon = Coupon.objects.filter(company=company)
+            return render(request,'productadmin/businesspage/promotions.html',{'company':company, 'coupon':coupon, 'form':form})
+        return redirect(reverse('promotions', host='prodadmin'))
+class modalPromoCodeUpdate(View):
+    def get(self, request):
+        user = request.user
+        company = Company.objects.get(user=user)
+        coupon_id = request.GET.get('coupon')
+        coupon = Coupon.objects.get(pk=str(coupon_id))
+        html = ''
+        title = ''
+        if company != coupon.company:
+            return JsonResponse({'html_form':html, 'title':title})
+        form = CouponForm(initial={'code':coupon.code, 'valid_from':coupon.valid_from, 'valid_to':coupon.valid_to, 'discount':coupon.discount})
+        title = 'Update Discount Code'
+        html = render_to_string('productadmin/businesspage/partials/promo_form.html', {'coupon':coupon, 'company':company, 'valid_from':coupon.valid_from, 'valid_to':coupon.valid_to, 'form':form}, request=request)
+        return JsonResponse({'html_form':html, 'title':title})
+    def post(self, request):
+        user = request.user
+        company = Company.objects.get(user=user)
+        form = CouponForm(request.POST)
+        coupon_id = request.POST.get('coupon_id')
+        coupon = Coupon.objects.get(pk=str(coupon_id))
+        if form.is_valid():
+            code = form.cleaned_data.get('code')
+            coupon.code = code
+            coupon.discount = form.cleaned_data.get('discount')
+            from_date = request.POST.get('valid_from')
+            from_time = timezone.localtime(timezone.make_aware(datetime.strptime(from_date, "%m/%d/%Y")))
+            coupon.valid_from = from_time
+            to_date = request.POST.get('valid_to')
+            to_time = timezone.localtime(timezone.make_aware(datetime.strptime(to_date, "%m/%d/%Y")))
+            coupon.valid_to = to_time
+            coupon.save()
+            error = False
+            html = ''
+        else:
+            print('he')
+            html = render_to_string('productadmin/businesspage/partials/promo_form.html', {'coupon':coupon, 'company':company, 'valid_from':coupon.valid_from, 'valid_to':coupon.valid_to, 'form':form}, request=request)
+            error = True
+        return JsonResponse({'html_form':html, 'error':error})
 
 class modalGetOrderType(View):
     def get(self, request):
@@ -1540,6 +1628,20 @@ def businessAmenitiesView(request):
         loginViews(request)
     amenities = Amenities.objects.filter(company=company)
     return render(request,'productadmin/businesspage/amenities.html',{'company':company, 'amenities':amenities})
+
+from products.models import Coupon
+from products.forms import CouponForm
+@login_required
+def businessPromotionsView(request):
+    company = Company.objects.get(user=request.user)
+    user=request.user
+    if user.is_business and not user.on_board:
+        return redirect(reverse('completeprofile', host='prodadmin'))
+    elif not user.is_business:
+        loginViews(request)
+    coupon = Coupon.objects.filter(company=company)
+    form = CouponForm()
+    return render(request,'productadmin/businesspage/promotions.html',{'company':company, 'coupon':coupon, 'form':form})
 
 @login_required
 def businessBreaksView(request):

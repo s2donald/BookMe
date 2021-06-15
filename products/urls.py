@@ -3,6 +3,7 @@ from django.urls import path, re_path
 from . import views
 app_name = 'products'
 urlpatterns = [
+    path('addcouponcode/', views.add_coupon_code.as_view(), name='addcoupon'),
     path('cancel/', views.payment_cancel, name='cancel'),
     path('processed/', views.requires_capture, name='capture'),
     path('completed/', views.payment_done, name='done'),

@@ -153,14 +153,19 @@
                         </tr>
                     {% endfor %}
                 {% endif %}
-
+				{% if order.coupon %}
+					<tr class="item">
+						<td>"{{ order.coupon.code }}" ({{ order.coupon.discount }}% off)</td>
+						<td style="color:red !important;">- ${{ order.get_discount|floatformat:2 }}</td>
+					</tr>
+				{% endif %}
 				<tr class="total">
 					<td></td>
-                    <td>Total: ${{ order.get_total_cost }}</td>
+                    <td>Total: ${{ order.get_total_cost|floatformat:2 }}</td>
 				</tr>
                 <tr class="total">
 					<td></td>
-                        <td>Total Paid: ${{ order.get_total_cost }}</td>
+                        <td>Total Paid: ${{ order.get_total_cost|floatformat:2 }}</td>
 				</tr>
                 <tr class="total">
 					<td></td>

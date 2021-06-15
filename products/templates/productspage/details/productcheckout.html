@@ -124,61 +124,7 @@
                     </form>
                 </div>
             </div>
-            <div class="col-md-5 order-1 order-md-2">
-                {% for item in cart %}
-                    {% with product=item.product %}
-                        <div class="d-flex align-items-center pb-2">
-                            <div class="">
-                            
-                                <img class="rounded" style="object-fit: cover; width:90px; height:90px;" src="{% if product.mainimage %}{{ product.mainimage.url }}{% else %}{% static 'img/default-product-image.png' %}{% endif %}" alt="">
-                            </div>
-                            <div class="ml-3 w-100 text-left">
-                                <p class="m-0">{{product.name}}</p>
-                                <div class="d-flex">
-                                    <span style="font-weight:600;">${{ product.price }}</span>
-                                </div>
-                                <div class="d-flex flex-wrap"></div>
-                            </div>
-                        </div>
-                        {% for addon in item.addons.all %}
-                            <div class="d-flex justify-content-between align-items-center mt-0 py-0">
-                                <p class="mb-1 text-muted">{{ addon.name }}:</p>
-                                <p class=" mb-1 text-muted">${{ addon.price }}</p>
-                            </div>
-                        {% endfor %}
-                        {% for dropdownoptions in item.dropdownoptions.all %}
-                            <div class="d-flex justify-content-between align-items-center mt-0 py-0">
-                                <p class="mb-1 text-muted">{{ dropdownoptions.option }}:</p>
-                                <p class=" mb-1 text-muted">${{ dropdownoptions.price }}</p>
-                            </div>
-                        {% endfor %}
-                        <hr class="mt-0">
-                        <div class="d-flex justify-content-between align-items-center mt-0 py-0">
-                            <p class="mb-1 text-muted">Subtotal:</p>
-                            <p class=" mb-1 text-muted">${{ item.total_price }}</p>
-                        </div>
-                        {% comment %} <div class="d-flex justify-content-between align-items-center mt-0">
-                            <p class="mb-1 text-muted">Shipping</p>
-                            {% if item.shipping %}
-                                <h5>$<span style="font-weight:500">{{ item.shipping }}</span></h5>
-                            {% else %}
-                                <p class="mb-1 text-muted">Pick up</p>
-                            {% endif %}
-                            
-                        </div> {% endcomment %}
-                        <hr class="mt-0">
-                        <div class="d-flex justify-content-between align-items-center mb-3">
-                            <p style="font-weight:600">Total Due Now</p>
-                            <h5>$<span style="font-weight:600">{{ item.total_price }}</span></h5>
-                        </div>
-                        <div class="text-block text-left">
-                            <p class="text-muted">In the event your order gets cancelled or unapproved, you will be refunded in full.</p>
-                            {% if product.request %}<p class="text-muted">Depending on the request of your order, vendors may reach out for additional payment.</p>{% endif %}
-                        </div>
-                        
-                    {% endwith %}
-                {% endfor %}
-            </div>
+            {% include "productspage/details/summary/sidesummary.html" with cart=cart product=product.request %}
         </div>
     </div>
 </section>

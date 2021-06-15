@@ -8,6 +8,7 @@ from django.core.validators import MinValueValidator, MaxValueValidator,RegexVal
 from address.models import AddressField
 from django_countries.fields import CountryField
 from cities.models import City, Region
+from decimal import Decimal
 # Create your models here.
 
 
@@ -92,6 +93,18 @@ def slug_generators(sender, instance, *args, **kwargs):
         instance.slug = unique_slug_generator_product(instance)
 
 pre_save.connect(slug_generators, sender=Product)
+
+class Coupon(models.Model):
+    code = models.CharField(max_length=50)
+    company = models.ForeignKey(Company, related_name='coupon_code', on_delete=models.CASCADE)
+    valid_from = models.DateTimeField()
+    valid_to = models.DateTimeField()
+    discount = models.IntegerField(verbose_name="Discount(%)",validators=[MinValueValidator(0), MaxValueValidator(100)])
+    active = models.BooleanField()
+    def __str__(self):
+        return f'{self.code} - {self.company}'
+    class Meta:
+        unique_together=(('company','code'),)
 
 class ProductCategory(models.Model):
     name = models.CharField(max_length=200,db_index=True)
@@ -180,12 +193,19 @@ class Order(models.Model):
     shipping_local = models.BooleanField(default=False)
     shipping_international = models.BooleanField(default=False)
     paymentintent = models.CharField(verbose_name="Payment Intent", max_length=200, unique=True, null=True, blank=True)
+
+    coupon = models.ForeignKey(Coupon, related_name='orders_coupon', null=True, blank=True, on_delete=models.SET_NULL)
+    discount = models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(100)])
     class Meta:
         ordering = ('-created',)
     def __str__(self):
         return f'Order {self.id}'
     def get_total_cost(self):
-        return sum(item.get_cost() for item in self.items.all())
+        total_cost = sum(item.get_cost() for item in self.items.all())
+        return total_cost - (total_cost * (self.discount / Decimal(100)))
+    def get_discount(self):
+        total_cost = sum(item.get_cost() for item in self.items.all()) 
+        return total_cost - self.get_total_cost()
     
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='items')
@@ -221,3 +241,4 @@ class MultipleImageOrderAttachments(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     class Meta:
         ordering = ('-created',)
+    

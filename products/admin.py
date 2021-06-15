@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Product, GallaryProductImage, MainProductDropDown, ProductDropDown, ProductReviews, Order, OrderItem, ProductCategory, OrderItem, QuestionModels, AnswerModels
+from .models import Coupon, Product, GallaryProductImage, MainProductDropDown, ProductDropDown, ProductReviews, Order, OrderItem, ProductCategory, OrderItem, QuestionModels, AnswerModels
 from django_hosts.resolvers import reverse
 from django.utils.safestring import mark_safe
 # Register your models here.
@@ -65,3 +65,8 @@ class OrderAdmin(admin.ModelAdmin):
     list_filter = ['paid', 'created', 'updated']
     inlines = [ OrderItemInline ]
 
+@admin.register(Coupon)
+class CouponAdmin(admin.ModelAdmin):
+    list_display = ['code', 'valid_from','valid_to', 'discount', 'active',]
+    list_filter = ['active', 'valid_from', 'valid_to']
+    search_fields = ['code']

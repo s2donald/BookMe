@@ -117,7 +117,7 @@
                                         {{ order.first_name }} {{ order.last_name }}
                                     </td>
                                     <td class="tableclickme" data-id="{{ order.id }}" data-type="detail">
-                                        ${{ item.price}}
+                                        ${{ order.get_total_cost|floatformat:2 }}
                                     </td>
                                     <td class="tableclickme" data-id="{{ order.id }}" data-type="detail">
                                         <a class="btn btn-link ml-0 px-0" type="button" >View</a>

@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
-from .models import Account
+from .models import Account, WaitListCustomers
 from business.models import Company, Clients
 from django.core.validators import RegexValidator
 from bootstrap_modal_forms.forms import BSModalModelForm
@@ -37,6 +37,17 @@ il8nl = ["CA", "US"]
 
 il8nlist = sorted((item, item) for item in il8nl)
 from crispy_forms.helper import FormHelper
+
+class WaitListForm(forms.ModelForm):
+    first_name = forms.CharField(max_length=30, required=True)
+    last_name = forms.CharField(max_length=30, required=True)
+    phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$', message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
+    phone = forms.CharField(label='Phone Number',required=False, validators=[phone_regex], max_length=30,)
+    email = forms.EmailField(label='Email')
+
+    class Meta:
+        model = WaitListCustomers
+        fields = ('email', 'first_name','last_name', 'phone')
 
 
 class ConsumerRegistrationForm(UserCreationForm):
@@ -89,6 +100,7 @@ class ConsumerRegistrationForm(UserCreationForm):
 class AccountAuthenticationForm(forms.ModelForm):
     password = forms.CharField(label='Password', widget=forms.PasswordInput)
     email = forms.EmailField(label='Email')
+    # referred = forms.CharField(label='Password')
     
     class Meta:
         model = Account

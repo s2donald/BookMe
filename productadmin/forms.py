@@ -102,6 +102,15 @@ class AddCompanyForm(forms.ModelForm):
         company = super().save(commit=False)
         company.save()
 
+class AddCompanySlugForm(forms.ModelForm):
+    city = forms.CharField(max_length=30,label='Website URL', widget=forms.TextInput(attrs={'class':'form-control'}))
+    class Meta:
+        model = Company
+        fields = ('slug',)
+    def save(self):
+        company = super().save(commit=False)
+        company.save()
+
 class AddProductForm(forms.ModelForm):
     # description = forms.CharField(widget=TinyMCE(attrs={'cols': 280, 'rows':50,'class': 'form-control'}))
     class Meta:

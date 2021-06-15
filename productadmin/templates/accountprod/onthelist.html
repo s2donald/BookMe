@@ -1,0 +1,135 @@
+{% extends 'welcomes/main.html' %}
+{% block 'index_signup' %}active{% endblock %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% load hosts %}
+{% block descriptiontag %}"SignUp to begin using ShopMe for free and get your own website for free!"{% endblock descriptiontag %} 
+{% block header %}
+  <header>
+    <div class="page-header section-height-50" style="">
+      <span class="mask bg-gradient-dark"></span>
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 mx-auto text-white text-center">
+            <h2 class="text-white">Thank you for joining the waitlist!</h2>
+            <p class="text-white">We will send progress updates regarding the project and will let you know once we have released a full product.</p>
+
+            <br>
+            <h5 class="text-white">If you are interested in beta testing, please contact a ShopMe team member.</h5>
+            <p class="text-white text-sm">P.S. Beta testers will have early access to all premium releases for free.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="position-relative overflow-hidden" style="height:36px;margin-top:-35px;">
+      <div class="w-full absolute bottom-0 start-0 end-0" style="transform: scale(2);transform-origin: top center;color: #fff;">
+        <svg viewBox="0 0 2880 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M0 48H1437.5H2880V0H2160C1442.5 52 720 0 720 0H0V48Z" fill="currentColor"></path>
+        </svg>
+      </div>
+    </div>
+    <div class="container">
+      <div class="row mt-sm-0 mt-5">
+        <div class="col-lg-3 col-md-4 border-end ms-lg-auto">
+          <div class="p-3 text-center">
+            <div class="icon icon-shape mb-2">
+              <svg class="text-info" width="25px" height="25px" viewBox="0 0 46 42" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                <title>Andy Phan</title>
+                <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                  <g transform="translate(-1717.000000, -291.000000)" fill="#FFFFFF" fill-rule="nonzero">
+                    <g transform="translate(1716.000000, 291.000000)">
+                      <g transform="translate(1.000000, 0.000000)">
+                        <path class="color-background" d="M45,0 L26,0 C25.447,0 25,0.447 25,1 L25,20 C25,20.379 25.214,20.725 25.553,20.895 C25.694,20.965 25.848,21 26,21 C26.212,21 26.424,20.933 26.6,20.8 L34.333,15 L45,15 C45.553,15 46,14.553 46,14 L46,1 C46,0.447 45.553,0 45,0 Z" opacity="0.59858631"></path>
+                        <path class="color-foreground" d="M22.883,32.86 C20.761,32.012 17.324,31 13,31 C8.676,31 5.239,32.012 3.116,32.86 C1.224,33.619 0,35.438 0,37.494 L0,41 C0,41.553 0.447,42 1,42 L25,42 C25.553,42 26,41.553 26,41 L26,37.494 C26,35.438 24.776,33.619 22.883,32.86 Z"></path>
+                        <path class="color-foreground" d="M13,28 C17.432,28 21,22.529 21,18 C21,13.589 17.411,10 13,10 C8.589,10 5,13.589 5,18 C5,22.529 8.568,28 13,28 Z"></path>
+                      </g>
+                    </g>
+                  </g>
+                </g>
+              </svg>
+            </div>
+            <h6 class="mb-0">Andy Phan</h6>
+            <a class="text-gradiant-primary px-3" href="https://www.instagram.com/phandyandy/" target="_blank">
+                <i class="fab fa-instagram text-lg opacity-8" aria-hidden="true"></i>
+            </a>
+            <a class="text-gradiant-primary px-1" href="https://www.facebook.com/Ph4ndy" target="_blank">
+                <i class="fab fa-facebook text-lg opacity-8" aria-hidden="true"></i>
+            </a>
+            <a class="text-gradiant-primary px-3" href="https://www.linkedin.com/in/andy-phan-039360a7/" target="_blank">
+                <i class="fab fa-linkedin text-lg opacity-8" aria-hidden="true"></i>
+            </a>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-4 border-end">
+          <div class="p-3 text-center">
+            <div class="icon icon-shape mb-2">
+              <svg class="text-info" width="25px" height="25px" viewBox="0 0 46 42" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                <title>Stephen Donald</title>
+                <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                  <g transform="translate(-1717.000000, -291.000000)" fill="#FFFFFF" fill-rule="nonzero">
+                    <g transform="translate(1716.000000, 291.000000)">
+                      <g transform="translate(1.000000, 0.000000)">
+                        <path class="color-background" d="M45,0 L26,0 C25.447,0 25,0.447 25,1 L25,20 C25,20.379 25.214,20.725 25.553,20.895 C25.694,20.965 25.848,21 26,21 C26.212,21 26.424,20.933 26.6,20.8 L34.333,15 L45,15 C45.553,15 46,14.553 46,14 L46,1 C46,0.447 45.553,0 45,0 Z" opacity="0.59858631"></path>
+                        <path class="color-foreground" d="M22.883,32.86 C20.761,32.012 17.324,31 13,31 C8.676,31 5.239,32.012 3.116,32.86 C1.224,33.619 0,35.438 0,37.494 L0,41 C0,41.553 0.447,42 1,42 L25,42 C25.553,42 26,41.553 26,41 L26,37.494 C26,35.438 24.776,33.619 22.883,32.86 Z"></path>
+                        <path class="color-foreground" d="M13,28 C17.432,28 21,22.529 21,18 C21,13.589 17.411,10 13,10 C8.589,10 5,13.589 5,18 C5,22.529 8.568,28 13,28 Z"></path>
+                      </g>
+                    </g>
+                  </g>
+                </g>
+              </svg>
+            </div>
+            <h6 class="mb-0">Stephen Donald</h6>
+            <a class="text-gradiant-primary px-3" href="https://www.instagram.com/stxphxn.d/" target="_blank">
+                <i class="fab fa-instagram text-lg opacity-8" aria-hidden="true"></i>
+            </a>
+            <a class="text-gradiant-primary px-1" href="https://www.facebook.com/TheBlessedStephen" target="_blank">
+                <i class="fab fa-facebook text-lg opacity-8" aria-hidden="true"></i>
+            </a>
+            <a class="text-gradiant-primary px-3" href="https://www.linkedin.com/in/s2donald/" target="_blank">
+                <i class="fab fa-linkedin text-lg opacity-8" aria-hidden="true"></i>
+            </a>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-4 me-lg-auto">
+          <div class="p-3 text-center">
+            <div class="icon icon-shape mb-2">
+              <svg class="text-info" width="25px" height="25px" viewBox="0 0 46 42" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                <title>Jaran Para</title>
+                <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                  <g transform="translate(-1717.000000, -291.000000)" fill="#FFFFFF" fill-rule="nonzero">
+                    <g transform="translate(1716.000000, 291.000000)">
+                      <g transform="translate(1.000000, 0.000000)">
+                        <path class="color-background" d="M45,0 L26,0 C25.447,0 25,0.447 25,1 L25,20 C25,20.379 25.214,20.725 25.553,20.895 C25.694,20.965 25.848,21 26,21 C26.212,21 26.424,20.933 26.6,20.8 L34.333,15 L45,15 C45.553,15 46,14.553 46,14 L46,1 C46,0.447 45.553,0 45,0 Z" opacity="0.59858631"></path>
+                        <path class="color-foreground" d="M22.883,32.86 C20.761,32.012 17.324,31 13,31 C8.676,31 5.239,32.012 3.116,32.86 C1.224,33.619 0,35.438 0,37.494 L0,41 C0,41.553 0.447,42 1,42 L25,42 C25.553,42 26,41.553 26,41 L26,37.494 C26,35.438 24.776,33.619 22.883,32.86 Z"></path>
+                        <path class="color-foreground" d="M13,28 C17.432,28 21,22.529 21,18 C21,13.589 17.411,10 13,10 C8.589,10 5,13.589 5,18 C5,22.529 8.568,28 13,28 Z"></path>
+                      </g>
+                    </g>
+                  </g>
+                </g>
+              </svg>
+            </div>
+            <h6 class="mb-0">Jaran Pararajasingham</h6>
+            <a class="text-gradiant-primary px-3" href="https://www.instagram.com/jaran.para/" target="_blank">
+                <i class="fab fa-instagram text-lg opacity-8" aria-hidden="true"></i>
+            </a>
+            <a class="text-gradiant-primary px-1" href="https://www.facebook.com/jaran.beastt/" target="_blank">
+                <i class="fab fa-facebook text-lg opacity-8" aria-hidden="true"></i>
+            </a>
+            <a class="text-gradiant-primary px-3" href="https://www.linkedin.com/in/jaranpara/" target="_blank">
+                <i class="fab fa-linkedin text-lg opacity-8" aria-hidden="true"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+  </header>
+{% endblock header %}
+
+{% block businesscontent %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+
+    </div>
+</div>
+{% endblock %}

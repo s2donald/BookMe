@@ -159,7 +159,19 @@
                                 
                             </tr>
                         {% endif %}
-
+                        {% if order.coupon %}
+                        <tr>
+                            <th scope="row">
+                                <div class="media align-items-center">
+                                    <span class="name mb-0 text-sm">"{{ order.coupon.code }}" ({{ order.coupon.discount }}% off)</span>
+                                </div>
+                            </th>
+                            <td class="text-right text-red" style="color:red;">
+                                - ${{ order.get_discount|floatformat:2 }}
+                            </td>
+                            
+                        </tr>
+                        {% endif %}
                         <tr>
                             
                             <th scope="row">
@@ -168,7 +180,7 @@
                                 </div>
                             </th>
                             <td class="text-right">
-                                ${{ order.get_total_cost }}
+                                ${{ order.get_total_cost|floatformat:2 }}
                             </td>
                             
                         </tr>

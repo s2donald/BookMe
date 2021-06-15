@@ -1,6 +1,7 @@
 {% extends 'welcomes/main.html' %}
 {% load static %}
 {% load hosts %}
+{% block descriptiontag %}"ShopMe will help you build your shop while you create your art. ShopMe is an online platform which enables businesses that sell tailored arts and products to easily set up up their own website. ShopMe was built to help you make more sales with your client base."{% endblock  %}
 {% block 'index_features' %}active{% endblock %}
 {% block header %}
   <header class="header-2">
@@ -16,7 +17,7 @@
                                 <a class="btn-solid-lg" href="{% host_url 'newbizcreate' host 'prodadmin' %}">Create a business page</a>
                     {% else %}
                             <a class="btn-solid-lg my-1" href="{% host_url 'bizadminlogin' host 'prodadmin' %}"><i class="fab fa-start"></i>Sign into ShopMe</a>
-                            <a class="btn-solid-lg my-1" href="{% host_url 'bizadminsignup' host 'prodadmin' %}"><i class="fab fa-start"></i>Get started for free</a>
+                            <a class="btn-solid-lg my-1" href="{% host_url 'bizadminsignup' host 'prodadmin' %}"><i class="fab fa-start"></i>Join the Waitlist</a>
                     {% endif %}
                 </div>
                 <div class="col-lg-5 d-none d-lg-block">
@@ -281,9 +282,9 @@
     <div class="container">
       <div class="row">
         <div class="col-md-5 col-8 mx-auto">
-          <h4 class="mb-1">Start using ShopMe today!</h4>
+          <h4 class="mb-1">Join the ShopMe Waitlist today!</h4>
           <a href="{% host_url 'bizadminsignup' host 'prodadmin' %}" class="btn btn-lg d-block bg-gradient-info mb-0 mx-auto">
-            Get Started
+            Join Waitlist
           </a>
         </div>
       </div>

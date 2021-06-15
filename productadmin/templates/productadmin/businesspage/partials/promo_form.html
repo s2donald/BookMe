@@ -1,0 +1,68 @@
+{% load static %}
+{% load hosts %}
+{% load business_tags %}
+{% load crispy_forms_tags %}
+
+<form method="POST" action="{% host_url 'promotionmodalview' host 'prodadmin' %}" id="mynewformSub">
+    {% csrf_token %}
+    <input type="text" hidden value="{{ coupon.id }}" name="coupon_id">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                {{ form.code|as_crispy_field }}
+            </div>
+            <div class="col-12">
+                <div id="div_id_valid_from" class="form-group">
+                    <label for="id_valid_from" class=" requiredField">
+                        Valid from<span class="asteriskField">*</span>
+                    </label>         
+                    <div class="">
+                        <input type="text" name="valid_from" value="{{ valid_from|date:"m/d/Y" }}" class="datetimeinput form-control" required="" id="id_valid_from">
+                    </div>
+                </div>
+            </div>
+            <div class="col-12">
+                <div id="div_id_valid_to" class="form-group">
+                    <label for="id_valid_to" class=" requiredField">
+                        Valid to<span class="asteriskField">*</span>
+                    </label>
+                    <div class="">
+                        <input type="text" name="valid_to" value="{{ valid_to|date:"m/d/Y" }}" class="datetimeinput form-control" required="" id="id_valid_to">
+                    </div>
+                </div>
+            </div>
+            <div class="col-12">
+                {{ form.discount|as_crispy_field }}
+            </div>
+        </div>
+    </div>
+    
+    
+    
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-info">Update</button>
+    </div>
+</form>
+<script>
+
+    $('#mynewformSub').submit(function(e){
+        e.preventDefault();
+        $.ajax({
+            type:'POST',
+            url: "{% host_url 'promotionmodalview' host 'prodadmin' %}",
+            data: $('#mynewformSub').serialize(),
+            headers:{
+                "X-CSRFToken": csrftoken
+            },
+            success:function(data){
+                if (data.errors){
+                    $('#myModals .modal-body').html(data.html_form)
+                }
+                else {
+                    location.reload();
+                }
+            }
+        });
+    });
+</script>

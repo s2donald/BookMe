@@ -2,7 +2,7 @@
 {% block 'index_pricing' %}active{% endblock %}
 {% load static %}
 {% load hosts %}
-
+{% block descriptiontag %}"ShopMe Pricing Summary Page"{% endblock  %}
 {% block header %}
   <header class="header-2">
             <div class="page-header relative" style="height: 100px; background: #141727; background-image: linear-gradient(310deg,#141727,#3a416f);">
@@ -59,7 +59,7 @@
                 <h3 class="font-weight-bolder">
                   <small></small>Platform Fees
                 </h3>
-                <h6 class="text-dark opacity-8 text mb-0">3% on each sale made</h6>
+                <h6 class="text-dark opacity-8 text mb-0">2.9% + 10¢ on each sale made</h6>
               </div>
               <div class="card-footer">
                 <p>Volume and value based processing fees will be offered in the future.</p>
@@ -164,9 +164,9 @@
     <div class="container">
       <div class="row">
         <div class="col-md-5 col-8 mx-auto">
-          <h4 class="mb-1">Start using ShopMe today!</h4>
+          <h4 class="mb-1">Join the ShopMe Waitlist today!</h4>
           <a href="{% host_url 'bizadminsignup' host 'prodadmin' %}" class="btn btn-lg d-block bg-gradient-info mb-0 mx-auto">
-            Get Started
+            Join Waitlist
           </a>
         </div>
       </div>

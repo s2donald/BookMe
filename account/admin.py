@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import Account
+from .models import Account, WaitListCustomers
 from business.models import Clients, Company, Services
 from businessadmin.models import Breaks, StaffMember, StaffWorkingHours
 from consumer.models import Bookings
@@ -16,7 +16,7 @@ class AccountAdmin(UserAdmin):
     filter_horizontal = ()
     list_filter =()
     fieldsets = (
-        (None, {'fields': ('email', )}),
+        (None, {'fields': ('email', 'rates',)}),
         (('Personal info'), {'fields': ('first_name', 'last_name', 'phone', 'tz')}),
         (('Permissions'), {'fields': ('is_admin','is_staff', 'is_business', 'is_consumer', 'on_board')}),
         (('Important dates'), {'fields': ('last_login', 'date_joined')}),
@@ -62,4 +62,7 @@ class StaffAdmin(admin.ModelAdmin):
     search_fields = ('user__first_name','company__business_name',)
     inlines = [ BreaksInline, StaffWorkingHoursInline ]
 
-    
+@admin.register(WaitListCustomers)
+class WaitListAdmin(admin.ModelAdmin):
+    list_display = ['email', 'first_name', 'last_name', 'phone']
+    search_fields = ('email','first_name','last_name')

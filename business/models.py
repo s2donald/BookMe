@@ -259,6 +259,7 @@ class Company(models.Model):
     business_name = models.CharField(max_length=30, db_index=True)
     business_type = models.CharField(choices=typeofbusiness, default="service", max_length=60)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='category', null=True, blank=True)
+    referedby = models.ForeignKey(Account, on_delete=models.CASCADE, related_name='referred_company', null=True, blank=True)
     subcategory = models.ManyToManyField(SubCategory)
     description = models.TextField(max_length=500, db_index=True, blank=True, null=True)
     address = models.CharField(max_length=200)

@@ -1,0 +1,11 @@
+{% if order.discount > 0 %}
+    <div class="d-flex justify-content-between align-items-center mt-0 py-0" id="textdiscounts">
+        <p class="mb-1 text-muted txtamntdiscount">"{{ order.coupon.code }}" ({{ order.coupon.discount }}% off)</p>
+        <p class="text-danger mb-1 text-muted amountdiscount" style="color:red !important;">- ${{ order.get_discount|floatformat:2 }}</p>
+    </div>
+{% endif %}
+<hr class="mt-0">
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <p style="font-weight:600">Total Due Now</p>
+    <h5>$<span style="font-weight:600" id="my_total_after_discount">{{ order.get_total_cost|floatformat:2 }}</span></h5>
+</div>

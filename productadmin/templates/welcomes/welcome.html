@@ -17,7 +17,7 @@
                                 <a class="btn-solid-lg" href="{% host_url 'newbizcreate' host 'prodadmin' %}">Create a business page</a>
                     {% else %}
                             <a class="btn-solid-lg my-1" href="{% host_url 'bizadminlogin' host 'prodadmin' %}"><i class="fab fa-start"></i>Sign into ShopMe</a>
-                            <a class="btn-solid-lg my-1" href="{% host_url 'bizadminsignup' host 'prodadmin' %}"><i class="fab fa-start"></i>Join the Waitlist</a>
+                            <a class="btn-solid-lg my-1" href="{% host_url 'completefullprofile' host 'prodadmin' %}"><i class="fab fa-start"></i>Join the Waitlist</a>
                     {% endif %}
                 </div>
                 <div class="col-lg-5 d-none d-lg-block">
@@ -283,7 +283,7 @@
       <div class="row">
         <div class="col-md-5 col-8 mx-auto">
           <h4 class="mb-1">Join the ShopMe Waitlist today!</h4>
-          <a href="{% host_url 'bizadminsignup' host 'prodadmin' %}" class="btn btn-lg d-block bg-gradient-info mb-0 mx-auto">
+          <a href="{% host_url 'completefullprofile' host 'prodadmin' %}" class="btn btn-lg d-block bg-gradient-info mb-0 mx-auto">
             Join Waitlist
           </a>
         </div>

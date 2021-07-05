@@ -36,6 +36,9 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 import stripe, djstripe
 from .forms import OrderCreateForm
 from django.http import HttpResponse
+import easypost
+
+
 class ProductMain(View):
     @xframe_options_exempt
     def get(self, request):
@@ -194,10 +197,50 @@ class CartCheckoutView(View):
         cart = ProductCart(request)
         pk = settings.STRIPE_PUBLISHABLE_KEY
         cart = ProductCart(request)
+        easypost.api_key = settings.EASYPOST_API_KEY
+        
         if form.is_valid():
             order = form.save(commit=False)
             order.company = company
             total = cart.get_total_price()
+            # try:
+            #     # this request will raise an error
+            #     address = easypost.Address.create(
+            #         verify_strict=["delivery"],
+            #         street1=order.address,
+            #         city=order.city,
+            #         state=order.state,
+            #         zip=order.postal_code,
+            #         country=order.country,
+            #         company=company.business_name,
+            #         phone=company.user.phone
+            #     )
+            #     shipment = easypost.Shipment.create(
+            #         to_address=address,
+            #         from_address={
+            #             "name": company.business_name,
+            #             "street1": company.address,
+            #             "city": company.city,
+            #             "state": company.state,
+            #             "zip": company.postal,
+            #             "country": "Canada",
+            #             "phone": company.phone,
+            #             "email": company.email
+            #         },
+            #         parcel={
+            #             "length": 20.2,
+            #             "width": 10.9,
+            #             "height": 5,
+            #             "weight": 65.9
+            #         },
+            #         carrier_accounts = [settings.CANADA_POST_EASY]
+            #     )
+
+            #     print(shipment.get_rates())
+            # except easypost.Error as e:
+            #     print(e.http_body)
+            #     form.add_error('address', 'This address could not be found. Please try again.')
+            #     return render(request, 'productspage/details/productcheckout.html',{'form':form,'user':user,'company':company, 'cart':cart, 'pk_stripe':pk})
             if cart.coupon:
                 order.coupon = cart.coupon
                 order.discount = cart.coupon.discount

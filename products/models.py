@@ -3,7 +3,7 @@ from business.models import Company, Clients, CompanyReq
 from gibele.utils import unique_slug_generator_product, unique_slug_generator_order
 from django.db.models.signals import pre_save
 from django.utils import timezone
-from account.models import Account
+from account.models import Account, WaitListCustomers
 from django.core.validators import MinValueValidator, MaxValueValidator,RegexValidator
 from address.models import AddressField
 from django_countries.fields import CountryField

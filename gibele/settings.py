@@ -276,12 +276,19 @@ if not DEBUG:
     # Your Auth Token from twilio.com/console
     TWILIO_AUTH_TOKEN  = "a1caf1d0f007d77614731a2384762a6a"
     TWILIO_PHONE = "+13253993572"
+    EASYPOST_API_KEY = "EZAKcd152ecd3d404810990184730daf1b5aYrYUXLTa0NnCCDFNAnIVKw"
+    CANADA_POST_EASY = "ca_3068605e36d8489caaeb957f56f214e6"
+    UPS_POST_EASY = "ca_c6ad73e45e3743859d9aa3a62ff8d1e2"
 else:
     # Your Trial Account SID from twilio.com/console
     TWILIO_ACCOUNT_SID = "AC712a29e67ecd6959a2c012000762a4a4"
     # Your Trail Auth Token from twilio.com/console
     TWILIO_AUTH_TOKEN  = "c63173775623ac34e0dfe724061cc6e3"
     TWILIO_PHONE = "+13656509721"
+    EASYPOST_API_KEY = "EZTKcd152ecd3d404810990184730daf1b5a5CsvEc480yy19gjE9vBVBA"
+    CANADA_POST_EASY = "ca_3068605e36d8489caaeb957f56f214e6"
+    UPS_POST_EASY = "ca_c6ad73e45e3743859d9aa3a62ff8d1e2"
+    
 
 #Stripe
 if not DEBUG:

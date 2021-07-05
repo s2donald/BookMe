@@ -78,9 +78,8 @@ urlpatterns = [
     re_path(r'path/loadsubcategories/$', views.load_subcat, name='ajax_load_subcategories'),
     re_path(r'path/loadservices/$', views.load_services, name='ajax_load_services'),
     
-    re_path(r'onboarding/$', views.completeViews, name='completefullprofile'),
-    re_path(r'onboarding/$', views.WaitListViews, name='completeprofile'),
-    re_path(r'onboarding/confirmed/$', views.ShowWaitListViews, name='completeprofilewaitlist'),
+    re_path(r'onboarding/$', views.completeViews, name='completeprofile'),
+    re_path(r'joinwaitlist/$', views.WaitListViews, name='completefullprofile'),
     re_path(r'^companyformsave/$', views.saveCompanyDetail.as_view(), name='saveDetailForm'),
     re_path(r'^accountFormSave/$', views.personDetailSave.as_view(), name='accountCheck'),
     re_path(r'home/$', views.homepageViews, name='home'),#Changed
@@ -94,7 +93,7 @@ urlpatterns = [
     re_path(r'file-upload/$', views.fileUploadView, name='upload'),
 
     re_path(r'createbusiness/$', views.createNewBusiness, name='newbizcreate'),
-    re_path(r'signup/$', views.WaitListViews, name='bizadminsignup'),
+    re_path(r'signup/$', views.signupViews, name='bizadminsignup'),
     re_path(r'logout/$', views.LogoutView, name='bizadminlogout'),
     re_path(r'login/$', views.loginViews, name='bizadminlogin'),
 

@@ -2,7 +2,7 @@ from django.core.mail import get_connection, send_mail, EmailMessage
 
 from celery import task
 from django.conf import settings
-from .models import Account
+from .models import Account, WaitListCustomers
 from business.models import Company, CompanyReq
 from .models import *
 from django.template.loader import render_to_string
@@ -31,6 +31,25 @@ def bizCreatedEmailSent(user_id):
     mail_sent = send_mail(subject, plain_message,'ShopMe.to <noreply@shopme.to>', [email], html_message=html_message, fail_silently=False, connection=connection)
     return mail_sent
 
+
+@task
+def sendWaitListEmail(user_id):
+    acct = WaitListCustomers.objects.get(id=user_id)
+    firstname = acct.first_name
+    email = acct.email
+    subject = f'Thanks for joining the ShopMe waitlist!'
+    html_message = render_to_string('productemail/waitlist_emails.html', {'acct':acct})
+    plain_message = strip_tags(html_message)
+    connection = get_connection(
+        host=settings.EMAIL1_HOST, 
+        port=settings.EMAIL1_PORT, 
+        username=settings.EMAIL1_HOST_USER, 
+        password=settings.EMAIL1_HOST_PASSWORD, 
+        use_tls=settings.EMAIL1_USE_TLS,
+        use_ssl=settings.EMAIL1_USE_SSL,
+    )
+    mail_sent = send_mail(subject, plain_message,'ShopMe.to <noreply@shopme.to>', [email], html_message=html_message, fail_silently=False, connection=connection)
+    return mail_sent
 
 @task
 def order_payment_completed(order_id):

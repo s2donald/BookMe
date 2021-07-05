@@ -7,7 +7,7 @@ from business.models import Company, SubCategory, OpeningHours, Services, Gallar
 from account.models import Account, WaitListCustomers
 from calendarapp.models import formBuilder, bookingForm
 from account.forms import UpdatePersonalForm
-from products.tasks import bizCreatedEmailSent
+from products.tasks import bizCreatedEmailSent, sendWaitListEmail
 from consumer.models import Bookings, Reviews, extraInformation
 from account.forms import AccountAuthenticationForm
 from django.contrib.auth import authenticate, login, logout
@@ -123,13 +123,10 @@ def WaitListViews(request):
             first = form.cleaned_data.get('first_name')
             last = form.cleaned_data.get('last_name')
             user = WaitListCustomers.objects.create(first_name=first, last_name=last, phone=phone, email=email)
-            return redirect(reverse('completeprofilewaitlist', host='prodadmin'))
+            sendWaitListEmail.delay(user.id)
+            return render(request, 'accountprod/onthelist.html', {'user':user})
 
     return render(request, 'accountprod/waitlist.html', {'form':form, 'user':user})
-
-def ShowWaitListViews(request):
-    user = request.user
-    return render(request, 'accountprod/onthelist.html', {'user':user})
 
 @login_required
 def completeViews(request):

@@ -119,10 +119,9 @@ def WaitListViews(request):
 
         if form.is_valid():
             email = form.cleaned_data.get('email')
-            phone = form.cleaned_data.get('phone')
             first = form.cleaned_data.get('first_name')
             last = form.cleaned_data.get('last_name')
-            user = WaitListCustomers.objects.create(first_name=first, last_name=last, phone=phone, email=email)
+            user = WaitListCustomers.objects.create(first_name=first, last_name=last, email=email)
             sendWaitListEmail.delay(user.id)
             return render(request, 'accountprod/onthelist.html', {'user':user})
 

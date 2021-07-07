@@ -39,15 +39,13 @@ il8nlist = sorted((item, item) for item in il8nl)
 from crispy_forms.helper import FormHelper
 
 class WaitListForm(forms.ModelForm):
-    first_name = forms.CharField(max_length=30, required=True)
-    last_name = forms.CharField(max_length=30, required=True)
-    phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$', message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
-    phone = forms.CharField(label='Phone Number',required=False, validators=[phone_regex], max_length=30,)
+    first_name = forms.CharField(max_length=30)
+    last_name = forms.CharField(max_length=30,required=False)
     email = forms.EmailField(label='Email')
 
     class Meta:
         model = WaitListCustomers
-        fields = ('email', 'first_name','last_name', 'phone')
+        fields = ('email', 'first_name','last_name')
 
 
 class ConsumerRegistrationForm(UserCreationForm):

@@ -64,5 +64,5 @@ class StaffAdmin(admin.ModelAdmin):
 
 @admin.register(WaitListCustomers)
 class WaitListAdmin(admin.ModelAdmin):
-    list_display = ['email', 'first_name', 'last_name', 'phone']
+    list_display = ['email', 'first_name', 'last_name']
     search_fields = ('email','first_name','last_name')

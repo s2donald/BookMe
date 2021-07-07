@@ -2,7 +2,7 @@
 {% load static %}
 {% load hosts %}
 {% load business_tags %}
-{% block title %}{{ company.business_name }} - BookMe.to{% endblock %}
+{% block title %}{{ product.description|linebreaks }}{% endblock %}
 {% block companybizname %}{{ company.business_name }}{% endblock companybizname %}
 
 {% block booking %}
